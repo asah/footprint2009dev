@@ -7,6 +7,15 @@ handlers:
 - url: /css
   static_dir: css
 
+# For FriendConnect
+- url: /rpc_relay.html
+  static_files: templates/rpc_relay.html
+  upload: templates/rpc_relay.html
+
+- url: /canvas.html
+  static_files: templates/canvas.html
+  upload: templates/canvas.html
+
+
 - url: /.*
   script: main.py
-
