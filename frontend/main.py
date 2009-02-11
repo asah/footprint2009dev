@@ -9,7 +9,8 @@ import views
 
 application = webapp.WSGIApplication(
                                      [('/', views.MainPageView),
-                                      ('/search', views.SearchView)],
+                                      ('/search', views.SearchView),
+                                      ('/friends', views.FriendsView)],
                                      debug=True)
 
 def main():

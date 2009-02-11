@@ -1,0 +1,50 @@
+<html>
+<head>
+  <link href="css/main.css" rel="stylesheet"/>
+</head>
+<body>
+ {% include 'header.html' %}
+
+  <div id='signInPane'>
+   <input type="button" value="Sign in" onclick="google.friendconnect.requestSignIn()"/><br/><br/>
+   Reasons to join: </br>
+   You can star events, save your location data and more. 
+  </div>
+
+  <div id="activeMemberPane">
+
+  </div>
+
+  <script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
+  <script type="text/javascript">
+    var SITE_ID = '02962301966004179520';
+    google.friendconnect.container.setParentUrl('/');
+    google.friendconnect.container.loadOpenSocialApi({site: SITE_ID, onload: initAllData});
+
+    function initAllData() {
+      // See if the viewer is logged in. 
+      // Get the owner's friends to display
+
+      // TODO(doll): use the fcauth token to do restful calls with the current user info - right off the bat
+      var req = opensocial.newDataRequest();
+      req.add(req.newFetchPersonRequest('VIEWER'), 'viewer');
+      req.add(req.newFetchPeopleRequest(new opensocial.IdSpec({'userId' : 'OWNER', 'groupId' : 'FRIENDS'})), 'ownerFriends');
+      req.send(setupData);
+    }
+
+    var viewer, ownerFriends;
+    function setupData(data) {
+      ownerFriends = data.get('ownerFriends').getData().asArray();
+      var html = "";
+      for (var i = 0; i < ownerFriends.length; i++) {
+        var person = ownerFriends[i];
+        html += "<div class='memberPane'><img src='" + person.getField("thumbnailUrl")  + "'/>" + person.getDisplayName() + "</div>";
+      };
+
+     document.getElementById('activeMemberPane').innerHTML = html;
+
+    }
+  </script>
+
+</body>
+</html>

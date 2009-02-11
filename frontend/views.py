@@ -19,6 +19,7 @@ SEARCH_RESULTS_TEMPLATE = 'search_results.html'
 SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
+WORK_WITH_OTHERS_TEMPLATE = 'work_with_others.html'
 
 def RenderTemplate(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
@@ -49,6 +50,7 @@ class SearchView(webapp.RequestHandler):
         'results': result_set.results,
         'keywords': query,
         'location': location,
+        'currentPage' : 'SEARCH'
       }
 
     if output == "rss":
@@ -58,3 +60,13 @@ class SearchView(webapp.RequestHandler):
       # html output
       self.response.out.write(RenderTemplate(SEARCH_RESULTS_TEMPLATE,
                                              template_values))
+
+class FriendsView(webapp.RequestHandler):
+  def get(self):
+    template_values = {
+        'viewer' : 'placeholder',
+        'currentPage' : 'FRIENDS'
+      }
+
+    self.response.out.write(RenderTemplate(WORK_WITH_OTHERS_TEMPLATE,
+                                           template_values))
