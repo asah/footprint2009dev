@@ -44,7 +44,7 @@ class SearchView(webapp.RequestHandler):
 
     result_set = search.Search(query, location)
 
-    point = geocode.Geocode(query)
+   ### point = geocode.Geocode(location)
 
     template_values = {
         'query_url_encoded': result_set.query_url_encoded,
