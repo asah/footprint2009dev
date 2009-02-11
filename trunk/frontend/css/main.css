@@ -1,0 +1,53 @@
+body {
+  font-family: arial;
+}
+
+.snippet {
+}
+
+.snippet_title {
+  font-weight: bold;
+}
+
+.snippet_title A {
+  color: #2475B6;
+  font-decoration: underline;
+}
+
+.snippet_link A {
+  color: #669FCC;
+}
+
+#snippet_pane {
+  margin-left: 8px;
+}
+
+.header_title {
+  float: left;
+  color: white;
+  font-weight: bold;
+  font-size: x-large;
+  padding: 6px 30px 6px 12px;
+}
+
+.header {
+  background: #2475B6;
+}
+
+.tab_active {
+  float: left;
+  background: white;
+  border-top: 8px solid #2475B6;
+  border-bottom: 8px solid white;
+  color: #193B6B;
+  padding: 4px 12px 4px 12px;
+}
+
+.tab_inactive {
+  float: left;
+  background: #2475B6;
+}
+
+#search_bar {
+  margin: 16px 8px 16px 8px;
+}
