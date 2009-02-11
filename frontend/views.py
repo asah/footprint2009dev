@@ -13,16 +13,12 @@ from google.appengine.ext import db
 import geocode
 import search
 
-TEMPLATE_DIR = 'html/'
+TEMPLATE_DIR = 'templates/'
 MAIN_PAGE_TEMPLATE = 'main_page.html'
 SEARCH_RESULTS_TEMPLATE = 'search_results.html'
+SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
-
-#class Greeting(db.Model):
-#  author = db.UserProperty()
-#  content = db.StringProperty(multiline=True)
-#  date = db.DateTimeProperty(auto_now_add=True)
-
+SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 
 def RenderTemplate(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
@@ -41,6 +37,7 @@ class SearchView(webapp.RequestHandler):
   def get(self):
     query = self.request.get('q')
     location = self.request.get('loc')
+    output = self.request.get('output')
 
     result_set = search.Search(query, location)
 
@@ -54,5 +51,10 @@ class SearchView(webapp.RequestHandler):
         'location': location,
       }
 
-    self.response.out.write(RenderTemplate(SEARCH_RESULTS_TEMPLATE,
-                                           template_values))
+    if output == "rss":
+      self.response.out.write(RenderTemplate(SEARCH_RESULTS_RSS_TEMPLATE,
+                                             template_values))
+    else:
+      # html output
+      self.response.out.write(RenderTemplate(SEARCH_RESULTS_TEMPLATE,
+                                             template_values))
