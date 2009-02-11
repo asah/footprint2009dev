@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Footprint search results</title>
+<link></link>
+<atom:link href="{{ query_url_encoded }}" rel="self" type="application/rss+xml" />
+<description>Footprint - blah blah blah</description>
+<language>en-us</language>
+<pubDate>Tue, 10 Feb 2009 17:35:24 PST</pubDate>  <!-- TODO -->
+<lastBuildDate>Tue, 10 Feb 2009 17:35:23 PST</lastBuildDate>  <!-- TODO -->
+{% include 'snippets_list.rss' %}
+</channel>
+</rss>
