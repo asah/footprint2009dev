@@ -31,7 +31,7 @@ def Search(query, location):
   location_param = '[location: @"%s" + 5mi]' % location
 #  link_param = '[link: idealist]'
   link_param = ''
-  base_query = 'volunteer %s %s' % (location_param, link_param)
+  base_query = 'volunteer %s %s %s' % (query, location_param, link_param)
 
   url_params = urllib.urlencode({'max-results': '10',
                                  'bq': base_query })
