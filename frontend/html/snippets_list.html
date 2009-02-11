@@ -1,0 +1,13 @@
+{% for result in results %}
+  <p class='snippet'>
+    <div class='snippet_title'>
+      <a href='{{ result.url }}'>{{ result.title }}</a>
+    </div>
+    <div class='snippet_text'>
+      {{ result.snippet }}
+    </div>
+    <div class='snippet_url'>
+      <a href='{{ result.url }}'>{{ result.url }}</a>
+    </div>
+  </p>
+{% endfor %}
