@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema version="0.1" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="yesNoEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Yes"/>
+      <xs:enumeration value="No"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="durationUnitEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Y"/>
+      <xs:enumeration value="M"/>
+      <xs:enumeration value="W"/>
+      <xs:enumeration value="D"/>
+      <xs:enumeration value="H"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sexRestrictedEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Female"/>
+      <xs:enumeration value="Male"/>
+      <xs:enumeration value="Neither"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="locationType">
+    <xs:sequence>
+      <xs:element name="virtual" type="yesNoEnum" minOccurs="0" />
+      <xs:element name="name" type="xs:string" minOccurs="0"/>   
+      <xs:element name="streetAddress1" type="xs:string" minOccurs="0"/>   
+      <xs:element name="streetAddress2" type="xs:string" minOccurs="0"/>   
+      <xs:element name="streetAddress3" type="xs:string" minOccurs="0"/>
+      <xs:element name="city" type="xs:string" minOccurs="0"/>
+      <xs:element name="region" type="xs:string" minOccurs="0"/>
+      <xs:element name="postalCode" type="xs:string" minOccurs="0"/>
+      <xs:element name="country" type="xs:string" minOccurs="0"/>
+      <xs:element name="directions" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="dateTimeDurationType">
+    <xs:sequence>
+      <xs:element name="openEnded" type="yesNoEnum" minOccurs="0"/>
+      <xs:element name="startDate" type="xs:date" minOccurs="0"/>
+      <xs:element name="endDate" type="xs:date" minOccurs="0"/>
+      <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0"/>
+      <xs:element name="durationQuantity" type="xs:integer" minOccurs="0"/>
+      <xs:element name="durationUnit" type="durationUnitEnum" minOccurs="0"/>
+      <xs:element name="startTime" type="xs:time" minOccurs="0"/>
+      <xs:element name="endTime" type="xs:time" minOccurs="0"/>
+      <xs:element name="tzOlsonPath" type="xs:string" minOccurs="0"/>
+      <xs:element name="commitmentHoursPerWeek" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+    
+  <xs:element name="FootprintFeed">
+    <xs:complexType>
+        <xs:sequence>
+
+          <xs:element name="FeedInfo">
+            <xs:complexType>
+              <xs:all>
+                <xs:element name="providerID" type="xs:integer" />
+                <xs:element name="providerName" type="xs:string" />
+                <xs:element name="createdDateTime" type="xs:dateTime" />
+                <xs:element name="feedID" minOccurs="0" type="xs:integer" />
+                <xs:element name="providerURL" minOccurs="0" type="xs:string" />
+                <xs:element name="description" minOccurs="0" type="xs:string" />
+              </xs:all>
+            </xs:complexType>
+          </xs:element>
+
+
+          <xs:element name="Organizations" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Organization" minOccurs="0" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="organizationID" type="xs:integer" />
+                      <xs:element name="nationalEIN" type="xs:string" minOccurs="0"/>
+                      <xs:element name="guidestarID" type="xs:integer" minOccurs="0"/>
+                      <xs:element name="name" type="xs:string" />
+                      <xs:element name="missionStatement" type="xs:string" minOccurs="0" />
+                      <xs:element name="description" type="xs:string" minOccurs="0" />
+                      <xs:element name="location" type="locationType" minOccurs="0" />
+                      <xs:element name="phone" type="xs:string" minOccurs="0" />
+                      <xs:element name="fax" type="xs:string" minOccurs="0" />
+                      <xs:element name="email" type="xs:string" minOccurs="0" />
+                      <xs:element name="organizationURL" type="xs:string" minOccurs="0" />
+                      <xs:element name="logoURL" type="xs:string" minOccurs="0" />
+                      <xs:element name="providerURL" type="xs:string" minOccurs="0" />
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element> 
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element> 
+                      
+          <xs:element name="Opportunities" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>          
+                <xs:element name="Opportunity" minOccurs="0" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:sequence>          
+                      <xs:element name="opportunityID" type="xs:integer" />
+                      <xs:element name="organizationID" type="xs:integer" minOccurs="0"/>
+                      <xs:element name="title" type="xs:string" />
+                      <xs:element name="abstract" type="xs:string" minOccurs="0" />
+                      <xs:element name="volunteersSlots" type="xs:integer" minOccurs="0" />
+                      <xs:element name="volunteersFilled" type="xs:integer" minOccurs="0" />
+                      <xs:element name="volunteersStillNeeded" type="xs:integer" minOccurs="0" />
+                      <xs:element name="dateTimeDurations">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="dateTimeDuration" type="dateTimeDurationType" minOccurs="0" maxOccurs="unbounded" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="locations">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="location" type="locationType" minOccurs="0" maxOccurs="unbounded" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="paid" type="yesNoEnum" minOccurs="0" />
+                      <xs:element name="audiences" minOccurs="0">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="audience" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="categories" minOccurs="0">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="category" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="minimumAge" type="xs:integer" minOccurs="0" />
+                      <xs:element name="sexRestritedTo" type="sexRestrictedEnum" minOccurs="0" />
+                      <xs:element name="skills" type="xs:string" minOccurs="0" />
+                      <xs:element name="contactName" type="xs:string" minOccurs="0" />
+                      <xs:element name="contactPhone" type="xs:string" minOccurs="0" />
+                      <xs:element name="contactEmail" type="xs:string" minOccurs="0" />
+                      <xs:element name="providerURL" type="xs:string" minOccurs="0" />
+                      <xs:element name="language" type="xs:string" minOccurs="0" />
+                      <xs:element name="description" type="xs:string" minOccurs="0" />
+                      <xs:element name="lastUpdated" type="xs:dateTime" minOccurs="0" />
+                      <xs:element name="expires" type="xs:dateTime" minOccurs="0" />
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element> 
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element> 
+          
+                      
+        </xs:sequence>
+        <xs:attribute fixed="0.1" name="schemaVersion" type="xs:decimal" use="required" />
+    </xs:complexType>  
+  </xs:element>
+</xs:schema>
+
