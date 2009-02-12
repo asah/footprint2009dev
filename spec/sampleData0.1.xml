@@ -1,0 +1,148 @@
+<?xml version="1.0" ?>
+<FootprintFeed schemaVersion="0.1">
+ <FeedInfo>
+  <providerID>1</providerID>
+  <providerName>Volunteer Match</providerName>
+  <createdDateTime>2008-12-30T09:30:10.5</createdDateTime>
+  <providerURL>http://www.volunteermatch.org</providerURL>
+ </FeedInfo>
+
+ <Organizations>
+  <Organization>
+   <organizationID>1</organizationID>
+   <nationalEIN>123456789</nationalEIN>
+   <guidestarID>3421</guidestarID>
+   <name>MicroMentor | An initiative of Mercy Corps</name>
+   <missionStatement>MicroMentor's mission is to help underserved entrepreneurs increase business revenues and navigate the opportunities and challenges of running a small business.</missionStatement>
+   <description>MicroMentor, a Mercy Corps initiative, helps entrepreneurs grow their businesses through mentoring relationships with experienced business professionals. Our mentors volunteer their time to meaningfully impact the lives of those new to the world of small business.</description>
+   <location>
+    <city>Portland</city>
+    <region>OR</region>
+    <postalCode>97232</postalCode>
+   </location>
+   <organizationURL>http://www.micromentor.org</organizationURL>
+   <logoURL>http://www.micromentor.org/images/MM_LogoTag.gif</logoURL>
+   <providerURL>http://www.volunteermatch.org/search/org28450.jsp</providerURL>
+  </Organization>
+
+  <Organization>
+   <organizationID>2</organizationID>
+   <nationalEIN>133456789</nationalEIN>
+   <guidestarID>3321</guidestarID>
+   <name>QUIXOTE QUEST</name>
+   <missionStatement>Believing in the personal development achieved through youth volunteerism, Quixote Quest, a non-school based volunteer club, engages teenagers in meaningful community service, while enriching the experience through peer support, mentoring, and Service Learning.</missionStatement>
+   <description>Quixote Quest is a community based service club for South Jersey teens. The organization assists and mentors the teen volunteer as he/she donates service hours to a community cause of their choice. Teens volunteer their time to a weekly project during the school year, and then come together as a group through club meetings twice monthly. This service takes a major commitment and is suitable for only those driven to "make a difference."</description>
+   <location>
+    <city>Bellmawr</city>
+    <region>NJ</region>
+    <postalCode>08031</postalCode>
+   </location>
+   <providerURL>http://www.volunteermatch.org/search/org25790.jsp</providerURL>
+  </Organization>
+ </Organizations>
+
+ <Opportunities>  
+  <Opportunity>
+   <opportunityID>1001</opportunityID>
+   <organizationID>1</organizationID>
+   <title>Be a Business Mentor - Trenton, NJ &amp; Beyond</title>
+   <dateTimeDurations>
+    <dateTimeDuration>
+     <openEnded>Yes</openEnded>
+     <durationQuantity>6</durationQuantity>
+     <durationUnit>M</durationUnit>
+     <commitmentHoursPerWeek>4</commitmentHoursPerWeek>
+    </dateTimeDuration>
+   </dateTimeDurations>
+   <locations>
+    <location>
+     <city>Trenton</city>
+     <region>NJ</region>
+     <postalCode>08608</postalCode>
+    </location>
+   </locations>
+   <categories>
+    <category>Community</category>
+    <category>Computers &amp; Technology</category>
+    <category>Employment</category>
+   </categories>
+   <minimumAge>21</minimumAge>
+   <skills>In order to maintain the integrity of the MicroMentor program, we require that our Mentor volunteers have significant business experience and expertise, such as: 3 years of business ownership experience</skills>
+   <providerURL>http://www.volunteermatch.org/search/index.jsp?l=08540</providerURL>
+   <description>This is where you come in. Simply by sharing your business know-how, you can make a huge difference in the lives of entrepreneurs from low-income and marginalized communities, helping them navigate the opportunities and challenges of running a business and improving their economic well-being and creating new jobs where they are most needed.</description>
+  </Opportunity>
+
+
+  <Opportunity>
+   <opportunityID>2001</opportunityID>
+   <organizationID>2</organizationID>
+   <title>DODGEBALL TO HELP AREA HUNGRY</title>
+   <dateTimeDurations>
+    <dateTimeDuration>
+     <openEnded>No</openEnded>
+     <startDate>2009-02-22</startDate>
+     <endDate>2009-02-22</endDate>
+     <startTime>13:45:00</startTime>
+     <endTime>16:00:00</endTime>
+     <tzOlsonPath>America/New_York</tzOlsonPath>
+    </dateTimeDuration>
+   </dateTimeDurations>
+   <locations>
+    <location>
+     <city>West Windsor</city>
+     <region>NJ</region>
+     <postalCode>08550</postalCode>
+    </location>
+   </locations>
+   <audiences>
+    <audience>Teens</audience>
+    <audience>High School Students</audience>
+   </audiences>
+   <categories>
+    <category>Community</category>
+    <category>Homeless &amp; Hungry</category>
+    <category>Hunger</category>
+   </categories>
+   <minimumAge>14</minimumAge>
+   <skills>Must be in High School</skills>
+   <providerURL>http://www.volunteermatch.org/search/opp451561.jsp</providerURL>
+   <description>The Mercer County Quixote Quest Teen Volunteer Club is hosting a FUN Dodgeball Tournament at Mercer County College on Sunday afternoon, February 22nd. The proceeds from the event will bebefit the Trenton Area Soup Kitchen. Teens are invited to enter a team of six...with at least three female players (3 guys and 3 girls or more girls). Each team playing will bring a $50 entry fee and a matching sponsor donation of $50. (Total of $100 from each team).</description>
+   <lastUpdated>2009-02-02T14:02:01</lastUpdated>
+  </Opportunity>
+
+  <Opportunity>
+   <opportunityID>2002</opportunityID>
+   <organizationID>2</organizationID>
+   <title>YOUNG ADULT TO HELP GUIDE MERCER COUNTY TEEN VOLUNTEER CLUB</title>
+   <volunteersSlots>2</volunteersSlots>
+   <volunteersFilled>0</volunteersFilled>
+   <dateTimeDurations>
+    <dateTimeDuration>
+     <openEnded>No</openEnded>
+     <startDate>2009-01-01</startDate>
+     <endDate>2009-05-31</endDate>
+     <iCalRecurrence>FREQ=WEEKLY;INTERVAL=2</iCalRecurrence>
+     <commitmentHoursPerWeek>2</commitmentHoursPerWeek>
+    </dateTimeDuration>
+   </dateTimeDurations>
+   <locations>
+    <location>
+     <city>Mercer County</city>
+     <region>NJ</region>
+    <postalCode>08610</postalCode>
+    </location>
+   </locations>
+   <audiences>
+    <audience>Teens</audience>
+   </audiences>
+   <categories>
+    <category>Community</category>
+    <category>Children &amp; Youth</category>
+   </categories>
+   <skills>Be interested in promoting youth volunteerism. Be available two Tuesday evenings per month.</skills>
+   <providerURL>http://www.volunteermatch.org/search/opp200517.jsp</providerURL>
+   <description>Quixote Quest is a volunteer club for teens who have a passion for community service. The teens each volunteer for their own specific cause. Twice monthly, the club meets. At the club meetings the teens from different high schools come together for two hours to talk about their volunteer experiences and spend some hang-out time together that helps them bond as fraternity...family. Quixote Quest is seeking young adults roughly between 20 and 30 years of age who would be interested in being a guide and advisor to the teens during these two evening meetings a month.</description>
+   <lastUpdated>2008-12-02T14:02:01</lastUpdated>
+  </Opportunity>
+ </Opportunities>
+</FootprintFeed>
