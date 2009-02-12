@@ -61,3 +61,48 @@ body {
 #search_bar {
   margin: 16px 8px 16px 8px;
 }
+
+
+/*
+ * NOTE: I don't really know what I'm doing here in terms of css. 
+ * It all looks nice on my box but is definitely not cross browser 
+ * and cross screen size friendly!
+ **/
+.right_pane {
+  float: left;
+  width: 200px;
+  background-color: #ECF3F8; 
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  height: 100%;
+}
+
+.left_pane {
+  margin-top: 10px;
+  padding: 10px;
+  padding-top: 0px;
+  float: left;
+  width: 550px;
+}
+
+.pane_title {
+  font-weight: bold;
+  color: #2475B6;
+}
+
+.member_row0, 
+.member_row1 {
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color: white;
+}
+
+.member_row0 {
+  background-color: #ECF3F8; 
+}
+
+.member_photo {
+  width: 45px;
+  height: 45px;
+}
