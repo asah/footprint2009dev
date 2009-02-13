@@ -81,6 +81,7 @@
                       <xs:element name="fax" type="xs:string" minOccurs="0" />
                       <xs:element name="email" type="xs:string" minOccurs="0" />
                       <xs:element name="organizationURL" type="xs:string" minOccurs="0" />
+                      <xs:element name="donateURL" type="xs:string" minOccurs="0" />
                       <xs:element name="logoURL" type="xs:string" minOccurs="0" />
                       <xs:element name="detailURL" type="xs:string" minOccurs="0" />
                     </xs:sequence>
@@ -107,6 +108,7 @@
                       <xs:element name="fax" type="xs:string" minOccurs="0" />
                       <xs:element name="email" type="xs:string" minOccurs="0" />
                       <xs:element name="volunteerHubURL" type="xs:string" minOccurs="0" />
+                      <xs:element name="donateURL" type="xs:string" minOccurs="0" />
                       <xs:element name="logoURL" type="xs:string" minOccurs="0" />
                       <xs:element name="detailURL" type="xs:string" minOccurs="0" />
                     </xs:sequence>
