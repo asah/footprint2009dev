@@ -49,8 +49,7 @@
       <xs:element name="startDate" type="xs:date" minOccurs="0"/>
       <xs:element name="endDate" type="xs:date" minOccurs="0"/>
       <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0"/>
-      <xs:element name="durationQuantity" type="xs:integer" minOccurs="0"/>
-      <xs:element name="durationUnit" type="durationUnitEnum" minOccurs="0"/>
+      <xs:element name="duration" type="xs:duration" minOccurs="0"/>
       <xs:element name="startTime" type="xs:time" minOccurs="0"/>
       <xs:element name="endTime" type="xs:time" minOccurs="0"/>
       <xs:element name="tzOlsonPath" type="xs:string" minOccurs="0"/>
