@@ -145,7 +145,7 @@
                         </xs:complexType>
                       </xs:element>
                       <xs:element name="minimumAge" type="xs:integer" minOccurs="0" />
-                      <xs:element name="sexRestritedTo" type="sexRestrictedEnum" minOccurs="0" />
+                      <xs:element name="sexRestrictedTo" type="sexRestrictedEnum" minOccurs="0" />
                       <xs:element name="skills" type="xs:string" minOccurs="0" />
                       <xs:element name="contactName" type="xs:string" minOccurs="0" />
                       <xs:element name="contactPhone" type="xs:string" minOccurs="0" />
