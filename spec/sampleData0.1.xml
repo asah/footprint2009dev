@@ -22,7 +22,7 @@
    </location>
    <organizationURL>http://www.micromentor.org</organizationURL>
    <logoURL>http://www.micromentor.org/images/MM_LogoTag.gif</logoURL>
-   <providerURL>http://www.volunteermatch.org/search/org28450.jsp</providerURL>
+   <detailURL>http://www.volunteermatch.org/search/org28450.jsp</detailURL>
   </Organization>
 
   <Organization>
@@ -37,7 +37,7 @@
     <region>NJ</region>
     <postalCode>08031</postalCode>
    </location>
-   <providerURL>http://www.volunteermatch.org/search/org25790.jsp</providerURL>
+   <detailURL>http://www.volunteermatch.org/search/org25790.jsp</detailURL>
   </Organization>
  </Organizations>
 
@@ -67,7 +67,7 @@
    </categories>
    <minimumAge>21</minimumAge>
    <skills>In order to maintain the integrity of the MicroMentor program, we require that our Mentor volunteers have significant business experience and expertise, such as: 3 years of business ownership experience</skills>
-   <providerURL>http://www.volunteermatch.org/search/index.jsp?l=08540</providerURL>
+   <detailURL>http://www.volunteermatch.org/search/index.jsp?l=08540</detailURL>
    <description>This is where you come in. Simply by sharing your business know-how, you can make a huge difference in the lives of entrepreneurs from low-income and marginalized communities, helping them navigate the opportunities and challenges of running a business and improving their economic well-being and creating new jobs where they are most needed.</description>
   </Opportunity>
 
@@ -83,7 +83,6 @@
      <endDate>2009-02-22</endDate>
      <startTime>13:45:00</startTime>
      <endTime>16:00:00</endTime>
-     <tzOlsonPath>America/New_York</tzOlsonPath>
     </dateTimeDuration>
    </dateTimeDurations>
    <locations>
@@ -104,7 +103,7 @@
    </categories>
    <minimumAge>14</minimumAge>
    <skills>Must be in High School</skills>
-   <providerURL>http://www.volunteermatch.org/search/opp451561.jsp</providerURL>
+   <detailURL>http://www.volunteermatch.org/search/opp451561.jsp</detailURL>
    <description>The Mercer County Quixote Quest Teen Volunteer Club is hosting a FUN Dodgeball Tournament at Mercer County College on Sunday afternoon, February 22nd. The proceeds from the event will bebefit the Trenton Area Soup Kitchen. Teens are invited to enter a team of six...with at least three female players (3 guys and 3 girls or more girls). Each team playing will bring a $50 entry fee and a matching sponsor donation of $50. (Total of $100 from each team).</description>
    <lastUpdated>2009-02-02T14:02:01</lastUpdated>
   </Opportunity>
@@ -113,8 +112,7 @@
    <opportunityID>2002</opportunityID>
    <organizationID>2</organizationID>
    <title>YOUNG ADULT TO HELP GUIDE MERCER COUNTY TEEN VOLUNTEER CLUB</title>
-   <volunteersSlots>2</volunteersSlots>
-   <volunteersFilled>0</volunteersFilled>
+   <volunteersNeeded>3</volunteersNeeded>
    <dateTimeDurations>
     <dateTimeDuration>
      <openEnded>No</openEnded>
@@ -139,7 +137,7 @@
     <category>Children &amp; Youth</category>
    </categories>
    <skills>Be interested in promoting youth volunteerism. Be available two Tuesday evenings per month.</skills>
-   <providerURL>http://www.volunteermatch.org/search/opp200517.jsp</providerURL>
+   <detailURL>http://www.volunteermatch.org/search/opp200517.jsp</detailURL>
    <description>Quixote Quest is a volunteer club for teens who have a passion for community service. The teens each volunteer for their own specific cause. Twice monthly, the club meets. At the club meetings the teens from different high schools come together for two hours to talk about their volunteer experiences and spend some hang-out time together that helps them bond as fraternity...family. Quixote Quest is seeking young adults roughly between 20 and 30 years of age who would be interested in being a guide and advisor to the teens during these two evening meetings a month.</description>
    <lastUpdated>2008-12-02T14:02:01</lastUpdated>
   </Opportunity>
