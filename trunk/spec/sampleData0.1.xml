@@ -49,8 +49,7 @@
    <dateTimeDurations>
     <dateTimeDuration>
      <openEnded>Yes</openEnded>
-     <durationQuantity>6</durationQuantity>
-     <durationUnit>M</durationUnit>
+     <duration>P6M</duration>
      <commitmentHoursPerWeek>4</commitmentHoursPerWeek>
     </dateTimeDuration>
    </dateTimeDurations>
