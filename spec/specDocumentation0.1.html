@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Documentation for Footprint XML Specification, Version 1.0</title>
+</head>
+<body>
+<center><h2>Documentation for Footprint XML Specification, Version 1.0</head>
+</h2></center>
+<b>Introduction</b><p>
+The Footprint XML Specification is design for easy delivery of volunteer opportunities that are collected by aggregating organizations (e.g., VolunteerMatch, Idealist). These organizations are referred to as "providers" as they provide opportunity information to the Footprint project. Footprint's goal is to organize these opportunities in one place and direct web traffic back to the provider when a user locates a suitable opportunity.<p>
+Overall, there are four main stand-alone objects: the FeedInfo, Organization, VolunteerHub, and Opportunity. The provider is the source of infomation for the FeedInfo object; this object specifies the details of the feed being transmitted to Footprint. The Organization object specificies the details of a group that organizes opprotunities (e.g., Habbitat for Humanity). The VolunteerHub object specifies the details of a local organization that coordinates local opportunities from various organization. The Opportunity object specifies the details of a volunteer opportunity and usually links to either an Organization or VolunteerHub object (or both).<p>
+The spec is based on several existing xml specifications (specifically the specs developed by Network for Good, VolunteerMatch, and 1-800-Volunteer). The major difference is that volunteer organizations and hubs are stand-along objects to which opportinities refer, thus saving space in the xml document. For instance, if Habbitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habbitat Organization object and 100 Opportunity objects, rather than 100 of each. Another difference is the use of the iCal <a href="">Recurrence Rule</a> format so that repeating opportunities need use multiple dateTimeRecurrance sub-ojects to represent one opportnty.<p>
+<p>
+<b>Top-level Object: FootprintFeed</b><p>
+The top-level object is FootprintFeed and requires a schemaVersion attribute. Thus, a feed would be wrapped in the following XML:<p>
+&lt;?xml version="1.0" ?&gt;<br>
+&lt;FootprintFeed schemaVersion="0.1"&gt;<br>
+...<br>
+&lt;/FootprintFeed&gt;<br>
+
+<b>FeedInfo Object</b><p>
+The FeedInfo object contains the information about the feed being delivered from the provider.<br>Notes:
+<ul>
+<li><b>providerID</b>: A unique ID for the provider organization. Assigned by Footprint.
+<br><li><b>feedID</b>: Only needed is the provider delivers multiple, mutually exclusive feeds. Parsers should default this value to 0.
+<br><li><b>createdDateTime</b>: The date+time+timezone that this specific iteration of the feed was created.
+<br><li><b>providerURL</b>: A URL to the provider organization's homepage. Optional.
+<br><li><b>description</b>: Any notes about the feed; perhaps copyright or terms of use. Optional.</ul><p>
+
+<b>Organization and VolunteerHub Objects</b><p>
+The Organization and VolunteerHub objects are very similar and are documented together. The distinction between the two objects is that Organization objects represent the organization who sponsors/conducts an opportunity. Most opportunities will have an associated organization. In contrast, a VolunteerHub object represents a group that coordinates many local opportunities conducted by several organization. A minority of opportunities will have a volunteer hub associated with them. They are wrapped in an Organizations or a VolunteerHubs object, respectively.<br>Notes:
+<ul>
+<li><b>organizationID and volunteerHubID</b>: Unique ID within the feed. Required. Would be helpful if it were constant across feeds from one provider.
+<li><b>phone fax and email</b>: Most providers will not release this information, instead choosing to populate the detailURL field.
+<li><b>organizationURL and volunteerHub URL</b>: Link to organization or hub's homepage.
+<li><b>logoURL</b>: Unclear on what the dimension requirements are.
+<li><b>detailURL</b>: Links to the page on the provider's website that displays detailed info about the organization or volunteer hub.
+</ul>
+
+<b>Opportunity Object</b><p>
+The Opportunity object represents a volunteer opportunity. Wrapped in an Opptunities object. Order does not matter.<br>Notes:
+<ul>
+<li><b>opportunityID</b>: Unique ID within the feed. Required.
+<br><li><b>organizationID and volunteerHubID</b>: Link to the Organization and/or VolunteerHub objects that relate to this opporunity (via the organizationID and volunteerHubID fields in those objects).
+<br><li><b>title, abstract, and description</b>: Increasinly long descriptions of the opportunity. Title required; other two optional.
+<br><li><b>volunteersNeeded</b>: How many volunteers are needed for this opportunity. May not be up to date as volunteers sign up. Optional.
+<br><li><b>dateTimeDurations</b>: A wrapper around one or more dateTimeDuration sub-objects. See the sub-object documentation below. Given the recurrence field in dateTimeDuration sub-oject, the vast majority of cases should only need one dateTimDuration sub-object.  Order does not matter.
+<br><li><b>locations</b>: A wrapper around one or more location sub-object. See documentation below. The city/region/postalCode of the first location determines the default timezone of the opportunity. Other than that exception, order does not matter.
+<br><li><b>paid</b>: Does the opportunity pay volunteers. Domain: Yes, No. Optional; parser defaults to No.
+<br><li><b>audiences</b>: A wrapper for one or more audience fields. An audience field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the audience field.  Order does not matter. Example:<br>
+&lt;audiences&gt;<br>
+&nbsp;&nbsp; &lt;audience&gt;Teens&lt;/audience&gt;<br>
+&nbsp;&nbsp; &lt;audience&gt;College-aged&lt;/audience&gt;<br>
+&lt;/audiences&gt;
+<br><li><b>categories</b>: A wrapper for one or more category fields. An category field is a short string that describes the opportunity. Key words also belong in multiple cotegory fields. There is no set domain for the category field.  Order does not matter. Example:<br>
+&lt;categories&gt;<br>
+&nbsp;&nbsp; &lt;category&gt;Homeless&lt;/audience&gt;<br>
+&nbsp;&nbsp; &lt;category&gt;Hunger&lt;/audience&gt;<br>
+&nbsp;&nbsp; &lt;category&gt;Weekend opportunity&lt;/audience&gt;<br>
+&lt;/categories&gt;
+<br><li><b>minimumAge</b>: The minimum age of volunteers. Optional.
+<br><li><b>sexRestrictedTo</b>: Is the opportunity restricted to one sex/gender. Domain: Female, Male, Neither (default). Optional.
+<br><li><b>skills</b>: One string of all the skills a volunteer needs. Optional.
+<br><li><b>contactName, contactPhone, contactEmail</b>: Many providers will choose to populate the detailURL instead of these fields. All optional.
+<br><li><b>detailURL</b>: Links to the page on the provider's website that displays detailed info about the opportunity. Optional, but highly recommended for feeds that do not transmit contact info.
+<br><li><b>language</b>: Language of the opportunity. Default: English. Optional.
+<br><li><b>lastUpdated</b>: Date+time+timezone of last update to the opportunity on the provider's site. Optional.
+<br><li><b>expires</b>: Date+time+timezone of when the opportunity expires on the provider's site. Optional.
+</ul><p>
+<b>dateTimeDuration Sub-Object</b><p>
+The dateTimeDuration sub-object represents when an opportunity occurs.<br>Notes:
+<ul>
+<li><b>openEnded</b>: Whether the opportunity is limited by dates. Domain: Yes, No (default). Optional. If Yes, parser igores startDate and endDate fields.
+<br><li><b>startDate and endDate</b>: The start and end of the opportunity. Optional; highly recommended is openEnded is No.
+<br><li><b>iCalRecurrence</b>: String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
+FREQ=WEEKLY;INTERVAL=2
+<br><li><b>duration</b>: The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for siz months). Optional; highly recommended is openEnded is Yes.
+<br><li><b>startTime and endTime</b>: Start and end times for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional. Time zone note: Using the built-in time zone for the xs:time type is recommended. If no time zone is specified, a parser defaults to (1) the time zone of the first location object, or (2) if no location object is present, East Coast time is assumed.
+<br><li><b>commitmentHoursPerWeek</b>: For long-term opportunities, how many hours per week are expected? Integer. Optional.
+
+</ul><p>
+<b>location Sub-Object</b><p>
+The location sub-object represents where an opportunity physically occurs, including if the opportunity is virtual and not physically located anywhere.<br>Notes:
+<ul>
+<li><b>virtual</b>: Is the opportunity virtual (i.e., not physically located anywhere)? Domain: Yes, No (default). Optional.
+<br><li><b>name</b>: Name of physical location. Example: Camelot Elementary School. Optional.
+<br><li><b>streetAddress1, streetAddress2, and streetAddress3</b>: The street address. Optional. Not expected if providers populate the detailURL in the main object.
+<br><li><b>city, region, postalCode</b>: Region is analogous to state; postalCode to zipCode. Optional, but highly recommended if virtual is No. 
+<br><li><b>Country</b>: Optional. Defaults to US.
+<br><li><b>directions</b>: Directions to or special instructions for the location.
+</ul><p>
+
+
+</body>
+
+</html>
