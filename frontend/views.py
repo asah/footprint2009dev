@@ -4,14 +4,17 @@
 import cgi
 import os
 
-from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
+from google.appengine.api import urlfetch
 
 import geocode
 import search
+
+from django.utils import simplejson
+from StringIO import StringIO
 
 TEMPLATE_DIR = 'templates/'
 MAIN_PAGE_TEMPLATE = 'main_page.html'
@@ -63,10 +66,35 @@ class SearchView(webapp.RequestHandler):
 
 class FriendsView(webapp.RequestHandler):
   def get(self):
+    userInfo = self.getUserInfo()
+    userId = ""
+    if userInfo:
+      #we are logged in
+      userId = userInfo['entry']['id']
+      displayName = userInfo['entry']['displayName']
+      thumbnailUrl = userInfo['entry']['thumbnailUrl']
+
     template_values = {
-        'viewer' : 'placeholder',
-        'currentPage' : 'FRIENDS'
+        'currentPage' : 'FRIENDS',
+        'userId': userId
       }
 
     self.response.out.write(RenderTemplate(WORK_WITH_OTHERS_TEMPLATE,
                                            template_values))
+
+  def getUserInfo(self):
+    friendCookie = self.getFriendCookie()
+    if friendCookie:
+      url = 'http://www.google.com/friendconnect/api/people/@viewer/@self?fcauth=' + friendCookie;
+      result = urlfetch.fetch(url)
+      if result.status_code == 200:
+        return simplejson.load(StringIO(result.content))
+
+  def getFriendCookie(self):
+    if 'HTTP_COOKIE' in os.environ:
+      cookies = os.environ['HTTP_COOKIE']
+      cookies = cookies.split('; ')
+      for cookie in cookies:
+        cookie = cookie.split('=')
+        if cookie[0] == '_ps_auth02962301966004179520':
+          return cookie[1]
