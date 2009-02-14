@@ -1,6 +1,7 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
+import hashlib
 from datetime import datetime
 import parse_footprint
 import os
@@ -11,7 +12,7 @@ FIELDSEP = "\t"
 RECORDSEP = "\n"
 
 fieldtypes = {
-  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin",
+  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin","id":"builtin",
   "paid":"boolean","openended":"boolean",
   'opportunityID':'integer','organizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
   'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL',
@@ -94,17 +95,35 @@ def outputField(name, value):
     return name.rjust(22) + " : " + value
   return value
 
-def outputLocationField(node, mapped_name):
+def computeLocationField(node):
   # note: avoid commas, so it works with CSV
   # (this is good enough for the geocoder)
   loc = getTagValue(node, "city") + " "
   loc += getTagValue(node, "region") + " " 
   loc += getTagValue(node, "postalCode")
-  return outputField(mapped_name, loc)
+  return loc
+
+def outputLocationField(node, mapped_name):
+  return outputField(mapped_name, computeLocationField(node))
 
 
 def outputTagValue(node, fieldname):
   return outputField(fieldname, getTagValue(node, fieldname))
+
+def computeStableId(opp, org, locstr, openended, duration,
+                    commitmentHoursPerWeek, startend):
+  eid = getTagValue(org, "nationalEIN");
+  if (eid == ""):
+    # support informal "organizations" that lack EINs
+    eid = getTagValue(org, "organizationURL")
+  # TODO: if two providers have same listing, good odds the
+  # locations will be slightly different...
+  loc = locstr
+
+  # TODO: if two providers have same listing, the time info
+  # is unlikely to be exactly the same, incl. missing fields
+  timestr = openended + duration + commitmentHoursPerWeek + startend
+  return hashlib.md5(eid + loc + timestr).hexdigest()
 
 def getDirectMappedField(opp, org):
   s = FIELDSEP
@@ -168,7 +187,7 @@ def getBaseEventRequiredFields(opp, org):
 
   # link
   s += FIELDSEP
-  s += outputField("link", "http://code.google.com/p/footprint2009dev/")
+  s += outputField("link", "http://change.gov/")
 
   # image_link
   s += FIELDSEP
@@ -189,6 +208,7 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
   if do_printhead:
     global printhead
     printhead = True
+    s += outputField("id", "") + FIELDSEP
     s += outputField("location", "") + FIELDSEP
     s += outputField("openended", "") + FIELDSEP
     s += outputField("duration", "") + FIELDSEP
@@ -233,7 +253,7 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
       if (startDate == ""):
         startDate = "1971-01-01"
         startTime = "00:00:00"
-        startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
+      startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
       if (endDate != ""):
         startend += "/"
         startend += cvtDateTimeToGoogleBase(endDate, endTime, tz)
@@ -241,10 +261,17 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
         recno = recno + 1
         if debug:
           s += "--- record %s\n" % (recno)
-        s += outputLocationField(opploc, "location") + FIELDSEP
+        locstr = computeLocationField(opploc)
+        duration = getTagValue(opptime, "duration")
+        commitmentHoursPerWeek = getTagValue(opptime, "commitmentHoursPerWeek")
+        locstr = computeLocationField(opploc)
+        id = computeStableId(opp, org, locstr, openended, duration,
+                             commitmentHoursPerWeek, startend)
+        s += outputField("id", id) + FIELDSEP
+        s += outputField("location", locstr) + FIELDSEP
         s += outputField("openended", openended) + FIELDSEP
-        s += outputTagValue(opptime, "duration") + FIELDSEP
-        s += outputTagValue(opptime, "commitmentHoursPerWeek") + FIELDSEP
+        s += outputField("duration", duration) + FIELDSEP
+        s += outputField("commitmentHoursPerWeek", commitmentHoursPerWeek) + FIELDSEP
         s += outputField("event_date_range", startend) + FIELDSEP
         s += getBaseEventRequiredFields(opp, org)
         s += getBaseOtherFields(opp, org)
