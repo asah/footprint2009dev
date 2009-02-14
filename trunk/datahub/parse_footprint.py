@@ -40,10 +40,9 @@ known_elnames = {
   'dateTimeDurationType': 1,
   'dateTimeDurations': 1,
   'description': 1,
+  'detailURL': 1,
   'directions': 1,
-  'durationQuantity': 1,
-  'durationUnit': 1,
-  'durationUnitEnum': 1,
+  'duration': 1,
   'email': 1,
   'endDate': 1,
   'endTime': 1,
@@ -87,7 +86,7 @@ known_elnames = {
   'virtual': 1,
   'volunteersFilled': 1,
   'volunteersSlots': 1,
-  'volunteersStillNeeded': 1,
+  'volunteersNeeded': 1,
   'yesNoEnum': 1,
   }
 

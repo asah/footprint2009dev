@@ -10,6 +10,18 @@ import pytz
 FIELDSEP = "\t"
 RECORDSEP = "\n"
 
+fieldtypes = {
+  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "employer":"builtin", "expiration_date":"builtin",
+  "paid":"boolean","openended":"boolean",
+  'opportunityID':'integer','organizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
+  'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL',
+  'lastUpdated':'dateTime','expires':'dateTime',
+  "orgLocation":"location","location":"location",
+  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string",
+}
+
+
+
 def getTagValue(entity, tag):
   #print "----------------------------------------"
   nodes = entity.getElementsByTagName(tag)
@@ -52,7 +64,7 @@ def cvtDateTimeToGoogleBase(datestr, timestr, tz):
   return res
 
 csv_repeated_fields = ['categories','audiences',]
-direct_map_fields = ['opportunityID','organizationID','abstract','volunteersSlots','volunteersFilled','volunteersStillNeeded','minimumAge','sexRestrictedTo','skills','contactName','contactPhone','contactEmail','providerURL','language','lastUpdated','expires',]
+direct_map_fields = ['opportunityID','organizationID','abstract','volunteersSlots','volunteersFilled','volunteersNeeded','minimumAge','sexRestrictedTo','skills','contactName','contactPhone','contactEmail','providerURL','language','lastUpdated','expires',]
 organization_fields = ['nationalEIN','guidestarID','name','missionStatement','description','phone','fax','email','organizationURL','logoURL','providerURL',]
 def value(n):
   if (n.firstChild != None):
@@ -69,7 +81,13 @@ printhead = False
 def outputField(name, value):
   global printhead
   if printhead == True:
-    return name
+    if (name not in fieldtypes):
+      print "no type for field: " + name
+      print fieldtypes[name]
+    elif (fieldtypes[name] == "builtin"):
+      return name
+    else:
+      return "c:"+name+":"+fieldtypes[name]
   if debug:
     if (len(value) > 70):
       value = value[0:67] + "..."
@@ -101,7 +119,7 @@ def getDirectMappedField(opp, org):
     s += outputTagValue(opp, field)
   for field in organization_fields:
     s += FIELDSEP
-    s += outputTagValue(org, field)
+    s += outputField("org_"+field, getTagValue(org, field))
   for field in csv_repeated_fields:
     s += FIELDSEP
     l = opp.getElementsByTagName(field)
@@ -123,39 +141,21 @@ def getDirectMappedField(opp, org):
 # feeds.  Since we're talking about a small overlap, these fields are
 # populated *as well as* direct mapping of the footprint XML fields.
 #
-# gender - The gender of the individual.
 # quantity - Number. Indicate a value of 0 for out-of-stock items.
 # job_function - The function of the employment position., e.g. Product Manager
 # employer - The company providing employment.
-# publish_date - The date the job was published.
+# expiration_date - The date the job was published.
 # 
 def getBaseOtherFields(opp, org):
   s = FIELDSEP
-  # gender
-  s += outputTagValue(opp, "sexRestritedTo")
-  # quantity
+  s += outputField("quantity", getTagValue(opp, "volunteersNeeded"))
   s += FIELDSEP
-  s += outputTagValue(opp, "volunteersStillNeeded")
-  # employer
-  s += FIELDSEP
-  s += outputTagValue(org, "name")
-  # publish_date
-  # TODO: what tz is lastUpdated?
-  s += FIELDSEP
-  pubdate = getTagValue(opp, "lastUpdated")
-  tz = ""
-  if (pubdate == ""):
-    startDate = getTagValue(opp, "startDate")
-    startTime = getTagValue(opp, "startTime")
-    tz = getTagValue(opp, "tzOlsonPath")
-    pubdate = cvtDateTimeToGoogleBase(startDate, startTime, tz)
-  s += outputField("publish_date", pubdate)
-  # expiration_date, in PST
+  s += outputField("employer", getTagValue(org, "name"))
   s += FIELDSEP
   expires = getTagValue(opp, "expires")
   # TODO: what tz is expires?
-  expires = cvtDateTimeToGoogleBase(expires, "", tz)
-  s += outputField("expires", expires)
+  expires = cvtDateTimeToGoogleBase(expires, "", "UTC")
+  s += outputField("expiration_date", expires)
   return s
 
 def getBaseEventRequiredFields(opp, org):
@@ -216,28 +216,39 @@ def convertToGoogleBaseEventsType(xmldoc):
     opp_locations = opp.getElementsByTagName("location")
     opp_times = opp.getElementsByTagName("dateTimeDuration")
     for opptime in opp_times:
-      # event_time_range
-      # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-      startDate = getTagValue(opptime, "startDate")
-      startTime = getTagValue(opptime, "startTime")
-      endDate = getTagValue(opptime, "endDate")
-      endTime = getTagValue(opptime, "endTime")
-      tz = getTagValue(opptime, "tzOlsonPath")
-      # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-      if (startDate == ""):
+      openended = getTagValue(opptime, "openEnded")
+      if (openended == "Yes"):
         startend = ""
-      elif (endDate == ""):
-        startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
       else:
-        startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
-        startend += "/"
-        startend += cvtDateTimeToGoogleBase(endDate, endTime, tz)
+        # event_time_range
+        # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
+        startDate = getTagValue(opptime, "startDate")
+        startTime = getTagValue(opptime, "startTime")
+        endDate = getTagValue(opptime, "endDate")
+        endTime = getTagValue(opptime, "endTime")
+        tz = getTagValue(opptime, "tzOlsonPath")
+        # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
+        if (startDate == ""):
+          startend = ""
+        elif (endDate == ""):
+          startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
+        else:
+          startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
+          startend += "/"
+          startend += cvtDateTimeToGoogleBase(endDate, endTime, tz)
+        if (startend == ""):
+          openended = "Yes"
+        else:
+          openended = "No"
       for opploc in opp_locations:
         recno = recno + 1
         if debug:
           s += "--- record %s\n" % (i)
         s += RECORDSEP
         s += outputLocationField(opploc, "location") + FIELDSEP
+        s += outputField("openended", openended) + FIELDSEP
+        s += outputTagValue(opptime, "duration") + FIELDSEP
+        s += outputTagValue(opptime, "commitmentHoursPerWeek") + FIELDSEP
         s += outputField("event_time_range", startend) + FIELDSEP
         s += getBaseEventRequiredFields(opp, org)
         s += getBaseOtherFields(opp, org)
