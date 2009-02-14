@@ -11,13 +11,13 @@ FIELDSEP = "\t"
 RECORDSEP = "\n"
 
 fieldtypes = {
-  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "employer":"builtin", "expiration_date":"builtin",
+  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin",
   "paid":"boolean","openended":"boolean",
   'opportunityID':'integer','organizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
   'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL',
   'lastUpdated':'dateTime','expires':'dateTime',
   "orgLocation":"location","location":"location",
-  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string",
+  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string"
 }
 
 
@@ -134,17 +134,13 @@ def getDirectMappedField(opp, org):
     s += outputLocationField(l[0], "orgLocation")
   else:
     s += outputField("orgLocation", "")
+
   return s
 
 # these are fields that exist in other Base schemas-- for the sake of
 # possible syndication, we try to make ourselves look like other Base
 # feeds.  Since we're talking about a small overlap, these fields are
 # populated *as well as* direct mapping of the footprint XML fields.
-#
-# quantity - Number. Indicate a value of 0 for out-of-stock items.
-# job_function - The function of the employment position., e.g. Product Manager
-# employer - The company providing employment.
-# expiration_date - The date the job was published.
 # 
 def getBaseOtherFields(opp, org):
   s = FIELDSEP
@@ -152,10 +148,12 @@ def getBaseOtherFields(opp, org):
   s += FIELDSEP
   s += outputField("employer", getTagValue(org, "name"))
   s += FIELDSEP
+  # TODO: publish_date?
   expires = getTagValue(opp, "expires")
   # TODO: what tz is expires?
   expires = cvtDateTimeToGoogleBase(expires, "", "UTC")
   s += outputField("expiration_date", expires)
+
   return s
 
 def getBaseEventRequiredFields(opp, org):
@@ -170,12 +168,11 @@ def getBaseEventRequiredFields(opp, org):
 
   # link
   s += FIELDSEP
-  url = getTagValue(opp, "providerURL")
-  if (url == ""):
-    url = getTagValue(org, "providerURL")
-  if (url == ""):
-    url = getTagValue(org, "organizationURL")
-  s += outputField("link", url)
+  s += outputField("link", "http://code.google.com/p/footprint2009dev/")
+
+  # image_link
+  s += FIELDSEP
+  s += outputField("image_link", getTagValue(org, "logoURL"))
 
   # event_type
   s += FIELDSEP
@@ -184,16 +181,24 @@ def getBaseEventRequiredFields(opp, org):
   return s
 
 
-def convertToGoogleBaseEventsType(xmldoc):
+def convertToGoogleBaseEventsType(xmldoc, do_printhead):
   s = ""
-  global printhead, debug
   recno = 0
+  global debug
 
-  printhead = True
-  s += getBaseEventRequiredFields(xmldoc, xmldoc)
-  s += getBaseOtherFields(xmldoc, xmldoc)
-  s += getDirectMappedField(xmldoc, xmldoc)
-  printhead = False
+  if do_printhead:
+    global printhead
+    printhead = True
+    s += outputField("location", "") + FIELDSEP
+    s += outputField("openended", "") + FIELDSEP
+    s += outputField("duration", "") + FIELDSEP
+    s += outputField("commitmentHoursPerWeek", "") + FIELDSEP
+    s += outputField("event_date_range", "") + FIELDSEP
+    s += getBaseEventRequiredFields(xmldoc, xmldoc)
+    s += getBaseOtherFields(xmldoc, xmldoc)
+    s += getDirectMappedField(xmldoc, xmldoc)
+    s += RECORDSEP
+    printhead = False
 
   organizations = xmldoc.getElementsByTagName("Organization")
   known_orgs = {}
@@ -217,50 +222,81 @@ def convertToGoogleBaseEventsType(xmldoc):
     opp_times = opp.getElementsByTagName("dateTimeDuration")
     for opptime in opp_times:
       openended = getTagValue(opptime, "openEnded")
-      if (openended == "Yes"):
-        startend = ""
-      else:
-        # event_time_range
-        # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-        startDate = getTagValue(opptime, "startDate")
-        startTime = getTagValue(opptime, "startTime")
-        endDate = getTagValue(opptime, "endDate")
-        endTime = getTagValue(opptime, "endTime")
-        tz = getTagValue(opptime, "tzOlsonPath")
-        # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-        if (startDate == ""):
-          startend = ""
-        elif (endDate == ""):
-          startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
-        else:
-          startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
-          startend += "/"
-          startend += cvtDateTimeToGoogleBase(endDate, endTime, tz)
-        if (startend == ""):
-          openended = "Yes"
-        else:
-          openended = "No"
+      # event_date_range
+      # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
+      startDate = getTagValue(opptime, "startDate")
+      startTime = getTagValue(opptime, "startTime")
+      endDate = getTagValue(opptime, "endDate")
+      endTime = getTagValue(opptime, "endTime")
+      tz = getTagValue(opptime, "tzOlsonPath")
+      # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
+      if (startDate == ""):
+        startDate = "1971-01-01"
+        startTime = "00:00:00"
+        startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
+      if (endDate != ""):
+        startend += "/"
+        startend += cvtDateTimeToGoogleBase(endDate, endTime, tz)
       for opploc in opp_locations:
         recno = recno + 1
         if debug:
-          s += "--- record %s\n" % (i)
-        s += RECORDSEP
+          s += "--- record %s\n" % (recno)
         s += outputLocationField(opploc, "location") + FIELDSEP
         s += outputField("openended", openended) + FIELDSEP
         s += outputTagValue(opptime, "duration") + FIELDSEP
         s += outputTagValue(opptime, "commitmentHoursPerWeek") + FIELDSEP
-        s += outputField("event_time_range", startend) + FIELDSEP
+        s += outputField("event_date_range", startend) + FIELDSEP
         s += getBaseEventRequiredFields(opp, org)
         s += getBaseOtherFields(opp, org)
         s += getDirectMappedField(opp, org)
+        s += RECORDSEP
   return s
 
+def ftpActivity():
+  print ".",
 
+def ftpToBase(ftpinfo, s):
+  ftplib = __import__('ftplib')
+  StringIO = __import__('StringIO')
+  fh = StringIO.StringIO(s)
+  host = 'uploads.google.com'
+  (user,passwd) = ftpinfo.split(":")
+  print "connecting to " + host + " as user " + user + "..."
+  ftp = ftplib.FTP(host)
+  print ftp.getwelcome()
+  ftp.login(user, passwd)
+  ftp.storbinary("STOR footprint1.txt", fh, 8192)
+  ftp.quit()
+
+from optparse import OptionParser
 if __name__ == "__main__":
   sys = __import__('sys')
-  fp = __import__('parse_footprint')
-  #debug = True
-  #FIELDSEP = "\n"
-  xmldoc = fp.ParseFootprintXML(sys.argv[1])
-  print convertToGoogleBaseEventsType(xmldoc)
+  parser = OptionParser("usage: %prog [options] sample_data.xml ...")
+  parser.set_defaults(debug=False)
+  parser.add_option("-d", "--dbg", action="store_true", dest="debug")
+  parser.add_option("--ftpinfo", dest="ftpinfo")
+  parser.add_option("--fs", "--fieldsep", action="store", dest="fs")
+  parser.add_option("--rs", "--recordsep", action="store", dest="rs")
+  (options, args) = parser.parse_args(sys.argv[1:])
+  if (len(args) == 0):
+    parser.print_help()
+    exit
+  if options.fs != None:
+    FIELDSEP = options.fs
+  if options.rs != None:
+    RECORDSEP = options.rs
+  if (options.debug):
+    debug = True
+    FIELDSEP = "\n"
+  do_printhead = True
+  s = ""
+  for f in args:
+    xmldoc = parse_footprint.ParseFootprintXML(f)
+    s += convertToGoogleBaseEventsType(xmldoc, do_printhead)
+    do_printhead = False   # only print the first time
+  if (options.ftpinfo):
+    # 'mockingbird', 'ftp2mockingbird')
+    ftpToBase(options.ftpinfo, s)
+  else:
+    print s,
 
