@@ -98,7 +98,7 @@
                 <xs:element name="VolunteerOpportunity" minOccurs="0" maxOccurs="unbounded">
                   <xs:complexType>
                     <xs:sequence>          
-                      <xs:element name="opportunityID" type="xs:integer" />
+                      <xs:element name="volunteerOpportunityID" type="xs:integer" />
                       <xs:element name="sponsoringOrganizationID" type="xs:integer" minOccurs="0"/>
                       <xs:element name="volunteerHubOrganizationID" type="xs:integer" minOccurs="0"/>
                       <xs:element name="title" type="xs:string" />
