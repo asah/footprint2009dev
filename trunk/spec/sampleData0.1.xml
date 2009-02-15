@@ -21,6 +21,7 @@
     <postalCode>97232</postalCode>
    </location>
    <organizationURL>http://www.micromentor.org</organizationURL>
+   <donateURL>http://www.mercycorps.org/charityweb.php?Custom15=wm&amp;Custom16=1,1</donateURL>
    <logoURL>http://www.micromentor.org/images/MM_LogoTag.gif</logoURL>
    <detailURL>http://www.volunteermatch.org/search/org28450.jsp</detailURL>
   </Organization>
@@ -59,7 +60,7 @@
 
  <VolunteerOpportunities>  
   <VolunteerOpportunity>
-   <opportunityID>1001</opportunityID>
+   <volunteerOpportunityID>1001</volunteerOpportunityID>
    <sponsoringOrganizationID>1</sponsoringOrganizationID>
    <volunteerHubOrganizationID>3011</volunteerHubOrganizationID>
    <title>Be a Business Mentor - Trenton, NJ &amp; Beyond</title>
@@ -90,7 +91,7 @@
 
 
   <VolunteerOpportunity>
-   <opportunityID>2001</opportunityID>
+   <volunteerOpportunityID>2001</volunteerOpportunityID>
    <sponsoringOrganizationID>2</sponsoringOrganizationID>
    <title>DODGEBALL TO HELP AREA HUNGRY</title>
    <dateTimeDurations>
@@ -126,7 +127,7 @@
   </VolunteerOpportunity>
 
   <VolunteerOpportunity>
-   <opportunityID>2002</opportunityID>
+   <volunteerOpportunityID>2002</volunteerOpportunityID>
    <sponsoringOrganizationID>2</sponsoringOrganizationID>
    <title>YOUNG ADULT TO HELP GUIDE MERCER COUNTY TEEN VOLUNTEER CLUB</title>
    <volunteersNeeded>3</volunteersNeeded>
