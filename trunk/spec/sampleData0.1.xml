@@ -39,12 +39,29 @@
    </location>
    <detailURL>http://www.volunteermatch.org/search/org25790.jsp</detailURL>
   </Organization>
+  
+  <Organization>
+   <organizationID>3011</organizationID>
+   <nationalEIN>1234589</nationalEIN>
+   <name>The Volunteer Center of Greensboro</name>
+   <description>been helping create a community of caring. We began our mission in 1975 as the Voluntary Action Center of Greensboro, an independent United Way agency.  One short year later, we were honored as a model center for the entire country - the only one selected in North Carolina.  In 1995, we became known as The Volunteer Center of Greensboro, Inc.</description>
+   <location>
+    <city>Greensboro</city>
+    <region>NC</region>
+    <postalCode>27405</postalCode>
+   </location>
+   <organizationURL>http://www.volunteergso.org</organizationURL>
+   <logoURL>http://volunteergso.org/wp-content/themes/acid-green-pro-10/images/vol_center_logo.gif</logoURL>
+   <detailURL>http://www.1-800-volunteer.org/1800Vol/Volunteer_Center_of_Greensboro/vcindex.do</detailURL>
+  </Organization>
+  
  </Organizations>
 
- <Opportunities>  
-  <Opportunity>
+ <VolunteerOpportunities>  
+  <VolunteerOpportunity>
    <opportunityID>1001</opportunityID>
-   <organizationID>1</organizationID>
+   <sponsoringOrganizationID>1</sponsoringOrganizationID>
+   <volunteerHubOrganizationID>3011</volunteerHubOrganizationID>
    <title>Be a Business Mentor - Trenton, NJ &amp; Beyond</title>
    <dateTimeDurations>
     <dateTimeDuration>
@@ -69,12 +86,12 @@
    <skills>In order to maintain the integrity of the MicroMentor program, we require that our Mentor volunteers have significant business experience and expertise, such as: 3 years of business ownership experience</skills>
    <detailURL>http://www.volunteermatch.org/search/index.jsp?l=08540</detailURL>
    <description>This is where you come in. Simply by sharing your business know-how, you can make a huge difference in the lives of entrepreneurs from low-income and marginalized communities, helping them navigate the opportunities and challenges of running a business and improving their economic well-being and creating new jobs where they are most needed.</description>
-  </Opportunity>
+  </VolunteerOpportunity>
 
 
-  <Opportunity>
+  <VolunteerOpportunity>
    <opportunityID>2001</opportunityID>
-   <organizationID>2</organizationID>
+   <sponsoringOrganizationID>2</sponsoringOrganizationID>
    <title>DODGEBALL TO HELP AREA HUNGRY</title>
    <dateTimeDurations>
     <dateTimeDuration>
@@ -106,11 +123,11 @@
    <detailURL>http://www.volunteermatch.org/search/opp451561.jsp</detailURL>
    <description>The Mercer County Quixote Quest Teen Volunteer Club is hosting a FUN Dodgeball Tournament at Mercer County College on Sunday afternoon, February 22nd. The proceeds from the event will bebefit the Trenton Area Soup Kitchen. Teens are invited to enter a team of six...with at least three female players (3 guys and 3 girls or more girls). Each team playing will bring a $50 entry fee and a matching sponsor donation of $50. (Total of $100 from each team).</description>
    <lastUpdated>2009-02-02T14:02:01</lastUpdated>
-  </Opportunity>
+  </VolunteerOpportunity>
 
-  <Opportunity>
+  <VolunteerOpportunity>
    <opportunityID>2002</opportunityID>
-   <organizationID>2</organizationID>
+   <sponsoringOrganizationID>2</sponsoringOrganizationID>
    <title>YOUNG ADULT TO HELP GUIDE MERCER COUNTY TEEN VOLUNTEER CLUB</title>
    <volunteersNeeded>3</volunteersNeeded>
    <dateTimeDurations>
@@ -140,6 +157,6 @@
    <detailURL>http://www.volunteermatch.org/search/opp200517.jsp</detailURL>
    <description>Quixote Quest is a volunteer club for teens who have a passion for community service. The teens each volunteer for their own specific cause. Twice monthly, the club meets. At the club meetings the teens from different high schools come together for two hours to talk about their volunteer experiences and spend some hang-out time together that helps them bond as fraternity...family. Quixote Quest is seeking young adults roughly between 20 and 30 years of age who would be interested in being a guide and advisor to the teens during these two evening meetings a month.</description>
    <lastUpdated>2008-12-02T14:02:01</lastUpdated>
-  </Opportunity>
- </Opportunities>
+  </VolunteerOpportunity>
+ </VolunteerOpportunities>
 </FootprintFeed>

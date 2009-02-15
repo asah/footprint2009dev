@@ -7,8 +7,8 @@
 </h2></center>
 <b>Introduction</b><p>
 The Footprint XML Specification is design for easy delivery of volunteer opportunities that are collected by aggregating organizations (e.g., VolunteerMatch, Idealist). These organizations are referred to as "providers" as they provide opportunity information to the Footprint project. Footprint's goal is to organize these opportunities in one place and direct web traffic back to the provider when a user locates a suitable opportunity.<p>
-Overall, there are four main stand-alone objects: the FeedInfo, Organization, VolunteerHub, and Opportunity. The provider is the source of information for the FeedInfo object; this object specifies the details of the feed being transmitted to Footprint. The Organization object specifies the details of a group that organizes opportunities (e.g., Habitat for Humanity). The VolunteerHub object specifies the details of a local organization that coordinates local opportunities from various organization. The Opportunity object specifies the details of a volunteer opportunity and usually links to either an Organization or VolunteerHub object (or both).<p>
-The spec is based on several existing xml specifications (specifically the specs developed by Network for Good, VolunteerMatch, and 1-800-Volunteer). The major difference is that volunteer organizations and hubs are stand-along objects to which opportunities refer, thus saving space in the xml document. For instance, if Habitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habitat Organization object and 100 Opportunity objects, rather than 100 of each. Another difference is the use of the iCal <a href="">Recurrence Rule</a> format so that repeating opportunities need use multiple dateTimeRecurrance sub-objects to represent one opportunity.<p>
+Overall, there are four main stand-alone objects: the FeedInfo, Organization, and VolunteerOpportunity. The provider is the source of information for the FeedInfo object; this object specifies the details of the feed being transmitted to Footprint. The Organization object specifies the details of a any group involved in the process, whether it be a sponsoring organization or (e.g., Habitat for Humanity) a local volunteer hub that coordinates local opportunities from various organization. The VolunteerOpportunity object specifies the details of a volunteer opportunity and usually links to either at least one Organization (e.g., a sponsoring organization and/or a volunteer hub).<p>
+The spec is based on several existing xml specifications (specifically the specs developed by Network for Good, VolunteerMatch, and 1-800-Volunteer). The major difference is that volunteer organizations and hubs are stand-along objects to which opportunities refer, thus saving space in the xml document. For instance, if Habitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habitat Organization object and 100 VolunteerOpportunity objects, rather than 100 of each. Another difference is the use of the iCal <a href="">Recurrence Rule</a> format so that repeating opportunities need use multiple dateTimeRecurrance sub-objects to represent one opportunity.<p>
 <p>
 <b>Top-level Object: FootprintFeed</b><p>
 The top-level object is FootprintFeed and requires a schemaVersion attribute. Thus, a feed would be wrapped in the following XML:<p>
@@ -26,22 +26,22 @@ The FeedInfo object contains the information about the feed being delivered from
 <br><li><b>providerURL</b>: A URL to the provider organization's homepage. Optional.
 <br><li><b>description</b>: Any notes about the feed; perhaps copyright or terms of use. Optional.</ul><p>
 
-<b>Organization and VolunteerHub Objects</b><p>
-The Organization and VolunteerHub objects are very similar and are documented together. The distinction between the two objects is that Organization objects represent the organization who sponsors/conducts an opportunity. Most opportunities will have an associated organization. In contrast, a VolunteerHub object represents a group that coordinates many local opportunities conducted by several organization. A minority of opportunities will have a volunteer hub associated with them. They are wrapped in an Organizations or a VolunteerHubs object, respectively.<br>Notes:
+<b>Organization Objects</b><p>
+The Organization object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). Organization objects are wrapped in an Organizations.<br>Notes:
 <ul>
-<li><b>organizationID and volunteerHubID</b>: Unique ID within the feed. Required. Would be helpful if it were constant across feeds from one provider.
+<li><b>organizationID</b>: Unique ID within the feed. Required. Would be helpful if it were constant across feeds from one provider.
 <li><b>phone fax and email</b>: Most providers will not release this information, instead choosing to populate the detailURL field.
-<li><b>organizationURL and volunteerHubURL</b>: Link to organization or hub's donation page.
-<li><b>donateURL</b>: Link to organization or hub's homepage.
+<li><b>organizationURL</b>: Link to organization's homepage.
+<li><b>donateURL</b>: Link to organization's donation page.
 <li><b>logoURL</b>: Dimension requirements TBD.
-<li><b>detailURL</b>: Links to the page on the provider's website that displays detailed info about the organization or volunteer hub.
+<li><b>detailURL</b>: Links to the page on the provider's website that displays detailed info about the organization.
 </ul>
 
-<b>Opportunity Object</b><p>
-The Opportunity object represents a volunteer opportunity. Wrapped in an Opptunities object. Order does not matter.<br>Notes:
+<b>VolunteerOpportunity Object</b><p>
+The VolunteerOpportunity object represents a volunteer opportunity. Wrapped in an VolunteerOpportunities object. Order does not matter.<br>Notes:
 <ul>
 <li><b>opportunityID</b>: Unique ID within the feed. Required.
-<br><li><b>organizationID and volunteerHubID</b>: Link to the Organization and/or VolunteerHub objects that relate to this opportunity (via the organizationID and volunteerHubID fields in those objects).
+<br><li><b>sponsoringOrganizationID and volunteerHubOrganizationID</b>: Link to the Organization objects that relate to this opportunity as the sponsoring organization or volunteer hub. Most opportunities will have an associated sponsoringOrganizationID, which funds and/or conducts the opportunity. In contrast, the volunteerHubOrganizationID links to the organization coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them.
 <br><li><b>title, abstract, and description</b>: Increasingly long descriptions of the opportunity. Title required; other two optional.
 <br><li><b>volunteersNeeded</b>: How many volunteers are needed for this opportunity. May not be up to date as volunteers sign up. Optional.
 <br><li><b>dateTimeDurations</b>: A wrapper around one or more dateTimeDuration sub-objects. See the sub-object documentation below. Given the recurrence field in dateTimeDuration sub-object, the vast majority of cases should only need one dateTimDuration sub-object.  Order does not matter.
