@@ -91,44 +91,16 @@
             </xs:complexType>
           </xs:element> 
 
-          <xs:element name="VolunteerHubs" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="VolunteerHub" minOccurs="0" maxOccurs="unbounded">
-                  <xs:complexType>
-                    <xs:sequence>
-                      <xs:element name="volunteerHubID" type="xs:integer" />
-                      <xs:element name="nationalEIN" type="xs:string" minOccurs="0"/>
-                      <xs:element name="guidestarID" type="xs:integer" minOccurs="0"/>
-                      <xs:element name="name" type="xs:string" />
-                      <xs:element name="missionStatement" type="xs:string" minOccurs="0" />
-                      <xs:element name="description" type="xs:string" minOccurs="0" />
-                      <xs:element name="location" type="locationType" minOccurs="0" />
-                      <xs:element name="phone" type="xs:string" minOccurs="0" />
-                      <xs:element name="fax" type="xs:string" minOccurs="0" />
-                      <xs:element name="email" type="xs:string" minOccurs="0" />
-                      <xs:element name="volunteerHubURL" type="xs:string" minOccurs="0" />
-                      <xs:element name="donateURL" type="xs:string" minOccurs="0" />
-                      <xs:element name="logoURL" type="xs:string" minOccurs="0" />
-                      <xs:element name="detailURL" type="xs:string" minOccurs="0" />
-                    </xs:sequence>
-                  </xs:complexType>
-                </xs:element> 
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element> 
-
-
-                      
-          <xs:element name="Opportunities" minOccurs="0">
+                     
+          <xs:element name="VolunteerOpportunities" minOccurs="0">
             <xs:complexType>
               <xs:sequence>          
-                <xs:element name="Opportunity" minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="VolunteerOpportunity" minOccurs="0" maxOccurs="unbounded">
                   <xs:complexType>
                     <xs:sequence>          
                       <xs:element name="opportunityID" type="xs:integer" />
-                      <xs:element name="organizationID" type="xs:integer" minOccurs="0"/>
-                      <xs:element name="volunteerID" type="xs:integer" minOccurs="0"/>
+                      <xs:element name="sponsoringOrganizationID" type="xs:integer" minOccurs="0"/>
+                      <xs:element name="volunteerHubOrganizationID" type="xs:integer" minOccurs="0"/>
                       <xs:element name="title" type="xs:string" />
                       <xs:element name="abstract" type="xs:string" minOccurs="0" />
                       <xs:element name="volunteersNeeded" type="xs:integer" minOccurs="0" />
