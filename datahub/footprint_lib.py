@@ -14,7 +14,7 @@ RECORDSEP = "\n"
 fieldtypes = {
   "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin","id":"builtin",
   "paid":"boolean","openended":"boolean",
-  'opportunityID':'integer','organizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
+  'opportunityID':'integer','organizationID':'integer','sponsoringOrganizationID':'integer','volunteerHubOrganizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
   'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL',
   'lastUpdated':'dateTime','expires':'dateTime',
   "orgLocation":"location","location":"location",
@@ -227,13 +227,13 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
     if (id != ""):
       known_orgs[id] = org
     
-  opportunities = xmldoc.getElementsByTagName("Opportunity")
+  opportunities = xmldoc.getElementsByTagName("VolunteerOpportunity")
   for opp in opportunities:
-    id = getTagValue(opp, "opportunityID")
+    id = getTagValue(opp, "volunteerOpportunityID")
     if (id == ""):
       print "no opportunityID"
       continue
-    org_id = getTagValue(opp, "organizationID")
+    org_id = getTagValue(opp, "sponsoringOrganizationID")
     if (org_id not in known_orgs):
       print "unknown org_id: " + org_id + ".  skipping opportunity " + id
       continue
