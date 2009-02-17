@@ -8,6 +8,18 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="dateTimeWithTimezone">
+    <xs:restriction base="xs:dateTime">
+      <xs:pattern value=".+T.+(Z|[+-].+)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="timeWithTimezone">
+    <xs:restriction base="xs:time">
+      <xs:pattern value=".+(Z|[+-].+)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="sexRestrictedEnum">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Female"/>
@@ -40,8 +52,8 @@
       <xs:element name="endDate" type="xs:date" minOccurs="0"/>
       <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0"/>
       <xs:element name="duration" type="xs:duration" minOccurs="0"/>
-      <xs:element name="startTime" type="xs:time" minOccurs="0"/>
-      <xs:element name="endTime" type="xs:time" minOccurs="0"/>
+      <xs:element name="startTime" type="timeWithTimezone" minOccurs="0"/>
+      <xs:element name="endTime" type="timeWithTimezone" minOccurs="0"/>
       <xs:element name="commitmentHoursPerWeek" type="xs:integer" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
@@ -53,10 +65,10 @@
           <xs:element name="FeedInfo">
             <xs:complexType>
               <xs:all>
-                <xs:element name="providerID" type="xs:integer" />
+                <xs:element name="providerID" type="xs:string" />
                 <xs:element name="providerName" type="xs:string" />
-                <xs:element name="feedID" minOccurs="0" type="xs:integer" />
-                <xs:element name="createdDateTime" type="xs:dateTime" />
+                <xs:element name="feedID" minOccurs="0" type="xs:string" />
+                <xs:element name="createdDateTime" type="dateTimeWithTimezone" />
                 <xs:element name="providerURL" minOccurs="0" type="xs:string" />
                 <xs:element name="description" minOccurs="0" type="xs:string" />
               </xs:all>
@@ -70,7 +82,7 @@
                 <xs:element name="Organization" minOccurs="0" maxOccurs="unbounded">
                   <xs:complexType>
                     <xs:sequence>
-                      <xs:element name="organizationID" type="xs:integer" />
+                      <xs:element name="organizationID" type="xs:string" />
                       <xs:element name="nationalEIN" type="xs:string" minOccurs="0"/>
                       <xs:element name="guidestarID" type="xs:integer" minOccurs="0"/>
                       <xs:element name="name" type="xs:string" />
@@ -98,9 +110,9 @@
                 <xs:element name="VolunteerOpportunity" minOccurs="0" maxOccurs="unbounded">
                   <xs:complexType>
                     <xs:sequence>          
-                      <xs:element name="volunteerOpportunityID" type="xs:integer" />
-                      <xs:element name="sponsoringOrganizationID" type="xs:integer" minOccurs="0"/>
-                      <xs:element name="volunteerHubOrganizationID" type="xs:integer" minOccurs="0"/>
+                      <xs:element name="volunteerOpportunityID" type="xs:string" />
+                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0"/>
+                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0"/>
                       <xs:element name="title" type="xs:string" />
                       <xs:element name="abstract" type="xs:string" minOccurs="0" />
                       <xs:element name="volunteersNeeded" type="xs:integer" minOccurs="0" />
@@ -142,8 +154,8 @@
                       <xs:element name="detailURL" type="xs:string" minOccurs="0" />
                       <xs:element name="language" type="xs:string" minOccurs="0" />
                       <xs:element name="description" type="xs:string" minOccurs="0" />
-                      <xs:element name="lastUpdated" type="xs:dateTime" minOccurs="0" />
-                      <xs:element name="expires" type="xs:dateTime" minOccurs="0" />
+                      <xs:element name="lastUpdated" type="dateTimeWithTimezone" minOccurs="0" />
+                      <xs:element name="expires" type="dateTimeWithTimezone" minOccurs="0" />
                     </xs:sequence>
                   </xs:complexType>
                 </xs:element> 

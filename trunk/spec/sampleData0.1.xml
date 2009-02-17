@@ -3,7 +3,7 @@
  <FeedInfo>
   <providerID>1</providerID>
   <providerName>Volunteer Match</providerName>
-  <createdDateTime>2008-12-30T09:30:10.5</createdDateTime>
+  <createdDateTime>2008-12-30T09:30:10.5-05:00</createdDateTime>
   <providerURL>http://www.volunteermatch.org</providerURL>
  </FeedInfo>
 
@@ -109,16 +109,15 @@
      <openEnded>No</openEnded>
      <startDate>2009-02-22</startDate>
      <endDate>2009-02-22</endDate>
-     <startTime>13:45:00</startTime>
-     <endTime>16:00:00</endTime>
+     <startTime>13:45:00-05:00</startTime>
+     <endTime>16:00:00-05:00</endTime>
     </dateTimeDuration>
     <dateTimeDuration>
      <openEnded>No</openEnded>
      <startDate>2009-02-27</startDate>
      <endDate>2009-02-27</endDate>
-     <startTime>13:45:00</startTime>
-     <endTime>16:00:00</endTime>
-     <tzOlsonPath>America/New_York</tzOlsonPath>
+     <startTime>13:45:00-05:00</startTime>
+     <endTime>16:00:00-05:00</endTime>
     </dateTimeDuration>
    </dateTimeDurations>
    <locations>
@@ -141,7 +140,7 @@
    <skills>Must be in High School</skills>
    <detailURL>http://www.volunteermatch.org/search/opp451561.jsp</detailURL>
    <description>The Mercer County Quixote Quest Teen Volunteer Club is hosting a FUN Dodgeball Tournament at Mercer County College on Sunday afternoon, February 22nd. The proceeds from the event will bebefit the Trenton Area Soup Kitchen. Teens are invited to enter a team of six...with at least three female players (3 guys and 3 girls or more girls). Each team playing will bring a $50 entry fee and a matching sponsor donation of $50. (Total of $100 from each team).</description>
-   <lastUpdated>2009-02-02T14:02:01</lastUpdated>
+   <lastUpdated>2009-02-02T14:02:01-05:00</lastUpdated>
   </VolunteerOpportunity>
 
   <VolunteerOpportunity>
@@ -175,7 +174,7 @@
    <skills>Be interested in promoting youth volunteerism. Be available two Tuesday evenings per month.</skills>
    <detailURL>http://www.volunteermatch.org/search/opp200517.jsp</detailURL>
    <description>Quixote Quest is a volunteer club for teens who have a passion for community service. The teens each volunteer for their own specific cause. Twice monthly, the club meets. At the club meetings the teens from different high schools come together for two hours to talk about their volunteer experiences and spend some hang-out time together that helps them bond as fraternity...family. Quixote Quest is seeking young adults roughly between 20 and 30 years of age who would be interested in being a guide and advisor to the teens during these two evening meetings a month.</description>
-   <lastUpdated>2008-12-02T14:02:01</lastUpdated>
+   <lastUpdated>2008-12-02T14:02:01-05:00</lastUpdated>
   </VolunteerOpportunity>
  </VolunteerOpportunities>
 </FootprintFeed>
