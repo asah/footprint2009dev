@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema version="0.1" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[
+        The Footprint XML Specification is design for easy delivery of volunteer opportunities that are collected by aggregating organizations (e.g., VolunteerMatch, Idealist). These organizations are referred to as "providers" as they provide opportunity information to the Footprint project. Footprint's goal is to organize these opportunities in one place and direct web traffic back to the provider when a user locates a suitable opportunity.<p>
+        Overall, there are four main stand-alone objects: the <code>FeedInfo</code>, <code>Organization</code>, and <code>VolunteerOpportunity</code>. The provider is the source of information for the FeedInfo object; this object specifies the details of the feed being transmitted to Footprint. The Organization object specifies the details of a any group involved in the process, whether it be a sponsoring organization or (e.g., Habitat for Humanity) a local volunteer hub that coordinates local opportunities from various organization. The <code>VolunteerOpportunity</code> object specifies the details of a volunteer opportunity and usually links to either at least one Organization (e.g., a sponsoring organization and/or a volunteer hub).<p>
+        The spec is based on several existing xml specifications (specifically the specs developed by Network for Good, <a href="http://www.volunteermatch.org/schema/2007/2/listings.xsd">VolunteerMatch</a>, and 1-800-Volunteer). The major difference is that volunteer organizations and hubs are stand-along objects to which opportunities refer, thus saving space in the xml document. For instance, if Habitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habitat Organization object and 100 <code>VolunteerOpportunity</code> objects, rather than 100 of each. Another difference is the use of the iCal <a href="">Recurrence Rule</a> format so that repeating opportunities need use multiple <code>dateTimeRecurrance</code> sub-objects to represent one opportunity.<p>
+      ]]>
+    </xs:documentation>
+  </xs:annotation>
 
   <xs:simpleType name="yesNoEnum">
     <xs:restriction base="xs:string">
@@ -31,46 +40,293 @@
 
   <xs:complexType name="locationType">
     <xs:sequence>
-      <xs:element name="virtual" type="yesNoEnum" minOccurs="0" />
-      <xs:element name="name" type="xs:string" minOccurs="0"/>   
-      <xs:element name="streetAddress1" type="xs:string" minOccurs="0"/>   
-      <xs:element name="streetAddress2" type="xs:string" minOccurs="0"/>   
-      <xs:element name="streetAddress3" type="xs:string" minOccurs="0"/>
-      <xs:element name="city" type="xs:string" minOccurs="0"/>
-      <xs:element name="region" type="xs:string" minOccurs="0"/>
-      <xs:element name="postalCode" type="xs:string" minOccurs="0"/>
-      <xs:element name="country" type="xs:string" minOccurs="0"/>
-      <xs:element name="directions" type="xs:string" minOccurs="0"/>
+      <xs:element name="virtual" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+           Is the opportunity virtual (i.e., not physically located anywhere)? Domain: Yes, No (default). Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+        
+      <xs:element name="name" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Name of physical location. Example: Camelot Elementary School. Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+      <xs:element name="streetAddress1" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             First line of street address. Optional. Not expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+            
+      <xs:element name="streetAddress2" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Second line of street address. Optional. Not expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="streetAddress3" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Third line of street address. Optional. Not expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+        
+      <xs:element name="city" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             City of physical location. Optional. Expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+        
+      <xs:element name="region" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Region (e.g., State or Province) of physical location. Optional. Expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="postalCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Postal Code (e.g., zip code) of physical location. Optional. Expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+           
+      <xs:element name="country" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Country. Optional. Defaults to "US".
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="directions" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Directions to or special instructions for the location. Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
     </xs:sequence>
   </xs:complexType>
 
 
   <xs:complexType name="dateTimeDurationType">
     <xs:sequence>
-      <xs:element name="openEnded" type="yesNoEnum" minOccurs="0"/>
-      <xs:element name="startDate" type="xs:date" minOccurs="0"/>
-      <xs:element name="endDate" type="xs:date" minOccurs="0"/>
-      <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0"/>
-      <xs:element name="duration" type="xs:duration" minOccurs="0"/>
-      <xs:element name="startTime" type="timeWithTimezone" minOccurs="0"/>
-      <xs:element name="endTime" type="timeWithTimezone" minOccurs="0"/>
-      <xs:element name="commitmentHoursPerWeek" type="xs:integer" minOccurs="0"/>
+      <xs:element name="openEnded" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Whether the opportunity is limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ignores startDate and endDate fields.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="startDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The start date of the opportunity. Optional; highly recommended if openEnded is No.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="endDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The end date of the opportunity. Optional; highly recommended if openEnded is No.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
+FREQ=WEEKLY;INTERVAL=2
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="duration" type="xs:duration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for siz months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+      <xs:element name="startTime" type="timeWithTimezone" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Start time for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="endTime" type="timeWithTimezone" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             End time for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="commitmentHoursPerWeek" type="xs:integer" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             For long-term opportunities, how many hours per week are expected? Integer. Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
     </xs:sequence>
   </xs:complexType>
     
   <xs:element name="FootprintFeed">
     <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>
+         <![CDATA[
+           The top-level object is <code>FootprintFeed</code> and requires a schemaVersion attribute. Thus, a feed would be wrapped in the following XML:<p><code>
+&lt;?xml version="1.0" ?&gt;<br>
+&lt;FootprintFeed schemaVersion="0.1"&gt;<br>
+...<br>
+&lt;/FootprintFeed&gt;</code><p>
+         ]]>
+        </xs:documentation>
+      </xs:annotation>
+    
         <xs:sequence>
 
           <xs:element name="FeedInfo">
+            <xs:annotation>
+              <xs:documentation>
+               <![CDATA[
+                 The <code>FeedInfo</code> object contains the information about the feed being delivered from the provider.
+               ]]>
+              </xs:documentation>
+            </xs:annotation>
+            
             <xs:complexType>
               <xs:all>
-                <xs:element name="providerID" type="xs:string" />
-                <xs:element name="providerName" type="xs:string" />
-                <xs:element name="feedID" minOccurs="0" type="xs:string" />
-                <xs:element name="createdDateTime" type="dateTimeWithTimezone" />
-                <xs:element name="providerURL" minOccurs="0" type="xs:string" />
-                <xs:element name="description" minOccurs="0" type="xs:string" />
+                <xs:element name="providerID" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        A unique ID for the provider organization. Either a number assigned by Footprint or a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                      
+                <xs:element name="providerName" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        Name of organization providing the feed. Required.
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+
+                <xs:element name="feedID" minOccurs="0" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        Only needed if the provider delivers multiple, mutually exclusive feeds (can be <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>). Optional. Default: "0".
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                
+                <xs:element name="createdDateTime" type="dateTimeWithTimezone">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        The date+time+timezone that this specific iteration of the feed was created. Required.
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+
+                <xs:element name="providerURL" minOccurs="0" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        URL to the provider organization's homepage. Optional.
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+
+                <xs:element name="termsOfUse" minOccurs="0" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        Terms of use. Optional. Recommended.
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+
+                <xs:element name="description" minOccurs="0" type="xs:string">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        Any notes about the feed. Optional. Not recommended.
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                                
               </xs:all>
             </xs:complexType>
           </xs:element>
