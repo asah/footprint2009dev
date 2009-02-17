@@ -74,10 +74,10 @@ The <code>VolunteerOpportunity</code> object represents a volunteer opportunity.
 The <code>dateTimeDuration</code> sub-object represents when an opportunity occurs.<br>Notes:
 <ul>
 <li><b><bcode>openEnded</bcode></b>: Whether the opportunity is limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ingores startDate and endDate fields.
-<br><li><b><bcode>startDate</bcode> and <bcode>endDate</bcode></b>: The start and end of the opportunity. Optional; highly recommended if openEnded is No; ignored if startDate and endDate are populated.
+<br><li><b><bcode>startDate</bcode> and <bcode>endDate</bcode></b>: The start and end of the opportunity. Optional; highly recommended if openEnded is No.
 <br><li><b><bcode>iCalRecurrence</bcode></b>: String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
 FREQ=WEEKLY;INTERVAL=2
-<br><li><b><bcode>duration</bcode></b>: The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for siz months). Optional; highly recommended is openEnded is Yes.
+<br><li><b><bcode>duration</bcode></b>: The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for siz months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
 <br><li><b><bcode>startTime</bcode> and <bcode>endTime</bcode></b>: Start and end times for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
 <br><li><b><bcode>commitmentHoursPerWeek</bcode></b>: For long-term opportunities, how many hours per week are expected? Integer. Optional.
 
