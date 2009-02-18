@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
@@ -14,11 +15,11 @@ RECORDSEP = "\n"
 fieldtypes = {
   "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin","id":"builtin",
   "paid":"boolean","openended":"boolean",
-  'opportunityID':'integer','organizationID':'integer','sponsoringOrganizationID':'integer','volunteerHubOrganizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
-  'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL',
-  'lastUpdated':'dateTime','expires':'dateTime',
+  'providerID':'integer','feed_providerID':'integer','feedID':'integer','opportunityID':'integer','organizationID':'integer','sponsoringOrganizationID':'integer','volunteerHubOrganizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
+  'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL','feed_providerURL':'URL',
+  'lastUpdated':'dateTime','expires':'dateTime','feed_createdDateTime':'dateTime',
   "orgLocation":"location","location":"location",
-  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string"
+  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string","feed_providerName":"string","feed_description":"string",
 }
 
 
@@ -110,6 +111,9 @@ def outputLocationField(node, mapped_name):
 def outputTagValue(node, fieldname):
   return outputField(fieldname, getTagValue(node, fieldname))
 
+def outputTagValueRenamed(node, xmlname, fieldname):
+  return outputField(fieldname, getTagValue(node, xmlname))
+
 def computeStableId(opp, org, locstr, openended, duration,
                     commitmentHoursPerWeek, startend):
   eid = getTagValue(org, "nationalEIN");
@@ -126,7 +130,7 @@ def computeStableId(opp, org, locstr, openended, duration,
   return hashlib.md5(eid + loc + timestr).hexdigest()
 
 def getDirectMappedField(opp, org):
-  s = FIELDSEP
+  s = ""
   paid = getTagValue(opp, "paid")
   if (paid == "" or paid.lower()[0] != "y"):
     paid = "n"
@@ -162,61 +166,56 @@ def getDirectMappedField(opp, org):
 # populated *as well as* direct mapping of the footprint XML fields.
 # 
 def getBaseOtherFields(opp, org):
-  s = FIELDSEP
-  s += outputField("quantity", getTagValue(opp, "volunteersNeeded"))
-  s += FIELDSEP
-  s += outputField("employer", getTagValue(org, "name"))
-  s += FIELDSEP
+  s = outputField("quantity", getTagValue(opp, "volunteersNeeded"))
+  s += FIELDSEP + outputField("employer", getTagValue(org, "name"))
   # TODO: publish_date?
   expires = getTagValue(opp, "expires")
   # TODO: what tz is expires?
   expires = cvtDateTimeToGoogleBase(expires, "", "UTC")
-  s += outputField("expiration_date", expires)
-
+  s += FIELDSEP + outputField("expiration_date", expires)
   return s
 
 def getBaseEventRequiredFields(opp, org):
-  s = ""
-
-  # title
-  s += outputTagValue(opp, "title")
-  s += FIELDSEP
-
-  # description
-  s += outputTagValue(opp, "description")
-
-  # link
-  s += FIELDSEP
-  s += outputField("link", "http://change.gov/")
-
-  # image_link
-  s += FIELDSEP
-  s += outputField("image_link", getTagValue(org, "logoURL"))
-
-  # event_type
-  s += FIELDSEP
-  s += outputField("event_type", "volunteering")
-
+  s = outputTagValue(opp, "title")
+  s += FIELDSEP + outputTagValue(opp, "description")
+  s += FIELDSEP + outputField("link", "http://change.gov/")
+  s += FIELDSEP + outputField("image_link", getTagValue(org, "logoURL"))
+  s += FIELDSEP + outputField("event_type", "volunteering")
   return s
 
+def getFeedFields(feedinfo):
+  s = outputTagValue(feedinfo, "feedID")
+  s += FIELDSEP + outputTagValueRenamed(feedinfo, "providerID", "feed_providerID")
+  s += FIELDSEP + outputTagValueRenamed(feedinfo, "providerName", "feed_providerName")
+  s += FIELDSEP + outputTagValueRenamed(feedinfo, "providerURL", "feed_providerURL")
+  s += FIELDSEP + outputTagValueRenamed(feedinfo, "description", "feed_description")
+  s += FIELDSEP + outputTagValueRenamed(feedinfo, "createdDateTime", "feed_createdDateTime")
+  return s
 
 def convertToGoogleBaseEventsType(xmldoc, do_printhead):
   s = ""
   recno = 0
   global debug
 
+  feedinfos = xmldoc.getElementsByTagName("FeedInfo")
+  if (feedinfos.length != 1):
+    print "bad FeedInfo: should only be one section"
+    exit
+  feedinfo = feedinfos[0]
+
   if do_printhead:
     global printhead
     printhead = True
-    s += outputField("id", "") + FIELDSEP
-    s += outputField("location", "") + FIELDSEP
-    s += outputField("openended", "") + FIELDSEP
-    s += outputField("duration", "") + FIELDSEP
-    s += outputField("commitmentHoursPerWeek", "") + FIELDSEP
-    s += outputField("event_date_range", "") + FIELDSEP
-    s += getBaseEventRequiredFields(xmldoc, xmldoc)
-    s += getBaseOtherFields(xmldoc, xmldoc)
-    s += getDirectMappedField(xmldoc, xmldoc)
+    s += outputField("id", "")
+    s += FIELDSEP + getFeedFields(feedinfo)
+    s += FIELDSEP + getBaseEventRequiredFields(xmldoc, xmldoc)
+    s += FIELDSEP + getBaseOtherFields(xmldoc, xmldoc)
+    s += FIELDSEP + getDirectMappedField(xmldoc, xmldoc)
+    s += FIELDSEP + outputField("location", "")
+    s += FIELDSEP + outputField("openended", "")
+    s += FIELDSEP + outputField("duration", "")
+    s += FIELDSEP + outputField("commitmentHoursPerWeek", "")
+    s += FIELDSEP + outputField("event_date_range", "")
     s += RECORDSEP
     printhead = False
 
@@ -267,15 +266,16 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
         locstr = computeLocationField(opploc)
         id = computeStableId(opp, org, locstr, openended, duration,
                              commitmentHoursPerWeek, startend)
-        s += outputField("id", id) + FIELDSEP
-        s += outputField("location", locstr) + FIELDSEP
-        s += outputField("openended", openended) + FIELDSEP
-        s += outputField("duration", duration) + FIELDSEP
-        s += outputField("commitmentHoursPerWeek", commitmentHoursPerWeek) + FIELDSEP
-        s += outputField("event_date_range", startend) + FIELDSEP
-        s += getBaseEventRequiredFields(opp, org)
-        s += getBaseOtherFields(opp, org)
-        s += getDirectMappedField(opp, org)
+        s += outputField("id", id)
+        s += FIELDSEP + getFeedFields(feedinfo)
+        s += FIELDSEP + getBaseEventRequiredFields(opp, org)
+        s += FIELDSEP + getBaseOtherFields(opp, org)
+        s += FIELDSEP + getDirectMappedField(opp, org)
+        s += FIELDSEP + outputField("location", locstr)
+        s += FIELDSEP + outputField("openended", openended)
+        s += FIELDSEP + outputField("duration", duration)
+        s += FIELDSEP + outputField("commitmentHoursPerWeek", commitmentHoursPerWeek)
+        s += FIELDSEP + outputField("event_date_range", startend)
         s += RECORDSEP
   return s
 
