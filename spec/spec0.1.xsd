@@ -336,7 +336,7 @@ FREQ=WEEKLY;INTERVAL=2
             <xs:annotation>
               <xs:documentation>
                <![CDATA[
-                 The <code>Organizations</code> wraps a set of <code>Organization</code> objects. Order does not matter.
+                 The <code>Organizations</code> object wraps a set of <code>Organization</code> objects. Order does not matter.
                ]]>
               </xs:documentation>
             </xs:annotation>
@@ -430,7 +430,7 @@ FREQ=WEEKLY;INTERVAL=2
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Phone number of organization. Optional. Not expected from most providers.
+                              Phone number (and extension) of organization. Optional. Not expected from most providers.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -505,57 +505,305 @@ FREQ=WEEKLY;INTERVAL=2
 
                      
           <xs:element name="VolunteerOpportunities" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+                <![CDATA[
+                  The <code>VolunteerOpportunities</code> object wraps a set of <code>VolunteerOpportunity</code> objects. Order does not matter.
+                ]]>
+              </xs:documentation>
+            </xs:annotation>
             <xs:complexType>
               <xs:sequence>          
                 <xs:element name="VolunteerOpportunity" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
+                        The <code>VolunteerOpportunity</code> object represents one volunteer opportunity listing. It is capable of representing a repeating or on-going event.
+                        Often an <code>Opportunity</code> object will link to an <code>Organization</code> object via the <sponsoringOrganizationID> or <volunteerHubOrganizationID> fields.
+                      ]]>
+                    </xs:documentation>
+                  </xs:annotation>
                   <xs:complexType>
                     <xs:sequence>          
-                      <xs:element name="volunteerOpportunityID" type="xs:string" />
-                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0"/>
-                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0"/>
-                      <xs:element name="title" type="xs:string" />
-                      <xs:element name="abstract" type="xs:string" minOccurs="0" />
-                      <xs:element name="volunteersNeeded" type="xs:integer" minOccurs="0" />
-                      <xs:element name="dateTimeDurations">
+                      <xs:element name="volunteerOpportunityID" type="xs:string">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Unique ID within the feed. Often a primary key from a database, but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="title" type="xs:string">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Short title of the opportunity. Required.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="abstract" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Abstract of the opportunity. Generally one paragraph. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="volunteersNeeded" type="xs:integer" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Number of volunteers needed. Must be integer. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="dateTimeDurations" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order does not matter. Optional. Highly recommended.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="dateTimeDuration" type="dateTimeDurationType" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="dateTimeDuration" type="dateTimeDurationType" minOccurs="0" maxOccurs="unbounded">
+                              <xs:annotation>
+                                <xs:documentation>
+                                  <![CDATA[
+                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. Optional. Recommended.
+                                  ]]>
+                                </xs:documentation>
+                              </xs:annotation>
+                            </xs:element>
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="locations">
+                      <xs:element name="locations" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order does not matter. Optional. Highly recommended.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="location" type="locationType" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="location" type="locationType" minOccurs="0" maxOccurs="unbounded" >
+                              <xs:annotation>
+                                <xs:documentation>
+                                  <![CDATA[
+                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Optional. Highly recommended.
+                                  ]]>
+                                </xs:documentation>
+                              </xs:annotation>
+                            </xs:element>
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="paid" type="yesNoEnum" minOccurs="0" />
+                      <xs:element name="paid" type="yesNoEnum" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Does the opportunity pay volunteers. Domain is {"Yes" | "No"}. Optional. Defaults to "No".
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
                       <xs:element name="audienceTags" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order does not matter. Example:<br><code>
+                              &lt;audienceTags&gt;<br>
+                              &nbsp;&nbsp; &lt;audienceTag&gt;Teens&lt;/audienceTag&gt;<br>
+                              &nbsp;&nbsp; &lt;audienceTag&gt;College-aged&lt;/audienceTag&gt;<br>
+                              &lt;/audienceTags&gt;</code>
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="audienceTag" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="audienceTag" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                              <xs:annotation>
+                                <xs:documentation>
+                                  <![CDATA[
+                                    String that represents a target audience. No domain. Optional.
+                                  ]]>
+                                </xs:documentation>
+                              </xs:annotation>
+                            </xs:element>
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
                       <xs:element name="categoryTags" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                             A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order does not matter. Example:<br><code>
+                             &lt;categoryTag&gt;<br>
+                             &nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>
+                             &nbsp;&nbsp; &lt;categoryTag&gt;Hunger&lt;/categoryTag&gt;<br>
+                             &nbsp;&nbsp; &lt;categoryTag&gt;Weekend opportunity&lt;/categoryTag&gt;<br>
+                             &lt;/categoryTag&gt;</code>
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="categoryTag" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="categoryTag" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                              <xs:annotation>
+                                <xs:documentation>
+                                  <![CDATA[
+                                    String that represents a category of the opportunity or a key word/phrase of the opportunity. No domain. Optional. Recommended.
+                                  ]]>
+                                </xs:documentation>
+                              </xs:annotation>
+                            </xs:element>                            
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="minimumAge" type="xs:integer" minOccurs="0" />
-                      <xs:element name="sexRestrictedTo" type="sexRestrictedEnum" minOccurs="0" />
-                      <xs:element name="skills" type="xs:string" minOccurs="0" />
-                      <xs:element name="contactName" type="xs:string" minOccurs="0" />
-                      <xs:element name="contactPhone" type="xs:string" minOccurs="0" />
-                      <xs:element name="contactEmail" type="xs:string" minOccurs="0" />
-                      <xs:element name="detailURL" type="xs:string" minOccurs="0" />
-                      <xs:element name="language" type="xs:string" minOccurs="0" />
-                      <xs:element name="description" type="xs:string" minOccurs="0" />
-                      <xs:element name="lastUpdated" type="dateTimeWithTimezone" minOccurs="0" />
-                      <xs:element name="expires" type="dateTimeWithTimezone" minOccurs="0" />
+                      <xs:element name="minimumAge" type="xs:integer" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              The minimum age of volunteers. Optional. Recommended.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="sexRestrictedTo" type="sexRestrictedEnum" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Is the opportunity restricted to one sex/gender. Domain: {"Female" | "Male" | "Neither"}. Default is "Neither". Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="skills" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                               String of all the skills a volunteer needs. One (potentially long) string. Optional. Recommended.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="contactName" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Name of contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="contactPhone" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Phone number (and extension) for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="contactEmail" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Email for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="detailURL" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Links to the page on the provider's website that displays detailed info about the opportunity. Optional. Highly recommended for feeds that do not transmit contact info.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="language" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Language of the opportunity. Default: English. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="description" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Full description of the opportunity. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="lastUpdated" type="dateTimeWithTimezone" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Date+time+timezone (timezone required) of last update to the opportunity on the provider's site. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="expires" type="dateTimeWithTimezone" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Date+time+timezone (timezone required) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
                     </xs:sequence>
                   </xs:complexType>
                 </xs:element> 
