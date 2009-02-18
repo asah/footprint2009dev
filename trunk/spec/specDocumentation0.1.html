@@ -43,12 +43,12 @@ The <code>Organization</code> object represents any organization involved in the
 <b>Object: <bcode>VolunteerOpportunity</bcode></b><p>
 The <code>VolunteerOpportunity</code> object represents a volunteer opportunity. Wrapped in an <code>VolunteerOpportunities</code> object. Order does not matter.<br>Notes:
 <ul>
-<li><b><bcode>opportunityID</bcode></b>: Unique ID within the feed (can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>). Required.
+<li><b><bcode>opportunityID</bcode></b>: Unique ID within the feed.Often a primary key within a database, but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
 <br><li><b><bcode>sponsoringOrganizationID</bcode> and <bcode>volunteerHubOrganizationID</bcode></b>: Link to the Organization objects that relate to this opportunity as the sponsoring organization or volunteer hub. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. In contrast, the <code>volunteerHubOrganizationID</code> links to the organization coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them.
 <br><li><b><bcode>title</bcode>, <bcode>abstract</bcode>, and <bcode>description</bcode></b>: Increasingly long descriptions of the opportunity. Title required; other two optional.
 <br><li><b><bcode>volunteersNeeded</bcode></b>: How many volunteers are needed for this opportunity. May not be up to date as volunteers sign up. Optional.
-<br><li><b><bcode>dateTimeDurations</bcode></b>: A wrapper around one or more dateTimeDuration sub-objects. See the sub-object documentation below. Given the recurrence field in dateTimeDuration sub-object, the vast majority of cases should only need one dateTimDuration sub-object.  Order does not matter.
-<br><li><b><bcode>locations</bcode></b>: A wrapper around one or more location sub-object. See documentation below. Order does not matter.
+<br><li><b><bcode>dateTimeDurations</bcode></b>: A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation below. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order does not matter.
+<br><li><b><bcode>locations</bcode></b>: A wrapper around one or more <code>location</code> sub-objects. See documentation below. Order does not matter.
 <br><li><b><bcode>paid</bcode></b>: Does the opportunity pay volunteers. Domain: Yes, No. Optional; parser defaults to No.
 <br><li><b><bcode>audienceTags</bcode></b>: A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Order does not matter. Example:<br><code>
 &lt;audienceTags&gt;<br>
