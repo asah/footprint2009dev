@@ -17,15 +17,15 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="dateTimeWithTimezone">
+  <xs:simpleType name="dateTimeUTC">
     <xs:restriction base="xs:dateTime">
-      <xs:pattern value=".+T.+(Z|[+-].+)"/>
+      <xs:pattern value=".+T.+Z"/>
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="timeWithTimezone">
+  <xs:simpleType name="timeUTC">
     <xs:restriction base="xs:time">
-      <xs:pattern value=".+(Z|[+-].+)"/>
+      <xs:pattern value=".+Z"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -197,21 +197,21 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:annotation>
       </xs:element>
       
-      <xs:element name="startTime" type="timeWithTimezone" minOccurs="0">
+      <xs:element name="startTime" type="timeUTC" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Start time for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
+             Start time for the opportunity (UTC required). There is no "all day" option: exact times should be specified where applicable. Optional.
            ]]>
           </xs:documentation>
         </xs:annotation>
       </xs:element>
 
-      <xs:element name="endTime" type="timeWithTimezone" minOccurs="0">
+      <xs:element name="endTime" type="timeUTC" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             End time for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
+             End time for the opportunity (UTC required). There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -287,11 +287,11 @@ FREQ=WEEKLY;INTERVAL=2
                   </xs:annotation>
                 </xs:element>
                 
-                <xs:element name="createdDateTime" type="dateTimeWithTimezone">
+                <xs:element name="createdDateTime" type="dateTimeUTC">
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        The date+time+timezone that this specific iteration of the feed was created. Required.
+                        The date+time (UTC required) that this specific iteration of the feed was created. Required.
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -785,21 +785,21 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
                       
-                      <xs:element name="lastUpdated" type="dateTimeWithTimezone" minOccurs="0">
+                      <xs:element name="lastUpdated" type="dateTimeUTC" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Date+time+timezone (timezone required) of last update to the opportunity on the provider's site. Optional.
+                              Date+time (UTC required) of last update to the opportunity on the provider's site. Optional.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
                       </xs:element>
                       
-                      <xs:element name="expires" type="dateTimeWithTimezone" minOccurs="0">
+                      <xs:element name="expires" type="dateTimeUTC" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Date+time+timezone (timezone required) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
+                              Date+time (UTC required) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
