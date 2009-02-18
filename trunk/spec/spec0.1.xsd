@@ -333,25 +333,169 @@ FREQ=WEEKLY;INTERVAL=2
 
 
           <xs:element name="Organizations" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+               <![CDATA[
+                 The <code>Organizations</code> wraps a set of <code>Organization</code> objects. Order does not matter.
+               ]]>
+              </xs:documentation>
+            </xs:annotation>
+
             <xs:complexType>
+
               <xs:sequence>
                 <xs:element name="Organization" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>
+                     <![CDATA[
+                       The <code>Organization</code> object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). <code>Organization</code> objects are wrapped in an <code>Organizations</code>.
+                     ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+
                   <xs:complexType>
+            
                     <xs:sequence>
-                      <xs:element name="organizationID" type="xs:string" />
-                      <xs:element name="nationalEIN" type="xs:string" minOccurs="0"/>
-                      <xs:element name="guidestarID" type="xs:integer" minOccurs="0"/>
-                      <xs:element name="name" type="xs:string" />
-                      <xs:element name="missionStatement" type="xs:string" minOccurs="0" />
-                      <xs:element name="description" type="xs:string" minOccurs="0" />
-                      <xs:element name="location" type="locationType" minOccurs="0" />
-                      <xs:element name="phone" type="xs:string" minOccurs="0" />
-                      <xs:element name="fax" type="xs:string" minOccurs="0" />
-                      <xs:element name="email" type="xs:string" minOccurs="0" />
-                      <xs:element name="organizationURL" type="xs:string" minOccurs="0" />
-                      <xs:element name="donateURL" type="xs:string" minOccurs="0" />
-                      <xs:element name="logoURL" type="xs:string" minOccurs="0" />
-                      <xs:element name="detailURL" type="xs:string" minOccurs="0" />
+                      <xs:element name="organizationID" type="xs:string">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Unique ID within the feed. Most likely a number (from a database primary key) but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required. Would be helpful if it were constant across feeds from one provider.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="nationalEIN" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              National Employer Identification Number. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="guidestarID" type="xs:integer" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              ID number from guidestar.org. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="name" type="xs:string">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Name of the organization. Required.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="missionStatement" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Mission statement of organization. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="description" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Description of organization. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="location" type="locationType" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Physical location of organization. See locationType for type definition. Optional, but recommended at the city/regional/postalCode level.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="phone" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Phone number of organization. Optional. Not expected from most providers.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="fax" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Fax number of organization. Optional. Not expected from most providers.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="email" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Email of organization. Optional. Not expected from most providers.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="organizationURL" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              URL of the organization's homepage. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="donateURL" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              URL of the organization's donation page. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="logoURL" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              URL of the organization's logo. Optional. Dimensions are TBD.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="detailURL" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              URL of the organization's page on the providers site. Optional. Highly recommended.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
                     </xs:sequence>
                   </xs:complexType>
                 </xs:element> 
@@ -387,17 +531,17 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:complexType>
                       </xs:element>
                       <xs:element name="paid" type="yesNoEnum" minOccurs="0" />
-                      <xs:element name="audiences" minOccurs="0">
+                      <xs:element name="audienceTags" minOccurs="0">
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="audience" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="audienceTag" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="categories" minOccurs="0">
+                      <xs:element name="categoryTags" minOccurs="0">
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="category" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                            <xs:element name="categoryTag" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>

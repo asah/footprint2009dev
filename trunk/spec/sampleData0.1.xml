@@ -88,11 +88,11 @@
      <postalCode>95062</postalCode>
     </location>
    </locations>
-   <categories>
-    <category>Community</category>
-    <category>Computers &amp; Technology</category>
-    <category>Employment</category>
-   </categories>
+   <categoryTags>
+    <categoryTag>Community</categoryTag>
+    <categoryTag>Computers &amp; Technology</categoryTag>
+    <categoryTag>Employment</categoryTag>
+   </categoryTags>
    <minimumAge>21</minimumAge>
    <skills>In order to maintain the integrity of the MicroMentor program, we require that our Mentor volunteers have significant business experience and expertise, such as: 3 years of business ownership experience</skills>
    <detailURL>http://www.volunteermatch.org/search/index.jsp?l=08540</detailURL>
@@ -127,15 +127,15 @@
      <postalCode>08550</postalCode>
     </location>
    </locations>
-   <audiences>
-    <audience>Teens</audience>
-    <audience>High School Students</audience>
-   </audiences>
-   <categories>
-    <category>Community</category>
-    <category>Homeless &amp; Hungry</category>
-    <category>Hunger</category>
-   </categories>
+   <audienceTags>
+    <audienceTag>Teens</audienceTag>
+    <audienceTag>High School Students</audienceTag>
+   </audienceTags>
+   <categoryTags>
+    <categoryTag>Community</categoryTag>
+    <categoryTag>Homeless &amp; Hungry</categoryTag>
+    <categoryTag>Hunger</categoryTag>
+   </categoryTags>
    <minimumAge>14</minimumAge>
    <skills>Must be in High School</skills>
    <detailURL>http://www.volunteermatch.org/search/opp451561.jsp</detailURL>
@@ -164,13 +164,13 @@
     <postalCode>08610</postalCode>
     </location>
    </locations>
-   <audiences>
-    <audience>Teens</audience>
-   </audiences>
-   <categories>
-    <category>Community</category>
-    <category>Children &amp; Youth</category>
-   </categories>
+   <audienceTags>
+    <audienceTag>Teens</audienceTag>
+   </audienceTags>
+   <categoryTags>
+    <categoryTag>Community</categoryTag>
+    <categoryTag>Children &amp; Youth</categoryTag>
+   </categoryTags>
    <skills>Be interested in promoting youth volunteerism. Be available two Tuesday evenings per month.</skills>
    <detailURL>http://www.volunteermatch.org/search/opp200517.jsp</detailURL>
    <description>Quixote Quest is a volunteer club for teens who have a passion for community service. The teens each volunteer for their own specific cause. Twice monthly, the club meets. At the club meetings the teens from different high schools come together for two hours to talk about their volunteer experiences and spend some hang-out time together that helps them bond as fraternity...family. Quixote Quest is seeking young adults roughly between 20 and 30 years of age who would be interested in being a guide and advisor to the teens during these two evening meetings a month.</description>

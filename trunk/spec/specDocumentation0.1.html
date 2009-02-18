@@ -50,17 +50,17 @@ The <code>VolunteerOpportunity</code> object represents a volunteer opportunity.
 <br><li><b><bcode>dateTimeDurations</bcode></b>: A wrapper around one or more dateTimeDuration sub-objects. See the sub-object documentation below. Given the recurrence field in dateTimeDuration sub-object, the vast majority of cases should only need one dateTimDuration sub-object.  Order does not matter.
 <br><li><b><bcode>locations</bcode></b>: A wrapper around one or more location sub-object. See documentation below. Order does not matter.
 <br><li><b><bcode>paid</bcode></b>: Does the opportunity pay volunteers. Domain: Yes, No. Optional; parser defaults to No.
-<br><li><b><bcode>audiences</bcode></b>: A wrapper for one or more audience fields. An audience field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the audience field.  Order does not matter. Example:<br><code>
-&lt;audiences&gt;<br>
-&nbsp;&nbsp; &lt;audience&gt;Teens&lt;/audience&gt;<br>
-&nbsp;&nbsp; &lt;audience&gt;College-aged&lt;/audience&gt;<br>
-&lt;/audiences&gt;</code>
-<br><li><b><bcode>categories</bcode></b>: A wrapper for one or more category fields. An category field is a short string that describes the opportunity. Key words also belong in multiple category fields. There is no set domain for the category field.  Order does not matter. Example:<br><code>
-&lt;categories&gt;<br>
-&nbsp;&nbsp; &lt;category&gt;Homeless&lt;/audience&gt;<br>
-&nbsp;&nbsp; &lt;category&gt;Hunger&lt;/audience&gt;<br>
-&nbsp;&nbsp; &lt;category&gt;Weekend opportunity&lt;/audience&gt;<br>
-&lt;/categories&gt;</code>
+<br><li><b><bcode>audienceTags</bcode></b>: A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Order does not matter. Example:<br><code>
+&lt;audienceTags&gt;<br>
+&nbsp;&nbsp; &lt;audienceTag&gt;Teens&lt;/audienceTag&gt;<br>
+&nbsp;&nbsp; &lt;audienceTag&gt;College-aged&lt;/audienceTag&gt;<br>
+&lt;/audienceTags&gt;</code>
+<br><li><b><bcode>categoryTags</bcode></b>: A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order does not matter. Example:<br><code>
+&lt;categoryTag&gt;<br>
+&nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>
+&nbsp;&nbsp; &lt;categoryTag&gt;Hunger&lt;/categoryTag&gt;<br>
+&nbsp;&nbsp; &lt;categoryTag&gt;Weekend opportunity&lt;/categoryTag&gt;<br>
+&lt;/categoryTag&gt;</code>
 <br><li><b><bcode>minimumAge</bcode></b>: The minimum age of volunteers. Optional.
 <br><li><b><bcode>sexRestrictedTo</bcode></b>: Is the opportunity restricted to one sex/gender. Domain: Female, Male, Neither (default). Optional.
 <br><li><b><bcode>skills</bcode></b>: One string of all the skills a volunteer needs. Optional.
