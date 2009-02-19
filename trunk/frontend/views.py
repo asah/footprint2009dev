@@ -12,9 +12,7 @@ from google.appengine.api import urlfetch
 
 import geocode
 import search
-
-from django.utils import simplejson
-from StringIO import StringIO
+import utils
 
 TEMPLATE_DIR = 'templates/'
 MAIN_PAGE_TEMPLATE = 'main_page.html'
@@ -45,6 +43,11 @@ class SearchView(webapp.RequestHandler):
 
     result_set = search.Search(query, location)
 
+    userInfo = utils.GetUserInfo()
+    userDisplayName = ""
+    if userInfo:
+      userDisplayName = userInfo['entry']['displayName']
+
    ### point = geocode.Geocode(location)
 
     template_values = {
@@ -53,7 +56,8 @@ class SearchView(webapp.RequestHandler):
         'results': result_set.results,
         'keywords': query,
         'location': location,
-        'currentPage' : 'SEARCH'
+        'currentPage' : 'SEARCH',
+        'userDisplayName' : userDisplayName
       }
 
     if output == "rss":
@@ -66,7 +70,7 @@ class SearchView(webapp.RequestHandler):
 
 class FriendsView(webapp.RequestHandler):
   def get(self):
-    userInfo = self.getUserInfo()
+    userInfo = utils.GetUserInfo()
     userId = ""
     if userInfo:
       #we are logged in
@@ -81,20 +85,3 @@ class FriendsView(webapp.RequestHandler):
 
     self.response.out.write(RenderTemplate(WORK_WITH_OTHERS_TEMPLATE,
                                            template_values))
-
-  def getUserInfo(self):
-    friendCookie = self.getFriendCookie()
-    if friendCookie:
-      url = 'http://www.google.com/friendconnect/api/people/@viewer/@self?fcauth=' + friendCookie;
-      result = urlfetch.fetch(url)
-      if result.status_code == 200:
-        return simplejson.load(StringIO(result.content))
-
-  def getFriendCookie(self):
-    if 'HTTP_COOKIE' in os.environ:
-      cookies = os.environ['HTTP_COOKIE']
-      cookies = cookies.split('; ')
-      for cookie in cookies:
-        cookie = cookie.split('=')
-        if cookie[0] == '_ps_auth02962301966004179520':
-          return cookie[1]
