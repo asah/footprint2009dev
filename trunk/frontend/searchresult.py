@@ -14,8 +14,8 @@ class SearchResult(object):
     self.jsEscapedSnippet = self.jsEscape(snippet)
 
   def jsEscape(self, string):
-    # TODO: This escape method is overly agressive and is messing some snippets up.
-    # We only need to escape single and double quotes.  
+    # TODO: This escape method is overly agressive and is messing some snippets
+    # up.  We only need to escape single and double quotes.
     return re.escape(string)
 
 class SearchResultSet(object):

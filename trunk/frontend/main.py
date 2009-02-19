@@ -6,11 +6,12 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
 import views
+import urls
 
 application = webapp.WSGIApplication(
-                                     [('/', views.MainPageView),
-                                      ('/search', views.SearchView),
-                                      ('/friends', views.FriendsView)],
+                                     [(urls.URL_HOME, views.MainPageView),
+                                      (urls.URL_SEARCH, views.SearchView),
+                                      (urls.URL_FRIENDS, views.FriendsView)],
                                      debug=True)
 
 def main():

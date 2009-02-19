@@ -3,6 +3,7 @@
 
 import cgi
 import os
+import urllib
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -12,7 +13,9 @@ from google.appengine.api import urlfetch
 
 import geocode
 import search
+import urls
 import utils
+
 
 TEMPLATE_DIR = 'templates/'
 MAIN_PAGE_TEMPLATE = 'main_page.html'
@@ -21,6 +24,9 @@ SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 WORK_WITH_OTHERS_TEMPLATE = 'work_with_others.html'
+
+DEFAULT_NUM_RESULTS = 10
+
 
 def RenderTemplate(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
@@ -39,9 +45,31 @@ class SearchView(webapp.RequestHandler):
   def get(self):
     query = self.request.get('q')
     location = self.request.get('loc')
+
+    start_index = utils.StringToInt(self.request.get('start')) or 1
+    if start_index < 1:
+      start_index = 1
+    num_results_requested = DEFAULT_NUM_RESULTS
+    is_first_page = (start_index <= num_results_requested)
+
+    # TODO(paul): need to determine total # of results
+
     output = self.request.get('output')
 
-    result_set = search.Search(query, location)
+    result_set = search.Search(query, location,
+                               start_index, num_results_requested)
+
+    # TODO(paul): Fix this.  It needs to use total num results.
+    is_last_page = (len(result_set.results) < num_results_requested)
+
+    def BuildSearchUrl(start_index):
+      return ('%s?%s' %
+          (urls.URL_SEARCH, urllib.urlencode({'q': query,
+                                              'loc': location,
+                                              'start': start_index })))
+
+    prev_page_url = BuildSearchUrl(start_index - DEFAULT_NUM_RESULTS)
+    next_page_url = BuildSearchUrl(start_index + DEFAULT_NUM_RESULTS)
 
     userInfo = utils.GetUserInfo()
     userId = ""
@@ -50,17 +78,17 @@ class SearchView(webapp.RequestHandler):
       userId = userInfo['entry']['id']
       userDisplayName = userInfo['entry']['displayName']
 
-   ### point = geocode.Geocode(location)
-
     template_values = {
-        'query_url_encoded': result_set.query_url_encoded,
-        'query_url_unencoded': result_set.query_url_unencoded,
-        'results': result_set.results,
+        'result_set': result_set,
         'keywords': query,
         'location': location,
         'currentPage' : 'SEARCH',
         'userId' : userId,
-        'userDisplayName' : userDisplayName
+        'userDisplayName' : userDisplayName,
+        'is_first_page': is_first_page,
+        'is_last_page': is_last_page,
+        'prev_page_url': prev_page_url,
+        'next_page_url': next_page_url,
       }
 
     if output == "rss":

@@ -16,6 +16,7 @@ def GetXmlDomText(dom):
       text += child.data
   return text
 
+
 def GetUserInfo():
   friendCookie = GetFriendCookie()
   if friendCookie:
@@ -23,6 +24,7 @@ def GetUserInfo():
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       return simplejson.load(StringIO(result.content))
+
 
 def GetFriendCookie():
   if 'HTTP_COOKIE' in os.environ:
@@ -32,3 +34,10 @@ def GetFriendCookie():
       cookie = cookie.split('=')
       if cookie[0] == '_ps_auth02962301966004179520':
         return cookie[1]
+
+
+def StringToInt(string):
+  try:
+    return int(string)
+  except ValueError:
+    return None
