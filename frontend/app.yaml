@@ -7,6 +7,9 @@ handlers:
 - url: /css
   static_dir: css
 
+- url: /images
+  static_dir: images
+
 # For FriendConnect
 - url: /rpc_relay.html
   static_files: templates/rpc_relay.html
@@ -16,6 +19,6 @@ handlers:
   static_files: templates/canvas.html
   upload: templates/canvas.html
 
-
+# Keep this last
 - url: /.*
   script: main.py
