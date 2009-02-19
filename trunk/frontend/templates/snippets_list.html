@@ -1,5 +1,25 @@
 {% for result in results %}
   <p class='snippet'>
+      <div class='snippet_buttons'>
+        {% if userId %}
+          <div class='broadcast_event' onclick='broadcastEvent(this, "{{result.url}}", "{{result.jsEscapedTitle}}", "{{result.jsEscapedSnippet}}")'>
+            <img src='images/broadcasticon.png' alt=''/> Broadcast
+          </div>
+          <div class='share_event' onclick='shareEvent(this, "{{result.url}}", "{{result.jsEscapedTitle}}", "{{result.jsEscapedSnippet}}")'>
+            <img src='images/openshareicon-16.png' alt=''/> Share
+          </div>
+        {% endif %}
+        <!-- TODO: We need locations and dates for adding to calendars -->
+        <div class='add_to_calendar' onclick='addToCalendar(this, "YAHOO", "{{result.url|escape}}", "{{result.jsEscapedTitle|escape}}",
+            "{{result.jsEscapedSnippet|escape}}", "20090214", "locationPlaceholder")'>
+          <img src='images/yahoo.gif' height="16px" alt=''/> Yahoo! Calendar
+          </div>
+       <div class='add_to_calendar' onclick='addToCalendar(this, "GOOGLE", "{{result.url|escape}}", "{{result.jsEscapedTitle|escape}}",
+            "{{result.jsEscapedSnippet|escape}}", "20090214", "locationPlaceholder")'>
+          <img src='images/google.png' height="16px" alt=''/> Google Calendar
+        </div>
+      </div>
+
     <div class='snippet_title'>
       <a href='{{ result.url }}'>{{ result.title }}</a>
     </div>
@@ -9,8 +29,9 @@
     <div class='snippet_url'>
       <a href='{{ result.url }}'>{{ result.url }}</a>
     </div>
+
     <div class='snippet_actions'>
-      <div id="review-{{result.url|escape}}" style="width:100%;"</div>
+      <div id='review-{{result.url|escape}}' style='width:100%;'></div>
     </div>
   </p>
 
@@ -18,9 +39,51 @@
     google.friendconnect.container.renderReviewGadget(
        {id: 'review-{{result.url|escape}}',
         site: SITE_ID,
-        'view-params':{"disableMinMax":"false","scope":"ID","allowAnonymousPost":"true",
+        'view-params':{"disableMinMax":"false","scope":"ID","allowAnonymousPost":"false",
             "docId":"review-{{result.url|escape}}","startMaximized":"false"}
         },
         REVIEW_SKIN);
   </script>
 {% endfor %}
+
+<script type="text/javascript">
+  google.friendconnect.container.loadOpenSocialApi({site: SITE_ID, onload: function() {}});
+
+  function broadcastEvent(div, eventUrl, eventTitle, eventSnippet) {
+    opensocial.requestCreateActivity(opensocial.newActivity(
+        {title: '{{userDisplayName}} shared an event: <a href="' + eventUrl + '">' + eventTitle + '</a>',
+          body: eventSnippet}));
+    // TODO: This is a hack. We need to figure out the real ui here...
+    div.childNodes[1].src="images/broadcasticon-on.png";
+    div.setAttribute("onclick", "");
+  }
+
+  function shareEvent(div, eventUrl, eventTitle, eventSnippet) {
+    google.friendconnect.requestInvite("{{userDisplayName}} wants you to check out this event! "
+        + eventTitle + " " + eventUrl);
+  }
+
+  function addToCalendar(div, type, eventUrl, eventTitle, eventSnippet, eventDate, eventLocation) {
+    // TODO: Handle ical and outlook
+    var url;
+
+    if (type == 'GOOGLE') {
+      url = "http://www.google.com/calendar/event?action=TEMPLATE"
+          + "&text=" + eventTitle
+          + "&dates=" + (eventDate + "/" + eventDate)
+          + "&details=" + eventSnippet + "+" + eventUrl
+          + "&location=" + eventLocation;
+
+    } else if (type == 'YAHOO') {
+      url = "http://calendar.yahoo.com?v=60"
+          + "&ST=" + eventDate
+          + "&TITLE=" + eventTitle
+        //+ "&DUR=" + eventDuration TODO: Support duration once we have real dates
+          + "&VIEW=d"
+          + "&DESC=" + eventSnippet
+          + "&in_loc=" + eventLocation;
+    }
+
+    window.open(url, 'calendar');
+  }
+</script>

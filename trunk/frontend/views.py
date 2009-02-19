@@ -44,8 +44,10 @@ class SearchView(webapp.RequestHandler):
     result_set = search.Search(query, location)
 
     userInfo = utils.GetUserInfo()
+    userId = ""
     userDisplayName = ""
     if userInfo:
+      userId = userInfo['entry']['id']
       userDisplayName = userInfo['entry']['displayName']
 
    ### point = geocode.Geocode(location)
@@ -57,6 +59,7 @@ class SearchView(webapp.RequestHandler):
         'keywords': query,
         'location': location,
         'currentPage' : 'SEARCH',
+        'userId' : userId,
         'userDisplayName' : userDisplayName
       }
 
