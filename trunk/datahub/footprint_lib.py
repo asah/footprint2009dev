@@ -2,12 +2,18 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
+# TODO: do we need to geocode the locations?  or does Base handle this?
+
 import hashlib
+import urllib
+import re
 from datetime import datetime
 import parse_footprint
+import parse_usaservice
 import os
 from pytz import timezone
 import pytz
+import xml_helpers
 
 FIELDSEP = "\t"
 RECORDSEP = "\n"
@@ -21,26 +27,6 @@ fieldtypes = {
   "orgLocation":"location","location":"location",
   "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string","feed_providerName":"string","feed_description":"string",
 }
-
-
-
-def getTagValue(entity, tag):
-  #print "----------------------------------------"
-  nodes = entity.getElementsByTagName(tag)
-  #print "nodes: "
-  #print nodes
-  if (nodes.length == 0):
-    return ""
-  #print nodes[0]
-  if (nodes[0] == None):
-    return ""
-  if (nodes[0].firstChild == None):
-    return ""
-  if (nodes[0].firstChild.data == None):
-    return ""
-  #print nodes[0].firstChild.data
-  return nodes[0].firstChild.data
-
 
 # Google Base uses ISO8601... in PST -- I kid you not:
 # http://base.google.com/support/bin/answer.py?answer=78170&hl=en#Events%20and%20Activities
@@ -99,9 +85,9 @@ def outputField(name, value):
 def computeLocationField(node):
   # note: avoid commas, so it works with CSV
   # (this is good enough for the geocoder)
-  loc = getTagValue(node, "city") + " "
-  loc += getTagValue(node, "region") + " " 
-  loc += getTagValue(node, "postalCode")
+  loc = xml_helpers.getTagValue(node, "city") + " "
+  loc += xml_helpers.getTagValue(node, "region") + " " 
+  loc += xml_helpers.getTagValue(node, "postalCode")
   return loc
 
 def outputLocationField(node, mapped_name):
@@ -109,17 +95,17 @@ def outputLocationField(node, mapped_name):
 
 
 def outputTagValue(node, fieldname):
-  return outputField(fieldname, getTagValue(node, fieldname))
+  return outputField(fieldname, xml_helpers.getTagValue(node, fieldname))
 
 def outputTagValueRenamed(node, xmlname, fieldname):
-  return outputField(fieldname, getTagValue(node, xmlname))
+  return outputField(fieldname, xml_helpers.getTagValue(node, xmlname))
 
 def computeStableId(opp, org, locstr, openended, duration,
                     commitmentHoursPerWeek, startend):
-  eid = getTagValue(org, "nationalEIN");
+  eid = xml_helpers.getTagValue(org, "nationalEIN");
   if (eid == ""):
     # support informal "organizations" that lack EINs
-    eid = getTagValue(org, "organizationURL")
+    eid = xml_helpers.getTagValue(org, "organizationURL")
   # TODO: if two providers have same listing, good odds the
   # locations will be slightly different...
   loc = locstr
@@ -131,7 +117,7 @@ def computeStableId(opp, org, locstr, openended, duration,
 
 def getDirectMappedField(opp, org):
   s = ""
-  paid = getTagValue(opp, "paid")
+  paid = xml_helpers.getTagValue(opp, "paid")
   if (paid == "" or paid.lower()[0] != "y"):
     paid = "n"
   else:
@@ -142,7 +128,7 @@ def getDirectMappedField(opp, org):
     s += outputTagValue(opp, field)
   for field in organization_fields:
     s += FIELDSEP
-    s += outputField("org_"+field, getTagValue(org, field))
+    s += outputField("org_"+field, xml_helpers.getTagValue(org, field))
   for field in csv_repeated_fields:
     s += FIELDSEP
     l = opp.getElementsByTagName(field)
@@ -166,10 +152,10 @@ def getDirectMappedField(opp, org):
 # populated *as well as* direct mapping of the footprint XML fields.
 # 
 def getBaseOtherFields(opp, org):
-  s = outputField("quantity", getTagValue(opp, "volunteersNeeded"))
-  s += FIELDSEP + outputField("employer", getTagValue(org, "name"))
+  s = outputField("quantity", xml_helpers.getTagValue(opp, "volunteersNeeded"))
+  s += FIELDSEP + outputField("employer", xml_helpers.getTagValue(org, "name"))
   # TODO: publish_date?
-  expires = getTagValue(opp, "expires")
+  expires = xml_helpers.getTagValue(opp, "expires")
   # TODO: what tz is expires?
   expires = cvtDateTimeToGoogleBase(expires, "", "UTC")
   s += FIELDSEP + outputField("expiration_date", expires)
@@ -179,7 +165,7 @@ def getBaseEventRequiredFields(opp, org):
   s = outputTagValue(opp, "title")
   s += FIELDSEP + outputTagValue(opp, "description")
   s += FIELDSEP + outputField("link", "http://change.gov/")
-  s += FIELDSEP + outputField("image_link", getTagValue(org, "logoURL"))
+  s += FIELDSEP + outputField("image_link", xml_helpers.getTagValue(org, "logoURL"))
   s += FIELDSEP + outputField("event_type", "volunteering")
   return s
 
@@ -192,6 +178,13 @@ def getFeedFields(feedinfo):
   s += FIELDSEP + outputTagValueRenamed(feedinfo, "createdDateTime", "feed_createdDateTime")
   return s
 
+def geocode(addr):
+  params = urllib.urlencode({'q':addr, 'output':'csv',
+                             'oe':'utf8', 'sensor':'false',
+                             'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
+  f = urllib.urlopen("http://maps.google.com/maps/geo?%s" % params)
+  print f.read()
+
 def convertToGoogleBaseEventsType(xmldoc, do_printhead):
   s = ""
   recno = 0
@@ -200,6 +193,7 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
   feedinfos = xmldoc.getElementsByTagName("FeedInfo")
   if (feedinfos.length != 1):
     print "bad FeedInfo: should only be one section"
+    # TODO: throw error
     exit
   feedinfo = feedinfos[0]
 
@@ -222,17 +216,17 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
   organizations = xmldoc.getElementsByTagName("Organization")
   known_orgs = {}
   for org in organizations:
-    id = getTagValue(org, "organizationID")
+    id = xml_helpers.getTagValue(org, "organizationID")
     if (id != ""):
       known_orgs[id] = org
     
   opportunities = xmldoc.getElementsByTagName("VolunteerOpportunity")
   for opp in opportunities:
-    id = getTagValue(opp, "volunteerOpportunityID")
+    id = xml_helpers.getTagValue(opp, "volunteerOpportunityID")
     if (id == ""):
       print "no opportunityID"
       continue
-    org_id = getTagValue(opp, "sponsoringOrganizationID")
+    org_id = xml_helpers.getTagValue(opp, "sponsoringOrganizationID")
     if (org_id not in known_orgs):
       print "unknown org_id: " + org_id + ".  skipping opportunity " + id
       continue
@@ -240,29 +234,28 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
     opp_locations = opp.getElementsByTagName("location")
     opp_times = opp.getElementsByTagName("dateTimeDuration")
     for opptime in opp_times:
-      openended = getTagValue(opptime, "openEnded")
+      openended = xml_helpers.getTagValue(opptime, "openEnded")
       # event_date_range
       # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-      startDate = getTagValue(opptime, "startDate")
-      startTime = getTagValue(opptime, "startTime")
-      endDate = getTagValue(opptime, "endDate")
-      endTime = getTagValue(opptime, "endTime")
-      tz = getTagValue(opptime, "tzOlsonPath")
+      startDate = xml_helpers.getTagValue(opptime, "startDate")
+      startTime = xml_helpers.getTagValue(opptime, "startTime")
+      endDate = xml_helpers.getTagValue(opptime, "endDate")
+      endTime = xml_helpers.getTagValue(opptime, "endTime")
       # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
       if (startDate == ""):
         startDate = "1971-01-01"
-        startTime = "00:00:00"
-      startend = cvtDateTimeToGoogleBase(startDate, startTime, tz)
+        startTime = "00:00:00-00:00"
+      startend = cvtDateTimeToGoogleBase(startDate, startTime, "UTC")
       if (endDate != ""):
         startend += "/"
-        startend += cvtDateTimeToGoogleBase(endDate, endTime, tz)
+        startend += cvtDateTimeToGoogleBase(endDate, endTime, "UTC")
       for opploc in opp_locations:
         recno = recno + 1
         if debug:
           s += "--- record %s\n" % (recno)
         locstr = computeLocationField(opploc)
-        duration = getTagValue(opptime, "duration")
-        commitmentHoursPerWeek = getTagValue(opptime, "commitmentHoursPerWeek")
+        duration = xml_helpers.getTagValue(opptime, "duration")
+        commitmentHoursPerWeek = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
         locstr = computeLocationField(opploc)
         id = computeStableId(opp, org, locstr, openended, duration,
                              commitmentHoursPerWeek, startend)
@@ -307,7 +300,7 @@ if __name__ == "__main__":
   (options, args) = parser.parse_args(sys.argv[1:])
   if (len(args) == 0):
     parser.print_help()
-    exit
+    exit(0)
   if options.fs != None:
     FIELDSEP = options.fs
   if options.rs != None:
@@ -318,7 +311,10 @@ if __name__ == "__main__":
   do_printhead = True
   s = ""
   for f in args:
-    xmldoc = parse_footprint.ParseFootprintXML(f)
+    parsefunc = parse_footprint.ParseXML
+    if re.search("usa-?service", f):
+      parsefunc = parse_usaservice.ParseXML
+    xmldoc = parsefunc(f)
     s += convertToGoogleBaseEventsType(xmldoc, do_printhead)
     do_printhead = False   # only print the first time
   if (options.ftpinfo):

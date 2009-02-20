@@ -2,6 +2,7 @@
 #
 
 from xml.dom import minidom
+from xml.parsers.expat import ExpatError
 
 def validateXML(xmldoc):
   for node in xmldoc.childNodes:
@@ -12,8 +13,21 @@ def validateXML(xmldoc):
     validateXML(node)
 
 # parsing footprint format is the identity operation
-def ParseFootprintXML(doc):
+def ParseXML(doc):
   xmldoc = minidom.parse(doc)
+  validateXML(xmldoc)
+  return xmldoc
+
+def ParseXMLString(s):
+  try:
+    xmldoc = minidom.parseString(s)
+  except ExpatError, ee:
+    print "XML parsing error on line ", ee.lineno
+    lines = s.split("\n")
+    for i in range(ee.lineno - 3, ee.lineno + 3):
+      if i >= 0 and i < len(lines):
+        print "%6d %s" % (i+1, lines[i])
+    exit(0)
   validateXML(xmldoc)
   return xmldoc
 
@@ -25,10 +39,10 @@ known_elnames = {
   'VolunteerOpportunities': 1,
   'VolunteerOpportunity': 1,
   'abstract': 1,
-  'audience': 1,
-  'audiences': 1,
-  'categories': 1,
-  'category': 1,
+  'audienceTag': 1,
+  'audienceTags': 1,
+  'categoryTag': 1,
+  'categoryTags': 1,
   'city': 1,
   'commitmentHoursPerWeek': 1,
   'contactEmail': 1,
