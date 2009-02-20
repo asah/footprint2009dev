@@ -130,6 +130,26 @@
         </xs:annotation>
       </xs:element>
 
+      <xs:element name="latitude" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Latitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="longitude" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Longitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
       <xs:element name="directions" type="xs:string" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
