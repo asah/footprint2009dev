@@ -275,7 +275,7 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
 def ftpActivity():
   print ".",
 
-def ftpToBase(ftpinfo, s):
+def ftpToBase(f, ftpinfo, s):
   ftplib = __import__('ftplib')
   StringIO = __import__('StringIO')
   fh = StringIO.StringIO(s)
@@ -285,7 +285,12 @@ def ftpToBase(ftpinfo, s):
   ftp = ftplib.FTP(host)
   print ftp.getwelcome()
   ftp.login(user, passwd)
-  ftp.storbinary("STOR footprint1.txt", fh, 8192)
+  fn = "footprint1.txt"
+  if re.search("usa-?service", f):
+    fn = "usaservice1.txt"
+  print "uploading: "+fn
+  ftp.storbinary("STOR " + fn, fh, 8192)
+  print "done."
   ftp.quit()
 
 from optparse import OptionParser
@@ -309,17 +314,16 @@ if __name__ == "__main__":
     debug = True
     FIELDSEP = "\n"
   do_printhead = True
-  s = ""
   for f in args:
+    s = ""
     parsefunc = parse_footprint.ParseXML
     if re.search("usa-?service", f):
       parsefunc = parse_usaservice.ParseXML
     xmldoc = parsefunc(f)
     s += convertToGoogleBaseEventsType(xmldoc, do_printhead)
     do_printhead = False   # only print the first time
-  if (options.ftpinfo):
-    # 'mockingbird', 'ftp2mockingbird')
-    ftpToBase(options.ftpinfo, s)
-  else:
-    print s,
+    if (options.ftpinfo):
+      ftpToBase(f, options.ftpinfo, s)
+    else:
+      print s,
 
