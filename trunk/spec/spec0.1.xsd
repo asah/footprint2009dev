@@ -191,7 +191,7 @@ FREQ=WEEKLY;INTERVAL=2
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for siz months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
+             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
            ]]>
           </xs:documentation>
         </xs:annotation>
