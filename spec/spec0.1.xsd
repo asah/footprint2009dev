@@ -599,7 +599,9 @@ FREQ=WEEKLY;INTERVAL=2
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Number of volunteers needed. Must be integer. Optional.
+                              How many volunteers are needed for this opportunity. Special codes: -999 for unlimited. -8888 for unknown number of volunteers. Other than those exceptions, must be a non-negative integer. Optional. Cannot be blank.
+                              May not be up-to-date as volunteers sign up.
+                              Design decision: large negative numbers for special codes since overbooking might lead to accidental use of negative numbers.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
