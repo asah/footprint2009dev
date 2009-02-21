@@ -70,7 +70,7 @@ class SearchView(webapp.RequestHandler):
 
     prev_page_url = BuildSearchUrl(start_index - DEFAULT_NUM_RESULTS)
     next_page_url = BuildSearchUrl(start_index + DEFAULT_NUM_RESULTS)
-
+  
     userInfo = utils.GetUserInfo()
     userId = ""
     userDisplayName = ""
