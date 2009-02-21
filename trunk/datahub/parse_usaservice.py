@@ -1,31 +1,25 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
+from xml.parsers.expat import ExpatError
 from xml.dom import minidom
 import xml_helpers
 import parse_footprint
 import re
 
-def validateXML(xmldoc):
-  for node in xmldoc.childNodes:
-    if (xmldoc.nodeType == xmldoc.ELEMENT_NODE and
-        xmldoc.tagName not in known_elnames):
-      print "unknown tagName '"+xmldoc.tagName+"'"
-      # TODO: spellchecking...
-    validateXML(node)
-
-def ParseXML(doc):
-  xmldoc = minidom.parse(doc)
-  validateXML(xmldoc)
+def Parse(s, maxrecs):
+  xmldoc = xml_helpers.simpleParser(s, known_elnames)
 
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
   s += '<FootprintFeed schemaVersion="0.1">'
   s += '<FeedInfo>'
   # TODO: assign provider IDs?
+  s += '<feedID>usaservice.org</feedID>'
   s += '<providerID>101</providerID>'
   s += '<providerName>usaservice.org</providerName>'
   s += '<providerURL>http://www.usaservice.org/</providerURL>'
+  s += '<description>%s</description>' % (xml_helpers.getTagValue(xmldoc, "description"))
   # TODO: capture ts -- use now?!
   s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
   s += '</FeedInfo>'
@@ -49,7 +43,15 @@ def ParseXML(doc):
     
   s += '<VolunteerOpportunities>'
   items = xmldoc.getElementsByTagName("item")
-  for item in items:
+  if (maxrecs > items.length):
+    maxrecs = items.length
+  for item in items[0:maxrecs-1]:
+    # unmapped: db:rsvp  (seems to be same as link, but with #rsvp at end of url?)
+    # unmapped: db:host  (no equivalent?)
+    # unmapped: db:county  (seems to be empty)
+    # unmapped: attendee_count
+    # unmapped: guest_total
+    # unmapped: db:title   (dup of title, above)
     s += '<VolunteerOpportunity>'
     s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(item, "guid"))
     # hardcoded: sponsoringOrganizationID
@@ -59,33 +61,30 @@ def ParseXML(doc):
     s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
     s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(item, "link"))
     s += '<description>%s</description>' % (xml_helpers.getTagValue(item, "description"))
-    s += '<skills></skills>'
-    # unmapped: pubDate
+    s += '<lastUpdated>%s</lastUpdated>' % (xml_helpers.getTagValue(item, "pubDate"))
     dbevents = item.getElementsByTagName("db:event")
     if (dbevents.length != 1):
       print "parse_usaservice: only 1 db:event supported."
       return None
     dbevent = dbevents[0]
-    # unmapped: db:title   (dup of title, above)
-    # unmapped: db:eventType (no equivalent?)
     s += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(item, "abstract"))
     # hardcoded: volunteersNeeded
-    s += '<volunteersNeeded>0</volunteersNeeded>'
-    # unmapped: db:rsvp  (seems to be same as link, but with #rsvp at end of url?)
-    # unmapped: db:host  (no equivalent?)
-    # unmapped: db:venue_name  (no equivalent?)
+    s += '<volunteersNeeded>-8888</volunteersNeeded>'
+    s += '<contactName>%s</contactName>' % xml_helpers.getTagValue(item, "db:host")
     dbaddresses = item.getElementsByTagName("db:address")
     if (dbaddresses.length != 1):
       print "parse_usaservice: only 1 db:address supported."
       return None
     dbaddress = dbaddresses[0]
-    # unmapped: db:street  (no equivalent?)
-    # unmapped: db:county  (no equivalent?)
     s += '<locations><location>'
+    s += '<name>%s</name>' % (xml_helpers.getTagValue(item, "db:venue_name"))
+    s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(dbaddress, "db:street"))
     s += '<city>%s</city>' % (xml_helpers.getTagValue(dbaddress, "db:city"))
     s += '<region>%s</region>' % (xml_helpers.getTagValue(dbaddress, "db:state"))
     s += '<country>%s</country>' % (xml_helpers.getTagValue(dbaddress, "db:country"))
     s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(dbaddress, "db:zipcode"))
+    s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(dbaddress, "db:latitude"))
+    s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(dbaddress, "db:longitude"))
     s += '</location></locations>'
     dbscheduledTimes = item.getElementsByTagName("db:scheduledTime")
     if (dbscheduledTimes.length != 1):
@@ -107,20 +106,15 @@ def ParseXML(doc):
     # TODO: timezone???
     s += '<startTime>%s</startTime>' % (time)
     s += '</dateTimeDuration></dateTimeDurations>'
-    # unmapped: attendee_count
-    # unmapped: guest_total
-    # unmapped: latitude
-    # unmapped: longitude
-    # unmapped: categories (empty in usaservice.org, so I don't know what to do)
+    type = xml_helpers.getTagValue(item, "db:eventType")
+    s += '<categoryTags><categoryTag>%s</categoryTag></categoryTags>' % (type)
     s += '</VolunteerOpportunity>'
-    
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
 
   s = re.sub(r'><([^/])', r'>\n<\1', s)
-  if False:
-    print s
-  xmldoc = parse_footprint.ParseXMLString(s)
+  #print s
+  xmldoc = parse_footprint.Parse(s, maxrecs)
   return xmldoc
 
 known_elnames = {
@@ -160,7 +154,4 @@ known_elnames = {
 
 if __name__ == "__main__":
   sys = __import__('sys')
-  xmldoc = ParseFootprintXML(sys.argv[1])
   # tests go here
-
-

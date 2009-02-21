@@ -3,33 +3,12 @@
 
 from xml.dom import minidom
 from xml.parsers.expat import ExpatError
+import xml_helpers
 
-def validateXML(xmldoc):
-  for node in xmldoc.childNodes:
-    if (xmldoc.nodeType == xmldoc.ELEMENT_NODE and
-        xmldoc.tagName not in known_elnames):
-      print "unknown tagName '"+xmldoc.tagName+"'"
-      # TODO: spellchecking...
-    validateXML(node)
-
-# parsing footprint format is the identity operation
-def ParseXML(doc):
-  xmldoc = minidom.parse(doc)
-  validateXML(xmldoc)
-  return xmldoc
-
-def ParseXMLString(s):
-  try:
-    xmldoc = minidom.parseString(s)
-  except ExpatError, ee:
-    print "XML parsing error on line ", ee.lineno
-    lines = s.split("\n")
-    for i in range(ee.lineno - 3, ee.lineno + 3):
-      if i >= 0 and i < len(lines):
-        print "%6d %s" % (i+1, lines[i])
-    exit(0)
-  validateXML(xmldoc)
-  return xmldoc
+def Parse(s, maxrecs):
+  # parsing footprint format is the identity operation
+  # TODO: maxrecs
+  return xml_helpers.simpleParser(s, known_elnames)
 
 known_elnames = {
   'FeedInfo': 1,
@@ -67,11 +46,13 @@ known_elnames = {
   'guidestarID': 1,
   'iCalRecurrence': 1,
   'language': 1,
+  'latitude': 1,
   'lastUpdated': 1,
   'location': 1,
   'locationType': 1,
   'locations': 1,
   'logoURL': 1,
+  'longitude': 1,
   'minimumAge': 1,
   'missionStatement': 1,
   'name': 1,
@@ -109,7 +90,5 @@ known_elnames = {
 
 if __name__ == "__main__":
   sys = __import__('sys')
-  xmldoc = ParseFootprintXML(sys.argv[1])
   # tests go here
-
 

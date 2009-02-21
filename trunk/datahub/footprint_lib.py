@@ -2,8 +2,11 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
+# TODO: venue_name from location.name
 # TODO: do we need to geocode the locations?  or does Base handle this?
 
+from xml.dom.ext import PrettyPrint
+import gzip
 import hashlib
 import urllib
 import re
@@ -11,6 +14,7 @@ from datetime import datetime
 import parse_footprint
 import parse_usaservice
 import os
+import time
 from pytz import timezone
 import pytz
 import xml_helpers
@@ -19,13 +23,13 @@ FIELDSEP = "\t"
 RECORDSEP = "\n"
 
 fieldtypes = {
-  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin","id":"builtin",
+  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin","id":"builtin","location":"builtin",
   "paid":"boolean","openended":"boolean",
-  'providerID':'integer','feed_providerID':'integer','feedID':'integer','opportunityID':'integer','organizationID':'integer','sponsoringOrganizationID':'integer','volunteerHubOrganizationID':'integer','volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer','org_nationalEIN':'integer','org_guidestarID':'integer',"commitmentHoursPerWeek":'integer',
+  'volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer',"commitmentHoursPerWeek":'integer',
   'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL','feed_providerURL':'URL',
   'lastUpdated':'dateTime','expires':'dateTime','feed_createdDateTime':'dateTime',
-  "orgLocation":"location","location":"location",
-  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string","feed_providerName":"string","feed_description":"string",
+  "orgLocation":"location","latlong":"location",
+  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string","feed_providerName":"string","feed_description":"string",'providerID':'string','feed_providerID':'string','feedID':'string','opportunityID':'string','organizationID':'string','sponsoringOrganizationID':'strng','volunteerHubOrganizationID':'string','org_nationalEIN':'string','org_guidestarID':'string','venue_name':'string',
 }
 
 # Google Base uses ISO8601... in PST -- I kid you not:
@@ -67,7 +71,7 @@ def flattenFieldToCSV(field):
 debug = False
 printhead = False
 def outputField(name, value):
-  global printhead
+  global printhead, debug
   if printhead == True:
     if (name not in fieldtypes):
       print "no type for field: " + name
@@ -85,14 +89,43 @@ def outputField(name, value):
 def computeLocationField(node):
   # note: avoid commas, so it works with CSV
   # (this is good enough for the geocoder)
-  loc = xml_helpers.getTagValue(node, "city") + " "
-  loc += xml_helpers.getTagValue(node, "region") + " " 
-  loc += xml_helpers.getTagValue(node, "postalCode")
+  loc = ""
+  addr1 = xml_helpers.getTagValue(node, "streetAddress1")
+  if addr1 != "":
+    loc += addr1 + " "
+  addr2 = xml_helpers.getTagValue(node, "streetAddress2")
+  if addr2 != "":
+    loc += addr2 + " "
+  addr3 = xml_helpers.getTagValue(node, "streetAddress3")
+  if addr3 != "":
+    loc += addr3 + " "
+  city = xml_helpers.getTagValue(node, "city")
+  if city != "":
+    loc += city + " "
+  region = xml_helpers.getTagValue(node, "region")
+  if region != "":
+    loc += region + " "
+  postalCode = xml_helpers.getTagValue(node, "postalCode")
+  if postalCode != "":
+    loc += postalCode + " "
+  country = xml_helpers.getTagValue(node, "country")
+  if country != "":
+    loc += country
   return loc
+
+def computeLocationFields(node):
+  global debug
+  loc = computeLocationField(node)
+  latlong = xml_helpers.getTagValue(node, "latitude") + ","
+  latlong += xml_helpers.getTagValue(node, "longitude")
+  if latlong == ",":
+    latlong = geocode(loc)
+    if debug:
+      print "geocode: "+loc+"="+latlong
+  return (loc, latlong)
 
 def outputLocationField(node, mapped_name):
   return outputField(mapped_name, computeLocationField(node))
-
 
 def outputTagValue(node, fieldname):
   return outputField(fieldname, xml_helpers.getTagValue(node, fieldname))
@@ -132,10 +165,10 @@ def getDirectMappedField(opp, org):
   for field in csv_repeated_fields:
     s += FIELDSEP
     l = opp.getElementsByTagName(field)
+    val = ""
     if (l.length > 0):
-      s += outputField(field,flattenFieldToCSV(l[0]))
-    else:
-      s += ""
+      val = flattenFieldToCSV(l[0])
+    s += outputField(field, val)
   # orgLocation
   s += FIELDSEP
   l = opp.getElementsByTagName(field)
@@ -178,19 +211,66 @@ def getFeedFields(feedinfo):
   s += FIELDSEP + outputTagValueRenamed(feedinfo, "createdDateTime", "feed_createdDateTime")
   return s
 
+geocode_cache = None
 def geocode(addr):
-  params = urllib.urlencode({'q':addr, 'output':'csv',
+  loc = addr.lower()
+
+  global geocode_cache
+  if geocode_cache == None:
+    geocode_cache = {}
+    fh = open("geocode_cache.txt", "r")
+    try:
+      for line in fh:
+        if "|" in line:
+          key,val = line.split("|")
+          val = val.rstrip('\n')
+          geocode_cache[key.lower()] = val
+    finally:
+      fh.close()
+  if loc in geocode_cache:
+    return geocode_cache[loc]
+
+  # geocode with google maps, and cache responses
+  params = urllib.urlencode({'q':loc.lower(), 'output':'csv',
                              'oe':'utf8', 'sensor':'false',
                              'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
+  if debug:
+    print "geocoding '"+addr+"'..."
   f = urllib.urlopen("http://maps.google.com/maps/geo?%s" % params)
-  print f.read()
+  res = f.readline()
+  if debug:
+    print "response: "+res
+  if "," not in res:
+    # fail and also don't cache
+    return ""
+  respcode,zoom,lat,long = res.split(",")
+  respcode = int(respcode)
+  if respcode == 500 or respcode == 620:
+    if debug:
+      print "geocoder quota exceeded-- sleeping..."
+    time.sleep(1)
+    return geocode(addr)
 
-def convertToGoogleBaseEventsType(xmldoc, do_printhead):
+  # these results get cached
+  if respcode == 200:
+    val = geocode_cache[loc] = lat+","+long
+  elif respcode > 200:  # lookup failure
+    val = ""
+
+  fh = open("geocode_cache.txt", "a")
+  fh.write(addr + "|" + val + "\n")
+  fh.close()
+  return val
+
+def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
   s = ""
   recno = 0
   global debug
+  if debug:
+    print "footprint XML:"
+    PrettyPrint(footprint_xml)
 
-  feedinfos = xmldoc.getElementsByTagName("FeedInfo")
+  feedinfos = footprint_xml.getElementsByTagName("FeedInfo")
   if (feedinfos.length != 1):
     print "bad FeedInfo: should only be one section"
     # TODO: throw error
@@ -202,10 +282,12 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
     printhead = True
     s += outputField("id", "")
     s += FIELDSEP + getFeedFields(feedinfo)
-    s += FIELDSEP + getBaseEventRequiredFields(xmldoc, xmldoc)
-    s += FIELDSEP + getBaseOtherFields(xmldoc, xmldoc)
-    s += FIELDSEP + getDirectMappedField(xmldoc, xmldoc)
+    s += FIELDSEP + getBaseEventRequiredFields(footprint_xml, footprint_xml)
+    s += FIELDSEP + getBaseOtherFields(footprint_xml, footprint_xml)
+    s += FIELDSEP + getDirectMappedField(footprint_xml, footprint_xml)
     s += FIELDSEP + outputField("location", "")
+    s += FIELDSEP + outputField("latlong", "")
+    s += FIELDSEP + outputField("venue_name", "")
     s += FIELDSEP + outputField("openended", "")
     s += FIELDSEP + outputField("duration", "")
     s += FIELDSEP + outputField("commitmentHoursPerWeek", "")
@@ -213,14 +295,14 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
     s += RECORDSEP
     printhead = False
 
-  organizations = xmldoc.getElementsByTagName("Organization")
+  organizations = footprint_xml.getElementsByTagName("Organization")
   known_orgs = {}
   for org in organizations:
     id = xml_helpers.getTagValue(org, "organizationID")
     if (id != ""):
       known_orgs[id] = org
     
-  opportunities = xmldoc.getElementsByTagName("VolunteerOpportunity")
+  opportunities = footprint_xml.getElementsByTagName("VolunteerOpportunity")
   for opp in opportunities:
     id = xml_helpers.getTagValue(opp, "volunteerOpportunityID")
     if (id == ""):
@@ -253,10 +335,9 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
         recno = recno + 1
         if debug:
           s += "--- record %s\n" % (recno)
-        locstr = computeLocationField(opploc)
         duration = xml_helpers.getTagValue(opptime, "duration")
         commitmentHoursPerWeek = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
-        locstr = computeLocationField(opploc)
+        locstr,latlong = computeLocationFields(opploc)
         id = computeStableId(opp, org, locstr, openended, duration,
                              commitmentHoursPerWeek, startend)
         s += outputField("id", id)
@@ -265,6 +346,8 @@ def convertToGoogleBaseEventsType(xmldoc, do_printhead):
         s += FIELDSEP + getBaseOtherFields(opp, org)
         s += FIELDSEP + getDirectMappedField(opp, org)
         s += FIELDSEP + outputField("location", locstr)
+        s += FIELDSEP + outputField("latlong", latlong)
+        s += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
         s += FIELDSEP + outputField("openended", openended)
         s += FIELDSEP + outputField("duration", duration)
         s += FIELDSEP + outputField("commitmentHoursPerWeek", commitmentHoursPerWeek)
@@ -298,10 +381,12 @@ if __name__ == "__main__":
   sys = __import__('sys')
   parser = OptionParser("usage: %prog [options] sample_data.xml ...")
   parser.set_defaults(debug=False)
+  parser.set_defaults(maxrecs=-1)
   parser.add_option("-d", "--dbg", action="store_true", dest="debug")
   parser.add_option("--ftpinfo", dest="ftpinfo")
   parser.add_option("--fs", "--fieldsep", action="store", dest="fs")
   parser.add_option("--rs", "--recordsep", action="store", dest="rs")
+  parser.add_option("-n", "--maxrecords", action="store", dest="maxrecs")
   (options, args) = parser.parse_args(sys.argv[1:])
   if (len(args) == 0):
     parser.print_help()
@@ -313,17 +398,16 @@ if __name__ == "__main__":
   if (options.debug):
     debug = True
     FIELDSEP = "\n"
+  f = args[0]
   do_printhead = True
-  for f in args:
-    s = ""
-    parsefunc = parse_footprint.ParseXML
-    if re.search("usa-?service", f):
-      parsefunc = parse_usaservice.ParseXML
-    xmldoc = parsefunc(f)
-    s += convertToGoogleBaseEventsType(xmldoc, do_printhead)
-    do_printhead = False   # only print the first time
-    if (options.ftpinfo):
-      ftpToBase(f, options.ftpinfo, s)
-    else:
-      print s,
-
+  parsefunc = parse_footprint.Parse
+  if re.search("usa-?service", f):
+    parsefunc = parse_usaservice.Parse
+  fh = gzip.open(f, 'rb')
+  instr = fh.read()
+  footprint_xml = parsefunc(instr, int(options.maxrecs))
+  outstr = convertToGoogleBaseEventsType(footprint_xml, do_printhead)
+  if (options.ftpinfo):
+    ftpToBase(f, options.ftpinfo, outstr)
+  else:
+    print outstr,
