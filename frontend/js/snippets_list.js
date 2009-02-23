@@ -2,7 +2,8 @@ google.friendconnect.container.loadOpenSocialApi({site: SITE_ID, onload: functio
 
 function broadcastEvent(div, eventUrl, eventTitle, eventSnippet) {
   opensocial.requestCreateActivity(opensocial.newActivity(
-      {title: '{{userDisplayName}} shared an event: <a href="' + eventUrl + '">' + eventTitle + '</a>',
+      {title: document.userDisplayName 
+              + ' shared an event: <a href="' + eventUrl + '">' + eventTitle + '</a>',
         body: eventSnippet}));
   // TODO: This is a hack. We need to figure out the real ui here...
   div.childNodes[1].src="images/broadcasticon-on.png";
@@ -10,7 +11,8 @@ function broadcastEvent(div, eventUrl, eventTitle, eventSnippet) {
 }
 
 function shareEvent(div, eventUrl, eventTitle, eventSnippet) {
-  google.friendconnect.requestInvite("{{userDisplayName}} wants you to check out this event! "
+  google.friendconnect.requestInvite(document.userDisplayName +
+                                     " wants you to check out this event! "
       + eventTitle + " " + eventUrl);
 }
 
