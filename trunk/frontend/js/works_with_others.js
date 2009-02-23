@@ -36,7 +36,7 @@ function setupData(data) {
     html += "<a href='#' onclick='google.friendconnect.requestInvite()'>Invite</a><br>";
     html += "<a href='#' onclick='google.friendconnect.requestSignOut(); location.href=\"friends\";'>Sign out</a><br>";
 
-    html += "<b>userId: {{userId}}</b>";
+    html += "<b>userId: " + document.fcUserId + "</b>";
 
     document.getElementById('signInPane').innerHTML = html;
   }
