@@ -1,0 +1,188 @@
+# Copyright 2009 Google Inc.  All Rights Reserved.
+#
+
+# <VolunteerOpportunity>
+# <LocalID>7702:76159:578625</LocalID>
+# <AffiliateID>7702</AffiliateID>
+# <OrgLocalID>578625</OrgLocalID>
+# <Categories>
+# <Category><CategoryID>5</CategoryID></Category>
+# <Category><CategoryID>6</CategoryID></Category>
+# </Categories>
+# <DateListed>2008-07-08</DateListed>
+# <OpportunityType><OpportunityTypeID>1</OpportunityTypeID></OpportunityType>
+# <Title>HHSB Arts &amp; Crafts (FX)</Title>
+# <DetailURL>http://www.HandsOnMiami.org/projects/viewProject.php?_mode=occurrenceView&amp;_action=load&amp;ixActivity=76159&amp;_clearFlag=specialevent&amp;_clearFlag=course&amp;ixFeed=6</DetailURL>
+# <Description>Join HOM at the Hebrew Home of South Beach for a fun morning of arts and crafts with the seniors who reside at the home.  Volunteers and residents will enjoy sweets. Spanish-speaking volunteers especially welcome.  Family-friendly: minimum age with an adult is 11.   </Description>
+# <LogoURL>http://www.HandsOnMiami.org/uploaded_files/deliverFile.php/hom_140x140.gif</LogoURL>
+# <LocationClassifications><LocationClassification><LocationClassificationID>1</LocationClassificationID></LocationClassification></LocationClassifications>
+# <Locations>
+# <Location>
+# <Address1>Hebrew Home of South Beach</Address1>
+# <Address2>320 Collins Avenue</Address2>
+# <City>Miami Beach</City>
+# <StateOrProvince>FL</StateOrProvince>
+# <ZipOrPostalCode>33139</ZipOrPostalCode>
+# <Country>USA</Country>
+# </Location>
+# </Locations>
+# <OpportunityDates>
+# <OpportunityDate>
+# <StartDate>2008-08-09</StartDate>
+# <EndDate>2008-08-09</EndDate>
+# <StartTime>10:00:00</StartTime>
+# <EndTime>11:30:00</EndTime>
+# </OpportunityDate>
+# <OpportunityDate>
+# <StartDate>2008-08-23</StartDate>
+# <EndDate>2008-08-23</EndDate>
+# <StartTime>10:00:00</StartTime>
+# <EndTime>11:30:00</EndTime>
+# </OpportunityDate>
+# </OpportunityDates>
+# 
+# <SponsoringOrganizations>
+# <SponsoringOrganization>
+# <Name>Hebrew Home of South Beach</Name>
+# <Description>Hebrew Home of South Beach; Residential facility managed by D.O.S. Health Care </Description>
+# <Country>USA</Country>
+# <Phone>305-672-6464</Phone>
+# <Extension>220</Extension>
+# </SponsoringOrganization>
+# </SponsoringOrganizations>
+# </VolunteerOpportunity>
+
+from xml.dom import minidom
+import xml_helpers
+import parse_footprint
+import re
+
+def ParseHelper(instr, maxrecs):
+  known_elnames = [ 'Address1', 'Address2', 'AffiliateID', 'Categories', 'Category', 'City', 'Country', 'DateListed', 'Description', 'DetailURL', 'EndDate', 'EndTime', 'Extension', 'LocalID', 'Location', 'LocationClassifications', 'Locations', 'LogoURL', 'Name', 'OpportunityDate', 'OpportunityDates', 'OpportunityType', 'OrgLocalID', 'Phone', 'SponsoringOrganization', 'SponsoringOrganizations', 'StartDate', 'StartTime', 'StateOrProvince', 'Title', 'VolunteerOpportunity', 'ZipOrPostalCode', ]
+  #xmldoc = xml_helpers.simpleParser(instr, known_elnames)
+
+  # convert to footprint format
+  s = '<?xml version="1.0" ?>'
+  s += '<FootprintFeed schemaVersion="0.1">'
+  s += '<FeedInfo>'
+  # TODO: assign provider IDs?
+  s += '<feedID>handsonnetwork.org</feedID>'
+  s += '<providerID>102</providerID>'
+  s += '<providerName>handsonnetwork.org</providerName>'
+  s += '<providerURL>http://www.handsonnetwork.org/</providerURL>'
+  s += '<description></description>'
+  # TODO: capture ts -- use now?!
+  s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
+  s += '</FeedInfo>'
+
+  # hardcoded: Organization
+  s += '<Organizations>'
+  sponsor_ids = {}
+  sponsorstrs = re.findall(r'<SponsoringOrganization>.+?</SponsoringOrganization>', instr, re.DOTALL)
+  for i,orgstr in enumerate(sponsorstrs):
+    org = xml_helpers.simpleParser(orgstr, known_elnames)
+    #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
+    #for i,org in enumerate(sponsors):
+    s += '<Organization>'
+    name = xml_helpers.getTagValue(org, "Name")
+    desc = xml_helpers.getTagValue(org, "Desc")
+    s += '<name>%s</name>' % (xml_helpers.getTagValue(org, "Name"))
+    s += '<description>%s</description>' % (xml_helpers.getTagValue(org, "Description"))
+    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.getTagValue(org, "URL"))
+    # unmapped: Email
+    # unmapped: Phone
+    # unmapped: Extension
+    s += '<location>'
+    #s += '<city>%s</city>' % (xml_helpers.getTagValue(org, "City"))
+    #s += '<region>%s</region>' % (xml_helpers.getTagValue(org, "State"))
+    #s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(org, "PostalCode"))
+    s += '<country>%s</country>' % (xml_helpers.getTagValue(org, "Country"))
+    s += '</location>'
+    s += '<organizationID>%d</organizationID>' % (i+1)
+    sponsor_ids[name+desc] = i+1
+    s += '<nationalEIN></nationalEIN>'
+    s += '<guidestarID></guidestarID>'
+    s += '<missionStatement></missionStatement>'
+    s += '<donateURL></donateURL>'
+    s += '<logoURL></logoURL>'
+    s += '<detailURL></detailURL>'
+    s += '</Organization>'
+  s += '</Organizations>'
+    
+  s += '<VolunteerOpportunities>'
+  #items = xmldoc.getElementsByTagName("VolunteerOpportunity")
+  #if (maxrecs > items.length):
+  #  maxrecs = items.length
+  #for item in items[0:maxrecs-1]:
+  oppstrs = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>', instr, re.DOTALL)
+  if (maxrecs > len(oppstrs)):
+    maxrecs = len(oppstrs)
+  for i,oppstr in enumerate(oppstrs):
+    opp = xml_helpers.simpleParser(oppstr, known_elnames)
+    name = xml_helpers.getTagValue(org, "Name")
+    desc = xml_helpers.getTagValue(org, "Desc")
+    sponsor_id = sponsor_ids[name+desc]
+    oppdates = opp.getElementsByTagName("OpportunityDate")
+    if (oppdates == None):
+      oppdates = [ None ]
+    for oppdate in oppdates:
+      # unmapped: LogoURL
+      # unmapped: OpportunityTypeID   (categoryTag?)
+      # unmapped: LocationClassificationID (flatten)
+      s += '<VolunteerOpportunity>'
+      s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(opp, "LocalID"))
+      s += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (sponsor_id)
+      # unmapped: OrgLocalID
+      s += '<volunteerHubOrganizationID>%s</volunteerHubOrganizationID>' % (xml_helpers.getTagValue(opp, "AffiliateID"))
+      s += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "Title"))
+      s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(opp, "DetailURL"))
+      s += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "Description"))
+      s += '<lastUpdated>%s</lastUpdated>' % (xml_helpers.getTagValue(opp, "DateListed"))
+      # hardcoded: abstract
+      s += '<abstract></abstract>'
+      # hardcoded: volunteersNeeded
+      s += '<volunteersNeeded>-8888</volunteersNeeded>'
+      # no equivalent: contactName, contactEmail
+      locations = opp.getElementsByTagName("Location")
+      if (locations.length != 1):
+        print "parse_handsonnetwork: only 1 db:event supported."
+        return None
+      loc = locations[0]
+      s += '<locations><location>'
+      # yuck, uses address1 for venue name... sometimes... no way to detect: presence of numbers?
+      s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(loc, "Address1"))
+      s += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.getTagValue(loc, "Address2"))
+      s += '<city>%s</city>' % (xml_helpers.getTagValue(loc, "City"))
+      s += '<region>%s</region>' % (xml_helpers.getTagValue(loc, "State"))
+      s += '<country>%s</country>' % (xml_helpers.getTagValue(loc, "Country"))
+      s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(loc, "ZipOrPostalCode"))
+      # no equivalent: latitude, longitude
+      s += '</location></locations>'
+      s += '<dateTimeDurations><dateTimeDuration>'
+      if oppdate == None:
+        s += '<openEnded>Yes</openEnded>'
+      else:
+        s += '<openEnded>No</openEnded>'
+        # hardcoded: commitmentHoursPerWeek
+        s += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
+        # TODO: timezone
+        s += '<startDate>%s</startDate>' % (xml_helpers.getTagValue(oppdate, "StartDate"))
+        s += '<endDate>%s</endDate>' % (xml_helpers.getTagValue(oppdate, "EndDate"))
+        s += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(oppdate, "StartTime"))
+        s += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(oppdate, "EndTime"))
+      s += '</dateTimeDuration></dateTimeDurations>'
+      s += '</VolunteerOpportunity>'
+  s += '</VolunteerOpportunities>'
+  s += '</FootprintFeed>'
+  return s
+
+def Parse(instr, maxrecs):
+  # frees up RAM
+  s = ParseHelper(instr, maxrecs)
+  s = re.sub(r'><([^/])', r'>\n<\1', s)
+  cvtd_xml = parse_footprint.Parse(s, maxrecs)
+  return cvtd_xml
+
+if __name__ == "__main__":
+  sys = __import__('sys')
+  # tests go here

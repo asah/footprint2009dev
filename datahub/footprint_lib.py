@@ -2,10 +2,8 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
-# TODO: venue_name from location.name
-# TODO: do we need to geocode the locations?  or does Base handle this?
-
 from xml.dom.ext import PrettyPrint
+from xml.sax.saxutils import escape
 import gzip
 import hashlib
 import urllib
@@ -13,14 +11,20 @@ import re
 from datetime import datetime
 import parse_footprint
 import parse_usaservice
+import parse_handsonnetwork
 import os
 import time
-from pytz import timezone
-import pytz
 import xml_helpers
+
+import dateutil
+import dateutil.tz
+import dateutil.parser
 
 FIELDSEP = "\t"
 RECORDSEP = "\n"
+
+debug = False
+printhead = False
 
 fieldtypes = {
   "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin","id":"builtin","location":"builtin",
@@ -39,19 +43,14 @@ def cvtDateTimeToGoogleBase(datestr, timestr, tz):
   # datestr = YYYY-MM-DD
   # timestr = HH:MM:SS
   # tz = America/New_York
-  #print "datestr="+datestr+" timestr="+timestr+" tz="+tz
-  if (datestr == ""):
-    return ""
-  if (timestr == ""):
-    ts = datetime.strptime(datestr, "%Y-%m-%d")
-  else:
-    if (tz == ""):
-      tz = "UTC"
-    origtz = timezone(tz)
-    ts = datetime.strptime(datestr + " " + timestr, "%Y-%m-%d %H:%M:%S")
-    ts = ts.replace(tzinfo=origtz)
-    ts = ts.astimezone(timezone("PST8PDT"))
-  # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00  (in PST)
+  try:
+    tzinfo = dateutil.tz.tzstr(tz)
+  except:
+    tzinfo = dateutil.tz.tzutc()
+  ts = dateutil.parser.parse(datestr + " " + timestr)
+  ts = ts.replace(tzinfo=tzinfo)
+  pst = dateutil.tz.tzstr("PST8PDT")
+  ts = ts.astimezone(pst)
   res = ts.strftime("%Y-%m-%dT%H:%M:%S")
   return res
 
@@ -68,8 +67,6 @@ def flattenFieldToCSV(field):
   #print field
   return ",".join(filter(lambda x: x != "", map(value, field.childNodes)))
 
-debug = False
-printhead = False
 def outputField(name, value):
   global printhead, debug
   if printhead == True:
@@ -86,46 +83,71 @@ def outputField(name, value):
     return name.rjust(22) + " : " + value
   return value
 
-def computeLocationField(node):
+def addrField(node, field):
+  addr = xml_helpers.getTagValue(node, field)
+  if addr != "":
+    addr += " "
+  return addr
+  
+def cityLocationFields(node):
   # note: avoid commas, so it works with CSV
   # (this is good enough for the geocoder)
   loc = ""
-  addr1 = xml_helpers.getTagValue(node, "streetAddress1")
-  if addr1 != "":
-    loc += addr1 + " "
-  addr2 = xml_helpers.getTagValue(node, "streetAddress2")
-  if addr2 != "":
-    loc += addr2 + " "
-  addr3 = xml_helpers.getTagValue(node, "streetAddress3")
-  if addr3 != "":
-    loc += addr3 + " "
-  city = xml_helpers.getTagValue(node, "city")
-  if city != "":
-    loc += city + " "
-  region = xml_helpers.getTagValue(node, "region")
-  if region != "":
-    loc += region + " "
-  postalCode = xml_helpers.getTagValue(node, "postalCode")
-  if postalCode != "":
-    loc += postalCode + " "
-  country = xml_helpers.getTagValue(node, "country")
-  if country != "":
-    loc += country
+  loc += addrField(node, "city")
+  loc += addrField(node, "region")
+  loc += addrField(node, "postalCode")
+  loc += addrField(node, "country")
   return loc
 
-def computeLocationFields(node):
+def computeLocationField(node):
+  loc = ""
+  addr1 = addrField(node, "streetAddress1")
+  addr2 = addrField(node, "streetAddress2")
+  adde3 = addrField(node, "streetAddress3")
+  return loc
+
+def lookupLocationFields(node):
   global debug
-  loc = computeLocationField(node)
+  loc = addrField(node, "streetAddress1")
+  loc += addrField(node, "streetAddress2")
+  loc += addrField(node, "streetAddress3")
+  loc += cityLocationFields(node)
+  fullloc = loc
   latlong = xml_helpers.getTagValue(node, "latitude") + ","
   latlong += xml_helpers.getTagValue(node, "longitude")
   if latlong == ",":
     latlong = geocode(loc)
-    if debug:
-      print "geocode: "+loc+"="+latlong
-  return (loc, latlong)
+  if latlong == "":
+    # sometimes address1 contains un-geocodable descriptive language,
+    # e.g. venue name, "around the corner from ..." etc.
+    loc = addrField(node, "streetAddress2")
+    loc += addrField(node, "streetAddress3")
+    loc += cityLocationFields(node)
+    latlong = geocode(loc)
+  if latlong == "":
+    # rarely, addr1 & addr are both descriptive
+    loc = addrField(node, "streetAddress3")
+    loc += cityLocationFields(node)
+    latlong = geocode(loc)
+  if latlong == "":
+    # missing or bogus address lines
+    loc = cityLocationFields(node)
+    latlong = geocode(loc)
+  if latlong == "":
+    # missing or bogus city name
+    loc = addrField(node, "postalCode")
+    loc += addrField(node, "country")
+  if latlong == "":
+    # missing or bogus postalcode
+    loc = addrField(node, "city")
+    loc += addrField(node, "region")
+    loc += addrField(node, "country")
+  if debug:
+    print "geocode: "+loc+"="+latlong
+  return (fullloc, latlong, loc)
 
 def outputLocationField(node, mapped_name):
-  return outputField(mapped_name, computeLocationField(node))
+  return outputField(mapped_name, computeLocationField(node)+cityLocationFields(node))
 
 def outputTagValue(node, fieldname):
   return outputField(fieldname, xml_helpers.getTagValue(node, fieldname))
@@ -189,8 +211,9 @@ def getBaseOtherFields(opp, org):
   s += FIELDSEP + outputField("employer", xml_helpers.getTagValue(org, "name"))
   # TODO: publish_date?
   expires = xml_helpers.getTagValue(opp, "expires")
-  # TODO: what tz is expires?
-  expires = cvtDateTimeToGoogleBase(expires, "", "UTC")
+  if expires != "":
+    # TODO: what tz is expires?
+    expires = cvtDateTimeToGoogleBase(expires, "", "UTC")
   s += FIELDSEP + outputField("expiration_date", expires)
   return s
 
@@ -211,11 +234,15 @@ def getFeedFields(feedinfo):
   s += FIELDSEP + outputTagValueRenamed(feedinfo, "createdDateTime", "feed_createdDateTime")
   return s
 
+geocode_debug = False
 geocode_cache = None
 def geocode(addr):
-  loc = addr.lower()
+  global geocode_debug, geocode_cache
+  loc = addr.lower().strip()
+  loc = re.sub(r'^[^0-9a-z]+', r'', loc)
+  loc = re.sub(r'[^0-9a-z]+$', r'', loc)
+  loc = re.sub(r'\s\s+', r'\s', loc)
 
-  global geocode_cache
   if geocode_cache == None:
     geocode_cache = {}
     fh = open("geocode_cache.txt", "r")
@@ -234,19 +261,24 @@ def geocode(addr):
   params = urllib.urlencode({'q':loc.lower(), 'output':'csv',
                              'oe':'utf8', 'sensor':'false',
                              'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
-  if debug:
+  if geocode_debug:
     print "geocoding '"+addr+"'..."
   f = urllib.urlopen("http://maps.google.com/maps/geo?%s" % params)
   res = f.readline()
-  if debug:
+  if geocode_debug:
     print "response: "+res
   if "," not in res:
     # fail and also don't cache
     return ""
-  respcode,zoom,lat,long = res.split(",")
+  try:
+    respcode,zoom,lat,long = res.split(",")
+  except:
+    if geocode_debug:
+      print "unparseable response: "+res[0:80]
+    respcode,zoom,lat,long = 999,0,0,0
   respcode = int(respcode)
   if respcode == 500 or respcode == 620:
-    if debug:
+    if geocode_debug:
       print "geocoder quota exceeded-- sleeping..."
     time.sleep(1)
     return geocode(addr)
@@ -337,7 +369,14 @@ def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
           s += "--- record %s\n" % (recno)
         duration = xml_helpers.getTagValue(opptime, "duration")
         commitmentHoursPerWeek = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
-        locstr,latlong = computeLocationFields(opploc)
+        locstr,latlong,geocoded_loc = lookupLocationFields(opploc)
+        if locstr != geocoded_loc:
+          #print "locstr: ", locstr, " geocoded_loc: ", geocoded_loc
+          descs = opp.getElementsByTagName("description")
+          encoded_locstr = escape(locstr)
+          encoded_locstr = unicode(encoded_locstr,errors="ignore")
+          encoded_locstr = encoded_locstr.encode('utf-8', "ignore")
+          descs[0].firstChild.data += ". detailed location information: " + encoded_locstr
         id = computeStableId(opp, org, locstr, openended, duration,
                              commitmentHoursPerWeek, startend)
         s += outputField("id", id)
@@ -345,7 +384,7 @@ def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
         s += FIELDSEP + getBaseEventRequiredFields(opp, org)
         s += FIELDSEP + getBaseOtherFields(opp, org)
         s += FIELDSEP + getDirectMappedField(opp, org)
-        s += FIELDSEP + outputField("location", locstr)
+        s += FIELDSEP + outputField("location", geocoded_loc)
         s += FIELDSEP + outputField("latlong", latlong)
         s += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
         s += FIELDSEP + outputField("openended", openended)
@@ -371,18 +410,26 @@ def ftpToBase(f, ftpinfo, s):
   fn = "footprint1.txt"
   if re.search("usa-?service", f):
     fn = "usaservice1.txt"
+  elif re.search("handson", f):
+    fn = "handsonnetwork1.txt"
   print "uploading: "+fn
   ftp.storbinary("STOR " + fn, fh, 8192)
   print "done."
   ftp.quit()
+  #print "file:"
+  #print s,
 
 from optparse import OptionParser
 if __name__ == "__main__":
   sys = __import__('sys')
   parser = OptionParser("usage: %prog [options] sample_data.xml ...")
+  parser.set_defaults(geocode_debug=False)
   parser.set_defaults(debug=False)
+  parser.set_defaults(debug_input=False)
   parser.set_defaults(maxrecs=-1)
   parser.add_option("-d", "--dbg", action="store_true", dest="debug")
+  parser.add_option("--dbginput", action="store_true", dest="debug_input")
+  parser.add_option("-g", "--geodbg", action="store_true", dest="geocode_debug")
   parser.add_option("--ftpinfo", dest="ftpinfo")
   parser.add_option("--fs", "--fieldsep", action="store", dest="fs")
   parser.add_option("--rs", "--recordsep", action="store", dest="rs")
@@ -397,16 +444,30 @@ if __name__ == "__main__":
     RECORDSEP = options.rs
   if (options.debug):
     debug = True
+    geocode_debug = True
     FIELDSEP = "\n"
+  if (options.geocode_debug):
+    geocode_debug = True
   f = args[0]
   do_printhead = True
   parsefunc = parse_footprint.Parse
   if re.search("usa-?service", f):
     parsefunc = parse_usaservice.Parse
-  fh = gzip.open(f, 'rb')
+  elif re.search("handson", f):
+    parsefunc = parse_handsonnetwork.Parse
+  if re.search(r'[.]gz$', f):
+    fh = gzip.open(f, 'rb')
+  else:
+    fh = open(f, 'rb')
   instr = fh.read()
+  if (options.debug_input):
+    # split nasty XML inputs, to help isolate problems
+    instr = re.sub(r'><', r'>\n<', instr)
+    
   footprint_xml = parsefunc(instr, int(options.maxrecs))
   outstr = convertToGoogleBaseEventsType(footprint_xml, do_printhead)
+  #only need this if Base quoted fields it enabled
+  #outstr = re.sub(r'"', r'&quot;', outstr)
   if (options.ftpinfo):
     ftpToBase(f, options.ftpinfo, outstr)
   else:

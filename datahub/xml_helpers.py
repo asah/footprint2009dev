@@ -1,5 +1,7 @@
 from xml.dom import minidom
+from datetime import datetime
 from xml.sax.saxutils import escape
+from xml.parsers.expat import ExpatError
 import re
 
 def getTagValue(entity, tag):
@@ -26,14 +28,22 @@ def validateXML(xmldoc, known_elnames):
   for node in xmldoc.childNodes:
     if (node.nodeType == node.ELEMENT_NODE and
         node.tagName not in known_elnames):
-      print "unknown tagName '"+node.tagName+"'"
+      #print "unknown tagName '"+node.tagName+"'"
+      pass
       # TODO: spellchecking...
     validateXML(node, known_elnames)
 
-def simpleParser(s, known_elnames):
+def simpleParser(s, known_elnames_list):
   try:
+    #print datetime.now(),": parsing XML"
     xmldoc = minidom.parseString(s)
-    validateXML(xmldoc, known_elnames)
+    # this stuff in try-block to avoid use-before-def of xmldoc
+    #print datetime.now(),": validating XML..."
+    known_elnames_dict = {}
+    for item in known_elnames_list:
+      known_elnames_dict[item] = True
+    validateXML(xmldoc, known_elnames_dict)
+    #print datetime.now(),": done."
     return xmldoc
   except ExpatError, ee:
     print "XML parsing error on line ", ee.lineno
