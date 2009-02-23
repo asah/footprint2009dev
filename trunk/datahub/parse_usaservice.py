@@ -9,7 +9,8 @@ from datetime import datetime
 
 import dateutil.parser
 
-def Parse(s, maxrecs):
+def Parse(s, maxrecs, progress):
+  # TODO: progress
   known_elnames = [ 'channel', 'db:abstract', 'db:address', 'db:attendee_count', 'db:categories', 'db:city', 'db:country', 'db:county', 'db:dateTime', 'db:event', 'db:eventType', 'db:guest_total', 'db:host', 'db:latitude', 'db:length', 'db:longitude', 'db:rsvp', 'db:scheduledTime', 'db:state', 'db:street', 'db:title', 'db:venue_name', 'db:zipcode', 'description', 'docs', 'guid', 'item', 'language', 'link', 'pubDate', 'rss', 'title', ]
   xmldoc = xml_helpers.simpleParser(s, known_elnames)
 
@@ -68,7 +69,7 @@ def Parse(s, maxrecs):
     if re.search("[0-9][0-9] [A-Z][a-z][a-z] [0-9][0-9][0-9][0-9]", pubdate):
       # TODO: parse() is ignoring timzone...
       ts = dateutil.parser.parse(pubdate)
-      pubdate = ts.strftime("%Y-%m-%d %H:%M:%S")
+      pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
     s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
     dbevents = item.getElementsByTagName("db:event")
     if (dbevents.length != 1):
@@ -122,7 +123,7 @@ def Parse(s, maxrecs):
 
   s = re.sub(r'><([^/])', r'>\n<\1', s)
   #print s
-  xmldoc = parse_footprint.Parse(s, maxrecs)
+  xmldoc = parse_footprint.Parse(s, maxrecs, progress)
   return xmldoc
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@ FIELDSEP = "\t"
 RECORDSEP = "\n"
 
 debug = False
+progress = False
 printhead = False
 
 fieldtypes = {
@@ -32,8 +33,8 @@ fieldtypes = {
   'volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer',"commitmentHoursPerWeek":'integer',
   'providerURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL','feed_providerURL':'URL',
   'lastUpdated':'dateTime','expires':'dateTime','feed_createdDateTime':'dateTime',
-  "orgLocation":"location","latlong":"location",
-  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string","feed_providerName":"string","feed_description":"string",'providerID':'string','feed_providerID':'string','feedID':'string','opportunityID':'string','organizationID':'string','sponsoringOrganizationID':'strng','volunteerHubOrganizationID':'string','org_nationalEIN':'string','org_guidestarID':'string','venue_name':'string',
+  # note: type 'location' isn't safe because the Base geocoder can fail, causing the record to be rejected
+  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string","feed_providerName":"string","feed_description":"string",'providerID':'string','feed_providerID':'string','feedID':'string','opportunityID':'string','organizationID':'string','sponsoringOrganizationID':'strng','volunteerHubOrganizationID':'string','org_nationalEIN':'string','org_guidestarID':'string','venue_name':'string',"location_string":"string","orgLocation":"string",
 }
 
 # Google Base uses ISO8601... in PST -- I kid you not:
@@ -294,7 +295,7 @@ def geocode(addr):
   fh.close()
   return val
 
-def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
+def convertToGoogleBaseEventsType(footprint_xml, do_printhead, progress):
   s = ""
   recno = 0
   global debug
@@ -318,7 +319,7 @@ def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
     s += FIELDSEP + getBaseOtherFields(footprint_xml, footprint_xml)
     s += FIELDSEP + getDirectMappedField(footprint_xml, footprint_xml)
     s += FIELDSEP + outputField("location", "")
-    s += FIELDSEP + outputField("latlong", "")
+    s += FIELDSEP + outputField("location_string", "")
     s += FIELDSEP + outputField("venue_name", "")
     s += FIELDSEP + outputField("openended", "")
     s += FIELDSEP + outputField("duration", "")
@@ -335,6 +336,7 @@ def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
       known_orgs[id] = org
     
   opportunities = footprint_xml.getElementsByTagName("VolunteerOpportunity")
+  totrecs = 0
   for opp in opportunities:
     id = xml_helpers.getTagValue(opp, "volunteerOpportunityID")
     if (id == ""):
@@ -364,19 +366,23 @@ def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
         startend += "/"
         startend += cvtDateTimeToGoogleBase(endDate, endTime, "UTC")
       for opploc in opp_locations:
+        if progress:
+          totrecs = totrecs + 1
+          if totrecs%250==0:
+            print datetime.now(),": ",totrecs," records generated."
         recno = recno + 1
         if debug:
           s += "--- record %s\n" % (recno)
         duration = xml_helpers.getTagValue(opptime, "duration")
         commitmentHoursPerWeek = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
         locstr,latlong,geocoded_loc = lookupLocationFields(opploc)
-        if locstr != geocoded_loc:
-          #print "locstr: ", locstr, " geocoded_loc: ", geocoded_loc
-          descs = opp.getElementsByTagName("description")
-          encoded_locstr = escape(locstr)
-          encoded_locstr = unicode(encoded_locstr,errors="ignore")
-          encoded_locstr = encoded_locstr.encode('utf-8', "ignore")
-          descs[0].firstChild.data += ". detailed location information: " + encoded_locstr
+        #if locstr != geocoded_loc:
+        #  #print "locstr: ", locstr, " geocoded_loc: ", geocoded_loc
+        #  descs = opp.getElementsByTagName("description")
+        #  encoded_locstr = escape(locstr)
+        #  encoded_locstr = unicode(encoded_locstr,errors="ignore")
+        #  encoded_locstr = encoded_locstr.encode('utf-8', "ignore")
+        #  descs[0].firstChild.data += ". detailed location information: " + encoded_locstr
         id = computeStableId(opp, org, locstr, openended, duration,
                              commitmentHoursPerWeek, startend)
         s += outputField("id", id)
@@ -384,8 +390,8 @@ def convertToGoogleBaseEventsType(footprint_xml, do_printhead):
         s += FIELDSEP + getBaseEventRequiredFields(opp, org)
         s += FIELDSEP + getBaseOtherFields(opp, org)
         s += FIELDSEP + getDirectMappedField(opp, org)
-        s += FIELDSEP + outputField("location", geocoded_loc)
-        s += FIELDSEP + outputField("latlong", latlong)
+        s += FIELDSEP + outputField("location", latlong)
+        s += FIELDSEP + outputField("location_string", geocoded_loc)
         s += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
         s += FIELDSEP + outputField("openended", openended)
         s += FIELDSEP + outputField("duration", duration)
@@ -425,10 +431,12 @@ if __name__ == "__main__":
   parser = OptionParser("usage: %prog [options] sample_data.xml ...")
   parser.set_defaults(geocode_debug=False)
   parser.set_defaults(debug=False)
+  parser.set_defaults(progress=False)
   parser.set_defaults(debug_input=False)
   parser.set_defaults(maxrecs=-1)
   parser.add_option("-d", "--dbg", action="store_true", dest="debug")
   parser.add_option("--dbginput", action="store_true", dest="debug_input")
+  parser.add_option("--progress", action="store_true", dest="progress")
   parser.add_option("-g", "--geodbg", action="store_true", dest="geocode_debug")
   parser.add_option("--ftpinfo", dest="ftpinfo")
   parser.add_option("--fs", "--fieldsep", action="store", dest="fs")
@@ -445,9 +453,12 @@ if __name__ == "__main__":
   if (options.debug):
     debug = True
     geocode_debug = True
+    progress = True
     FIELDSEP = "\n"
   if (options.geocode_debug):
     geocode_debug = True
+  if (options.progress):
+    progress = True
   f = args[0]
   do_printhead = True
   parsefunc = parse_footprint.Parse
@@ -460,12 +471,25 @@ if __name__ == "__main__":
   else:
     fh = open(f, 'rb')
   instr = fh.read()
+
+  # remove tabs and nonprintable junk
+  instr = xml_helpers.filterNonPrintable(instr)
+  instr = re.sub("\t", " ", instr)                                         
+  instr = re.sub(r'\r\n?', "\n", instr)
+  instr = re.sub("\xc2?[\x93\x94]", "'", instr)
+  instr = re.sub("\xc2?\222", "'", instr)
+  instr = re.sub(r'\xc2?[\223\224]', '"', instr)
+  instr = re.sub(r'\xc2?[\225\226]', "-", instr)
+
   if (options.debug_input):
     # split nasty XML inputs, to help isolate problems
     instr = re.sub(r'><', r'>\n<', instr)
     
-  footprint_xml = parsefunc(instr, int(options.maxrecs))
-  outstr = convertToGoogleBaseEventsType(footprint_xml, do_printhead)
+  footprint_xml = parsefunc(instr, int(options.maxrecs), progress)
+
+  if progress:
+    print datetime.now(),"footprint_lib: convertToGoogleBaseEventsType..."
+  outstr = convertToGoogleBaseEventsType(footprint_xml, do_printhead, progress)
   #only need this if Base quoted fields it enabled
   #outstr = re.sub(r'"', r'&quot;', outstr)
   if (options.ftpinfo):
