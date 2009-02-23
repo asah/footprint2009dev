@@ -1,3 +1,6 @@
+#from xml.dom import pulldom
+#from xml.parsers.expat pulldom
+
 from xml.dom import minidom
 from datetime import datetime
 from xml.sax.saxutils import escape
@@ -35,13 +38,13 @@ def validateXML(xmldoc, known_elnames):
 
 def simpleParser(s, known_elnames_list):
   try:
+    known_elnames_dict = {}
+    for item in known_elnames_list:
+      known_elnames_dict[item] = True
     #print datetime.now(),": parsing XML"
     xmldoc = minidom.parseString(s)
     # this stuff in try-block to avoid use-before-def of xmldoc
     #print datetime.now(),": validating XML..."
-    known_elnames_dict = {}
-    for item in known_elnames_list:
-      known_elnames_dict[item] = True
     validateXML(xmldoc, known_elnames_dict)
     #print datetime.now(),": done."
     return xmldoc
@@ -52,3 +55,10 @@ def simpleParser(s, known_elnames_list):
       if i >= 0 and i < len(lines):
         print "%6d %s" % (i+1, lines[i])
     exit(0)
+
+# as seen in http://stackoverflow.com/questions/92438/stripping-non-printable-characters-from-a-string-in-python
+def filterNonPrintable(str):
+  return ''.join([c for c in str if ord(c) > 31 or ord(c) == 9])
+
+
+
