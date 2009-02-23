@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listings xmlns="http://www.volunteermatch.org"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.volunteermatch.org http://www.volunteermatch.org/schema/2007/2/listings.xsd">
+<created>2009-02-08T17:33:03</created>
+<listing status="new">
+<key>425</key>
+<title>General Volunteer Opportunities</title>
+<description>&lt;p&gt;
+Volunteer opportunities include delivering meals to the homebound, visiting isolated older adults, performing clerical tasks, transporting clients on an as needed basis, assisting at the Shabbat Luncheon, providing legal counseling services, guiding visitors through agency facilities and informing them about agency programs, assisting with group activities at the group living facilities, adult day care center, or nursing home, responding to the needs of crime victims, working at the gift shop, participating in intergenerational programs, assisting with special projects, and others. For more information, email CJE or contact Anne Schuman, Director of Volunteer Services. 
+&lt;/p&gt;</description>
+<skill>&lt;p&gt;
+None 
+&lt;/p&gt;</skill>
+<audiences>
+<audience>kids</audience>
+<audience>teens</audience>
+<audience>55+</audience>
+<audience>groups</audience>
+</audiences>
+<categories>
+<category>Seniors</category>
+<category>Community</category>
+</categories>
+<duration ongoing="true" />
+<location>
+<street1 />
+<city>Chicago</city>
+<region>IL</region>
+<postalCode>60645</postalCode>
+</location>
+<detailURL>http://www.volunteermatch.org/results/opp_detail.jsp?oppid=425</detailURL>
+<expires>2009-08-01T07:00:00</expires>
+<parent>
+<key>3014</key>
+<name>CJE SeniorLife</name>
+<URL>http://www.cje.net</URL>
+<detailURL>http://www.volunteermatch.org/results/org_detail.jsp?orgid=3014</detailURL>
+</parent>
+</listing>
+<listing status="new">
+<key>1472</key>
+<title>Reclamation</title>
+<description>&lt;p&gt;
+A volunteer is needed on Fridays in the morning at the Bloomfield facility to inspect and evaluate damaged cans and packages of nonperishable food products and sort and redistribute the donations to the warehouse shopping area. 
+&lt;/p&gt;</description>
+<skill>&lt;p&gt;
+A 2-hour training session is required, and volunteers must make a weekly commitment for a minimum of 6 months. 
+&lt;/p&gt;</skill>
+<categories>
+<category>Hunger</category>
+</categories>
+<duration ongoing="true">
+<listingTime>
+<startTime>08:00:00</startTime>
+<endTime>11:00:00</endTime>
+</listingTime>
+</duration>
+<location>
+<street1>450 Woodland Ave.</street1>
+<city>Bloomfield</city>
+<region>CT</region>
+<postalCode>06002</postalCode>
+<geolocation>
+<latitude>41.8616</latitude>
+<longitude>-72.7279</longitude>
+</geolocation>
+</location>
+<detailURL>http://www.volunteermatch.org/results/opp_detail.jsp?oppid=1472</detailURL>
+<expires>2009-06-15T07:00:00</expires>
+<commitment>
+<num>2</num>
+<duration>hours</duration>
+<period>week</period>
+</commitment>
+<parent>
+<key>3967</key>
+<name>Foodshare, Inc.</name>
+<URL>http://www.foodshare.org</URL>
+<detailURL>http://www.volunteermatch.org/results/org_detail.jsp?orgid=3967</detailURL>
+</parent>
+</listing>
+<listing status="new">
+<key>1937</key>
+<title>Reproductive Health Services of Planned Parenthood</title>
+<description>&lt;p&gt;
+Three volunteer positions are available at RHS: 1) Options counseling for women with troubled pregnancies 2) Providing information and answering questions for women calling about RHS services 3) Giving emotional support and comfort to patients in the clinic. In depth professional training is provided for all positions, and RHS is looking for volunteers who are willing to make a minimum commitment of one four-hour shift per week for a year. Daytime, evening, and Saturday shifts are available. 
+&lt;/p&gt;</description>
+<skill>&lt;p&gt;
+None 
+&lt;/p&gt;</skill>
+<categories>
+<category>Women</category>
+<category>Health &amp; Medicine</category>
+</categories>
+<duration ongoing="true" />
+<location>
+<street1 />
+<city>Saint Louis</city>
+<region>MO</region>
+<postalCode>63108</postalCode>
+</location>
+<detailURL>http://www.volunteermatch.org/results/opp_detail.jsp?oppid=1937</detailURL>
+<expires>2009-07-03T07:00:00</expires>
+<commitment>
+<num>4</num>
+<duration>hours</duration>
+<period>week</period>
+</commitment>
+<parent>
+<key>4188</key>
+<name>National Council of Jewish Women St. Louis Section</name>
+<URL>http://ncjwstl.org</URL>
+<detailURL>http://www.volunteermatch.org/results/org_detail.jsp?orgid=4188</detailURL>
+</parent>
+</listing>
+<listing status="new">
+<key>2001</key>
+<title>Kitchen - Preparing Meals</title>
+<description>&lt;p&gt;
+Volunteers help prepare meals with a team of chefs. You might peel and chop vegetables, assist in pre-bake preparation, or package the daily meals. 
+&lt;/p&gt;</description>
+<skill>&lt;p&gt;
+Desire to have fun. 
+&lt;/p&gt;</skill>
+<categories>
+<category>Health &amp; Medicine</category>
+<category>Disabled</category>
+</categories>
+<duration ongoing="true">
+<listingTime>
+<startTime>09:00:00</startTime>
+<endTime>13:30:00</endTime>
+</listingTime>
+</duration>
+<location>
+<street1 />
+<city>San Francisco</city>
+<region>CA</region>
+<postalCode>94109</postalCode>
+</location>
+<detailURL>http://www.volunteermatch.org/results/opp_detail.jsp?oppid=2001</detailURL>
+<expires>2009-05-31T07:00:00</expires>
+<parent>
+<key>4226</key>
+<name>Project Open Hand</name>
+<URL>http://www.openhand.org/</URL>
+<detailURL>http://www.volunteermatch.org/results/org_detail.jsp?orgid=4226</detailURL>
+</parent>
+</listing>
+<listing status="new">
+<key>2002</key>
+<title>East Bay Meal Delivery</title>
+<description>&lt;p&gt;
+Deliver evening meals to Seniors. 
+&lt;/p&gt;</description>
+<skill>&lt;p&gt;
+Vehicle needed 
+&lt;/p&gt;</skill>
+<audiences>
+<audience>groups</audience>
+</audiences>
+<categories>
+<category>Health &amp; Medicine</category>
+<category>Seniors</category>
+<category>Disabled</category>
+</categories>
+<duration ongoing="true">
+<listingTime>
+<startTime>23:00:00</startTime>
+<endTime>12:30:00</endTime>
+</listingTime>
+</duration>
+<location>
+<street1>1921 san Pablo</street1>
+<city>Oakland</city>
+<region>CA</region>
+<postalCode>94612</postalCode>
+<geolocation>
+<latitude>37.8095</latitude>
+<longitude>-122.273</longitude>
+</geolocation>
+</location>
+<detailURL>http://www.volunteermatch.org/results/opp_detail.jsp?oppid=2002</detailURL>
+<expires>2009-05-31T07:00:00</expires>
+<parent>
+<key>4226</key>
+<name>Project Open Hand</name>
+<URL>http://www.openhand.org/</URL>
+<detailURL>http://www.volunteermatch.org/results/org_detail.jsp?orgid=4226</detailURL>
+</parent>
+</listing>
+</listings>
