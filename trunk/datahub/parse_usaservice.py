@@ -1,13 +1,16 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
-from xml.parsers.expat import ExpatError
 from xml.dom import minidom
 import xml_helpers
 import parse_footprint
 import re
+from datetime import datetime
+
+import dateutil.parser
 
 def Parse(s, maxrecs):
+  known_elnames = [ 'channel', 'db:abstract', 'db:address', 'db:attendee_count', 'db:categories', 'db:city', 'db:country', 'db:county', 'db:dateTime', 'db:event', 'db:eventType', 'db:guest_total', 'db:host', 'db:latitude', 'db:length', 'db:longitude', 'db:rsvp', 'db:scheduledTime', 'db:state', 'db:street', 'db:title', 'db:venue_name', 'db:zipcode', 'description', 'docs', 'guid', 'item', 'language', 'link', 'pubDate', 'rss', 'title', ]
   xmldoc = xml_helpers.simpleParser(s, known_elnames)
 
   # convert to footprint format
@@ -28,12 +31,12 @@ def Parse(s, maxrecs):
   s += '<Organizations>'
   s += '<Organization>'
   s += '<organizationID>0</organizationID>'
-  s += '<nationalEIN>0</nationalEIN>'
-  s += '<guidestarID>0</guidestarID>'
+  s += '<nationalEIN></nationalEIN>'
+  s += '<guidestarID></guidestarID>'
   s += '<name></name>'
   s += '<missionStatement></missionStatement>'
   s += '<description></description>'
-  s += '<location><city>Berkeley</city><region>CA</region><postalCode>94704</postalCode></location>'
+  s += '<location><city></city><region></region><postalCode></postalCode></location>'
   s += '<organizationURL></organizationURL>'
   s += '<donateURL></donateURL>'
   s += '<logoURL></logoURL>'
@@ -61,7 +64,12 @@ def Parse(s, maxrecs):
     s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
     s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(item, "link"))
     s += '<description>%s</description>' % (xml_helpers.getTagValue(item, "description"))
-    s += '<lastUpdated>%s</lastUpdated>' % (xml_helpers.getTagValue(item, "pubDate"))
+    pubdate = xml_helpers.getTagValue(item, "pubDate")
+    if re.search("[0-9][0-9] [A-Z][a-z][a-z] [0-9][0-9][0-9][0-9]", pubdate):
+      # TODO: parse() is ignoring timzone...
+      ts = dateutil.parser.parse(pubdate)
+      pubdate = ts.strftime("%Y-%m-%d %H:%M:%S")
+    s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
     dbevents = item.getElementsByTagName("db:event")
     if (dbevents.length != 1):
       print "parse_usaservice: only 1 db:event supported."
@@ -116,41 +124,6 @@ def Parse(s, maxrecs):
   #print s
   xmldoc = parse_footprint.Parse(s, maxrecs)
   return xmldoc
-
-known_elnames = {
-  'channel': 1,
-  'db:abstract': 1,
-  'db:address': 1,
-  'db:attendee_count': 1,
-  'db:categories': 1,
-  'db:city': 1,
-  'db:country': 1,
-  'db:county': 1,
-  'db:dateTime': 1,
-  'db:event': 1,
-  'db:eventType': 1,
-  'db:guest_total': 1,
-  'db:host': 1,
-  'db:latitude': 1,
-  'db:length': 1,
-  'db:longitude': 1,
-  'db:rsvp': 1,
-  'db:scheduledTime': 1,
-  'db:state': 1,
-  'db:street': 1,
-  'db:title': 1,
-  'db:venue_name': 1,
-  'db:zipcode': 1,
-  'description': 1,
-  'docs': 1,
-  'guid': 1,
-  'item': 1,
-  'language': 1,
-  'link': 1,
-  'pubDate': 1,
-  'rss': 1,
-  'title': 1,
-  }
 
 if __name__ == "__main__":
   sys = __import__('sys')
