@@ -25,7 +25,7 @@ The <code>FeedInfo</code> object contains the information about the feed being d
 <ul>
 <li><b><bcode>providerID</bcode></b>: A unique ID for the provider organization. Either a number assigned by Footprint or a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
 <br><li><b><bcode>feedID</bcode></b>: Only needed if the provider delivers multiple, mutually exclusive feeds (can be <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>). Parsers should default this value to 0.
-<br><li><b><bcode>createdDateTime</bcode></b>: The date+time (UTC required) that this specific iteration of the feed was created. Required.
+<br><li><b><bcode>createdDateTime</bcode></b>:                         The date+time (Olson time zone attribute optional, defaults to U.S. Pacific time zone) that this specific iteration of the feed was created. Required.
 <br><li><b><bcode>providerURL</bcode></b>: A URL to the provider organization's homepage. Optional.
 <br><li><b><bcode>description</bcode></b>: Any notes about the feed; perhaps copyright or terms of use. Optional.</ul><p>
 
@@ -48,7 +48,7 @@ The <code>VolunteerOpportunity</code> object represents a volunteer opportunity.
 <br><li><b><bcode>title</bcode>, <bcode>abstract</bcode>, and <bcode>description</bcode></b>: Increasingly long descriptions of the opportunity. Title required; other two optional.
 <br><li><b><bcode>volunteersNeeded</bcode></b>: How many volunteers are needed for this opportunity. -999 for unlimited. -8888 for unknown number of volunteers. Other than those exceptions, must be a non-negative integer. Optional. Cannot be blank. May not be up-to-date as volunteers sign up. Design decision: large negative numbers for special codes since overbooking might lead to accidental use of negative numbers.
 <br><li><b><bcode>dateTimeDurations</bcode></b>: A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation below. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order does not matter.
-<br><li><b><bcode>locations</bcode></b>: A wrapper around one or more <code>location</code> sub-objects. See documentation below. Order does not matter.
+<br><li><b><bcode>locations</bcode></b>: A wrapper around one or more <code>location</code> sub-objects. See documentation below.                               A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order matters only in that the first location is the default time zone if the time zone for the opportunity start or end time is unspecified. Optional. Highly recommended.
 <br><li><b><bcode>paid</bcode></b>: Does the opportunity pay volunteers. Domain: Yes, No. Optional; parser defaults to No.
 <br><li><b><bcode>audienceTags</bcode></b>: A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Order does not matter. Example:<br><code>
 &lt;audienceTags&gt;<br>
@@ -67,8 +67,8 @@ The <code>VolunteerOpportunity</code> object represents a volunteer opportunity.
 <br><li><b><bcode>contactName</bcode>, <bcode>contactPhone</bcode>, <bcode>contactEmail</bcode></b>: Many providers will choose to populate the detailURL instead of these fields. All optional.
 <br><li><b><bcode>detailURL</bcode></b>: Links to the page on the provider's website that displays detailed info about the opportunity. Optional, but highly recommended for feeds that do not transmit contact info.
 <br><li><b><bcode>language</bcode></b>: Language of the opportunity. Default: English. Optional.
-<br><li><b><bcode>lastUpdated</bcode></b>: Date+time (UTC required) of last update to the opportunity on the provider's site. Optional.
-<br><li><b><bcode>expires</bcode></b>: Date+time (UTC required) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
+<br><li><b><bcode>lastUpdated</bcode></b>:                               Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional, defaults to U.S. Pacific time zone) of last update to the opportunity on the provider's site. Optional.
+<br><li><b><bcode>expires</bcode></b>:                               Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional, defaults to U.S. Pacific time zone) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
 </ul><p>
 <b>Sub-Object: <bcode>dateTimeDuration</bcode></b><p>
 The <code>dateTimeDuration</code> sub-object represents when an opportunity occurs.<br>Notes:
@@ -78,7 +78,7 @@ The <code>dateTimeDuration</code> sub-object represents when an opportunity occu
 <br><li><b><bcode>iCalRecurrence</bcode></b>: String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
 FREQ=WEEKLY;INTERVAL=2
 <br><li><b><bcode>duration</bcode></b>: The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for siz months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
-<br><li><b><bcode>startTime</bcode> and <bcode>endTime</bcode></b>: Start and end times (UTC required) for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional.
+<br><li><b><bcode>startTime</bcode> and <bcode>endTime</bcode></b>: Start and end times (with optional Olson time zone attribute, <code>olsonTZ</code>) for the opportunity. There is no "all day" option: exact times should be specified where applicable. Optional. Default time zone is the time zone of the first <code>location</code> related to the opportunity. If the event is virtual, default time zone is U.S. Pacific ("America/Los_Angeles").
 <br><li><b><bcode>commitmentHoursPerWeek</bcode></b>: For long-term opportunities, how many hours per week are expected? Integer. Optional.
 
 </ul><p>
