@@ -91,6 +91,7 @@
           <xs:documentation>
            <![CDATA[
              Second line of street address. Optional. Not expected from most providers.
+             Only provide if streetAddress1 is provided.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -101,6 +102,7 @@
           <xs:documentation>
            <![CDATA[
              Third line of street address. Optional. Not expected from most providers.
+             Only provide if streetAddress1 and streetAddress2 are provided.
            ]]>
           </xs:documentation>
         </xs:annotation>
