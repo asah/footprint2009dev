@@ -2,6 +2,7 @@
 #
 
 import cgi
+import datetime
 import os
 import urllib
 
@@ -12,6 +13,7 @@ from google.appengine.ext import db
 from google.appengine.api import urlfetch
 
 import geocode
+import models
 import search
 import urls
 import utils
@@ -103,15 +105,23 @@ class FriendsView(webapp.RequestHandler):
   def get(self):
     userInfo = utils.GetUserInfo()
     userId = ""
+    days_since_joined = None
     if userInfo:
       #we are logged in
       userId = userInfo['entry']['id']
       displayName = userInfo['entry']['displayName']
       thumbnailUrl = userInfo['entry']['thumbnailUrl']
+      
+      # At this point it's mostly silly to save our own user info, but it's
+      # a start.
+      user_info = models.UserInfo.GetOrInsertUser(models.UserInfo.FRIENDCONNECT,
+                                                  userId)
+      days_since_joined = (datetime.datetime.now() - user_info.first_visit).days
 
     template_values = {
         'currentPage' : 'FRIENDS',
-        'userId': userId
+        'userId': userId,
+        'days_since_joined': days_since_joined
       }
 
     self.response.out.write(RenderTemplate(WORK_WITH_OTHERS_TEMPLATE,

@@ -37,6 +37,7 @@ function setupData(data) {
     html += "<a href='#' onclick='google.friendconnect.requestSignOut(); location.href=\"friends\";'>Sign out</a><br>";
 
     html += "<b>userId: " + document.fcUserId + "</b>";
+    html += "Joined " + document.days_since_joined + " days ago."
 
     document.getElementById('signInPane').innerHTML = html;
   }
