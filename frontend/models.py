@@ -1,7 +1,17 @@
+#!/usr/bin/python2.5
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
 from google.appengine.ext import db
+
+
+class Error(Exception):
+  pass
+
+
+class BadAccountType(Error):
+  pass
+
 
 class InterestTypeProperty(db.IntegerProperty):
   """Describes the level of interest a user has in an opportunity."""
@@ -11,33 +21,150 @@ class InterestTypeProperty(db.IntegerProperty):
   HAVE_ATTENDED = 3
   
 
-class User(db.Model):
+def IncrementProperties(model_class, key, **kwargs):
+  """Generic method to increment statistics.
+
+  Example:
+
+  Args:
+    model_class: model class
+    key: Entity key.
+    kwargs: Properties to increment.
+  """
+
+  def txn():
+    stats = model_class.get_by_key_name(key)
+    if not stats:
+      stats = VolunteerOpportunityStats(key_name=key)
+
+    def increment(prop):
+      if getattr(stats, prop):
+        setattr(stats, prop, getattr(stats, prop) + kwargs[prop])
+      else:
+        setattr(stats, prop, kwargs[prop])
+
+    for prop in kwargs.iterkeys():
+      increment(prop)
+
+    stats.put()
+
+  db.run_in_transaction(txn)
+
+
+class UserInfo(db.Model):
   """Basic user statistics/preferences data."""
-  # user_id is the friendconnect user id.
-  # NOTE: I plan to change this to a list property, then we can have multiple
-  # userids. We can/should define some type of sceme like fc:blah fb:blah etc.
-  user_id = db.StringProperty(required=True)
+  # Key is accounttype:accountaddress.
   first_visit = db.DateTimeProperty(auto_now_add=True)
-  recent_visit = db.DateTimeProperty(auto_now=True)
+  last_edit = db.DateTimeProperty(auto_now=True)
+
+  def AccountType(self):
+    key_name = self.key().name()
+    return key_name.split(':', 1)[0]
+
+  def Address(self):
+    key_name = self.key().name()
+    return key_name.split(':', 1)[1]
+
+  # Known types of accounts. Type must not start with a number.
+  FRIENDCONNECT = 'friendconnect'
+  GOOGLE = 'google'  # Google Account; not Google Apps account.
+  KNOWN_TYPES = (FRIENDCONNECT, GOOGLE)
+
+  @classmethod
+  def GetOrInsertUser(cls, account_type, address):
+    """Gets existing or creates a new user.
+
+    Similar to get_or_insert, increments UserStats if appropriate.
+
+    Args:
+      account_type: Type of account used.
+      address: address within that system.
+      
+    Returns:
+      UserInfo for this user.
+      
+    Raises:
+      BadAccountType if the account_type is unknown.
+      Various datastore exceptions.
+    """
+    if not account_type in cls.KNOWN_TYPES:
+      raise BadAccountType()
+      
+    key_name = '%s:%s' % (account_type, address)
+    user_info = cls.get_by_key_name(key_name)
+
+    def txn():
+      entity = cls.get_by_key_name(key_name)
+      created_entity = False
+      if entity is None:
+        entity = cls(key_name=key_name)
+        entity.put()
+        created_entity = True
+      return (entity, created_entity)
+
+    (user_info, created_entity) = db.run_in_transaction(txn)
+
+    if created_entity:
+      UserStats.Increment(account_type, address)
+
+    return user_info
+
+
+class UserStats(db.Model):
+  """Stats about how many users we have."""
+  count = db.IntegerProperty(default=0)
+
+  @classmethod
+  def Increment(cls, account_type, address):
+    """Sharded counter. User ID is only for sharding."""
+
+    def txn():
+      # We want << 1000 shards.
+      # This cheesy shard mechanism allows us some amount of way to see how
+      # many users of each type we have too.
+      shard_name = account_type + ':' + address[:2]
+      counter = cls.get_by_key_name(shard_name)
+      if not counter:
+        counter = cls(key_name=shard_name)
+      counter.count += 1
+      counter.put()
+
+    db.run_in_transaction(txn)
+
+  @staticmethod
+  def GetCount():
+    total = 0
+    for counter in UserStats.all():
+      total += counter.count
+    return total
 
 
 class UserVolunteerOpportunity(db.Model):
   """Our record a user's actions related to an opportunity."""
-  user = db.ReferenceProperty(User)
-  # volunteerOpportunityID is the stable ID from base; it is probabaly
+  user = db.ReferenceProperty(UserInfo)
+  # volunteer_opportunity_id is the stable ID from base; it is probabaly
   # not the same ID provided in the feed from providers.
-  volunteerOpportunityID = db.StringProperty(required=True)
-  broadcastOn = db.DateTimeProperty()
-  expressedInterest = InterestTypeProperty()
+  volunteer_opportunity_id = db.StringProperty(required=True)
+  broadcast_on = db.DateTimeProperty()
+  expressed_interest = InterestTypeProperty()
 
 
 class VolunteerOpportunityStats(db.Model):
   """Basic statistics about opportunities. Probably calculated on the fly."""
-  volunteerOpportunityID = db.StringProperty(required=True)
-  broadcastCount = db.IntegerProperty()
+
+  # The __key__ is 'id:' + volunteer_opportunity_id
+  broadcast_count = db.IntegerProperty(default=0)
   # interestCount should probably be split into multiple properties for each
   # possible interest type.
-  interestedCount = db.IntegerProperty()
-  will_attend_count = db.IntegerProperty()
-  have_attended_count = db.IntegerProperty()
+  interested_count = db.IntegerProperty(default=0)
+  will_attend_count = db.IntegerProperty(default=0)
+  have_attended_count = db.IntegerProperty(default=0)
+
+  @classmethod
+  def Increment(cls, volunteer_opportunity_id, **kwargs):
+    # Example:
+    # models.VolunteerOpportunityStats.Increment(opp_id, interested_count=1)
+    return IncrementProperties(cls,
+                               'id:' + volunteer_opportunity_id,
+                               **kwargs)
 

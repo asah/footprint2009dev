@@ -1,11 +1,15 @@
 <html>
 <head>
+  <title>Work with others</title>
   <link href="css/main.css" rel="stylesheet"/>
 </head>
 <body>
  {% include 'header.html' %}
 
   <div id="signInPane" class="right_pane">
+    {% if userId %}
+    Loading...
+    {% else %}
     <input type="button" value="Sign in" onclick="google.friendconnect.requestSignIn()"/>
     <br/><br/>
 
@@ -15,6 +19,7 @@
       <li>save your location data
       <li>and more!
     </ul>
+    {% endif %}
   </div>
 
   <div id="activeMemberPane" class="left_pane">
@@ -27,6 +32,7 @@
 
   <script>
   document.fcUserId = "{{userId}}";
+  document.days_since_joined = "{{days_since_joined}}";
   </script>
   <script type="text/javascript" src="/js/works_with_others.js"></script>
 
