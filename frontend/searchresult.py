@@ -4,10 +4,11 @@
 import re
 
 class SearchResult(object):
-  def __init__(self, url, title, snippet):
+  def __init__(self, url, title, snippet, location):
     self.url = url
     self.title = title
     self.snippet = snippet
+    self.location = location
     # app engine does not currently support the escapejs filter in templates
     # so we have to do it our selves for now
     self.jsEscapedTitle = self.jsEscape(title)

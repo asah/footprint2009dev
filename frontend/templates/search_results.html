@@ -1,15 +1,28 @@
 <html>
 <head>
   <link href="css/main.css" rel="stylesheet"/>
+
+  <script type="text/javascript" src="/js/utils.js"></script>
+  <script type="text/javascript" src="/js/map.js"></script>
+  <script type="text/javascript" src="/js/search_results.js"></script>
 </head>
-<body>
+<body onload='init()'>
  {% include 'header.html' %}
 
  {% include 'search_bar.html' %}
 
- <div id='snippet_pane'>
- {% include 'snippets_list.html' %}
- </div>
+  <table>
+    <tr>
+      <td valign=top>
+        <div id='map' style='width:300px; height:300px; float:left;'></div>
+      </td>
+      <td valign=top>
+        <div id='snippet_pane'>
+          {% include 'snippets_list.html' %}
+        </div>
+      </td>
+    </tr>
+  </table>
 
   {%include 'paginator.html' %}
 

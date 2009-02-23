@@ -20,6 +20,9 @@
         </div>
       </div>
 
+      {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
+      {% if location %} <script>workQueue.addCallback(function(){map.addMarkerGeocode("{{ result.location }}")});</script> {% endif %}
+
     <div class='snippet_title'>
       <a href='{{ result.url }}'>{{ result.title }}</a>
     </div>
