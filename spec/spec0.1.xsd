@@ -17,17 +17,33 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="dateTimeUTC">
+  <xs:simpleType name="dateTimeNoTZ">
     <xs:restriction base="xs:dateTime">
-      <xs:pattern value=".+T.+Z"/>
+      <xs:pattern value=".+[0-9]"/>
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="timeUTC">
+  <xs:simpleType name="timeNoTZ">
     <xs:restriction base="xs:time">
-      <xs:pattern value=".+Z"/>
+      <xs:pattern value=".+[0-9]"/>
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:complexType name="dateTimeOlsonDefaultPacific">
+    <xs:simpleContent>
+      <xs:extension base="dateTimeNoTZ">
+         <xs:attribute default="America/Los_Angeles" name="olsonTZ" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="timeOlson">
+    <xs:simpleContent>
+      <xs:extension base="timeNoTZ">
+         <xs:attribute default="" name="olsonTZ" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
 
   <xs:simpleType name="sexRestrictedEnum">
     <xs:restriction base="xs:string">
@@ -217,21 +233,21 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:annotation>
       </xs:element>
       
-      <xs:element name="startTime" type="timeUTC" minOccurs="0">
+      <xs:element name="startTime" type="timeOlson" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Start time for the opportunity (UTC required). There is no "all day" option: exact times should be specified where applicable. Optional.
+             Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional.
            ]]>
           </xs:documentation>
         </xs:annotation>
       </xs:element>
 
-      <xs:element name="endTime" type="timeUTC" minOccurs="0">
+      <xs:element name="endTime" type="timeOlson" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             End time for the opportunity (UTC required). There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
+             End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -307,11 +323,11 @@ FREQ=WEEKLY;INTERVAL=2
                   </xs:annotation>
                 </xs:element>
                 
-                <xs:element name="createdDateTime" type="dateTimeUTC">
+                <xs:element name="createdDateTime" type="dateTimeOlsonDefaultPacific">
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        The date+time (UTC required) that this specific iteration of the feed was created. Required.
+                        The date+time (Olson time zone attribute optional, defaults to U.S. Pacific time zone) that this specific iteration of the feed was created. Required.
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -555,21 +571,21 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
 
-                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0">
+                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0" maxOccurs="3">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended.
+                              Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended. Up to three sponsoring organizations allowed. If more than three sponsoring organizations exist, use the description field for the extras.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
                       </xs:element>
                       
-                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0">
+                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0" maxOccurs="3">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional.
+                              Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional. Up to three volunteer hubs allowed.  If more than three volunteer hubs are related to opportunity, use the description field for the extras.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -607,18 +623,18 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
 
-                      <xs:element name="dateTimeDurations" minOccurs="0">
+                      <xs:element name="dateTimeDurations">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order does not matter. Optional. Highly recommended.
+                              A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order does not matter. Required.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
                       
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="dateTimeDuration" type="dateTimeDurationType" minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="dateTimeDuration" type="dateTimeDurationType" minOccurs="1" maxOccurs="unbounded">
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
@@ -630,17 +646,17 @@ FREQ=WEEKLY;INTERVAL=2
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="locations" minOccurs="0">
+                      <xs:element name="locations">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order does not matter. Optional. Highly recommended.
+                              A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order matters only in that the first location is the default time zone if the time zone for the opportunity start or end time is unspecified. Required.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="location" type="locationType" minOccurs="0" maxOccurs="unbounded" >
+                            <xs:element name="location" type="locationType" minOccurs="1" maxOccurs="unbounded" >
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
@@ -807,21 +823,21 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
                       
-                      <xs:element name="lastUpdated" type="dateTimeUTC" minOccurs="0">
+                      <xs:element name="lastUpdated" type="dateTimeOlsonDefaultPacific" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Date+time (UTC required) of last update to the opportunity on the provider's site. Optional.
+                              Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone) of last update to the opportunity on the provider's site. Optional.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
                       </xs:element>
                       
-                      <xs:element name="expires" type="dateTimeUTC" minOccurs="0">
+                      <xs:element name="expires" type="dateTimeOlsonDefaultPacific" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Date+time (UTC required) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
+                              Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
