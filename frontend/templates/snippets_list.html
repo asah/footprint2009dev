@@ -32,21 +32,7 @@
     <div class='snippet_url'>
       <a href='{{ result.url }}'>{{ result.url }}</a>
     </div>
-
-    <div class='snippet_actions'>
-      <div id='review-{{result.url|escape}}' style='width:100%;'></div>
-    </div>
   </p>
-
-  <script type="text/javascript">
-    google.friendconnect.container.renderReviewGadget(
-       {id: 'review-{{result.url|escape}}',
-        site: SITE_ID,
-        'view-params':{"disableMinMax":"false","scope":"ID","allowAnonymousPost":"false",
-            "docId":"review-{{result.url|escape}}","startMaximized":"false"}
-        },
-        REVIEW_SKIN);
-  </script>
 {% endfor %}
 
 <script>
