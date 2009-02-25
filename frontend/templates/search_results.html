@@ -12,6 +12,10 @@
 
 {% block content_left %}
   <div id='map' style='width:300px; height:300px; float:left;'></div>
+  <br/>
+  <br/>
+  <div id='calendar' style='width:300px; height:300px; float:left;'><img style='width:300px; height:300px;' src='/images/calendar-placeholder.png'><br><b>[CALENDAR PLACEHOLDER]</b></div>
+  <div style='float:none; clear:both;'>&nbsp;</div>
 {% endblock content_left %}
 
 {% block width_left %}320{% endblock %}
@@ -25,7 +29,9 @@
 {% block width_right %}{% endblock %}
 
 {% block prefooter %}
+<center>
   {%include 'paginator.html' %}
+</center>
 
 <div style='margin-top:100px; color: #999; font-size: small;'>
  Query url= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded }}</a><br>
