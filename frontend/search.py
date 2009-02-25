@@ -22,10 +22,7 @@ def Search(args):
     if start_index > 1000-num: start_index = 1000-num
   args["start"] = start_index
 
-  if "q" in args:
-    q = args["q"]
-    base_query += q
-  else:
+  if "q" not in args:
     args["q"] = ""
 
   if "output" in args:
