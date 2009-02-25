@@ -11,8 +11,8 @@ class SearchResult(object):
     self.location = location
     # app engine does not currently support the escapejs filter in templates
     # so we have to do it our selves for now
-    self.jsEscapedTitle = self.jsEscape(title)
-    self.jsEscapedSnippet = self.jsEscape(snippet)
+    self.js_escaped_title = self.jsEscape(title)
+    self.js_escaped_snippet = self.jsEscape(snippet)
 
   def jsEscape(self, string):
     # TODO: This escape method is overly agressive and is messing some snippets
