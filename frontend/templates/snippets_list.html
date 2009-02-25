@@ -4,17 +4,17 @@
           <script type="text/javascript">
             SHARETHIS.addEntry({
               url: "{{result.url|escape}}",
-              title: "{{result.jsEscapedTitle|escape}}",
-              summary: "{{result.jsEscapedSnippet|escape}}"
+              title: "{{result.js_escaped_title|escape}}",
+              summary: "{{result.js_escaped_snippet|escape}}"
             }, {offsetLeft: -250});
            </script>
         <!-- TODO: We need locations and dates for adding to calendars -->
-        <div class='add_to_calendar' onclick='addToCalendar(this, "YAHOO", "{{result.url|escape}}", "{{result.jsEscapedTitle|escape}}",
-            "{{result.jsEscapedSnippet|escape}}", "20090214", "locationPlaceholder")'>
+        <div class='add_to_calendar' onclick='addToCalendar(this, "YAHOO", "{{result.url|escape}}", "{{result.js_escaped_title|escape}}",
+            "{{result.js_escaped_snippet|escape}}", "20090214", "locationPlaceholder")'>
           <img src='images/yahoo.gif' height="16px" alt=''/> Yahoo! Calendar
           </div>
-       <div class='add_to_calendar' onclick='addToCalendar(this, "GOOGLE", "{{result.url|escape}}", "{{result.jsEscapedTitle|escape}}",
-            "{{result.jsEscapedSnippet|escape}}", "20090214", "locationPlaceholder")'>
+       <div class='add_to_calendar' onclick='addToCalendar(this, "GOOGLE", "{{result.url|escape}}", "{{result.js_escaped_title|escape}}",
+            "{{result.js_escaped_snippet|escape}}", "20090214", "locationPlaceholder")'>
           <img src='images/google.png' height="16px" alt=''/> Google Calendar
         </div>
       </div>
@@ -35,6 +35,6 @@
 {% endfor %}
 
 <script>
-document.userDisplayName = "{{userDisplayName}}";
+document.userDisplayName = "{{user_display_name}}";
 </script>
 <script type="text/javascript" src="/js/snippets_list.js"></script>

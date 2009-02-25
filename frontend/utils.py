@@ -18,9 +18,9 @@ def GetXmlDomText(dom):
 
 
 def GetUserInfo():
-  friendCookie = GetFriendCookie()
-  if friendCookie:
-    url = 'http://www.google.com/friendconnect/api/people/@viewer/@self?fcauth=' + friendCookie;
+  friend_cookie = GetFriendCookie()
+  if friend_cookie:
+    url = 'http://www.google.com/friendconnect/api/people/@viewer/@self?fcauth=' + friend_cookie;
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       return simplejson.load(StringIO(result.content))

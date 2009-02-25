@@ -1,8 +1,8 @@
 <div class='header'>
   &nbsp;
   <div class='header_title'>Footprint</div>
-  <div class={% ifequal currentPage "SEARCH" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/search'">Find an event</div>
-  <div class={% ifequal currentPage "MY_EVENTS" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/myevents'">My Events</div>
-  <div class={% ifequal currentPage "POST" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/post'">Post</div>
+  <div class={% ifequal current_page "SEARCH" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/search'">Find an event</div>
+  <div class={% ifequal current_page "MY_EVENTS" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/myevents'">My Events</div>
+  <div class={% ifequal current_page "POST" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/post'">Post</div>
   <div style='clear: both; float: none'></div>
 </div>

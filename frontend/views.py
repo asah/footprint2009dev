@@ -66,14 +66,14 @@ class SearchView(webapp.RequestHandler):
       allvals = self.request.get_all(arg)
       unique_args[arg] = allvals[len(allvals)-1]
     result_set = search.Search(unique_args)
-    
+
     template_values = {
         'query_url_encoded': result_set.query_url_encoded,
         'query_url_unencoded': result_set.query_url_unencoded,
         'result_set': result_set,
         'keywords': result_set.args["q"],
         'location': result_set.args["vol_loc"],
-        'currentPage' : 'SEARCH'
+        'current_page' : 'SEARCH'
       }
     self.response.out.write(RenderTemplate(SEARCH_RESULTS_TEMPLATE,
                                            template_values))
@@ -97,8 +97,8 @@ class SearchAPIView(webapp.RequestHandler):
     template_values = {
         'result_set': result_set,
         'currentPage' : 'SEARCH',
-        'userId' : user_id,
-        'userDisplayName' : user_display_name,
+        'user_id' : user_id,
+        'user_display_name' : user_display_name,
 
         # TODO: remove this stuff...
         'keywords': result_set.args["q"],
@@ -155,8 +155,8 @@ class MyEventsView(webapp.RequestHandler):
       days_since_joined = (datetime.datetime.now() - user_info.first_visit).days
 
     template_values = {
-        'currentPage' : 'MY_EVENTS',
-        'userId': user_id,
+        'current_page' : 'MY_EVENTS',
+        'user_id': user_id,
         'days_since_joined': days_since_joined
       }
 
@@ -166,33 +166,7 @@ class MyEventsView(webapp.RequestHandler):
 class PostView(webapp.RequestHandler):
   def get(self):
     template_values = {
-      'currentPage' : 'POST'
+      'current_page' : 'POST'
     }
 
     self.response.out.write(RenderTemplate(POST_TEMPLATE, template_values))
-
-class FriendsView(webapp.RequestHandler):
-  def get(self):
-    userInfo = utils.GetUserInfo()
-    userId = ""
-    days_since_joined = None
-    if userInfo:
-      #we are logged in
-      userId = userInfo['entry']['id']
-      displayName = userInfo['entry']['displayName']
-      thumbnailUrl = userInfo['entry']['thumbnailUrl']
-      
-      # At this point it's mostly silly to save our own user info, but it's
-      # a start.
-      user_info = models.UserInfo.GetOrInsertUser(models.UserInfo.FRIENDCONNECT,
-                                                  userId)
-      days_since_joined = (datetime.datetime.now() - user_info.first_visit).days
-
-    template_values = {
-        'currentPage' : 'FRIENDS',
-        'userId': userId,
-        'days_since_joined': days_since_joined
-      }
-
-    self.response.out.write(RenderTemplate(WORK_WITH_OTHERS_TEMPLATE,
-                                           template_values))
