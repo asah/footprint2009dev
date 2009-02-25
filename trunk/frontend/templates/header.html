@@ -6,6 +6,7 @@
   &nbsp;
   <div class='header_title'>Footprint</div>
   <div class={% ifequal currentPage "SEARCH" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/search?loc=San+Francisco'">Find an event</div>
-  <div class={% ifequal currentPage "FRIENDS" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/friends'">Work with others</div>
+  <div class={% ifequal currentPage "MY_EVENTS" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/myevents'">My Events</div>
+  <div class={% ifequal currentPage "POST" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/post'">Post</div>
   <div style='clear: both; float: none'></div>
 </div>

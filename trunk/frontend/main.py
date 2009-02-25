@@ -11,7 +11,8 @@ import urls
 application = webapp.WSGIApplication(
                                      [(urls.URL_HOME, views.MainPageView),
                                       (urls.URL_SEARCH, views.SearchView),
-                                      (urls.URL_FRIENDS, views.FriendsView)],
+                                      (urls.URL_MY_EVENTS, views.MyEventsView),
+                                      (urls.URL_POST, views.PostView)],
                                      debug=True)
 
 def main():
