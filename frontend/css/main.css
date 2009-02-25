@@ -135,6 +135,12 @@ body {
   display: none;
 }
 
+/** ShareThis defined styles **/
+.stbutton {
+  color: white;
+  text-decoration: none;
+}
+
 #map {
   border: 1px solid silver;
   margin: 6px;

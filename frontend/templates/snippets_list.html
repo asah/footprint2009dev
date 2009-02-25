@@ -1,14 +1,13 @@
 {% for result in result_set.results %}
   <p class='snippet'>
       <div class='snippet_buttons'>
-        {% if userId %}
-          <div class='broadcast_event' onclick='broadcastEvent(this, "{{result.url}}", "{{result.jsEscapedTitle}}", "{{result.jsEscapedSnippet}}")'>
-            <img src='images/broadcasticon.png' alt=''/> Broadcast
-          </div>
-          <div class='share_event' onclick='shareEvent(this, "{{result.url}}", "{{result.jsEscapedTitle}}", "{{result.jsEscapedSnippet}}")'>
-            <img src='images/openshareicon-16.png' alt=''/> Share
-          </div>
-        {% endif %}
+          <script type="text/javascript"> 
+            SHARETHIS.addEntry({
+              url: "{{result.url|escape}}",
+              title: "{{result.jsEscapedTitle|escape}}", 
+              summary: "{{result.jsEscapedSnippet|escape}}"
+            }, {offsetLeft: -250});
+           </script>
         <!-- TODO: We need locations and dates for adding to calendars -->
         <div class='add_to_calendar' onclick='addToCalendar(this, "YAHOO", "{{result.url|escape}}", "{{result.jsEscapedTitle|escape}}",
             "{{result.jsEscapedSnippet|escape}}", "20090214", "locationPlaceholder")'>
