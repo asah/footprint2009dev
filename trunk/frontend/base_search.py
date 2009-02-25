@@ -4,6 +4,7 @@
 import cgi
 import os
 import urllib
+import logging
 
 from google.appengine.api import users
 from google.appengine.api.urlfetch import fetch
@@ -13,8 +14,6 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 from xml.dom import minidom
 
-#import gdata.service
-#import gdata.urlfetch
 ## Use urlfetch instead of httplib
 #gdata.service.http_request_handler = gdata.urlfetch
 
@@ -23,35 +22,62 @@ import base_search
 import searchresult
 import utils
 
-# Base URL for snipets search on Base.
-#   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
-BASE_SNIPPETS_URL = 'http://www.google.com/base/feeds/snippets'
+# note: many of the XSS and injection-attack defenses are unnecessary
+# given that the callers are also protecting us, but I figure better
+# safe than sorry, and defense-in-depth.
+def Search(args):
+  base_query = ""
 
+  # TODO: injection attacks in vol_loc
+  if args["vol_loc"] != "":
+    args["vol_dist"] = int(str(args["vol_dist"]))
+    base_query += ' [location: @"%s" + %dmi]' % (args["vol_loc"],args["vol_dist"])
 
-def Search(query, location, start_index, num_results):
-  location_param = '[location: @"%s" + 5mi]' % location
-#  link_param = '[link: idealist]'
-  link_param = ''
-  base_query = 'volunteer %s %s %s' % (query, location_param, link_param)
+  # Base URL for snipets search on Base.
+  #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
+  # TODO: injection attack on backend
+  if "backend" not in args:
+    args["backends"] = "http://www.google.com/base/feeds/snippets"
 
-  if not start_index:
-    start_index = 1
+  #if "base_authorid" not in args:
+  #  args["base_authorid"] = 5663714
+  #else:
+  #  args["base_authorid"] = int(str(args["base_authorid"]))
 
-  url_params = urllib.urlencode({'max-results': num_results,
+  # TODO: omg this is broken on so many levels, e.g. not a real attrib search
+  # e.g. should use author id instead of name, etc.
+  # TODO: injection attack on base_author
+  if "base_author" not in args:
+    base_query += '"footprint project"'
+  else:
+    base_query += '"'+args["base_author"]+'"'
+
+  # TODO: injection attack on q
+  if "q" in args:
+    base_query += ' '+args["q"]
+
+  for k in args:
+    logging.info("arg["+str(k)+"]="+str(args[k]))
+
+  url_params = urllib.urlencode({'max-results': args["num"],
+				 'start-index': args["start"],
                                  'bq': base_query,
-                                 'start-index': start_index })
-  query_url = '%s?%s' % (BASE_SNIPPETS_URL, url_params)
+                                 #'authorid': int(args["base_authorid"]),
+                                 })
+  query_url = '%s?%s' % (args["backends"], url_params)
+  logging.info("query_url="+query_url)
 
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
                                             query_url,
                                             [])
+  result_set.args = args
   fetch_result = fetch(query_url)
   if fetch_result.status_code != 200:
     return result_set
 
   dom = minidom.parseString(fetch_result.content)
-
-  for entry in dom.getElementsByTagName('entry'):
+  
+  for i,entry in enumerate(dom.getElementsByTagName('entry')):
     url = entry.getElementsByTagName('link')[0].getAttribute('href')
     snippet = utils.GetXmlDomText(entry.getElementsByTagName('content')[0])
     title = utils.GetXmlDomText(entry.getElementsByTagName('title')[0])
@@ -60,7 +86,9 @@ def Search(query, location, start_index, num_results):
       location = utils.GetXmlDomText(location_element[0])
     else:
       location = None
-    result_set.results.append(searchresult.SearchResult(url, title, snippet,
-                                                        location))
+    logging.info("title="+title+"  location="+str(location)+"  url="+url)
+    res = searchresult.SearchResult(url, title, snippet, location)
+    res.idx = i+1
+    result_set.results.append(res)
 
   return result_set

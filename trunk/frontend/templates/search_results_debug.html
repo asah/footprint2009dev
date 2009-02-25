@@ -1,0 +1,23 @@
+<html>
+<body>
+
+<pre>
+This is debug output for developers only.  If you are an end user here by accident, please visit XXX.
+   If you are a developer, please use other &amp;output= formats to build your applications, including
+   output=rss,tsv,csv,rssdesc and xml.  Documentation available here (TODO: need link).
+
+query: {{result_set.query_url_encoded}}
+q={{keywords}}
+l={{location}}
+
+{% for result in result_set.results %}
+{{result.idx}}. {{result.title}} @ {{result.location}}
+link: <a href="{{result.url|escape}}">{{result.url}}</a>
+desc: {{result.snippet}}
+{% endfor %}
+
+{%include 'paginator.html' %}
+
+</pre>
+</body>
+</html>
