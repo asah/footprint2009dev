@@ -1,11 +1,9 @@
-<html>
-<head>
-  <title>Post</title>
-  <link href="css/main.css" rel="stylesheet"/>
-</head>
-<body>
- {% include 'header.html' %}
+{% extends "layout_full.html" %}
 
- Post form!
-</body>
-</html>
+{% block title %}
+Post
+{% endblock %}}
+
+{% block content %}
+Post form!
+{% endblock %}

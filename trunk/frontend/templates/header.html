@@ -1,11 +1,7 @@
-<script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
-<script type="text/javascript" src="/js/friendconnect_header.js"></script>
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAHtEBbyenR4BaYGl54_p0fRTpeCj-9ism2i6Mt7fLlVoN6HsfDBS56p13NY7E4BKFD32PG4jrxn4P1g" type="text/javascript"></script>
-
 <div class='header'>
   &nbsp;
   <div class='header_title'>Footprint</div>
-  <div class={% ifequal currentPage "SEARCH" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/search?loc=San+Francisco'">Find an event</div>
+  <div class={% ifequal currentPage "SEARCH" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/search'">Find an event</div>
   <div class={% ifequal currentPage "MY_EVENTS" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/myevents'">My Events</div>
   <div class={% ifequal currentPage "POST" %} 'tab_active' {% else %} 'tab_inactive' {% endifequal %} onclick="location.href = '/post'">Post</div>
   <div style='clear: both; float: none'></div>
