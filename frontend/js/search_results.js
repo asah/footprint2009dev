@@ -1,6 +1,6 @@
 var map;
 var workQueue = new WorkQueue();
-function init() {
+function mapApiLoadComplete() {
   var queryParams = GetQueryParams();
   if (queryParams['loc']) {
     map = new SimpleMap(el('map'));
