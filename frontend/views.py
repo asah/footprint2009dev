@@ -10,7 +10,6 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
-from google.appengine.api import urlfetch
 
 import geocode
 import models
@@ -25,7 +24,8 @@ SEARCH_RESULTS_TEMPLATE = 'search_results.html'
 SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
-WORK_WITH_OTHERS_TEMPLATE = 'work_with_others.html'
+MY_EVENTS_TEMPLATE = 'my_events.html'
+POST_TEMPLATE = 'post.html'
 
 DEFAULT_NUM_RESULTS = 10
 
@@ -73,20 +73,20 @@ class SearchView(webapp.RequestHandler):
     prev_page_url = BuildSearchUrl(start_index - DEFAULT_NUM_RESULTS)
     next_page_url = BuildSearchUrl(start_index + DEFAULT_NUM_RESULTS)
 
-    userInfo = utils.GetUserInfo()
-    userId = ""
-    userDisplayName = ""
-    if userInfo:
-      userId = userInfo['entry']['id']
-      userDisplayName = userInfo['entry']['displayName']
+    user_info = utils.GetUserInfo()
+    user_id = ""
+    user_display_name = ""
+    if user_info:
+      user_id = user_info['entry']['id']
+      user_display_name = user_info['entry']['displayName']
 
     template_values = {
         'result_set': result_set,
         'keywords': query,
         'location': location,
         'currentPage' : 'SEARCH',
-        'userId' : userId,
-        'userDisplayName' : userDisplayName,
+        'userId' : user_id,
+        'userDisplayName' : user_display_name,
         'is_first_page': is_first_page,
         'is_last_page': is_last_page,
         'prev_page_url': prev_page_url,
@@ -101,28 +101,36 @@ class SearchView(webapp.RequestHandler):
       self.response.out.write(RenderTemplate(SEARCH_RESULTS_TEMPLATE,
                                              template_values))
 
-class FriendsView(webapp.RequestHandler):
+class MyEventsView(webapp.RequestHandler):
   def get(self):
-    userInfo = utils.GetUserInfo()
-    userId = ""
+    user_info = utils.GetUserInfo()
+    user_id = ""
     days_since_joined = None
-    if userInfo:
+    if user_info:
       #we are logged in
-      userId = userInfo['entry']['id']
-      displayName = userInfo['entry']['displayName']
-      thumbnailUrl = userInfo['entry']['thumbnailUrl']
-      
+      user_id = user_info['entry']['id']
+      display_name = user_info['entry']['displayName']
+      thumbnail_url = user_info['entry']['thumbnailUrl']
+
       # At this point it's mostly silly to save our own user info, but it's
       # a start.
       user_info = models.UserInfo.GetOrInsertUser(models.UserInfo.FRIENDCONNECT,
-                                                  userId)
+                                                  user_id)
       days_since_joined = (datetime.datetime.now() - user_info.first_visit).days
 
     template_values = {
-        'currentPage' : 'FRIENDS',
-        'userId': userId,
+        'currentPage' : 'MY_EVENTS',
+        'userId': user_id,
         'days_since_joined': days_since_joined
       }
 
-    self.response.out.write(RenderTemplate(WORK_WITH_OTHERS_TEMPLATE,
+    self.response.out.write(RenderTemplate(MY_EVENTS_TEMPLATE,
                                            template_values))
+
+class PostView(webapp.RequestHandler):
+  def get(self):
+    template_values = {
+      'currentPage' : 'POST'
+    }
+
+    self.response.out.write(RenderTemplate(POST_TEMPLATE, template_values))
