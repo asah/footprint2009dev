@@ -7,6 +7,18 @@ from xml.sax.saxutils import escape
 from xml.parsers.expat import ExpatError
 import re
 
+def getNodeData(entity):
+  if (entity.firstChild == None):
+    return ""
+  if (entity.firstChild.data == None):
+    return ""
+  
+  s = entity.firstChild.data
+  s = escape(s).encode('UTF-8')
+  s = re.sub(r'\n', r'\\n', s)
+  return s
+  
+
 def getTagValue(entity, tag):
   #print "----------------------------------------"
   nodes = entity.getElementsByTagName(tag)
