@@ -1,4 +1,4 @@
-{% for result in results %}
+{% for result in result_set.results %}
 <item>
 <title><![CDATA[{{ result.title }}]]></title>  <!-- TODO: what about close-cdata-brackets in title? -->
 <link>{{ result.url }}</link>
