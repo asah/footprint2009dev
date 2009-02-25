@@ -1,10 +1,10 @@
 {% for result in result_set.results %}
   <p class='snippet'>
       <div class='snippet_buttons'>
-          <script type="text/javascript"> 
+          <script type="text/javascript">
             SHARETHIS.addEntry({
               url: "{{result.url|escape}}",
-              title: "{{result.jsEscapedTitle|escape}}", 
+              title: "{{result.jsEscapedTitle|escape}}",
               summary: "{{result.jsEscapedSnippet|escape}}"
             }, {offsetLeft: -250});
            </script>
