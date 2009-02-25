@@ -1,4 +1,4 @@
-{% extends "layout_full.html" %}
+{% extends "layout_two_column.html" %}
 
 {% block js_files %}
   <script type="text/javascript" src="/js/map.js"></script>
@@ -6,22 +6,25 @@
   <script type="text/javascript" src="http://w.sharethis.com/button/sharethis.js#tabs=email%2Cweb%2Cpost&amp;charset=utf-8&amp;style=default&amp;publisher=53d633da-5f45-4163-9dfa-6874\4e89a302"></script>
 {% endblock %}
 
-{% block content %}
-{% include 'search_bar.html' %}
+{% block subheader %}
+ {% include 'search_bar.html' %}
+{% endblock subheader %}
 
-  <table>
-    <tr>
-      <td valign=top>
-        <div id='map' style='width:300px; height:300px; float:left;'></div>
-      </td>
-      <td valign=top>
-        <div id='snippet_pane'>
-          {% include 'snippets_list.html' %}
-        </div>
-      </td>
-    </tr>
-  </table>
+{% block content_left %}
+  <div id='map' style='width:300px; height:300px; float:left;'></div>
+{% endblock content_left %}
 
+{% block width_left %}320{% endblock %}
+
+{% block content_right %}
+  <div id='snippet_pane'>
+    {% include 'snippets_list.html' %}
+  </div>
+{% endblock content_right %}
+
+{% block width_right %}{% endblock %}
+
+{% block prefooter %}
   {%include 'paginator.html' %}
 
 <div style='margin-top:100px; color: #999; font-size: small;'>
@@ -34,5 +37,4 @@
   google.load("maps", "2");
   google.setOnLoadCallback(mapApiLoadComplete);
 </script>
-
-{% endblock %}
+{% endblock prefooter %}
