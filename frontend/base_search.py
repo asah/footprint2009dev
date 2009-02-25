@@ -81,7 +81,7 @@ def Search(args):
     url = entry.getElementsByTagName('link')[0].getAttribute('href')
     snippet = utils.GetXmlDomText(entry.getElementsByTagName('content')[0])
     title = utils.GetXmlDomText(entry.getElementsByTagName('title')[0])
-    location_element = entry.getElementsByTagName('g:location')
+    location_element = entry.getElementsByTagName('g:location_string')
     if location_element:
       location = utils.GetXmlDomText(location_element[0])
     else:
