@@ -1,0 +1,35 @@
+<html>
+{% comment %}
+   Base template for Django inheritance.
+   All templates should inherit from this.
+
+   blocks that can be overridden:
+     css_files: link tags for css files to include.
+     js_files: script tags for JS files to include.
+     content_layout: the main area inside the body, below the standard header.
+{% endcomment %}
+
+<head>
+  <title>{% block title %}{% endblock %}</title>
+
+  <link href="css/main.css" rel="stylesheet"/>
+  {% block css_files %}{% endblock %}
+
+  <script src="http://www.google.com/jsapi?key=ABQIAAAAHtEBbyenR4BaYGl54_p0fRTpeCj-9ism2i6Mt7fLlVoN6HsfDBS56p13NY7E4BKFD32PG4jrxn4P1g" type="text/javascript"></script>
+  <script type="text/javascript" src="http://www.google.com/friendconnect/script/friendconnect.js"></script>
+  <script type="text/javascript" src="/js/friendconnect_header.js"></script>
+  <script type='text/javascript' src='/js/utils.js'></script>
+  <script type='text/javascript'>
+    // Create a WorkQueue (defined in utils.js) to queue any
+    // JS callbacks to be invoked on body onload event.
+    var onloadWorkQueue = new WorkQueue();
+  </script>
+{% block js_files %}{% endblock %}
+
+
+</head>
+<body>
+{% include 'header.html' %}
+{% block content_layout %}{% endblock %}
+</body>
+</html>
