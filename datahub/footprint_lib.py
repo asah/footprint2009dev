@@ -2,7 +2,7 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
-from xml.dom.ext import PrettyPrint
+#from xml.dom.ext import PrettyPrint
 from xml.sax.saxutils import escape
 import gzip
 import hashlib
@@ -12,6 +12,8 @@ from datetime import datetime
 import parse_footprint
 import parse_usaservice
 import parse_handsonnetwork
+import parse_idealist
+import parse_volunteermatch
 import os
 import time
 import xml_helpers
@@ -301,7 +303,7 @@ def convertToGoogleBaseEventsType(footprint_xml, do_printhead, progress):
   global debug
   if debug:
     print "footprint XML:"
-    PrettyPrint(footprint_xml)
+    #PrettyPrint(footprint_xml)
 
   feedinfos = footprint_xml.getElementsByTagName("FeedInfo")
   if (feedinfos.length != 1):
@@ -466,6 +468,10 @@ if __name__ == "__main__":
     parsefunc = parse_usaservice.Parse
   elif re.search("handson", f):
     parsefunc = parse_handsonnetwork.Parse
+  elif re.search("idealist", f):
+    parsefunc = parse_idealist.Parse
+  elif re.search("volunteermatch", f):
+    parsefunc = parse_volunteermatch.Parse
   if re.search(r'[.]gz$', f):
     fh = gzip.open(f, 'rb')
   else:
