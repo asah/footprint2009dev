@@ -18,6 +18,13 @@ def getNodeData(entity):
   s = re.sub(r'\n', r'\\n', s)
   return s
   
+def getChildrenByTagName(elem, name):
+  temp = []
+  for child in elem.childNodes:
+    if child.nodeType == child.ELEMENT_NODE and child.nodeName == name:
+      temp.append(child)
+      
+  return temp
 
 def getTagValue(entity, tag):
   #print "----------------------------------------"
