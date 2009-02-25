@@ -161,6 +161,7 @@ class MyEventsView(webapp.RequestHandler):
 
     self.response.out.write(RenderTemplate(MY_EVENTS_TEMPLATE,
                                            template_values))
+
 class PostView(webapp.RequestHandler):
   def get(self):
     template_values = {
@@ -169,3 +170,28 @@ class PostView(webapp.RequestHandler):
 
     self.response.out.write(RenderTemplate(POST_TEMPLATE, template_values))
 
+class FriendsView(webapp.RequestHandler):
+  def get(self):
+    userInfo = utils.GetUserInfo()
+    userId = ""
+    days_since_joined = None
+    if userInfo:
+      #we are logged in
+      userId = userInfo['entry']['id']
+      displayName = userInfo['entry']['displayName']
+      thumbnailUrl = userInfo['entry']['thumbnailUrl']
+      
+      # At this point it's mostly silly to save our own user info, but it's
+      # a start.
+      user_info = models.UserInfo.GetOrInsertUser(models.UserInfo.FRIENDCONNECT,
+                                                  userId)
+      days_since_joined = (datetime.datetime.now() - user_info.first_visit).days
+
+    template_values = {
+        'currentPage' : 'FRIENDS',
+        'userId': userId,
+        'days_since_joined': days_since_joined
+      }
+
+    self.response.out.write(RenderTemplate(WORK_WITH_OTHERS_TEMPLATE,
+                                           template_values))
