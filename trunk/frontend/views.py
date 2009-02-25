@@ -66,10 +66,11 @@ class SearchView(webapp.RequestHandler):
       allvals = self.request.get_all(arg)
       unique_args[arg] = allvals[len(allvals)-1]
     result_set = search.Search(unique_args)
+    
     template_values = {
         'query_url_encoded': result_set.query_url_encoded,
         'query_url_unencoded': result_set.query_url_unencoded,
-        'results': result_set.results,
+        'result_set': result_set,
         'keywords': result_set.args["q"],
         'location': result_set.args["vol_loc"],
         'currentPage' : 'SEARCH'
@@ -84,8 +85,6 @@ class SearchAPIView(webapp.RequestHandler):
     for arg in args:
       allvals = self.request.get_all(arg)
       unique_args[arg] = allvals[len(allvals)-1]
-    if "output" not in unique_args:
-      unique_args["output"] = "rss"
     result_set = search.Search(unique_args)
 
     user_info = utils.GetUserInfo()
@@ -110,6 +109,8 @@ class SearchAPIView(webapp.RequestHandler):
         'next_page_url': result_set.next_page_url,
       }
 
+    if "output" not in result_set.args:
+      result_set.args["output"] = "html"
     output = result_set.args["output"]
     if output == "consumerui":
       tpl = SEARCH_RESULTS_TEMPLATE
