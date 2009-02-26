@@ -1,6 +1,5 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
-
 from xml.dom import minidom
 import xml_helpers
 import parse_footprint
