@@ -32,30 +32,29 @@ POST_TEMPLATE = 'post.html'
 DEFAULT_NUM_RESULTS = 10
 
 
-def RenderTemplate(template_filename, template_values):
+def render_template(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
                       TEMPLATE_DIR + template_filename)
   return template.render(path, template_values)
 
 
-class TestPageViewsView(webapp.RequestHandler):
+class test_page_views_view(webapp.RequestHandler):
   def get(self):
     pagename = "testpage%s" % (self.request.get('pagename'))
     pc = pagecount.IncrPageCount(pagename, 1)
     template_values = pagecount.GetStats()
     template_values['pagename'] = pagename
     template_values['pageviews'] = pc
-    self.response.out.write(RenderTemplate(TEST_PAGEVIEWS_TEMPLATE,
+    self.response.out.write(render_template(TEST_PAGEVIEWS_TEMPLATE,
                                            template_values))
 
-class MainPageView(webapp.RequestHandler):
+
+class main_page_view(webapp.RequestHandler):
   def get(self):
     template_values = []
-    self.response.out.write(RenderTemplate(MAIN_PAGE_TEMPLATE,
+    self.response.out.write(render_template(MAIN_PAGE_TEMPLATE,
                                            template_values))
 
-def RunSearch(req):
-  return result_set
 
 def get_user_interests(user):
   """Get the opportunities a user has expressed interest in.
@@ -75,6 +74,7 @@ def get_user_interests(user):
     #logging.info('Found interests: %s' % user_interests)
   return user_interests
 
+
 def get_interest_for_opportunities(opp_id):
   """Get the interest statistics for a set of volunteer opportunities.
 
@@ -85,18 +85,19 @@ def get_interest_for_opportunities(opp_id):
     Dictionary of volunteer opportunity id: interested_count.
   """
   others_interests = {}
-  
+
   #logging.info("oppids are %s" % opp_id)
-  
+
   for interest in models.VolunteerOpportunityStats.get_by_key_name(opp_id):
     logging.info("interest is %s" % interest)
     if interest:
       others_interests[interest.key().name()[3:]] = interest.interested_count
   return others_interests
 
+
 def get_annotated_results(search_args):
   """Get results annotated with the interests of this user and all users."""
-  result_set = search.Search(search_args)
+  result_set = search.search(search_args)
 
   # Get all the ids of items we've found
   opp_ids = []
@@ -119,8 +120,9 @@ def get_annotated_results(search_args):
 
   return result_set
 
+
 # TODO: legacy consumer UI, to be removed
-class SearchView(webapp.RequestHandler):
+class search_view(webapp.RequestHandler):
   def get(self):
     args = self.request.arguments()
     unique_args = {}
@@ -138,10 +140,11 @@ class SearchView(webapp.RequestHandler):
         'location': result_set.args["vol_loc"],
         'current_page' : 'SEARCH'
       }
-    self.response.out.write(RenderTemplate(SEARCH_RESULTS_TEMPLATE,
+    self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                            template_values))
 
-class SearchAPIView(webapp.RequestHandler):
+
+class search_api_view(webapp.RequestHandler):
   def get(self):
     args = self.request.arguments()
     unique_args = {}
@@ -198,9 +201,10 @@ class SearchAPIView(webapp.RequestHandler):
       # TODO: careful about escapification/XSS
       template_values["error"] = "no such output format."
       tpl = SEARCH_RESULTS_RSS_TEMPLATE
-    self.response.out.write(RenderTemplate(tpl, template_values))
+    self.response.out.write(render_template(tpl, template_values))
 
-class MyEventsView(webapp.RequestHandler):
+
+class my_events_view(webapp.RequestHandler):
   def get(self):
     user_info = userinfo.get_user()
     user_id = ""
@@ -220,13 +224,14 @@ class MyEventsView(webapp.RequestHandler):
         'days_since_joined': days_since_joined
       }
 
-    self.response.out.write(RenderTemplate(MY_EVENTS_TEMPLATE,
+    self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
                                            template_values))
 
-class PostView(webapp.RequestHandler):
+
+class post_view(webapp.RequestHandler):
   def get(self):
     template_values = {
       'current_page' : 'POST'
     }
 
-    self.response.out.write(RenderTemplate(POST_TEMPLATE, template_values))
+    self.response.out.write(render_template(POST_TEMPLATE, template_values))

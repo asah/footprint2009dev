@@ -24,13 +24,13 @@ import utils
 
 RESULT_CACHE_TIME = 120 # seconds
 
-def BaseArg(x):
+def make_base_arg(x):
   return "base_" + x
 
 # note: many of the XSS and injection-attack defenses are unnecessary
 # given that the callers are also protecting us, but I figure better
 # safe than sorry, and defense-in-depth.
-def Search(args):
+def search(args):
   base_query = ""
 
   # TODO: injection attack on q
@@ -48,9 +48,9 @@ def Search(args):
   if "backend" not in args:
     args["backends"] = "http://www.google.com/base/feeds/snippets"
 
-  if BaseArg("customer") not in args:
-    args[BaseArg("customer")] = 5663714;
-  base_query += ' [customer id: '+str(int(args[BaseArg("customer")]))+']'
+  if make_base_arg("customer") not in args:
+    args[make_base_arg("customer")] = 5663714;
+  base_query += ' [customer id: '+str(int(args[make_base_arg("customer")]))+']'
 
   if "num" not in args:
     args["num"] = 10

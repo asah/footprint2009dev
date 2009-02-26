@@ -5,6 +5,7 @@ function SimpleMap(div) {
 
   if (GBrowserIsCompatible()) {
     this.map_ = new GMap2(div);
+    this.map_.setCenter(new GLatLng(40, -25), me.defaultZoom_);
     this.map_.enableContinuousZoom();
     this.map_.enableScrollWheelZoom();
     this.geocoder_ = new GClientGeocoder();
