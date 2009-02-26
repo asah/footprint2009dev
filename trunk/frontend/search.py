@@ -29,7 +29,7 @@ def Search(args):
     if args["output"] in ['html','tsv','csv','json','rss','rssdesc','xml']:
       output = args["output"]
     else:
-      searchParamError(args, "fields")
+      searchParamError(args, "output")
   else:
     args["output"] = "html"
 
@@ -75,9 +75,10 @@ def Search(args):
 
   res = base_search.Search(args)
 
-  # TODO: implement pagination
-  res.is_first_page = True
+  res.is_first_page = (start_index == 1)
+  # TODO: detect last page
   res.is_last_page = True
+  # TODO: remove-- urls should be implemented by the caller
   res.prev_page_url = ""
   res.next_page_url = ""
 
