@@ -7,7 +7,7 @@ import base_search
 # and any path info is supposed to be homogenized into this,
 # e.g. /listing/56_foo should be resolved into [('id',56)]
 # by convention, repeated args are ignored, LAST ONE wins.
-def Search(args):
+def search(args):
   num = 10
   if "num" in args:
     num = int(args["num"])
@@ -73,7 +73,7 @@ def Search(args):
   if "id" in args:
     id = args["id"]
 
-  res = base_search.Search(args)
+  res = base_search.search(args)
 
   res.is_first_page = (start_index == 1)
   # TODO: detect last page
