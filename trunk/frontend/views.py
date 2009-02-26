@@ -85,8 +85,10 @@ def get_interest_for_opportunities(opp_id):
     Dictionary of volunteer opportunity id: interested_count.
   """
   others_interests = {}
-  logging.info("oppids are %s" % opp_ids)
-  for interest in models.VolunteerOpportunityStats.get_by_key_name(opp_ids):
+  
+  #logging.info("oppids are %s" % opp_id)
+  
+  for interest in models.VolunteerOpportunityStats.get_by_key_name(opp_id):
     logging.info("interest is %s" % interest)
     if interest:
       others_interests[interest.key().name()[3:]] = interest.interested_count
@@ -102,15 +104,15 @@ def get_annotated_results(search_args):
     opp_ids.append('id:' + result.id)
 
   # mark the items the user is interested in
-  user_interests = userinfo.get_user()
+  user_interests = get_user_interests(userinfo.get_user())
 
   # note the interest of others
   others_interests = get_interest_for_opportunities(opp_ids)
 
   # Mark up the results
   for result in result_set.results:
-    if result.id in users_interests:
-      result.interest = users_interests[result.id]
+    if result.id in user_interests:
+      result.interest = user_interests[result.id]
     if result.id in others_interests:
       #logging.info("others interest in %s = %s " % (result.id, others_interests[result.id]))
       result.interest_count = others_interests[result.id]
