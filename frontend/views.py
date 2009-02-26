@@ -16,7 +16,7 @@ import geocode
 import models
 import search
 import urls
-import utils
+import userinfo
 
 TEMPLATE_DIR = 'templates/'
 MAIN_PAGE_TEMPLATE = 'main_page.html'
@@ -57,6 +57,66 @@ class MainPageView(webapp.RequestHandler):
 def RunSearch(req):
   return result_set
 
+def get_user_interests(user):
+  """Get the opportunities a user has expressed interest in.
+
+  Args:
+    user: userinfo.User of a user
+  Returns:
+    Dictionary of volunteer opportunity id: expressed_interest.
+  """
+  user_interests = {}
+  if user:
+    # Note that if a user has a lot (particularly > 1000) of
+    # UserInterest entires, we'll have to do a more clever
+    # query than the magic reverse reference query.
+    for interest in user.get_user_info().interests:
+      user_interests[interest.key().name()[3:]] = interest.expressed_interest
+    #logging.info('Found interests: %s' % user_interests)
+  return user_interests
+
+def get_interest_for_opportunities(opp_id):
+  """Get the interest statistics for a set of volunteer opportunities.
+
+  Args:
+    opp_id: volunteer opportunity id, or list of volunteer opportunity ids.
+
+  Returns:
+    Dictionary of volunteer opportunity id: interested_count.
+  """
+  others_interests = {}
+  logging.info("oppids are %s" % opp_ids)
+  for interest in models.VolunteerOpportunityStats.get_by_key_name(opp_ids):
+    logging.info("interest is %s" % interest)
+    if interest:
+      others_interests[interest.key().name()[3:]] = interest.interested_count
+  return others_interests
+
+def get_annotated_results(search_args):
+  """Get results annotated with the interests of this user and all users."""
+  result_set = search.Search(search_args)
+
+  # Get all the ids of items we've found
+  opp_ids = []
+  for result in result_set.results:
+    opp_ids.append('id:' + result.id)
+
+  # mark the items the user is interested in
+  user_interests = userinfo.get_user()
+
+  # note the interest of others
+  others_interests = get_interest_for_opportunities(opp_ids)
+
+  # Mark up the results
+  for result in result_set.results:
+    if result.id in users_interests:
+      result.interest = users_interests[result.id]
+    if result.id in others_interests:
+      #logging.info("others interest in %s = %s " % (result.id, others_interests[result.id]))
+      result.interest_count = others_interests[result.id]
+
+  return result_set
+
 # TODO: legacy consumer UI, to be removed
 class SearchView(webapp.RequestHandler):
   def get(self):
@@ -65,7 +125,8 @@ class SearchView(webapp.RequestHandler):
     for arg in args:
       allvals = self.request.get_all(arg)
       unique_args[arg] = allvals[len(allvals)-1]
-    result_set = search.Search(unique_args)
+
+    result_set = get_annotated_results(unique_args)
 
     template_values = {
         'query_url_encoded': result_set.query_url_encoded,
@@ -85,14 +146,14 @@ class SearchAPIView(webapp.RequestHandler):
     for arg in args:
       allvals = self.request.get_all(arg)
       unique_args[arg] = allvals[len(allvals)-1]
-    result_set = search.Search(unique_args)
+    result_set = get_annotated_results(unique_args)
 
-    user_info = utils.GetUserInfo()
+    user_info = userinfo.get_user()
     user_id = ""
     user_display_name = ""
     if user_info:
-      user_id = user_info['entry']['id']
-      user_display_name = user_info['entry']['displayName']
+      user_id = user_info.user_id
+      user_display_name = user_info.get_display_name()
 
     template_values = {
         'result_set': result_set,
@@ -139,20 +200,17 @@ class SearchAPIView(webapp.RequestHandler):
 
 class MyEventsView(webapp.RequestHandler):
   def get(self):
-    user_info = utils.GetUserInfo()
+    user_info = userinfo.get_user()
     user_id = ""
     days_since_joined = None
     if user_info:
       #we are logged in
-      user_id = user_info['entry']['id']
-      display_name = user_info['entry']['displayName']
-      thumbnail_url = user_info['entry']['thumbnailUrl']
+      user_id = user_info.user_id
+      display_name = user_info.get_display_name()
+      thumbnail_url = user_info.get_thumbnail_url()
 
-      # At this point it's mostly silly to save our own user info, but it's
-      # a start.
-      user_info = models.UserInfo.GetOrInsertUser(models.UserInfo.FRIENDCONNECT,
-                                                  user_id)
-      days_since_joined = (datetime.datetime.now() - user_info.first_visit).days
+      days_since_joined = (datetime.datetime.now() -
+                           user_info.get_user_info().first_visit).days
 
     template_values = {
         'current_page' : 'MY_EVENTS',

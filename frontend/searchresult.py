@@ -4,11 +4,12 @@
 import re
 
 class SearchResult(object):
-  def __init__(self, url, title, snippet, location):
+  def __init__(self, url, title, snippet, location, id):
     self.url = url
     self.title = title
     self.snippet = snippet
     self.location = location
+    self.id = id
     # app engine does not currently support the escapejs filter in templates
     # so we have to do it our selves for now
     self.js_escaped_title = self.jsEscape(title)
@@ -24,3 +25,7 @@ class SearchResultSet(object):
     self.query_url_unencoded = query_url_unencoded
     self.query_url_encoded = query_url_encoded
     self.results = results
+    # user's expressed interest, models.InterestTypeProperty
+    self.interest = None
+    # stats from other users.
+    self.interest_count = 0

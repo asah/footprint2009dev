@@ -19,7 +19,7 @@ class InterestTypeProperty(db.IntegerProperty):
   INTERESTED = 1
   WILL_ATTEND = 2
   HAVE_ATTENDED = 3
-  
+
 
 def IncrementProperties(model_class, key, **kwargs):
   """Generic method to increment statistics.
@@ -53,44 +53,45 @@ def IncrementProperties(model_class, key, **kwargs):
 
 class UserInfo(db.Model):
   """Basic user statistics/preferences data."""
-  # Key is accounttype:accountaddress.
+  # Key is accounttype:user_id.
   first_visit = db.DateTimeProperty(auto_now_add=True)
   last_edit = db.DateTimeProperty(auto_now=True)
 
-  def AccountType(self):
+  def account_type(self):
     key_name = self.key().name()
     return key_name.split(':', 1)[0]
 
-  def Address(self):
+  def user_id(self):
     key_name = self.key().name()
     return key_name.split(':', 1)[1]
 
   # Known types of accounts. Type must not start with a number.
   FRIENDCONNECT = 'friendconnect'
   GOOGLE = 'google'  # Google Account; not Google Apps account.
-  KNOWN_TYPES = (FRIENDCONNECT, GOOGLE)
+  TEST = 'test'
+  KNOWN_TYPES = (FRIENDCONNECT, GOOGLE, TEST)
 
   @classmethod
-  def GetOrInsertUser(cls, account_type, address):
+  def get_or_insert_user(cls, account_type, user_id):
     """Gets existing or creates a new user.
 
     Similar to get_or_insert, increments UserStats if appropriate.
 
     Args:
       account_type: Type of account used.
-      address: address within that system.
-      
+      user_id: address within that system.
+
     Returns:
       UserInfo for this user.
-      
+
     Raises:
       BadAccountType if the account_type is unknown.
       Various datastore exceptions.
     """
     if not account_type in cls.KNOWN_TYPES:
       raise BadAccountType()
-      
-    key_name = '%s:%s' % (account_type, address)
+
+    key_name = '%s:%s' % (account_type, user_id)
     user_info = cls.get_by_key_name(key_name)
 
     def txn():
@@ -105,7 +106,7 @@ class UserInfo(db.Model):
     (user_info, created_entity) = db.run_in_transaction(txn)
 
     if created_entity:
-      UserStats.Increment(account_type, address)
+      UserStats.Increment(account_type, user_id)
 
     return user_info
 
@@ -115,14 +116,14 @@ class UserStats(db.Model):
   count = db.IntegerProperty(default=0)
 
   @classmethod
-  def Increment(cls, account_type, address):
+  def Increment(cls, account_type, user_id):
     """Sharded counter. User ID is only for sharding."""
 
     def txn():
       # We want << 1000 shards.
       # This cheesy shard mechanism allows us some amount of way to see how
       # many users of each type we have too.
-      shard_name = account_type + ':' + address[:2]
+      shard_name = account_type + ':' + user_id[:2]
       counter = cls.get_by_key_name(shard_name)
       if not counter:
         counter = cls(key_name=shard_name)
@@ -132,19 +133,19 @@ class UserStats(db.Model):
     db.run_in_transaction(txn)
 
   @staticmethod
-  def GetCount():
+  def get_count():
     total = 0
     for counter in UserStats.all():
       total += counter.count
     return total
 
 
-class UserVolunteerOpportunity(db.Model):
+class UserInterest(db.Model):
   """Our record a user's actions related to an opportunity."""
-  user = db.ReferenceProperty(UserInfo)
-  # volunteer_opportunity_id is the stable ID from base; it is probabaly
-  # not the same ID provided in the feed from providers.
-  volunteer_opportunity_id = db.StringProperty(required=True)
+  # Key is 'id:' + the stable ID from base; it is probabaly not the same ID
+  # provided in the feed from providers.
+  user = db.ReferenceProperty(UserInfo,
+                              collection_name='interests')
   broadcast_on = db.DateTimeProperty()
   expressed_interest = InterestTypeProperty()
 
@@ -161,9 +162,9 @@ class VolunteerOpportunityStats(db.Model):
   have_attended_count = db.IntegerProperty(default=0)
 
   @classmethod
-  def Increment(cls, volunteer_opportunity_id, **kwargs):
+  def increment(cls, volunteer_opportunity_id, **kwargs):
     # Example:
-    # models.VolunteerOpportunityStats.Increment(opp_id, interested_count=1)
+    # models.VolunteerOpportunityStats.increment(opp_id, interested_count=1)
     return IncrementProperties(cls,
                                'id:' + volunteer_opportunity_id,
                                **kwargs)

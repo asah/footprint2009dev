@@ -17,6 +17,13 @@
             "{{result.js_escaped_snippet|escape}}", "20090214", "locationPlaceholder")'>
           <img src='images/google.png' height="16px" alt=''/> Google Calendar
         </div>
+       <div class='add_to_calendar' onclick='expressInterest(this, "{{result.id|escape}}", "{{result.interest|escape}}")'>
+          {% if result.interest %}
+          <img src='images/markers/yellow-dot.png' height="16px" alt=''/> Interested {{result.interest_count|escape}}
+          {% else %}
+          <img src='images/markers/yellow.png' height="16px" alt=''/> Interested {{result.interest_count|escape}}
+          {% endif %}
+        </div>
       </div>
 
       {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
