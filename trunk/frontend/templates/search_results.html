@@ -3,6 +3,7 @@
 {% block js_files %}
   <script type="text/javascript" src="/js/map.js"></script>
   <script type="text/javascript" src="/js/search_results.js"></script>
+  <script type="text/javascript" src="/js/calendar_widget.js"></script>
   <script type="text/javascript" src="http://w.sharethis.com/button/sharethis.js#tabs=email%2Cweb%2Cpost&amp;charset=utf-8&amp;style=default&amp;publisher=53d633da-5f45-4163-9dfa-6874\4e89a302"></script>
 {% endblock %}
 
@@ -14,7 +15,7 @@
   <div id='map' style='width:300px; height:300px; float:left;'></div>
   <br/>
   <br/>
-  <div id='calendar' style='width:300px; height:300px; float:left;'><img style='width:300px; height:300px;' src='/images/calendar-placeholder.png'><br><b>[CALENDAR PLACEHOLDER]</b></div>
+  <div id="calendar">{% include "calendar_widget.html" %}</div>
   <div style='float:none; clear:both;'>&nbsp;</div>
 {% endblock content_left %}
 

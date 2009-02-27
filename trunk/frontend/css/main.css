@@ -146,7 +146,39 @@ body {
   margin: 6px;
 }
 
+/** Search results' calendar style **/
 #calendar {
-  border: 1px solid silver;
-  margin: 6px;
+  width: 300px;
+  float: left;
+}
+
+#calendar table {
+  margin: 0 auto;
+  color: #2475B6;
+  background: #669FCC;
+  border-collapse: collapse;
+  border: 3px solid #669FCC;
+}
+
+#calendar td,
+#calendar th {
+  padding: 3px;
+  width: 1.5em;
+  text-align: center;
+}
+
+#calendar td {
+  background: #a3bfdc;
+}
+
+#calendar td.calendar_days_weekend {
+  background: #b9cfe4;
+}
+
+#calendar td.calendar_days_today {
+  border: 1px solid #999;
+}
+
+#calendar td.calendar_days_event {
+  background: #fff;
 }
