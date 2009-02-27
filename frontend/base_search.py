@@ -52,6 +52,8 @@ def search(args):
     args[make_base_arg("customer")] = 5663714;
   base_query += ' [customer id: '+str(int(args[make_base_arg("customer")]))+']'
 
+  base_query += ' [detailurl]'
+
   if "num" not in args:
     args["num"] = 10
   if "start" not in args:
@@ -85,7 +87,12 @@ def search(args):
     # Note: using entry.getElementsByTagName('link')[0] isn't very stable;
     # consider iterating through them for the one where rel='alternate' or
     # whatever the right thing is.
-    url = entry.getElementsByTagName('link')[0].getAttribute('href')
+    #urltag = entry.getElementsByTagName('link')[0].getAttribute('href')
+    urltag = entry.getElementsByTagName('g:detailurl')
+    if urltag:
+      url = utils.GetXmlDomText(urltag[0])
+    else:
+      url = ""
     # ID is the 'stable id' of the item.
     # TODO: Get the correct node to use in the feed from base instead
     # of the atom 'id' item.
