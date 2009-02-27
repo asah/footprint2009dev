@@ -14,6 +14,10 @@ def Parse(s, maxrecs, progress):
   known_elnames = ['feed', 'title', 'subtitle', 'div', 'span', 'updated', 'id', 'link', 'icon', 'logo', 'author', 'name', 'uri', 'email', 'rights', 'entry', 'published', 'g:publish_date', 'g:expiration_date', 'g:event_date_range', 'g:start', 'g:end', 'updated', 'category', 'summary', 'content', 'awb:city', 'awb:country', 'awb:state', 'awb:postalcode', 'g:location', 'g:age_range', 'g:employer', 'g:job_type', 'g:job_industry', 'awb:paid', ]
   xmldoc = xml_helpers.simpleParser(s, known_elnames)
 
+  pubdate = xml_helpers.getTagValue(xmldoc, "created")
+  ts = dateutil.parser.parse(pubdate)
+  pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
+
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
   s += '<FootprintFeed schemaVersion="0.1">'
@@ -23,7 +27,7 @@ def Parse(s, maxrecs, progress):
   s += '<providerName>volunteermatch.org</providerName>'
   s += '<feedID>volunteermatch.org</feedID>'
   s += '<providerURL>http://www.volunteermatch.org/</providerURL>'
-  s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
+  s += '<createdDateTime>%s</createdDateTime>' % (pubdate)
   s += '<description></description>' 
   s += '</FeedInfo>'
 
@@ -113,6 +117,13 @@ def Parse(s, maxrecs, progress):
     s += '<city>%s</city>' % (xml_helpers.getTagValue(dbaddress, "city"))
     s += '<region>%s</region>' % (xml_helpers.getTagValue(dbaddress, "region"))
     s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(dbaddress, "postalCode"))
+    
+    geolocs = item.getElementsByTagName("geolocation")
+    if (geolocs.length == 1):
+      geoloc = geolocs[0]
+      s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(geoloc, "latitude"))
+      s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(geoloc, "longitude"))
+    
     s += '</location></locations>'
     
     s += '<audienceTags>'
@@ -128,6 +139,8 @@ def Parse(s, maxrecs, progress):
       type = xml_helpers.getNodeData(category)
       s += '<categoryTag>%s</categoryTag>' % (type)
     s += '</categoryTags>'
+
+    s += '<skills>%s</skills>' % (xml_helpers.getTagValue(item, "skill"))
 
     s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(item, "detailURL"))
     s += '<description>%s</description>' % (xml_helpers.getTagValue(item, "description"))
