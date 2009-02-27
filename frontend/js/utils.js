@@ -2,6 +2,38 @@ function el(node) {
   return document.getElementById(node);
 }
 
+function forEach(array, fn) {
+  var l = array.length;
+  for (var i = 0; i < l; i++) {
+    fn(array[i], i);
+  }
+}
+
+function forEachElementOfClass(classname, fn, opt_element) {
+  var root = opt_element || document;
+  forEach(root.getElementsByClassName(classname), fn);
+}
+
+function addEventListener(element, type, callback) {
+  if (element.addEventListener) {
+    element.addEventListener(type, callback, false);
+  } else if (element.attachEvent) {
+    element.attachEvent('on' + type, callback);
+  } else {
+    element['on' + type] = callback;
+  }
+}
+
+function removeEventListener(element, type, callback) {
+  if (element.removeEventListener) {
+    element.removeEventListener(type, callback, false);
+  } else if (element.detachEvent) {
+    element.detachEvent('on' + type, callback);
+  } else {
+    element['on' + type] = callback;
+  }
+}
+
 function GetUrlParams(paramString) {
   // Decode URL hash params.
   var params = {};

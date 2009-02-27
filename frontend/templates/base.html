@@ -27,6 +27,9 @@
     // Create a WorkQueue (defined in utils.js) to queue any
     // JS callbacks to be invoked on body onload event.
     var onloadWorkQueue = new WorkQueue();
+    
+    // ...and one to queue JS callbacks on body unload event.
+    var onUnloadWorkQueue = new WorkQueue();
   </script>
 {% block js_files %}{% endblock %}
 
