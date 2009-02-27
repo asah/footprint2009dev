@@ -12,7 +12,7 @@ import dateutil.parser
 def Parse(s, maxrecs, progress):
   # TODO: progress
   known_elnames = ['feed', 'title', 'subtitle', 'div', 'span', 'updated', 'id', 'link', 'icon', 'logo', 'author', 'name', 'uri', 'email', 'rights', 'entry', 'published', 'g:publish_date', 'g:expiration_date', 'g:event_date_range', 'g:start', 'g:end', 'updated', 'category', 'summary', 'content', 'awb:city', 'awb:country', 'awb:state', 'awb:postalcode', 'g:location', 'g:age_range', 'g:employer', 'g:job_type', 'g:job_industry', 'awb:paid', ]
-  xmldoc = xml_helpers.simpleParser(s, known_elnames)
+  xmldoc = xml_helpers.simpleParser(s, known_elnames, progress)
 
   pubdate = xml_helpers.getTagValue(xmldoc, "created")
   ts = dateutil.parser.parse(pubdate)
@@ -23,7 +23,7 @@ def Parse(s, maxrecs, progress):
   s += '<FootprintFeed schemaVersion="0.1">'
   s += '<FeedInfo>'
   # TODO: assign provider IDs?
-  s += '<providerID>XXX</providerID>'
+  s += '<providerID>104</providerID>'
   s += '<providerName>volunteermatch.org</providerName>'
   s += '<feedID>volunteermatch.org</feedID>'
   s += '<providerURL>http://www.volunteermatch.org/</providerURL>'
@@ -55,6 +55,7 @@ def Parse(s, maxrecs, progress):
       s += '</Organization>'
     else:
       print "parse_volunteermatch: listing does not have an organization"
+      return None
 
   s += '</Organizations>'
     
@@ -93,6 +94,7 @@ def Parse(s, maxrecs, progress):
         s += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(listingTime, "endTime"))
     else:
       print "parse_volunteermatch: number of durations in item != 1"
+      return None
         
     commitments = item.getElementsByTagName("commitment")
     if (commitments.length == 1):
@@ -156,7 +158,7 @@ def Parse(s, maxrecs, progress):
   s += '</FootprintFeed>'
 
   s = re.sub(r'><([^/])', r'>\n<\1', s)
-  print s
+  #print s
   xmldoc = parse_footprint.Parse(s, maxrecs, progress)
   return xmldoc
 
