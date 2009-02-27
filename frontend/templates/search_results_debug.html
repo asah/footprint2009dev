@@ -11,7 +11,7 @@ q={{keywords}}
 l={{location}}
 
 {% for result in result_set.results %}
-{{result.idx}}. {{result.title}} @ {{result.location}}
+{{result.idx}}. {{result.title}} @ {{result.location}} ({{result.latlong}})
 link: <a href="{{result.url|escape}}">{{result.url}}</a>
 desc: {{result.snippet}}
 {% endfor %}

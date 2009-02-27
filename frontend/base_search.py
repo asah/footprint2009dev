@@ -61,6 +61,7 @@ def search(args):
   url_params = urllib.urlencode({'max-results': args["num"],
                                  'start-index': args["start"],
                                  'bq': base_query,
+                                 'content': 'geocodes',
                                  })
   query_url = '%s?%s' % (args["backends"], url_params)
 
@@ -95,10 +96,18 @@ def search(args):
     if location_element:
       location = utils.GetXmlDomText(location_element[0])
     else:
-      location = None
+      location = None      
     logging.info("title="+title+"  location="+str(location)+"  url="+url)
     res = searchresult.SearchResult(url, title, snippet, location, id)
     res.idx = i+1
+    lat_element = entry.getElementsByTagName('g:latitude')
+    long_element = entry.getElementsByTagName('g:longitude')
+    res.latlong = ""
+    if lat_element and long_element:
+      res.latlong = utils.GetXmlDomText(lat_element[0]) + "," + \
+          utils.GetXmlDomText(long_element[0])
+    if res.latlong == ",":
+      res.latlong = ""
     result_set.results.append(res)
 
   return result_set
