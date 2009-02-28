@@ -255,11 +255,11 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:annotation>
       </xs:element>
 
-      <xs:element name="commitmentHoursPerWeek" type="xs:integer" minOccurs="0">
+      <xs:element name="commitmentHoursPerWeek" type="xs:decimal" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             For long-term opportunities, how many hours per week are expected? Integer. Optional.
+             For long-term opportunities, how many hours per week are expected? Decimal values allowed. Optional.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -273,7 +273,7 @@ FREQ=WEEKLY;INTERVAL=2
       <xs:annotation>
         <xs:documentation>
          <![CDATA[
-           The top-level object is <code>FootprintFeed</code> and requires a schemaVersion attribute. Thus, a feed would be wrapped in the following XML:<p><code>
+           The top-level object is <code>FootprintFeed</code> and requires a schemaVersion attribute. Order of objects must follow order below. Thus, a feed would be wrapped in the following XML:<p><code>
 &lt;?xml version="1.0" ?&gt;<br>
 &lt;FootprintFeed schemaVersion="0.1"&gt;<br>
 ...<br>
@@ -374,7 +374,7 @@ FREQ=WEEKLY;INTERVAL=2
             <xs:annotation>
               <xs:documentation>
                <![CDATA[
-                 The <code>Organizations</code> object wraps a set of <code>Organization</code> objects. Order does not matter.
+                 The <code>Organizations</code> object wraps a set of <code>Organization</code> objects. Order of <code>Organization</code> objects has no semantic meaning.
                ]]>
               </xs:documentation>
             </xs:annotation>
@@ -386,7 +386,7 @@ FREQ=WEEKLY;INTERVAL=2
                   <xs:annotation>
                     <xs:documentation>
                      <![CDATA[
-                       The <code>Organization</code> object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). <code>Organization</code> objects are wrapped in an <code>Organizations</code>.
+                       The <code>Organization</code> object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). <code>Organization</code> objects are wrapped in an <code>Organizations</code>. Order of fields must follow order below.
                      ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -546,7 +546,7 @@ FREQ=WEEKLY;INTERVAL=2
             <xs:annotation>
               <xs:documentation>
                 <![CDATA[
-                  The <code>VolunteerOpportunities</code> object wraps a set of <code>VolunteerOpportunity</code> objects. Order does not matter.
+                  The <code>VolunteerOpportunities</code> object wraps a set of <code>VolunteerOpportunity</code> objects. Order of <code>VolunteerOpportunity</code> objects has no semantic meaning.
                 ]]>
               </xs:documentation>
             </xs:annotation>
@@ -557,7 +557,7 @@ FREQ=WEEKLY;INTERVAL=2
                     <xs:documentation>
                       <![CDATA[
                         The <code>VolunteerOpportunity</code> object represents one volunteer opportunity listing. It is capable of representing a repeating or on-going event.
-                        Often an <code>Opportunity</code> object will link to an <code>Organization</code> object via the <sponsoringOrganizationID> or <volunteerHubOrganizationID> fields.
+                        Often an <code>Opportunity</code> object will link to an <code>Organization</code> object via the <sponsoringOrganizationID> or <volunteerHubOrganizationID> fields. Order of fields must follow order below.
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -629,7 +629,7 @@ FREQ=WEEKLY;INTERVAL=2
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order does not matter. Required.
+                              A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order of <code>dateTimeDuration</code> objects has no semantic meaning. Required.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -640,7 +640,7 @@ FREQ=WEEKLY;INTERVAL=2
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. Optional. Recommended.
+                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. ReOrder of objects must follow order below. Required. Order of fields must follow order specified elsewhere in documentation.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -652,7 +652,7 @@ FREQ=WEEKLY;INTERVAL=2
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order matters only in that the first location is the default time zone if the time zone for the opportunity start or end time is unspecified. Required.
+                              A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order of <code>location</code> objects matters only in that the first location is the default time zone if the time zone for the opportunity start or end time is unspecified. Required.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -662,7 +662,7 @@ FREQ=WEEKLY;INTERVAL=2
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Optional. Highly recommended.
+                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Required. Order of fields must follow order specified elsewhere in documentation.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -684,7 +684,7 @@ FREQ=WEEKLY;INTERVAL=2
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order does not matter. Example:<br><code>
+                              A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order of <code>audienceTag</code> entries has no semantic meaning. Example:<br><code>
                               &lt;audienceTags&gt;<br>
                               &nbsp;&nbsp; &lt;audienceTag&gt;Teens&lt;/audienceTag&gt;<br>
                               &nbsp;&nbsp; &lt;audienceTag&gt;College-aged&lt;/audienceTag&gt;<br>
@@ -711,7 +711,7 @@ FREQ=WEEKLY;INTERVAL=2
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                             A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order does not matter. Example:<br><code>
+                             A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning. Example:<br><code>
                              &lt;categoryTag&gt;<br>
                              &nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>
                              &nbsp;&nbsp; &lt;categoryTag&gt;Hunger&lt;/categoryTag&gt;<br>
