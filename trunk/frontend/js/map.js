@@ -5,10 +5,13 @@ function SimpleMap(div) {
 
   if (GBrowserIsCompatible()) {
     this.map_ = new GMap2(div);
-    this.map_.setCenter(new GLatLng(40, -25), me.defaultZoom_);
+
+    this.map_.setCenter(new GLatLng(40, -100), 3);
     this.map_.enableContinuousZoom();
     this.map_.enableScrollWheelZoom();
     this.geocoder_ = new GClientGeocoder();
+    this.map_.addControl(new GSmallMapControl());
+
     if (false) {
       this.icon_ = new GIcon(G_DEFAULT_ICON, "/images/markers/red.png");
       this.icon_.iconSize.width = 32;

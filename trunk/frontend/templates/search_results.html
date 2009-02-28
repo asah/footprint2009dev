@@ -8,21 +8,38 @@
 {% endblock %}
 
 {% block subheader %}
- {% include 'search_bar.html' %}
 {% endblock subheader %}
 
 {% block content_left %}
-  <div id='map' style='width:300px; height:300px; float:left;'></div>
+  <div class='top_search'>
+    What's going on this month?
+  </div>
+  <div id='calendar'>
+    {% include "calendar_widget.html" %}
+  </div>
   <br/>
   <br/>
-  <div id="calendar">{% include "calendar_widget.html" %}</div>
-  <div style='float:none; clear:both;'>&nbsp;</div>
+  <div id='map'></div>
+  <div style='float:none; clear:both;'></div>
+  <div>
+    In or near: <input style='margin-left: 10px;' id='location'
+                       onchange='submitForm("map"); return false;'
+                       type='text' size='30' value='{{ location }}'/>
+  </div>
 {% endblock content_left %}
 
 {% block width_left %}320{% endblock %}
 
 {% block content_right %}
-  <div id='snippet_pane'>
+  <div class='top_search'>
+    Show me all the activities:
+    <input type='text' id='keywords'
+           onchange='submitForm("keywords"); return false;'
+           size='60' value='{{ keywords }}' />
+    <input type=submit id='refine' value='Refine'
+           onclick='submitForm("keywords"); return false;' />
+  </div>
+  <div id='snippets_pane'>
     {% include 'snippets_list.html' %}
   </div>
 {% endblock content_right %}
@@ -39,6 +56,11 @@
  Keywords='{{ keywords }}'<br>
  Location='{{ location }}'<br>
 </div>
+
+<script>
+document.userDisplayName = "{{user_display_name}}";
+</script>
+<script type="text/javascript" src="/js/snippets_list.js"></script>
 
 <script type="text/javascript">
   google.load("maps", "2");

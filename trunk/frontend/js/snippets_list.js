@@ -16,7 +16,8 @@ function shareEvent(div, eventUrl, eventTitle, eventSnippet) {
       + eventTitle + " " + eventUrl);
 }
 
-function addToCalendar(div, type, eventUrl, eventTitle, eventSnippet, eventDate, eventLocation) {
+function addToCalendar(div, type, eventUrl, eventTitle, eventSnippet,
+                       eventDate, eventLocation) {
   // TODO: Handle ical and outlook
   var url;
 

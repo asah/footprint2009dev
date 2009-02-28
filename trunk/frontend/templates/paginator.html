@@ -1,4 +1,6 @@
+{% if result_set and not (is_first_page and is_last_page) %}
 <div id='paginator'>
 {% if not is_first_page %} <a href='{{ prev_page_url }}'>Prev page</a> {% endif %}
 {% if not is_last_page %} <a href='{{ next_page_url }}'>Next page</a> {% endif %}
 </div>
+{% endif %}
