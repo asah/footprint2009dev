@@ -70,7 +70,7 @@ def ParseHelper(instr, maxrecs, progress):
   s += '<providerID>102</providerID>'
   s += '<providerName>handsonnetwork.org</providerName>'
   s += '<feedID>handsonnetwork.org</feedID>'
-  s += '<createdDateTime></createdDateTime>'
+  s += '<createdDateTime>2008-12-30T14:30:10.5</createdDateTime>' # TODO: get/create real feed date
   s += '<providerURL>http://www.handsonnetwork.org/</providerURL>'
   s += '<description></description>'
   # TODO: capture ts -- use now?!
