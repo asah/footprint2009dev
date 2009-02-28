@@ -67,13 +67,13 @@ def ParseHelper(instr, maxrecs, progress):
   s += '<FootprintFeed schemaVersion="0.1">'
   s += '<FeedInfo>'
   # TODO: assign provider IDs?
-  s += '<feedID>handsonnetwork.org</feedID>'
   s += '<providerID>102</providerID>'
   s += '<providerName>handsonnetwork.org</providerName>'
+  s += '<feedID>handsonnetwork.org</feedID>'
+  s += '<createdDateTime></createdDateTime>'
   s += '<providerURL>http://www.handsonnetwork.org/</providerURL>'
   s += '<description></description>'
   # TODO: capture ts -- use now?!
-  s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
   s += '</FeedInfo>'
 
   # hardcoded: Organization
@@ -89,9 +89,11 @@ def ParseHelper(instr, maxrecs, progress):
     s += '<Organization>'
     name = xml_helpers.getTagValue(org, "Name")
     desc = xml_helpers.getTagValue(org, "Description")
+    s += '<organizationID>%d</organizationID>' % (i+1)
+    s += '<nationalEIN></nationalEIN>'
     s += '<name>%s</name>' % (xml_helpers.getTagValue(org, "Name"))
+    s += '<missionStatement></missionStatement>'
     s += '<description>%s</description>' % (xml_helpers.getTagValue(org, "Description"))
-    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.getTagValue(org, "URL"))
     # unmapped: Email
     # unmapped: Phone
     # unmapped: Extension
@@ -101,15 +103,13 @@ def ParseHelper(instr, maxrecs, progress):
     #s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(org, "PostalCode"))
     s += '<country>%s</country>' % (xml_helpers.getTagValue(org, "Country"))
     s += '</location>'
-    s += '<organizationID>%d</organizationID>' % (i+1)
-    sponsor_ids[name+desc] = i+1
-    s += '<nationalEIN></nationalEIN>'
-    s += '<guidestarID></guidestarID>'
-    s += '<missionStatement></missionStatement>'
+    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.getTagValue(org, "URL"))
     s += '<donateURL></donateURL>'
     s += '<logoURL></logoURL>'
     s += '<detailURL></detailURL>'
     s += '</Organization>'
+    sponsor_ids[name+desc] = i+1
+    
   s += '</Organizations>'
     
   s += '<VolunteerOpportunities>'
@@ -138,35 +138,34 @@ def ParseHelper(instr, maxrecs, progress):
     # unmapped: LogoURL
     # unmapped: OpportunityTypeID   (categoryTag?)
     # unmapped: LocationClassificationID (flatten)
-    outstr_for_all_dates = '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(opp, "LocalID"))
-    outstr_for_all_dates += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (sponsor_id)
+    outstr_for_all_dates_pre = '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(opp, "LocalID"))
+    outstr_for_all_dates_pre += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (sponsor_id)
       # unmapped: OrgLocalID
-    outstr_for_all_dates += '<volunteerHubOrganizationID>%s</volunteerHubOrganizationID>' % (xml_helpers.getTagValue(opp, "AffiliateID"))
-    outstr_for_all_dates += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "Title"))
-    outstr_for_all_dates += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(opp, "DetailURL"))
-    outstr_for_all_dates += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "Description"))
-    outstr_for_all_dates += '<lastUpdated>%s</lastUpdated>' % (xml_helpers.getTagValue(opp, "DateListed"))
-      # hardcoded: abstract
-    outstr_for_all_dates += '<abstract></abstract>'
-      # hardcoded: volunteersNeeded
-    outstr_for_all_dates += '<volunteersNeeded>-8888</volunteersNeeded>'
-    # no equivalent: contactName, contactEmail
+    outstr_for_all_dates_pre += '<volunteerHubOrganizationID>%s</volunteerHubOrganizationID>' % (xml_helpers.getTagValue(opp, "AffiliateID"))
+    outstr_for_all_dates_pre += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "Title"))
+    outstr_for_all_dates_pre += '<abstract></abstract>'
+    outstr_for_all_dates_pre += '<volunteersNeeded>-8888</volunteersNeeded>'
+    
 
     locations = opp.getElementsByTagName("Location")
     if (locations.length != 1):
       print "parse_handsonnetwork: only 1 location supported."
       return None
     loc = locations[0]
-    outstr_for_all_dates += '<locations><location>'
+    outstr_for_all_dates_post = '<locations><location>'
       # yuck, uses address1 for venue name... sometimes... no way to detect: presence of numbers?
-    outstr_for_all_dates += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(loc, "Address1"))
-    outstr_for_all_dates += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.getTagValue(loc, "Address2"))
-    outstr_for_all_dates += '<city>%s</city>' % (xml_helpers.getTagValue(loc, "City"))
-    outstr_for_all_dates += '<region>%s</region>' % (xml_helpers.getTagValue(loc, "State"))
-    outstr_for_all_dates += '<country>%s</country>' % (xml_helpers.getTagValue(loc, "Country"))
-    outstr_for_all_dates += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(loc, "ZipOrPostalCode"))
+    outstr_for_all_dates_post += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(loc, "Address1"))
+    outstr_for_all_dates_post += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.getTagValue(loc, "Address2"))
+    outstr_for_all_dates_post += '<city>%s</city>' % (xml_helpers.getTagValue(loc, "City"))
+    outstr_for_all_dates_post += '<region>%s</region>' % (xml_helpers.getTagValue(loc, "State"))
+    outstr_for_all_dates_post += '<country>%s</country>' % (xml_helpers.getTagValue(loc, "Country"))
+    outstr_for_all_dates_post += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(loc, "ZipOrPostalCode"))
       # no equivalent: latitude, longitude
-    outstr_for_all_dates += '</location></locations>'
+    outstr_for_all_dates_post += '</location></locations>'
+    
+    outstr_for_all_dates_post += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(opp, "DetailURL"))
+    outstr_for_all_dates_post += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "Description"))
+    outstr_for_all_dates_post += '<lastUpdated>%s</lastUpdated>' % (xml_helpers.getTagValue(opp, "DateListed"))
 
     for oppdate in oppdates:
       if progress:
@@ -175,7 +174,8 @@ def ParseHelper(instr, maxrecs, progress):
           print datetime.now(),": ",totrecs," records generated."
 
       s += '<VolunteerOpportunity>'
-      s += outstr_for_all_dates
+      s += outstr_for_all_dates_pre
+      
       s += '<dateTimeDurations><dateTimeDuration>'
       if oppdate == None:
         s += '<openEnded>Yes</openEnded>'
@@ -189,6 +189,8 @@ def ParseHelper(instr, maxrecs, progress):
         s += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(oppdate, "StartTime"))
         s += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(oppdate, "EndTime"))
       s += '</dateTimeDuration></dateTimeDurations>'
+      
+      s += outstr_for_all_dates_post
       s += '</VolunteerOpportunity>'
   if progress:
     print "done with VolunteerOpportunities..."
@@ -201,7 +203,8 @@ def Parse(instr, maxrecs, progress):
   if progress:
     print datetime.now(),"parse_handsonnetwork.Parse: starting parse..."
   s = ParseHelper(instr, maxrecs, progress)
-  #for debugging: s = re.sub(r'><([^/])', r'>\n<\1', s)
+  #s = re.sub(r'><([^/])', r'>\n<\1', s)
+  #print s
   if progress:
     print datetime.now(),"parse_handsonnetwork.Parse: starting FP XML parse..."
   cvtd_xml = parse_footprint.Parse(s, maxrecs, progress)

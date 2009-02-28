@@ -19,13 +19,13 @@ def Parse(s, maxrecs, progress):
   s += '<FootprintFeed schemaVersion="0.1">'
   s += '<FeedInfo>'
   # TODO: assign provider IDs?
-  s += '<feedID>usaservice.org</feedID>'
   s += '<providerID>101</providerID>'
   s += '<providerName>usaservice.org</providerName>'
+  s += '<feedID>usaservice.org</feedID>'
+  s += '<createdDateTime></createdDateTime>'
   s += '<providerURL>http://www.usaservice.org/</providerURL>'
   s += '<description>%s</description>' % (xml_helpers.getTagValue(xmldoc, "description"))
   # TODO: capture ts -- use now?!
-  s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
   s += '</FeedInfo>'
 
   # hardcoded: Organization
@@ -33,7 +33,6 @@ def Parse(s, maxrecs, progress):
   s += '<Organization>'
   s += '<organizationID>0</organizationID>'
   s += '<nationalEIN></nationalEIN>'
-  s += '<guidestarID></guidestarID>'
   s += '<name></name>'
   s += '<missionStatement></missionStatement>'
   s += '<description></description>'
@@ -63,38 +62,9 @@ def Parse(s, maxrecs, progress):
     # hardcoded: volunteerHubOrganizationID
     s += '<volunteerHubOrganizationID>0</volunteerHubOrganizationID>'
     s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
-    s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(item, "link"))
-    s += '<description>%s</description>' % (xml_helpers.getTagValue(item, "description"))
-    pubdate = xml_helpers.getTagValue(item, "pubDate")
-    if re.search("[0-9][0-9] [A-Z][a-z][a-z] [0-9][0-9][0-9][0-9]", pubdate):
-      # TODO: parse() is ignoring timzone...
-      ts = dateutil.parser.parse(pubdate)
-      pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
-    s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
-    dbevents = item.getElementsByTagName("db:event")
-    if (dbevents.length != 1):
-      print "parse_usaservice: only 1 db:event supported."
-      return None
-    dbevent = dbevents[0]
     s += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(item, "abstract"))
-    # hardcoded: volunteersNeeded
     s += '<volunteersNeeded>-8888</volunteersNeeded>'
-    s += '<contactName>%s</contactName>' % xml_helpers.getTagValue(item, "db:host")
-    dbaddresses = item.getElementsByTagName("db:address")
-    if (dbaddresses.length != 1):
-      print "parse_usaservice: only 1 db:address supported."
-      return None
-    dbaddress = dbaddresses[0]
-    s += '<locations><location>'
-    s += '<name>%s</name>' % (xml_helpers.getTagValue(item, "db:venue_name"))
-    s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(dbaddress, "db:street"))
-    s += '<city>%s</city>' % (xml_helpers.getTagValue(dbaddress, "db:city"))
-    s += '<region>%s</region>' % (xml_helpers.getTagValue(dbaddress, "db:state"))
-    s += '<country>%s</country>' % (xml_helpers.getTagValue(dbaddress, "db:country"))
-    s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(dbaddress, "db:zipcode"))
-    s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(dbaddress, "db:latitude"))
-    s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(dbaddress, "db:longitude"))
-    s += '</location></locations>'
+
     dbscheduledTimes = item.getElementsByTagName("db:scheduledTime")
     if (dbscheduledTimes.length != 1):
       print "parse_usaservice: only 1 db:scheduledTime supported."
@@ -115,13 +85,42 @@ def Parse(s, maxrecs, progress):
     # TODO: timezone???
     s += '<startTime>%s</startTime>' % (time)
     s += '</dateTimeDuration></dateTimeDurations>'
+
+    dbaddresses = item.getElementsByTagName("db:address")
+    if (dbaddresses.length != 1):
+      print "parse_usaservice: only 1 db:address supported."
+      return None
+    dbaddress = dbaddresses[0]
+    s += '<locations><location>'
+    s += '<name>%s</name>' % (xml_helpers.getTagValue(item, "db:venue_name"))
+    s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(dbaddress, "db:street"))
+    s += '<city>%s</city>' % (xml_helpers.getTagValue(dbaddress, "db:city"))
+    s += '<region>%s</region>' % (xml_helpers.getTagValue(dbaddress, "db:state"))
+    s += '<country>%s</country>' % (xml_helpers.getTagValue(dbaddress, "db:country"))
+    s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(dbaddress, "db:zipcode"))
+    s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(dbaddress, "db:latitude"))
+    s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(dbaddress, "db:longitude"))
+    s += '</location></locations>'
+
     type = xml_helpers.getTagValue(item, "db:eventType")
     s += '<categoryTags><categoryTag>%s</categoryTag></categoryTags>' % (type)
+
+    s += '<contactName>%s</contactName>' % xml_helpers.getTagValue(item, "db:host")
+    s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(item, "link"))
+    s += '<description>%s</description>' % (xml_helpers.getTagValue(item, "description"))
+    pubdate = xml_helpers.getTagValue(item, "pubDate")
+    if re.search("[0-9][0-9] [A-Z][a-z][a-z] [0-9][0-9][0-9][0-9]", pubdate):
+      # TODO: parse() is ignoring timzone...
+      ts = dateutil.parser.parse(pubdate)
+      pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
+    s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
+
     s += '</VolunteerOpportunity>'
+    
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
 
-  s = re.sub(r'><([^/])', r'>\n<\1', s)
+  #s = re.sub(r'><([^/])', r'>\n<\1', s)
   #print s
   xmldoc = parse_footprint.Parse(s, maxrecs, progress)
   return xmldoc
