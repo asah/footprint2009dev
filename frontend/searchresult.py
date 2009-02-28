@@ -2,6 +2,7 @@
 #
 
 import re
+import urlparse
 
 class SearchResult(object):
   def __init__(self, url, title, snippet, location, id):
@@ -15,10 +16,14 @@ class SearchResult(object):
     self.js_escaped_title = self.jsEscape(title)
     self.js_escaped_snippet = self.jsEscape(snippet)
 
+    parsed_url = urlparse.urlparse(url)
+    self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
+
   def jsEscape(self, string):
     # TODO: This escape method is overly agressive and is messing some snippets
     # up.  We only need to escape single and double quotes.
     return re.escape(string)
+
 
 class SearchResultSet(object):
   def __init__(self, query_url_unencoded, query_url_encoded, results):

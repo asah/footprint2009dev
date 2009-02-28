@@ -5,6 +5,7 @@ import cgi
 import datetime
 import os
 import urllib
+import urlparse
 import logging
 
 from google.appengine.ext import webapp
@@ -32,6 +33,26 @@ POST_TEMPLATE = 'post.html'
 DEFAULT_NUM_RESULTS = 10
 
 
+def get_unique_args_from_request(request):
+  """ Gets unique args from a request.arguments() list.
+  If a URL search string contains a param more than once, only
+  the last value is retained.
+  For example, for the query "http://foo.com/?a=1&a=2&b=3"
+  this function would return { 'a': '2', 'b': '3' }
+
+  Args:
+    request: A list given by webapp.RequestHandler.request.arguments()
+  Returns:
+    dictionary of URL parameters.
+  """
+  args = request.arguments()
+  unique_args = {}
+  for arg in args:
+    allvals = request.get_all(arg)
+    unique_args[arg] = allvals[len(allvals)-1]
+  return unique_args
+
+
 def render_template(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
                       TEMPLATE_DIR + template_filename)
@@ -52,7 +73,13 @@ class test_page_views_view(webapp.RequestHandler):
 class main_page_view(webapp.RequestHandler):
   def get(self):
     template_values = []
-    self.response.out.write(render_template(MAIN_PAGE_TEMPLATE,
+    result_set = {}
+    template_values = {
+        'result_set': result_set,
+        'current_page' : 'SEARCH',
+        'is_main_page' : True,
+      }
+    self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                            template_values))
 
 
@@ -95,9 +122,15 @@ def get_interest_for_opportunities(opp_id):
   return others_interests
 
 
-def get_annotated_results(search_args):
-  """Get results annotated with the interests of this user and all users."""
-  result_set = search.search(search_args)
+def get_annotated_results(user, result_set):
+  """Get results annotated with the interests of this user and all users.
+
+  Args:
+    user: User object returned by userinfo.get_user()
+    result_set: A search.SearchResultSet.
+  Returns:
+    The incoming result set, annotated with user-specific info.
+  """
 
   # Get all the ids of items we've found
   opp_ids = []
@@ -105,7 +138,7 @@ def get_annotated_results(search_args):
     opp_ids.append('id:' + result.id)
 
   # mark the items the user is interested in
-  user_interests = get_user_interests(userinfo.get_user())
+  user_interests = get_user_interests(user)
 
   # note the interest of others
   others_interests = get_interest_for_opportunities(opp_ids)
@@ -121,50 +154,70 @@ def get_annotated_results(search_args):
   return result_set
 
 
-# TODO: legacy consumer UI, to be removed
 class search_view(webapp.RequestHandler):
   def get(self):
-    args = self.request.arguments()
-    unique_args = {}
-    for arg in args:
-      allvals = self.request.get_all(arg)
-      unique_args[arg] = allvals[len(allvals)-1]
+    parsed_url = urlparse.urlparse(self.request.url)
+    unique_args = get_unique_args_from_request(self.request)
 
-    result_set = get_annotated_results(unique_args)
+    # Perform the search.
+    result_set = search.search(unique_args)
 
-    template_values = {
-        'query_url_encoded': result_set.query_url_encoded,
-        'query_url_unencoded': result_set.query_url_unencoded,
-        'result_set': result_set,
-        'keywords': result_set.args["q"],
-        'location': result_set.args["vol_loc"],
-        'current_page' : 'SEARCH'
-      }
-    self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
-                                           template_values))
-
-
-class search_api_view(webapp.RequestHandler):
-  def get(self):
-    args = self.request.arguments()
-    unique_args = {}
-    for arg in args:
-      allvals = self.request.get_all(arg)
-      unique_args[arg] = allvals[len(allvals)-1]
-    result_set = get_annotated_results(unique_args)
-
-    user_info = userinfo.get_user()
     user_id = ""
     user_display_name = ""
-    if user_info:
-      user_id = user_info.user_id
-      user_display_name = user_info.get_display_name()
+
+    output = None
+    if "output" in unique_args:
+      output = unique_args["output"]
+
+    # Determine whether this is an API call, and pick the output template.
+    is_api_call = parsed_url.path.startswith('/api/')
+    if is_api_call:
+      if not output or output == "rss":
+        template = SEARCH_RESULTS_RSS_TEMPLATE
+      elif output == "csv":
+        # TODO: implement SEARCH_RESULTS_CSV_TEMPLATE
+        template = SEARCH_RESULTS_RSS_TEMPLATE
+      elif output == "tsv":
+        # TODO: implement SEARCH_RESULTS_TSV_TEMPLATE
+        template = SEARCH_RESULTS_RSS_TEMPLATE
+      elif output == "xml":
+        # TODO: implement SEARCH_RESULTS_XML_TEMPLATE
+        template = SEARCH_RESULTS_XML_TEMPLATE
+      elif output == "rssdesc":
+        # TODO: implement SEARCH_RESULTS_RSSDESC_TEMPLATE
+        template = SEARCH_RESULTS_RSS_TEMPLATE
+      elif output == "html":
+        template = SEARCH_RESULTS_DEBUG_TEMPLATE
+      else:
+        # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
+        # TODO: careful about escapification/XSS
+        template = SEARCH_RESULTS_RSS_TEMPLATE
+    else:
+      # Not an api call.  Use the consumer UI output template
+      if output == "snippets_list":
+        # Return just the snippets list HTML.
+        template = SNIPPETS_LIST_TEMPLATE
+      else:
+        # The main search results page.
+        template = SEARCH_RESULTS_TEMPLATE
+
+      # Retrieve the user-specific information for the search result set.
+      user = userinfo.get_user()
+      if user:
+        user_id = user.user_id
+        user_display_name = user.get_display_name()
+        result_set = get_annotated_results(user, result_set)
+
+    logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
 
     template_values = {
         'result_set': result_set,
-        'currentPage' : 'SEARCH',
+        'current_page' : 'SEARCH',
         'user_id' : user_id,
         'user_display_name' : user_display_name,
+
+        'query_url_encoded': result_set.query_url_encoded,
+        'query_url_unencoded': result_set.query_url_unencoded,
 
         # TODO: remove this stuff...
         'keywords': result_set.args["q"],
@@ -175,33 +228,7 @@ class search_api_view(webapp.RequestHandler):
         'next_page_url': result_set.next_page_url,
       }
 
-    if "output" not in result_set.args:
-      result_set.args["output"] = "html"
-    output = result_set.args["output"]
-    if output == "consumerui":
-      tpl = SEARCH_RESULTS_TEMPLATE
-    elif output == "rss":
-      tpl = SEARCH_RESULTS_RSS_TEMPLATE
-    elif output == "csv":
-      # TODO: implement SEARCH_RESULTS_CSV_TEMPLATE
-      tpl = SEARCH_RESULTS_RSS_TEMPLATE
-    elif output == "tsv":
-      # TODO: implement SEARCH_RESULTS_TSV_TEMPLATE
-      tpl = SEARCH_RESULTS_RSS_TEMPLATE
-    elif output == "xml":
-      # TODO: implement SEARCH_RESULTS_XML_TEMPLATE
-      tpl = SEARCH_RESULTS_XML_TEMPLATE
-    elif output == "rssdesc":
-      # TODO: implement SEARCH_RESULTS_RSSDESC_TEMPLATE
-      tpl = SEARCH_RESULTS_RSS_TEMPLATE
-    elif output == "html":
-      tpl = SEARCH_RESULTS_DEBUG_TEMPLATE
-    else:
-      # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
-      # TODO: careful about escapification/XSS
-      template_values["error"] = "no such output format."
-      tpl = SEARCH_RESULTS_RSS_TEMPLATE
-    self.response.out.write(render_template(tpl, template_values))
+    self.response.out.write(render_template(template, template_values))
 
 
 class my_events_view(webapp.RequestHandler):

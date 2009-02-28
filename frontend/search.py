@@ -26,7 +26,8 @@ def search(args):
     args["q"] = ""
 
   if "output" in args:
-    if args["output"] in ['html','tsv','csv','json','rss','rssdesc','xml']:
+    if args["output"] in ['html','tsv','csv','json','rss','rssdesc','xml',
+                          'snippets_list']:
       output = args["output"]
     else:
       searchParamError(args, "output")

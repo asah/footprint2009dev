@@ -14,7 +14,7 @@ function forEachElementOfClass(classname, fn, opt_element) {
   forEach(root.getElementsByClassName(classname), fn);
 }
 
-function addEventListener(element, type, callback) {
+function addListener(element, type, callback) {
   if (element.addEventListener) {
     element.addEventListener(type, callback, false);
   } else if (element.attachEvent) {
@@ -24,7 +24,7 @@ function addEventListener(element, type, callback) {
   }
 }
 
-function removeEventListener(element, type, callback) {
+function removeListener(element, type, callback) {
   if (element.removeEventListener) {
     element.removeEventListener(type, callback, false);
   } else if (element.detachEvent) {
@@ -41,10 +41,13 @@ function GetUrlParams(paramString) {
   for (var i = 0; i < pairs.length; i++) {
     var p = pairs[i].split('=');
     var paramval = undefined;
-    if (p.length > 1) {
-      paramval = decodeURIComponent(p[1]);
+    var decodedName = decodeURIComponent(p[0]);
+    if (decodedName.length > 0) {
+      if (p.length > 1) {
+        paramval = decodeURIComponent(p[1]);
+      }
+      params[decodedName] = paramval;
     }
-    params[decodeURIComponent(p[0])] = paramval;
   }
   return params;
 }
@@ -55,6 +58,15 @@ function GetQueryParams() {
 
 function GetHashParams() {
   return GetUrlParams(document.location.hash.replace(/(^#)/,''));
+}
+
+/** Count number of elements inside a JS object */
+function getObjectLength(object) {
+  var count = 0;
+  for (i in object) {
+    count++;
+  }
+  return count;
 }
 
 /* Queues up a series of JS callbacks, which are executed when execute()

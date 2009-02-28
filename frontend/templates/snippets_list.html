@@ -1,5 +1,5 @@
 {% for result in result_set.results %}
-  <p class='snippet'>
+  <div class='snippet'>
       <div class='snippet_buttons'>
           <script type="text/javascript">
             SHARETHIS.addEntry({
@@ -32,16 +32,14 @@
     <div class='snippet_title'>
       <a href='{{ result.url }}'>{{ result.title }}</a>
     </div>
+    <div class='snippet_location'>
+      {{ result.location }}
+    </div>
     <div class='snippet_text'>
       {{ result.snippet }}
     </div>
     <div class='snippet_url'>
-      <a href='{{ result.url }}'>{{ result.url }}</a>
+      <a href='{{ result.url }}'>{{ result.url_short }}</a>
     </div>
-  </p>
+  </div>
 {% endfor %}
-
-<script>
-document.userDisplayName = "{{user_display_name}}";
-</script>
-<script type="text/javascript" src="/js/snippets_list.js"></script>

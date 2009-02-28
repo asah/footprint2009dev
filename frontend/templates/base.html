@@ -27,7 +27,10 @@
     // Create a WorkQueue (defined in utils.js) to queue any
     // JS callbacks to be invoked on body onload event.
     var onloadWorkQueue = new WorkQueue();
-    
+
+    var queryParams = GetQueryParams();
+    var hashParams = GetHashParams();
+
     // ...and one to queue JS callbacks on body unload event.
     var onUnloadWorkQueue = new WorkQueue();
   </script>
