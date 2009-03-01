@@ -12,7 +12,7 @@ import dateutil.parser
 def Parse(s, maxrecs, progress):
   # TODO: progress
   known_elnames = [ 'channel', 'db:abstract', 'db:address', 'db:attendee_count', 'db:categories', 'db:city', 'db:country', 'db:county', 'db:dateTime', 'db:event', 'db:eventType', 'db:guest_total', 'db:host', 'db:latitude', 'db:length', 'db:longitude', 'db:rsvp', 'db:scheduledTime', 'db:state', 'db:street', 'db:title', 'db:venue_name', 'db:zipcode', 'description', 'docs', 'guid', 'item', 'language', 'link', 'pubDate', 'rss', 'title', ]
-  xmldoc = xml_helpers.simpleParser(s, known_elnames)
+  xmldoc = xml_helpers.simpleParser(s, known_elnames, progress)
 
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
@@ -67,7 +67,7 @@ def Parse(s, maxrecs, progress):
 
     dbscheduledTimes = item.getElementsByTagName("db:scheduledTime")
     if (dbscheduledTimes.length != 1):
-      print "parse_usaservice: only 1 db:scheduledTime supported."
+      print datetime.now(),"parse_usaservice: only 1 db:scheduledTime supported."
       return None
     dbscheduledTime = dbscheduledTimes[0]
     s += '<dateTimeDurations><dateTimeDuration>'
@@ -88,7 +88,7 @@ def Parse(s, maxrecs, progress):
 
     dbaddresses = item.getElementsByTagName("db:address")
     if (dbaddresses.length != 1):
-      print "parse_usaservice: only 1 db:address supported."
+      print datetime.now(),"parse_usaservice: only 1 db:address supported."
       return None
     dbaddress = dbaddresses[0]
     s += '<locations><location>'
@@ -121,9 +121,7 @@ def Parse(s, maxrecs, progress):
   s += '</FootprintFeed>'
 
   #s = re.sub(r'><([^/])', r'>\n<\1', s)
-  #print s
-  xmldoc = parse_footprint.Parse(s, maxrecs, progress)
-  return xmldoc
+  return s
 
 if __name__ == "__main__":
   sys = __import__('sys')

@@ -58,9 +58,11 @@ import parse_footprint
 import re
 from datetime import datetime
 
-def ParseHelper(instr, maxrecs, progress):
+def Parse(instr, maxrecs, progress):
+  if progress:
+    print datetime.now(),"parse_handsonnetwork.Parse: starting parse..."
   known_elnames = [ 'Address1', 'Address2', 'AffiliateID', 'Categories', 'Category', 'City', 'Country', 'DateListed', 'Description', 'DetailURL', 'EndDate', 'EndTime', 'Extension', 'LocalID', 'Location', 'LocationClassifications', 'Locations', 'LogoURL', 'Name', 'OpportunityDate', 'OpportunityDates', 'OpportunityType', 'OrgLocalID', 'Phone', 'SponsoringOrganization', 'SponsoringOrganizations', 'StartDate', 'StartTime', 'StateOrProvince', 'Title', 'VolunteerOpportunity', 'ZipOrPostalCode', ]
-  #xmldoc = xml_helpers.simpleParser(instr, known_elnames)
+  #xmldoc = xml_helpers.simpleParser(instr, known_elnames, progress)
 
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
@@ -83,7 +85,7 @@ def ParseHelper(instr, maxrecs, progress):
   for i,orgstr in enumerate(sponsorstrs):
     if progress and i>0 and i%250==0:
       print datetime.now(),": ",i," orgs processed."
-    org = xml_helpers.simpleParser(orgstr, known_elnames)
+    org = xml_helpers.simpleParser(orgstr, known_elnames, False)
     #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
     #for i,org in enumerate(sponsors):
     s += '<Organization>'
@@ -118,15 +120,15 @@ def ParseHelper(instr, maxrecs, progress):
   #  maxrecs = items.length
   #for item in items[0:maxrecs-1]:
   if progress:
-    print "finding VolunteerOpportunities..."
+    print datetime.now(),"finding VolunteerOpportunities..."
   opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>', instr, re.DOTALL)
   totrecs = 0
   for i,oppstr in enumerate(opps):
     if (maxrecs>0 and i>maxrecs):
       break
     if progress and i>0 and i%100==0:
-      print datetime.now(),": ",i," opps processed."
-    opp = xml_helpers.simpleParser(oppstr, known_elnames)
+      print datetime.now(),": ",i,"opps processed of",maxrecs
+    opp = xml_helpers.simpleParser(oppstr, known_elnames, False)
     orgs = opp.getElementsByTagName("SponsoringOrganization")
     name = xml_helpers.getTagValue(orgs[0], "Name")
     desc = xml_helpers.getTagValue(orgs[0], "Description")
@@ -149,7 +151,7 @@ def ParseHelper(instr, maxrecs, progress):
 
     locations = opp.getElementsByTagName("Location")
     if (locations.length != 1):
-      print "parse_handsonnetwork: only 1 location supported."
+      print datetime.now(),"parse_handsonnetwork: only 1 location supported."
       return None
     loc = locations[0]
     outstr_for_all_dates_post = '<locations><location>'
@@ -193,24 +195,13 @@ def ParseHelper(instr, maxrecs, progress):
       s += outstr_for_all_dates_post
       s += '</VolunteerOpportunity>'
   if progress:
-    print "done with VolunteerOpportunities..."
+    print datetime.now(),"done with VolunteerOpportunities..."
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
+  s = re.sub(r'><([^/])', r'>\n<\1', s)
+  if progress:
+    print datetime.now(),"parse_handsonnetwork.Parse: done."
   return s
-
-def Parse(instr, maxrecs, progress):
-  # frees up RAM to split parsing from FP parsing and codegen
-  if progress:
-    print datetime.now(),"parse_handsonnetwork.Parse: starting parse..."
-  s = ParseHelper(instr, maxrecs, progress)
-  #s = re.sub(r'><([^/])', r'>\n<\1', s)
-  #print s
-  if progress:
-    print datetime.now(),"parse_handsonnetwork.Parse: starting FP XML parse..."
-  cvtd_xml = parse_footprint.Parse(s, maxrecs, progress)
-  if progress:
-    print datetime.now(),"parse_handsonnetwork.Parse: return FP DOM."
-  return cvtd_xml
 
 if __name__ == "__main__":
   sys = __import__('sys')

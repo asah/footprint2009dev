@@ -6,125 +6,178 @@ import xml_helpers
 import parse_footprint
 import re
 from datetime import datetime
+import xml.sax.saxutils
 
 import dateutil.parser
 
-def Parse(s, maxrecs, progress):
+# xml parser chokes on namespaces, and since we don't need them,
+# just replace them for simplicity-- note that this also affects
+# the code below
+def remove_g_namespace(s, progress):
+  if progress:
+    print datetime.now(),"removing g: namespace..."
+  s = re.sub(r'<(/?)g:', r'<\1gg_', s)
+  if progress:
+    print datetime.now(),"removing awb: namespace..."
+  s = re.sub(r'<(/?)awb:', r'<\1awb_', s)
+  return s
+
+def addCdataToContent(s, progress):
+  # what if CDATA is already used?!
+  if progress:
+    print datetime.now(),"adding CDATA to <content>..."
+  ## yuck: this caused a RAM explosion...
+  #rx = re.compile(r'<content( *?[^>]*?)>(.+?)</content>', re.DOTALL)
+  #s = re.sub(rx, r'<content\1><![CDATA[\2]]></content>', s)
+
+  s = re.sub(r'<content([^>]+)>', r'<content\1><![CDATA[', s)
+  if progress:
+    print datetime.now(),"adding ]]> to </content>..."
+  s = re.sub(r'</content>', r']]></content>', s)
+  if progress:
+    print datetime.now(),"done: ",len(s)," bytes"
+  return s
+
+# frees memory for main parse
+def ParseHelper(instr, maxrecs, progress):
   # TODO: progress
-  known_elnames = ['feed', 'title', 'subtitle', 'div', 'span', 'updated', 'id', 'link', 'icon', 'logo', 'author', 'name', 'uri', 'email', 'rights', 'entry', 'published', 'g:publish_date', 'g:expiration_date', 'g:event_date_range', 'g:start', 'g:end', 'updated', 'category', 'summary', 'content', 'awb:city', 'awb:country', 'awb:state', 'awb:postalcode', 'g:location', 'g:age_range', 'g:employer', 'g:job_type', 'g:job_industry', 'awb:paid', ]
-  xmldoc = xml_helpers.simpleParser(s, known_elnames)
+  known_elnames = ['feed', 'title', 'subtitle', 'div', 'span', 'updated', 'id', 'link', 'icon', 'logo', 'author', 'name', 'uri', 'email', 'rights', 'entry', 'published', 'gg_publish_date', 'gg_expiration_date', 'gg_event_date_range', 'gg_start', 'gg_end', 'updated', 'category', 'summary', 'content', 'awb_city', 'awb_country', 'awb_state', 'awb_postalcode', 'gg_location', 'gg_age_range', 'gg_employer', 'gg_job_type', 'gg_job_industry', 'awb_paid', ]
+  # takes forever
+  #xmldoc = xml_helpers.simpleParser(s, known_elnames, progress)
 
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
   s += '<FootprintFeed schemaVersion="0.1">'
   s += '<FeedInfo>'
   # TODO: assign provider IDs?
-  s += '<feedID>usaservice.org</feedID>'
-  s += '<providerID>101</providerID>'
-  s += '<providerName>usaservice.org</providerName>'
-  s += '<providerURL>http://www.usaservice.org/</providerURL>'
-  s += '<description>%s</description>' % (xml_helpers.getTagValue(xmldoc, "description"))
+  s += '<feedID>idealist.org</feedID>'
+  s += '<providerID>103</providerID>'
+  s += '<providerName>idealist.org</providerName>'
+  s += '<providerURL>http://www.idealist.org/</providerURL>'
+  match = re.search(r'<title>(.+?)</title>', instr, re.DOTALL)
+  if match:
+    s += '<description>%s</description>' % (match.group(1))
   # TODO: capture ts -- use now?!
   s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
   s += '</FeedInfo>'
 
   # hardcoded: Organization
   s += '<Organizations>'
-  s += '<Organization>'
-  s += '<organizationID>0</organizationID>'
-  s += '<nationalEIN></nationalEIN>'
-  s += '<guidestarID></guidestarID>'
-  s += '<name></name>'
-  s += '<missionStatement></missionStatement>'
-  s += '<description></description>'
-  s += '<location><city></city><region></region><postalCode></postalCode></location>'
-  s += '<organizationURL></organizationURL>'
-  s += '<donateURL></donateURL>'
-  s += '<logoURL></logoURL>'
-  s += '<detailURL></detailURL>'
-  s += '</Organization>'
+  #authors = xmldoc.getElementsByTagName("author")
+  organizations = {}
+  authors = re.findall(r'<author>.+?</author>', instr, re.DOTALL)
+  for i,orgstr in enumerate(authors):
+    if progress and i>0 and i%250==0:
+      print datetime.now(),": ",i," orgs processed."
+    org = xml_helpers.simpleParser(orgstr, known_elnames, False)
+    s += '<Organization>'
+    s += '<organizationID>%d</organizationID>' % (i+1)
+    s += '<nationalEIN></nationalEIN>'
+    s += '<guidestarID></guidestarID>'
+    name = xml_helpers.getTagValue(org, "name")
+    organizations[name] = i+1
+    s += '<name>%s</name>' % (organizations[name])
+    s += '<missionStatement></missionStatement>'
+    s += '<description></description>'
+    s += '<location><city></city><region></region><postalCode></postalCode></location>'
+    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.getTagValue(org, "uri"))
+    s += '<donateURL></donateURL>'
+    s += '<logoURL></logoURL>'
+    s += '<detailURL></detailURL>'
+    s += '</Organization>'
   s += '</Organizations>'
     
   s += '<VolunteerOpportunities>'
-  items = xmldoc.getElementsByTagName("item")
-  if (maxrecs > items.length):
-    maxrecs = items.length
-  for item in items[0:maxrecs-1]:
+  entries = re.findall(r'<entry>.+?</entry>', instr, re.DOTALL)
+  #entries = xmldoc.getElementsByTagName("entry")
+  #if (maxrecs > entries.length):
+  #  maxrecs = entries.length
+  #for opp in entries[0:maxrecs-1]:
+  for i,oppstr in enumerate(entries):
+    if (maxrecs>0 and i>maxrecs):
+      break
+    if progress and i>0 and i%100==0:
+      print datetime.now(),": ",i," opps processed of ",maxrecs
+    opp = xml_helpers.simpleParser(oppstr, known_elnames, False)
     # unmapped: db:rsvp  (seems to be same as link, but with #rsvp at end of url?)
     # unmapped: db:host  (no equivalent?)
     # unmapped: db:county  (seems to be empty)
     # unmapped: attendee_count
     # unmapped: guest_total
     # unmapped: db:title   (dup of title, above)
+    # unmapped: contactName
     s += '<VolunteerOpportunity>'
-    s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(item, "guid"))
-    # hardcoded: sponsoringOrganizationID
-    s += '<sponsoringOrganizationID>0</sponsoringOrganizationID>'
+    id_link = xml_helpers.getTagValue(opp, "id")
+    s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (id_link)
+    orgname = xml_helpers.getTagValue(org, "name")  # ok to be lazy-- no other 'name's in this feed
+    s += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (organizations[orgname])
     # hardcoded: volunteerHubOrganizationID
     s += '<volunteerHubOrganizationID>0</volunteerHubOrganizationID>'
-    s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
-    s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(item, "link"))
-    s += '<description>%s</description>' % (xml_helpers.getTagValue(item, "description"))
-    pubdate = xml_helpers.getTagValue(item, "pubDate")
-    if re.search("[0-9][0-9] [A-Z][a-z][a-z] [0-9][0-9][0-9][0-9]", pubdate):
-      # TODO: parse() is ignoring timzone...
-      ts = dateutil.parser.parse(pubdate)
-      pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
+    s += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "title"))
+    # lazy: id is the same as the link field...
+    s += '<detailURL>%s</detailURL>' % (id_link)
+    # lazy: idealist stuffs a div in the content...
+    s += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "div"))
+    s += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(opp, "summary"))
+    pubdate = xml_helpers.getTagValue(opp, "published")
     s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
-    dbevents = item.getElementsByTagName("db:event")
+    s += '<expires>%s</expires>' % (xml_helpers.getTagValue(opp, "gg_expiration_date"))
+    dbevents = opp.getElementsByTagName("gg_event_date_range")
     if (dbevents.length != 1):
-      print "parse_usaservice: only 1 db:event supported."
+      print datetime.now(),"parse_idealist: only 1 db:event supported."
       return None
-    dbevent = dbevents[0]
-    s += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(item, "abstract"))
-    # hardcoded: volunteersNeeded
-    s += '<volunteersNeeded>-8888</volunteersNeeded>'
-    s += '<contactName>%s</contactName>' % xml_helpers.getTagValue(item, "db:host")
-    dbaddresses = item.getElementsByTagName("db:address")
-    if (dbaddresses.length != 1):
-      print "parse_usaservice: only 1 db:address supported."
-      return None
-    dbaddress = dbaddresses[0]
     s += '<locations><location>'
-    s += '<name>%s</name>' % (xml_helpers.getTagValue(item, "db:venue_name"))
-    s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(dbaddress, "db:street"))
-    s += '<city>%s</city>' % (xml_helpers.getTagValue(dbaddress, "db:city"))
-    s += '<region>%s</region>' % (xml_helpers.getTagValue(dbaddress, "db:state"))
-    s += '<country>%s</country>' % (xml_helpers.getTagValue(dbaddress, "db:country"))
-    s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(dbaddress, "db:zipcode"))
-    s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(dbaddress, "db:latitude"))
-    s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(dbaddress, "db:longitude"))
+    # yucko: idealist is stored in Google Base, which only has 'location'
+    # so we stuff it into the city field, knowing that it'll just get
+    # concatenated down the line...
+    s += '<city>%s</city>' % (xml_helpers.getTagValue(opp, "gg_location"))
     s += '</location></locations>'
-    dbscheduledTimes = item.getElementsByTagName("db:scheduledTime")
+    dbscheduledTimes = opp.getElementsByTagName("gg_event_date_range")
     if (dbscheduledTimes.length != 1):
-      print "parse_usaservice: only 1 db:scheduledTime supported."
+      print datetime.now(),"parse_usaservice: only 1 gg_event_date_range supported."
       return None
     dbscheduledTime = dbscheduledTimes[0]
     s += '<dateTimeDurations><dateTimeDuration>'
-    length = xml_helpers.getTagValue(dbscheduledTime, "db:length")
-    if length == "" or length == "-1":
-      s += '<openEnded>Yes</openEnded>'
-      s += '<duration></duration>'
-    else:
-      s += '<openEnded>No</openEnded>'
-      s += '<duration>P%dH</duration>' % (int(int(length) / 60))
-    # hardcoded: commitmentHoursPerWeek
-    s += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
-    date,time = xml_helpers.getTagValue(dbscheduledTime, "db:dateTime").split(" ")
-    s += '<startDate>%s</startDate>' % (date)
+    s += '<openEnded>No</openEnded>'
+    # ignore duration
+    # ignore commitmentHoursPerWeek
+    s += '<startDate>%s</startDate>' % (xml_helpers.getTagValue(dbscheduledTime, "gg_start"))
+    s += '<endDate>%s</endDate>' % (xml_helpers.getTagValue(dbscheduledTime, "gg_end"))
     # TODO: timezone???
-    s += '<startTime>%s</startTime>' % (time)
     s += '</dateTimeDuration></dateTimeDurations>'
-    type = xml_helpers.getTagValue(item, "db:eventType")
-    s += '<categoryTags><categoryTag>%s</categoryTag></categoryTags>' % (type)
+    s += '<categoryTags>'
+    # proper way is too slow...
+    #cats = opp.getElementsByTagName("category")
+    #for i,cat in enumerate(cats):
+    #  s += '<categoryTag>%s</categoryTag>' % (cat.attributes["label"].value)
+    catstrs = re.findall(r'<category term=(["][^"]+["])', oppstr, re.DOTALL)
+    for cat in catstrs:
+      s += "<categoryTag>" + xml.sax.saxutils.escape(cat) + "</categoryTag>"
+    s += '</categoryTags>'
+    age_range = xml_helpers.getTagValue(opp, "gg_age_range")
+    if re.match(r'and under|Families', age_range):
+      s += '<minimumAge>0</minimumAge>'
+    elif re.match(r'Teens', age_range):
+      s += '<minimumAge>13</minimumAge>'
+    elif re.match(r'Adults', age_range):
+      s += '<minimumAge>18</minimumAge>'
+    elif re.match(r'Seniors', age_range):
+      s += '<minimumAge>65</minimumAge>'
     s += '</VolunteerOpportunity>'
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
 
+  if progress:
+    print datetime.now(),"done generating footprint XML-- adding newlines..."
   s = re.sub(r'><([^/])', r'>\n<\1', s)
   #print s
-  xmldoc = parse_footprint.Parse(s, maxrecs, progress)
-  return xmldoc
+  return s
+
+def Parse(s, maxrecs, progress):
+  s = addCdataToContent(s, progress)
+  s = remove_g_namespace(s, progress)
+  s = ParseHelper(s, maxrecs, progress)
+  return s
 
 if __name__ == "__main__":
   sys = __import__('sys')

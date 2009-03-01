@@ -54,7 +54,7 @@ def Parse(s, maxrecs, progress):
       s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(org, "detailURL"))
       s += '</Organization>'
     else:
-      print "parse_volunteermatch: listing does not have an organization"
+      print datetime.now(),"parse_volunteermatch: listing does not have an organization"
       return None
 
   s += '</Organizations>'
@@ -71,7 +71,7 @@ def Parse(s, maxrecs, progress):
       s += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (xml_helpers.getTagValue(org, "key"))
     else:
       s += '<sponsoringOrganizationID>0</sponsoringOrganizationID>'
-      print "parse_volunteermatch: listing does not have an organization"
+      print datetime.now(),"parse_volunteermatch: listing does not have an organization"
       
     s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
 
@@ -93,10 +93,11 @@ def Parse(s, maxrecs, progress):
         s += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(listingTime, "startTime"))
         s += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(listingTime, "endTime"))
     else:
-      print "parse_volunteermatch: number of durations in item != 1"
+      print datetime.now(),"parse_volunteermatch: number of durations in item != 1"
       return None
         
     commitments = item.getElementsByTagName("commitment")
+    l_period = l_duration = ""
     if (commitments.length == 1):
       commitment = commitments[0]
       l_num = xml_helpers.getTagValue(commitment, "num")
@@ -104,14 +105,24 @@ def Parse(s, maxrecs, progress):
       l_period = xml_helpers.getTagValue(commitment, "period")
       if ((l_duration == "hours") and (l_period == "week")):
         s += '<commitmentHoursPerWeek>' + l_num + '</commitmentHoursPerWeek>'
+      elif ((l_duration == "hours") and (l_period == "day")):
+        # note: weekdays only
+        s += '<commitmentHoursPerWeek>' + str(int(l_num)*5) + '</commitmentHoursPerWeek>'
+      elif ((l_duration == "hours") and (l_period == "month")):
+        hrs = int(float(l_num)/4.0)
+        if hrs < 1: hrs = 1
+        s += '<commitmentHoursPerWeek>' + str(hrs) + '</commitmentHoursPerWeek>'
+      elif ((l_duration == "hours") and (l_period == "event")):
+        # TODO: ignore for now, later compute the endTime if not already provided
+        pass
       else:
-        print "parse_volunteermatch: commitment given in units != hours/week"
+        print datetime.now(),"parse_volunteermatch: commitment given in units != hours/week: ", l_duration, "per", l_period
         
     s += '</dateTimeDuration></dateTimeDurations>'
 
     dbaddresses = item.getElementsByTagName("location")
     if (dbaddresses.length != 1):
-      print "parse_volunteermatch: only 1 location supported."
+      print datetime.now(),"parse_volunteermatch: only 1 location supported."
       return None
     dbaddress = dbaddresses[0]
     s += '<locations><location>'
@@ -158,9 +169,7 @@ def Parse(s, maxrecs, progress):
   s += '</FootprintFeed>'
 
   s = re.sub(r'><([^/])', r'>\n<\1', s)
-  #print s
-  xmldoc = parse_footprint.Parse(s, maxrecs, progress)
-  return xmldoc
+  return s
 
 if __name__ == "__main__":
   sys = __import__('sys')
