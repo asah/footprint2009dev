@@ -68,16 +68,18 @@ def validateXML(xmldoc, known_elnames):
 
 def simpleParser(s, known_elnames_list, progress):
   try:
-    known_elnames_dict = {}
-    for item in known_elnames_list:
-      known_elnames_dict[item] = True
+    if known_elnames_list:
+      known_elnames_dict = {}
+      for item in known_elnames_list:
+        known_elnames_dict[item] = True
     if progress:
       print datetime.now(),"parsing XML"
     xmldoc = minidom.parseString(s)
     # this stuff is in a try-block to avoid use-before-def on xmldoc
     if progress:
       print datetime.now(),"validating XML..."
-    validateXML(xmldoc, known_elnames_dict)
+    if known_elnames_list:
+      validateXML(xmldoc, known_elnames_dict)
     if progress:
       print datetime.now(),"done."
     return xmldoc
