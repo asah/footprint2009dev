@@ -533,7 +533,7 @@ def ftpToBase(f, ftpinfo, s):
   if re.search(r'[.]gz$', fn):
     s = zlib.compress(s, 9)
 
-  print datetime.now(),"uploading",len(s),"bytes under filename"+fn
+  print datetime.now(),"uploading",len(s),"bytes under filename",fn
   ftp.storbinary("STOR " + fn, fh, 8192)
   print datetime.now(),"done."
   ftp.quit()
@@ -623,10 +623,10 @@ if __name__ == "__main__":
   instr = re.sub(r'\r\n?', "\n", instr)
   if progress:
     print datetime.now(),"filtered dos newlines:",len(instr)," bytes"
-  instr = re.sub("\t", " ", instr)                                         
+  instr = re.sub(r'(?:\t|&#9;)', " ", instr)                                         
   if progress:
     print datetime.now(),"filtered tabs:",len(instr)," bytes"
-  instr = re.sub("\xc2?[\x93\x94\222]", "'", instr)
+  instr = re.sub(r'\xc2?[\x93\x94\222]', "'", instr)
   if progress:
     print datetime.now(),"filtered iso8859-1 single quotes:",len(instr)," bytes"
   #instr = re.sub(r'\xc2?[\223\224]', '"', instr)

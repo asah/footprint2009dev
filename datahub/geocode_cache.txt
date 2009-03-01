@@ -9677,3 +9677,15 @@ racine, wisconsin, 53405, united states|42.7311036,-87.8304145
 dallas/garland, texas, united states|32.9088650,-96.6308900
 dallas, texas, 75228, united states|32.8223622,-96.6745042
 belfast, ireland, bt6 0bp, ireland|
+las vegas, nevada, 89127 , united states|36.1753000,-115.1364000
+milwaukee, wisconsin, 53210 , united states|43.0671805,-87.9751299
+multiple locations) rochester ny 14619|
+we are a statewide agency ct 06492|
+palm springs ca 92262|33.8689812,-116.5845767
+pasadena ca 91050|34.1478000,-118.1436000
+santa barbara ca 93101|34.4201172,-119.7020606
+long beach ca 90745|33.8232001,-118.2585096
+san jose ca 95101|37.3435000,-121.8887000
+mailing) 8304 wayne ave, stanwood, wa. 98292 stanwood wa 98292|
+various) events held statewide ga 30310|
+and more! ca 91409|47.7329890,-117.4443280
