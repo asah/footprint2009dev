@@ -3,9 +3,20 @@
 
 from xml.dom import minidom
 from datetime import datetime
-from xml.sax.saxutils import escape
-from xml.parsers.expat import ExpatError
+import xml.sax.saxutils
+import xml.parsers.expat
 import re
+import unicodedata
+
+# asah: I give up, allowing UTF-8 is just too hard without incurring
+# crazy performance penalties
+simple_chars = ''.join(map(chr, range(32,126)))
+simple_chars_class = '[^\\n%s]' % re.escape(simple_chars)
+simple_chars_re = re.compile(simple_chars_class)
+def cleanString(s):
+    #print "simple_chars_class=",simple_chars_class
+    s = s.decode('ascii', 'replace')
+    return simple_chars_re.sub('', s).encode('UTF-8')
 
 def getNodeData(entity):
   if (entity.firstChild == None):
@@ -14,7 +25,7 @@ def getNodeData(entity):
     return ""
   
   s = entity.firstChild.data
-  s = escape(s).encode('UTF-8')
+  s = xml.sax.saxutils.escape(s).encode('UTF-8')
   s = re.sub(r'\n', r'\\n', s)
   return s
   
@@ -42,7 +53,7 @@ def getTagValue(entity, tag):
     return ""
   #print nodes[0].firstChild.data
   s = nodes[0].firstChild.data
-  s = escape(s).encode('UTF-8')
+  s = xml.sax.saxutils.escape(s).encode('UTF-8')
   s = re.sub(r'\n', r'\\n', s)
   return s
 
@@ -55,29 +66,37 @@ def validateXML(xmldoc, known_elnames):
       # TODO: spellchecking...
     validateXML(node, known_elnames)
 
-def simpleParser(s, known_elnames_list):
+def simpleParser(s, known_elnames_list, progress):
   try:
     known_elnames_dict = {}
     for item in known_elnames_list:
       known_elnames_dict[item] = True
-    #print datetime.now(),": parsing XML"
+    if progress:
+      print datetime.now(),"parsing XML"
     xmldoc = minidom.parseString(s)
-    # this stuff in try-block to avoid use-before-def of xmldoc
-    #print datetime.now(),": validating XML..."
+    # this stuff is in a try-block to avoid use-before-def on xmldoc
+    if progress:
+      print datetime.now(),"validating XML..."
     validateXML(xmldoc, known_elnames_dict)
-    #print datetime.now(),": done."
+    if progress:
+      print datetime.now(),"done."
     return xmldoc
-  except ExpatError, ee:
-    print "XML parsing error on line ", ee.lineno
+  except xml.parsers.expat.ExpatError, ee:
+    print datetime.now(),"XML parsing error on line ", ee.lineno,
+    print ":", xml.parsers.expat.ErrorString(ee.code),
+    print " (column ", ee.offset, ")"
     lines = s.split("\n")
     for i in range(ee.lineno - 3, ee.lineno + 3):
       if i >= 0 and i < len(lines):
         print "%6d %s" % (i+1, lines[i])
+    print "writing string to xmlerror.out..."
+    outfh = open("xmlerror.out","w+")
+    outfh.write(s)
+    outfh.close()
     exit(0)
 
-# as seen in http://stackoverflow.com/questions/92438/stripping-non-printable-characters-from-a-string-in-python
-def filterNonPrintable(str):
-  return ''.join([c for c in str if ord(c) > 31 or ord(c) == 9])
-
-
-
+def prettyxml(doc):
+  s = doc.toxml("UTF-8")
+  s = re.sub(r'><', r'>\n<', s)
+  # toprettyxml wasn't that pretty...
+  return s
