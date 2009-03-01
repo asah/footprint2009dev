@@ -5,6 +5,7 @@
 #from xml.dom.ext import PrettyPrint
 from xml.sax.saxutils import escape
 import gzip
+import zlib
 import difflib
 import hashlib
 import urllib
@@ -34,7 +35,7 @@ progress = False
 printhead = False
 
 fieldtypes = {
-  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "expiration_date":"builtin","image_link":"builtin","event_date_range":"builtin","id":"builtin","location":"builtin",
+  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "image_link":"builtin","event_date_range":"builtin","id":"builtin","location":"builtin",
   "paid":"boolean","openended":"boolean",
   'volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer',"commitmentHoursPerWeek":'integer',
   'providerURL':'URL','detailURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL','feed_providerURL':'URL',
@@ -59,6 +60,7 @@ def cvtDateTimeToGoogleBase(datestr, timestr, tz):
   pst = dateutil.tz.tzstr("PST8PDT")
   ts = ts.astimezone(pst)
   res = ts.strftime("%Y-%m-%dT%H:%M:%S")
+  res = re.sub(r'Z$', '', res)
   return res
 
 csv_repeated_fields = ['categories','audiences',]
@@ -88,6 +90,8 @@ def outputField(name, value):
     if (len(value) > 70):
       value = value[0:67] + "..."
     return name.rjust(22) + " : " + value
+  if (fieldtypes[name] == "dateTime"):
+    return cvtDateTimeToGoogleBase(value, "", "UTC")
   return value
 
 def addrField(node, field):
@@ -214,12 +218,7 @@ def getDirectMappedField(opp, org):
 def getBaseOtherFields(opp, org):
   s = outputField("quantity", xml_helpers.getTagValue(opp, "volunteersNeeded"))
   s += FIELDSEP + outputField("employer", xml_helpers.getTagValue(org, "name"))
-  # TODO: publish_date?
-  expires = xml_helpers.getTagValue(opp, "expires")
-  if expires != "":
-    # TODO: what tz is expires?
-    expires = cvtDateTimeToGoogleBase(expires, "", "UTC")
-  s += FIELDSEP + outputField("expiration_date", expires)
+  # don't map expiration_date -- Base has strict limits (e.g. 2 weeks) on this field
   return s
 
 def getBaseEventRequiredFields(opp, org):
@@ -246,7 +245,7 @@ def geocode(addr, retries=4):
   loc = addr.lower().strip()
   loc = re.sub(r'^[^0-9a-z]+', r'', loc)
   loc = re.sub(r'[^0-9a-z]+$', r'', loc)
-  loc = re.sub(r'\s\s+', r'\s', loc)
+  loc = re.sub(r'\s\s+', r' ', loc)
 
   if geocode_cache == None:
     geocode_cache = {}
@@ -255,8 +254,10 @@ def geocode(addr, retries=4):
       for line in fh:
         if "|" in line:
           key,val = line.split("|")
-          val = val.rstrip('\n')
-          geocode_cache[key.lower()] = val
+          key = re.sub(r'\s\s+', r' ', key)
+          geocode_cache[key.lower().strip()] = val.strip()
+          if geocode_debug and len(geocode_cache)%250==0:
+            print "read",len(geocode_cache),"geocode cache entries."
     finally:
       fh.close()
   if loc in geocode_cache:
@@ -267,7 +268,7 @@ def geocode(addr, retries=4):
                              'oe':'utf8', 'sensor':'false',
                              'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
   if geocode_debug:
-    print datetime.now(),"geocoding '"+addr+"'..."
+    print datetime.now(),"geocoding '"+loc+"'..."
   f = urllib.urlopen("http://maps.google.com/maps/geo?%s" % params)
   res = f.readline()
   if geocode_debug:
@@ -281,6 +282,7 @@ def geocode(addr, retries=4):
     if geocode_debug:
       print datetime.now(),"unparseable response: "+res[0:80]
     respcode,zoom,lat,long = 999,0,0,0
+
   respcode = int(respcode)
   if respcode == 500 or respcode == 620:
     if geocode_debug:
@@ -294,7 +296,10 @@ def geocode(addr, retries=4):
     val = lat+","+long
   geocode_cache[loc] = val
   fh = open("geocode_cache.txt", "a")
-  fh.write(addr + "|" + val + "\n")
+  cacheline = loc + "|" + val
+  if progress:
+    print datetime.now(),"storing cacheline:", cacheline
+  fh.write(cacheline + "\n")
   fh.close()
   return val
 
@@ -311,29 +316,40 @@ def outputOpportunity(opp, feedinfo, known_orgs, totrecs):
   org = known_orgs[org_id]
   opp_locations = opp.getElementsByTagName("location")
   opp_times = opp.getElementsByTagName("dateTimeDuration")
+  repeatedFields = FIELDSEP + getFeedFields(feedinfo)
+  repeatedFields += FIELDSEP + getBaseEventRequiredFields(opp, org)
+  repeatedFields += FIELDSEP + getBaseOtherFields(opp, org)
+  repeatedFields += FIELDSEP + getDirectMappedField(opp, org)
   for opptime in opp_times:
-    openended = xml_helpers.getTagValue(opptime, "openEnded")
     # event_date_range
     # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
     startDate = xml_helpers.getTagValue(opptime, "startDate")
     startTime = xml_helpers.getTagValue(opptime, "startTime")
     endDate = xml_helpers.getTagValue(opptime, "endDate")
     endTime = xml_helpers.getTagValue(opptime, "endTime")
+    openended = xml_helpers.getTagValue(opptime, "openEnded")
       # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
     if (startDate == ""):
       startDate = "1971-01-01"
       startTime = "00:00:00-00:00"
     startend = cvtDateTimeToGoogleBase(startDate, startTime, "UTC")
-    if (endDate != ""):
+    if (endDate != "" and endDate+endTime > startDate+startTime):
       startend += "/"
       startend += cvtDateTimeToGoogleBase(endDate, endTime, "UTC")
+    duration = xml_helpers.getTagValue(opptime, "duration")
+    commitmentHoursPerWeek = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
+    timeFields = FIELDSEP + outputField("openended", openended)
+    timeFields += FIELDSEP + outputField("duration", duration)
+    timeFields += FIELDSEP + outputField("commitmentHoursPerWeek", commitmentHoursPerWeek)
+    timeFields += FIELDSEP + outputField("event_date_range", startend)
     for opploc in opp_locations:
       totrecs = totrecs + 1
       if progress and totrecs%250==0:
         print datetime.now(),": ",totrecs," records generated."
-      duration = xml_helpers.getTagValue(opptime, "duration")
-      commitmentHoursPerWeek = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
       locstr,latlong,geocoded_loc = lookupLocationFields(opploc)
+      locFields = FIELDSEP + outputField("location", latlong)
+      locFields += FIELDSEP + outputField("location_string", geocoded_loc)
+      locFields += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
       #if locstr != geocoded_loc:
       #  #print datetime.now(),"locstr: ", locstr, " geocoded_loc: ", geocoded_loc
       #  descs = opp.getElementsByTagName("description")
@@ -344,36 +360,30 @@ def outputOpportunity(opp, feedinfo, known_orgs, totrecs):
       id = computeStableId(opp, org, locstr, openended, duration,
                            commitmentHoursPerWeek, startend)
       s += outputField("id", id)
-      s += FIELDSEP + getFeedFields(feedinfo)
-      s += FIELDSEP + getBaseEventRequiredFields(opp, org)
-      s += FIELDSEP + getBaseOtherFields(opp, org)
-      s += FIELDSEP + getDirectMappedField(opp, org)
-      s += FIELDSEP + outputField("location", latlong)
-      s += FIELDSEP + outputField("location_string", geocoded_loc)
-      s += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
-      s += FIELDSEP + outputField("openended", openended)
-      s += FIELDSEP + outputField("duration", duration)
-      s += FIELDSEP + outputField("commitmentHoursPerWeek", commitmentHoursPerWeek)
-      s += FIELDSEP + outputField("event_date_range", startend)
+      s += repeatedFields
+      s += timeFields
+      s += locFields
       s += RECORDSEP
   return totrecs, s
 
 def outputHeader(feedinfo, opp, org):
   global printhead
   printhead = True
-  s = ""
-  s += outputField("id", "")
+  s = outputField("id", "")
+  # repeatedFields (see below)
   s += FIELDSEP + getFeedFields(feedinfo)
   s += FIELDSEP + getBaseEventRequiredFields(opp, org)
   s += FIELDSEP + getBaseOtherFields(opp, org)
   s += FIELDSEP + getDirectMappedField(opp, org)
-  s += FIELDSEP + outputField("location", "")
-  s += FIELDSEP + outputField("location_string", "")
-  s += FIELDSEP + outputField("venue_name", "")
+  # timeFields
   s += FIELDSEP + outputField("openended", "")
   s += FIELDSEP + outputField("duration", "")
   s += FIELDSEP + outputField("commitmentHoursPerWeek", "")
   s += FIELDSEP + outputField("event_date_range", "")
+  # locFields
+  s += FIELDSEP + outputField("location", "")
+  s += FIELDSEP + outputField("location_string", "")
+  s += FIELDSEP + outputField("venue_name", "")
   s += RECORDSEP
   printhead = False
   return s
@@ -409,36 +419,69 @@ def convertToFootprintXML(instr, do_fastparse, maxrecs, progress):
     # TODO: maxrecs
     return xml_helpers.prettyxml(xmldoc)
 
-def convertToGoogleBaseEventsType(instr, do_fastparse, do_printhead, maxrecs, progress):
+def convertToGoogleBaseEventsType(instr, do_fastparse, maxrecs, progress):
   # todo: maxrecs
   global debug
   s = ""
   if progress:
     print datetime.now(),"convertToGoogleBaseEventsType..."
 
+  example_org = None
   known_orgs = {}
   if do_fastparse:
+    known_elnames = [ 'FeedInfo', 'FootprintFeed', 'Organization', 'Organizations', 'VolunteerOpportunities', 'VolunteerOpportunity', 'abstract', 'audienceTag', 'audienceTags', 'categoryTag', 'categoryTags', 'city', 'commitmentHoursPerWeek', 'contactEmail', 'contactName', 'contactPhone', 'country', 'createdDateTime', 'dateTimeDuration', 'dateTimeDurationType', 'dateTimeDurations', 'description', 'detailURL', 'directions', 'donateURL', 'duration', 'email', 'endDate', 'endTime', 'expires', 'fax', 'feedID', 'guidestarID', 'iCalRecurrence', 'language', 'latitude', 'lastUpdated', 'location', 'locationType', 'locations', 'logoURL', 'longitude', 'minimumAge', 'missionStatement', 'name', 'nationalEIN', 'openEnded', 'organizationID', 'organizationURL', 'paid', 'phone', 'postalCode', 'providerID', 'providerName', 'providerURL', 'region', 'schemaVersion', 'sexRestrictedEnum', 'sexRestritedTo', 'skills', 'sponsoringOrganizationID', 'startDate', 'startTime', 'streetAddress1', 'streetAddress2', 'streetAddress3', 'title', 'tzOlsonPath', 'virtual', 'volunteerHubOrganizationID', 'volunteerOpportunityID', 'volunteersFilled', 'volunteersSlots', 'volunteersNeeded', 'yesNoEnum', ]
     totrecs = 0
-    nodes = xml.dom.pulldom.parseString(instr)
-    example_org = None
-    for type,node in nodes:
-      if type == 'START_ELEMENT':
-        if node.nodeName == 'FeedInfo':
-          nodes.expandNode(node)
-          feedinfo = node
-        elif node.nodeName == 'Organization':
-          nodes.expandNode(node)
-          id = xml_helpers.getTagValue(node, "organizationID")
-          if (id != ""):
-            known_orgs[id] = node
-          if example_org == None:
-            example_org = node
-        elif node.nodeName == 'VolunteerOpportunity':
-          nodes.expandNode(node)
-          if do_printhead and totrecs == 0:
-            s += outputHeader(feedinfo, node, example_org)
-          totrecs,spiece = outputOpportunity(node, feedinfo, known_orgs, totrecs)
-          s += spiece
+    # note: preserves order, so diff works (vs. one sweep per element type)
+    chunks = re.findall(r'<(?:Organization|VolunteerOpportunity|FeedInfo)>.+?</(?:Organization|VolunteerOpportunity|FeedInfo)>', instr, re.DOTALL)
+    for chunk in chunks:
+      node = xml_helpers.simpleParser(chunk, known_elnames, False)
+      if re.search("<FeedInfo>", chunk):
+        if progress:
+          print datetime.now(),": feedinfo seen."
+        feedinfo = xml_helpers.simpleParser(chunk, known_elnames, False)
+        continue
+      if re.search("<Organization>", chunk):
+        if progress and len(known_orgs)%250==0:
+          print datetime.now(),": ",len(known_orgs)," organizations seen."
+        org = xml_helpers.simpleParser(chunk, known_elnames, False)
+        id = xml_helpers.getTagValue(org, "organizationID")
+        if (id != ""):
+          known_orgs[id] = org
+        if example_org == None:
+          example_org = org
+        continue
+      if re.search("<VolunteerOpportunity>", chunk):
+        opp = xml_helpers.simpleParser(chunk, None, False)
+        if totrecs == 0:
+          s += outputHeader(feedinfo, node, example_org)
+        totrecs,spiece = outputOpportunity(opp, feedinfo, known_orgs, totrecs)
+        s += spiece
+        totrecs = totrecs + 1
+        if (maxrecs > 0 and totrecs > maxrecs):
+          break
+    if progress:
+      print datetime.now(),totrecs,"opportunities found."
+    #totrecs = 0
+    #nodes = xml.dom.pulldom.parseString(instr)
+    #example_org = None
+    #for type,node in nodes:
+    #  if type == 'START_ELEMENT':
+    #    if node.nodeName == 'FeedInfo':
+    #      nodes.expandNode(node)
+    #      feedinfo = node
+    #    elif node.nodeName == 'Organization':
+    #      nodes.expandNode(node)
+    #      id = xml_helpers.getTagValue(node, "organizationID")
+    #      if (id != ""):
+    #        known_orgs[id] = node
+    #      if example_org == None:
+    #        example_org = node
+    #    elif node.nodeName == 'VolunteerOpportunity':
+    #      nodes.expandNode(node)
+    #      if totrecs == 0:
+    #        s += outputHeader(feedinfo, node, example_org)
+    #      totrecs,spiece = outputOpportunity(node, feedinfo, known_orgs, totrecs)
+    #      s += spiece
   else:
     # not do_fastparse
     footprint_xml = parse_footprint.Parse(instr, maxrecs, progress)
@@ -457,7 +500,7 @@ def convertToGoogleBaseEventsType(instr, do_fastparse, do_printhead, maxrecs, pr
     opportunities = footprint_xml.getElementsByTagName("VolunteerOpportunity")
     totrecs = 0
     for opp in opportunities:
-      if do_printhead and totrecs == 0:
+      if totrecs == 0:
         s += outputHeader(feedinfo, opp, organizations[0])
       totrecs,spiece = outputOpportunity(opp, feedinfo, known_orgs, totrecs)
       s += spiece
@@ -479,14 +522,18 @@ def ftpToBase(f, ftpinfo, s):
   ftp.login(user, passwd)
   fn = "footprint1.txt"
   if re.search("usa-?service", f):
-    fn = "usaservice1.txt"
+    fn = "usaservice1.gz"
   elif re.search("handson", f):
-    fn = "handsonnetwork1.txt"
+    fn = "handsonnetwork1.gz"
   elif re.search("idealist", f):
-    fn = "idealist1.txt"
+    fn = "idealist1.gz"
   elif re.search("volunteermatch", f):
-    fn = "volunteermatch1.txt"
-  print datetime.now(),"uploading: "+fn
+    fn = "volunteermatch1.gz"
+
+  if re.search(r'[.]gz$', fn):
+    s = zlib.compress(s, 9)
+
+  print datetime.now(),"uploading",len(s),"bytes under filename"+fn
   ftp.storbinary("STOR " + fn, fh, 8192)
   print datetime.now(),"done."
   ftp.quit()
@@ -535,7 +582,6 @@ if __name__ == "__main__":
   if (options.progress):
     progress = True
   f = args[0]
-  do_printhead = True
   if options.inputfmt == "fpxml":
     parsefunc = parse_footprint.Parse
   elif (options.inputfmt == "usaservice" or
@@ -646,7 +692,7 @@ if __name__ == "__main__":
     print datetime.now(),"--outputfmt not implemented: try 'basetsv' or 'fpxml'"
     exit(1)
 
-  outstr = convertToGoogleBaseEventsType(footprint_xmlstr, do_fastparse, do_printhead, int(options.maxrecs), progress)
+  outstr = convertToGoogleBaseEventsType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
   #only need this if Base quoted fields it enabled
   #outstr = re.sub(r'"', r'&quot;', outstr)
   if (options.ftpinfo):
