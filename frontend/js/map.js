@@ -6,7 +6,14 @@ function SimpleMap(div) {
   if (GBrowserIsCompatible()) {
     this.map_ = new GMap2(div);
 
-    this.map_.setCenter(new GLatLng(40, -100), 3);
+    var lat = 40, lon = -100, zoom = 3;
+    try {
+      lat = google.loader.ClientLocation.latitude;
+      lon = google.loader.ClientLocation.longitude;
+      zoom = this.defaultZoom_;
+    } catch (err) {}
+
+    this.map_.setCenter(new GLatLng(lat, lon), zoom);
     this.map_.enableContinuousZoom();
     this.map_.enableScrollWheelZoom();
     this.geocoder_ = new GClientGeocoder();
