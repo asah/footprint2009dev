@@ -7,6 +7,7 @@ import xml.sax.saxutils
 import xml.parsers.expat
 import re
 import unicodedata
+import sys
 
 # asah: I give up, allowing UTF-8 is just too hard without incurring
 # crazy performance penalties
@@ -95,7 +96,7 @@ def simpleParser(s, known_elnames_list, progress):
     outfh = open("xmlerror.out","w+")
     outfh.write(s)
     outfh.close()
-    exit(0)
+    sys.exit(0)
 
 def prettyxml(doc):
   s = doc.toxml("UTF-8")
