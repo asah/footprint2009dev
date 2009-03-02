@@ -68,6 +68,19 @@ function GetHashParams() {
   return GetUrlParams(document.location.hash.replace(/(^#)/,''));
 }
 
+/** Retrieve a parameter from the URL hashstring or querystring.
+ * Hashstring takes precedence.
+ * @param {string} paramName Parameter name
+ */
+function getParam(paramName) {
+  if (hashParams[paramName]) {
+    return hashParams[paramName];
+  } else if (queryParams[paramName]) {
+    return queryParams[paramName];
+  }
+  return null;
+}
+
 /** Count number of elements inside a JS object */
 function getObjectLength(object) {
   var count = 0;
@@ -94,3 +107,7 @@ WorkQueue.prototype.execute = function() {
 WorkQueue.prototype.addCallback = function(callback) {
   this.queue_.push(callback);
 }
+
+// Globals
+var queryParams = GetQueryParams();
+var hashParams = GetHashParams();

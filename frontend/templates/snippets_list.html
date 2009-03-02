@@ -30,10 +30,10 @@
            onclick='expressInterest(this, "{{result.id|escape}}",
                                           "{{result.interest|escape}}")'>
         {% if result.interest %}
-          <img src='images/markers/yellow-dot.png' height="16px" alt=''/>
+          <img src='images/star-on.png' alt=''/>
           {{result.interest_count|escape}}
         {% else %}
-          <img src='images/markers/yellow.png' height="16px" alt=''/>
+          <img src='images/star-off.png' alt=''/>
           {{result.interest_count|escape}}
         {% endif %}
       </div>

@@ -42,6 +42,7 @@ function addToCalendar(div, type, eventUrl, eventTitle, eventSnippet,
 }
 
 function expressInterest(div, eventUrl, interest) {
+  // TODO: cycle star back to 'off' state
   if (div.interest != undefined) {
     interest = div.interest;
   }
@@ -59,9 +60,10 @@ function expressInterest(div, eventUrl, interest) {
                         + '&zx=' + Math.random();
   function fixit() {
     if (newinterest) {
-      div.childNodes[1].src='images/markers/red-dot.png';
+      // TODO: different icon for new interest?
+      div.childNodes[1].src='images/star-on.png';
     } else {
-      div.childNodes[1].src='images/markers/red.png';
+      div.childNodes[1].src='images/star-on.png';
     }
   }
   window.setTimeout(fixit, 10);
