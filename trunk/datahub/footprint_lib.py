@@ -15,6 +15,7 @@ import parse_footprint
 import parse_usaservice
 import parse_handsonnetwork
 import parse_idealist
+import parse_craigslist
 import parse_volunteermatch
 import os
 import subprocess
@@ -81,7 +82,7 @@ def outputField(name, value):
   if printhead == True:
     if (name not in fieldtypes):
       print datetime.now(),"no type for field: " + name + fieldtypes[name]
-      exit(1)
+      sys.exit(1)
     elif (fieldtypes[name] == "builtin"):
       return name
     else:
@@ -490,7 +491,7 @@ def convertToGoogleBaseEventsType(instr, do_fastparse, maxrecs, progress):
     if (feedinfos.length != 1):
       print datetime.now(),"bad FeedInfo: should only be one section"
       # TODO: throw error
-      exit
+      sys.exit(1)
     feedinfo = feedinfos[0]
     organizations = footprint_xml.getElementsByTagName("Organization")
     for org in organizations:
@@ -527,6 +528,8 @@ def ftpToBase(f, ftpinfo, s):
     fn = "handsonnetwork1.gz"
   elif re.search("idealist", f):
     fn = "idealist1.gz"
+  elif re.search("craigslist", f):
+    fn = "craigslist1.gz"
   elif re.search("volunteermatch", f):
     fn = "volunteermatch1.gz"
 
@@ -550,8 +553,11 @@ if __name__ == "__main__":
   parser.set_defaults(debug_input=False)
   parser.set_defaults(output="basetsv")
   parser.set_defaults(test=False)
+  parser.set_defaults(clean=True)
   parser.set_defaults(maxrecs=-1)
   parser.add_option("-d", "--dbg", action="store_true", dest="debug")
+  parser.add_option("--clean", action="store_true", dest="clean")
+  parser.add_option("--noclean", action="store_false", dest="clean")
   parser.add_option("--inputfmt", action="store", dest="inputfmt")
   parser.add_option("--test", action="store_true", dest="test")
   parser.add_option("--dbginput", action="store_true", dest="debug_input")
@@ -565,7 +571,7 @@ if __name__ == "__main__":
   (options, args) = parser.parse_args(sys.argv[1:])
   if (len(args) == 0):
     parser.print_help()
-    exit(0)
+    sys.exit(0)
   if options.fs != None:
     FIELDSEP = options.fs
   if options.rs != None:
@@ -589,6 +595,11 @@ if __name__ == "__main__":
         (options.inputfmt == None and
          re.search("usa-?service", f))):
     parsefunc = parse_usaservice.Parse
+  elif (options.inputfmt == "craigslist" or
+        options.inputfmt == "cl" or
+        (options.inputfmt == None and
+         re.search("craigslist", f))):
+    parsefunc = parse_craigslist.Parse
   elif (options.inputfmt == "handson" or
         options.inputfmt == "handsonnetwork" or
         (options.inputfmt == None and
@@ -605,7 +616,7 @@ if __name__ == "__main__":
     parsefunc = parse_volunteermatch.Parse
   else:
     print datetime.now(),"unknown input format-- try --inputfmt"
-    exit(1)
+    sys.exit(1)
 
   if re.search(r'[.]gz$', f):
     fh = gzip.open(f, 'rb')
@@ -618,26 +629,28 @@ if __name__ == "__main__":
   instr = fh.read()
 
   # remove tabs and nonprintable junk
-  if progress:
-    print datetime.now(),"read file: ", len(instr)," bytes."
-  instr = re.sub(r'\r\n?', "\n", instr)
-  if progress:
-    print datetime.now(),"filtered dos newlines:",len(instr)," bytes"
-  instr = re.sub(r'(?:\t|&#9;)', " ", instr)                                         
-  if progress:
-    print datetime.now(),"filtered tabs:",len(instr)," bytes"
-  instr = re.sub(r'\xc2?[\x93\x94\222]', "'", instr)
-  if progress:
-    print datetime.now(),"filtered iso8859-1 single quotes:",len(instr)," bytes"
-  #instr = re.sub(r'\xc2?[\223\224]', '"', instr)
-  if progress:
-    print datetime.now(),"filtered iso8859-1 double quotes:",len(instr)," bytes"
-  instr = re.sub(r'\xc2?[\225\226\227]', "-", instr)
-  if progress:
-    print datetime.now(),"filtered iso8859-1 dashes:",len(instr)," bytes"
-  instr = xml_helpers.cleanString(instr)
-  if progress:
-    print datetime.now(),"filtered nonprintables:",len(instr)," bytes"
+  if options.clean:
+    if progress:
+      print datetime.now(),"read file: ", len(instr)," bytes."
+      instr = re.sub(r'\r\n?', "\n", instr)
+    if progress:
+      print datetime.now(),"filtered dos newlines:",len(instr)," bytes"
+    instr = re.sub(r'(?:\t|&#9;)', " ", instr)                                         
+    if progress:
+      print datetime.now(),"filtered tabs:",len(instr)," bytes"
+    instr = re.sub(r'\xc2?[\x93\x94\222]', "'", instr)
+    if progress:
+      print datetime.now(),"filtered iso8859-1 single quotes:",len(instr)," bytes"
+    instr = re.sub(r'\xc2?[\223\224]', '"', instr)
+    if progress:
+      print datetime.now(),"filtered iso8859-1 double quotes:",len(instr)," bytes"
+    instr = re.sub(r'\xc2?[\225\226\227]', "-", instr)
+    if progress:
+      print datetime.now(),"filtered iso8859-1 dashes:",len(instr)," bytes"
+    instr = xml_helpers.cleanString(instr)
+    if progress:
+      print datetime.now(),"filtered nonprintables:",len(instr)," bytes"
+
   if (options.debug_input):
     # split nasty XML inputs, to help isolate problems
     instr = re.sub(r'><', r'>\n<', instr)
@@ -681,16 +694,16 @@ if __name__ == "__main__":
       # grr-- difflib performance sucks
       #for line in difflib.unified_diff(fpxml, fpxml2, fromfile='(first output)', tofile='(second output)'):
       #print line
-    exit(0)
+    sys.exit(0)
 
   do_fastparse = not options.debug_input
   if options.outputfmt == "fpxml":
     # TODO: pretty printing option
     print convertToFootprintXML(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
-    exit(0)
+    sys.exit(0)
   elif (options.outputfmt != "basetsv" and not options.ftpinfo):
     print datetime.now(),"--outputfmt not implemented: try 'basetsv' or 'fpxml'"
-    exit(1)
+    sys.exit(1)
 
   outstr = convertToGoogleBaseEventsType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
   #only need this if Base quoted fields it enabled

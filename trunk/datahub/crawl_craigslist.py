@@ -5,11 +5,16 @@
 # it for the full scrape, but ended up not going that way.
 
 from xml.dom import minidom
+import sys
 import urllib
 import re
 import thread
 import time
 import datetime
+import socket
+
+DEFAULT_TIMEOUT = 10
+socket.setdefaulttimeout(DEFAULT_TIMEOUT)
 
 METROS_FN = "craigslist-metros.txt"
 CACHE_FN = "craigslist-cache.txt"
@@ -81,7 +86,7 @@ def crawl(url, ignore):
   crawlers = crawlers + 1
   crawlers_lock.release()
 
-  proxied_url = "http://www.gmodules.com/ig/proxy//"+url
+  proxied_url = "http://suprfetch.appspot.com/?url="+urllib.quote(url+"?for_google_and_craigslist.org_project_footprint_please_dont_block")
 
   page = ""
   attempts = 0
@@ -96,21 +101,33 @@ def crawl(url, ignore):
           print "open failed, retry after",attempts,"attempts"
           time.sleep(1)
 
+  if re.search(r'This IP has been automatically blocked', page, re.DOTALL):
+      print "uh oh: craiglist is blocking us (IP blocking).  exiting..."
+      exit(1)
+
+  if (re.search(r'sorry.google.com/sorry/', page) or
+      re.search(r'to automated requests from a computer virus or spyware', page, re.DOTALL)):
+      print "uh oh: google is blocking us (DOS detector).  exiting..."
+      exit(1)
+
+  if re.search(r'<TITLE>302 Moved</TITLE>"',page, re.DOTALL):
+      newlocstr = re.findall(r'The document has moved <A HREF="(.+?)"',page)          
+      print "being redirected to",newlocstr[0]
+      crawl(newlocstr[0],"foo")
+      return
+
   if attempts >= 3:
       print "crawl failed after 3 attempts:",url
-
-  if re.search(r'This IP has been automatically blocked', page):
-      print "uh oh: craiglist is blocking us.  exiting..."
-      exit
+      return
 
   page_lock.acquire()
   pages[url] = page
   page_lock.release()
 
-  cached_page = re.sub(r'\r?\n',' ',page)
+  cached_page = re.sub(r'(?:\r?\n|\r)',' ',page)
   cachefile_lock.acquire()
   outfh = open(CACHE_FN, "a")
-  outfh.write(url+"\t"+cached_page+"\n")
+  outfh.write(url+"-Q-"+cached_page+"\n")
   outfh.close()
   cachefile_lock.release()
 
@@ -150,21 +167,33 @@ def crawl_metro_page(urlbase, indexstr):
   for nextpage_url in nextpages:
       id = thread.start_new_thread(crawl_metro_page, (urlbase+nextpage_url, "foo"))
 
-def load_cache(listings_only):
+def parse_cache_file(s, listings_only=True, printerrors=True):
   global pages
-  print "loading cache..."
-  try:
-      fh = open(CACHE_FN, "r")
-      for line in fh:
-          res = re.findall(r'(.+?)\t(.+)', line)
+  for i,line in enumerate(s.splitlines()):
+      #print line[0:100]
+      res = re.findall(r'^(.+?)-Q-(.+)', line)
+      try:
           url,page = res[0][0], res[0][1]
           if not listings_only or re.search(r'html$', url):
               pages[url] = page
+      except:
+          if printerrors:
+              print "error parsing cache file on line",i+1
+              print line
+    
+def load_cache():
+  global CACHE_FN
+  try:
+      fh = open(CACHE_FN, "r")
+      instr = fh.read()
+      print "closing cache file", CACHE_FN
       fh.close()
+      print "parsing cache data",len(instr),"bytes"
+      parse_cache_file(instr, False)
+      print "loaded",len(pages),"pages."
   except:
+      # ignore errors if file doesn't exist
       pass
-  num_cached_pages = len(pages)
-  print "loaded",num_cached_pages,"pages."
 
 from optparse import OptionParser
 if __name__ == "__main__":
@@ -176,7 +205,8 @@ if __name__ == "__main__":
   if options.metros:
     crawl_metros()
   read_metros()
-  load_cache(False)
+  load_cache()
+  num_cached_pages = len(pages)
 
   outstr = ""
   for url in metros:
@@ -193,4 +223,4 @@ if __name__ == "__main__":
           time.sleep(2)
       # avoid race condition-- give it another 2secs to spawn more threads...
       time.sleep(2)
-  exit
+  sys.exit(0)
