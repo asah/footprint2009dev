@@ -3,7 +3,6 @@
 
 from xml.dom import minidom
 import xml_helpers
-import parse_footprint
 import re
 from datetime import datetime
 
