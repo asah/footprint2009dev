@@ -9,7 +9,7 @@ workQueue.addCallback(function() {
     '20090315': 'and one last thing'
   };
   var element = el('calendar');
-  var calendar = new footprint.Calendar(element, events);
+  var calendar = new vol.Calendar(element, events);
   calendar.render();
 
   function nextMonth() { calendar.nextMonth(); }

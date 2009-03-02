@@ -2,6 +2,14 @@ function el(node) {
   return document.getElementById(node);
 }
 
+function explode(obj) {
+  var s = '';
+  for (i in obj) {
+    s += i + ':' + obj[i] + ' . . . ';
+  }
+  alert(s);
+}
+
 function forEach(array, fn) {
   var l = array.length;
   for (var i = 0; i < l; i++) {

@@ -103,7 +103,7 @@ def search(args):
     if location_element:
       location = utils.GetXmlDomText(location_element[0])
     else:
-      location = None      
+      location = None
     logging.info("title="+title+"  location="+str(location)+"  url="+url)
     res = searchresult.SearchResult(url, title, snippet, location, id)
     res.idx = i+1

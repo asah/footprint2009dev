@@ -208,7 +208,7 @@ class search_view(webapp.RequestHandler):
         user_display_name = user.get_display_name()
         result_set = get_annotated_results(user, result_set)
 
-    logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
+    #logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
 
     template_values = {
         'result_set': result_set,
