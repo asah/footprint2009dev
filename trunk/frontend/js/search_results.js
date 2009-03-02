@@ -36,9 +36,6 @@ workQueue.addCallback(function() {
 
 function mapApiLoadComplete() {
   map = new SimpleMap(el('map'));
-  if (queryParams['vol_loc']) {
-    map.setCenterGeocode(queryParams['vol_loc']);
-  }
 
   // Call any queued-up functions that needed to wait for
   // initialization to complete.
@@ -46,7 +43,25 @@ function mapApiLoadComplete() {
 
   if (getObjectLength(hashParams) == 0 && getObjectLength(queryParams) == 0) {
     // Page wasn't given any search params.
-    doInlineSearch('', '', '', false);
+
+    var location = '';
+    try {
+      lat = google.loader.ClientLocation.latitude;
+      lon = google.loader.ClientLocation.longitude;
+      if (lat > 0) {
+        lat = '+' + lat;
+      }
+      if (lon > 0) {
+        lon = '+' + lon;
+      }
+      location = lat + lon;
+    } catch (err) {}
+
+    doInlineSearch('', location, '', false);
+  } else {
+    if (getParam('vol_loc')) {
+      map.setCenterGeocode(getParam('vol_loc'));
+    }
   }
 }
 
