@@ -14,7 +14,6 @@
    <guidestarID>3421</guidestarID>
    <name>MicroMentor | An initiative of Mercy Corps</name>
    <missionStatement>MicroMentor's mission is to help underserved entrepreneurs increase business revenues and navigate the opportunities and challenges of running a small business.</missionStatement>
-   <description>MicroMentor, a Mercy Corps initiative, helps entrepreneurs grow their businesses through mentoring relationships with experienced business professionals. Our mentors volunteer their time to meaningfully impact the lives of those new to the world of small business.</description>
    <location>
     <city>Portland</city>
     <region>OR</region>
@@ -24,6 +23,7 @@
    <donateURL>http://www.mercycorps.org/charityweb.php?Custom15=wm&amp;Custom16=1,1</donateURL>
    <logoURL>http://www.micromentor.org/images/MM_LogoTag.gif</logoURL>
    <detailURL>http://www.volunteermatch.org/search/org28450.jsp</detailURL>
+   <description>MicroMentor, a Mercy Corps initiative, helps entrepreneurs grow their businesses through mentoring relationships with experienced business professionals. Our mentors volunteer their time to meaningfully impact the lives of those new to the world of small business.</description>
   </Organization>
 
   <Organization>
@@ -61,8 +61,8 @@
  <VolunteerOpportunities>  
   <VolunteerOpportunity>
    <volunteerOpportunityID>1001</volunteerOpportunityID>
-   <sponsoringOrganizationID>1</sponsoringOrganizationID>
-   <volunteerHubOrganizationID>3011</volunteerHubOrganizationID>
+   <sponsoringOrganizationIDs><sponsoringOrganizationID>1</sponsoringOrganizationID></sponsoringOrganizationIDs>
+   <volunteerHubOrganizationIDs><volunteerHubOrganizationID>3011</volunteerHubOrganizationID></volunteerHubOrganizationIDs>
    <title>Be a Business Mentor - Trenton, NJ &amp; Beyond</title>
    <dateTimeDurations>
     <dateTimeDuration>
@@ -102,7 +102,7 @@
 
   <VolunteerOpportunity>
    <volunteerOpportunityID>2001</volunteerOpportunityID>
-   <sponsoringOrganizationID>2</sponsoringOrganizationID>
+   <sponsoringOrganizationIDs><sponsoringOrganizationID>2</sponsoringOrganizationID></sponsoringOrganizationIDs>
    <title>DODGEBALL TO HELP AREA HUNGRY</title>
    <dateTimeDurations>
     <dateTimeDuration>
@@ -145,7 +145,7 @@
 
   <VolunteerOpportunity>
    <volunteerOpportunityID>2002</volunteerOpportunityID>
-   <sponsoringOrganizationID>2</sponsoringOrganizationID>
+   <sponsoringOrganizationIDs><sponsoringOrganizationID>2</sponsoringOrganizationID></sponsoringOrganizationIDs>
    <title>YOUNG ADULT TO HELP GUIDE MERCER COUNTY TEEN VOLUNTEER CLUB</title>
    <volunteersNeeded>3</volunteersNeeded>
    <dateTimeDurations>
