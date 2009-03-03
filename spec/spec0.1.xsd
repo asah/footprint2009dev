@@ -55,7 +55,7 @@
 
 
   <xs:complexType name="locationType">
-    <xs:sequence>
+    <xs:all>
       <xs:element name="virtual" type="yesNoEnum" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
@@ -178,12 +178,12 @@
         </xs:annotation>
       </xs:element>
       
-    </xs:sequence>
+    </xs:all>
   </xs:complexType>
 
 
   <xs:complexType name="dateTimeDurationType">
-    <xs:sequence>
+    <xs:all>
       <xs:element name="openEnded" type="yesNoEnum" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
@@ -265,7 +265,7 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:annotation>
       </xs:element>
       
-    </xs:sequence>
+    </xs:all>
   </xs:complexType>
     
   <xs:element name="FootprintFeed">
@@ -273,7 +273,7 @@ FREQ=WEEKLY;INTERVAL=2
       <xs:annotation>
         <xs:documentation>
          <![CDATA[
-           The top-level object is <code>FootprintFeed</code> and requires a schemaVersion attribute. Order of objects must follow order below. Thus, a feed would be wrapped in the following XML:<p><code>
+           The top-level object is <code>FootprintFeed</code> and requires a schemaVersion attribute. Order of objects does not matter. Thus, a feed would be wrapped in the following XML:<p><code>
 &lt;?xml version="1.0" ?&gt;<br>
 &lt;FootprintFeed schemaVersion="0.1"&gt;<br>
 ...<br>
@@ -282,9 +282,9 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:documentation>
       </xs:annotation>
     
-        <xs:sequence>
+        <xs:all>
 
-          <xs:element name="FeedInfo">
+          <xs:element name="FeedInfo" minOccurs="1">
             <xs:annotation>
               <xs:documentation>
                <![CDATA[
@@ -386,14 +386,14 @@ FREQ=WEEKLY;INTERVAL=2
                   <xs:annotation>
                     <xs:documentation>
                      <![CDATA[
-                       The <code>Organization</code> object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). <code>Organization</code> objects are wrapped in an <code>Organizations</code>. Order of fields must follow order below.
+                       The <code>Organization</code> object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). <code>Organization</code> objects are wrapped in an <code>Organizations</code>. Order of fields does not matter.
                      ]]>
                     </xs:documentation>
                   </xs:annotation>
 
                   <xs:complexType>
             
-                    <xs:sequence>
+                    <xs:all>
                       <xs:element name="organizationID" type="xs:string">
                         <xs:annotation>
                           <xs:documentation>
@@ -534,7 +534,7 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
                       
-                    </xs:sequence>
+                    </xs:all>
                   </xs:complexType>
                 </xs:element> 
               </xs:sequence>
@@ -557,12 +557,12 @@ FREQ=WEEKLY;INTERVAL=2
                     <xs:documentation>
                       <![CDATA[
                         The <code>VolunteerOpportunity</code> object represents one volunteer opportunity listing. It is capable of representing a repeating or on-going event.
-                        Often an <code>Opportunity</code> object will link to an <code>Organization</code> object via the <sponsoringOrganizationID> or <volunteerHubOrganizationID> fields. Order of fields must follow order below.
+                        Often an <code>Opportunity</code> object will link to an <code>Organization</code> object via the <sponsoringOrganizationID> or <volunteerHubOrganizationID> fields. Order of fields does not matter.
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
                   <xs:complexType>
-                    <xs:sequence>          
+                    <xs:all>          
                       <xs:element name="volunteerOpportunityID" type="xs:string">
                         <xs:annotation>
                           <xs:documentation>
@@ -573,7 +573,7 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
 
-                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0" maxOccurs="3">
+                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
@@ -583,7 +583,7 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
                       
-                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0" maxOccurs="3">
+                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
@@ -640,7 +640,7 @@ FREQ=WEEKLY;INTERVAL=2
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. ReOrder of objects must follow order below. Required. Order of fields must follow order specified elsewhere in documentation.
+                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. ReOrder of objects must follow order below. Required. Order of fields does not matter.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -662,7 +662,7 @@ FREQ=WEEKLY;INTERVAL=2
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Required. Order of fields must follow order specified elsewhere in documentation.
+                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Required. Order of fields does not matter.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -844,7 +844,7 @@ FREQ=WEEKLY;INTERVAL=2
                           </xs:documentation>
                         </xs:annotation>
                       </xs:element>
-                    </xs:sequence>
+                    </xs:all>
                   </xs:complexType>
                 </xs:element> 
               </xs:sequence>
@@ -852,7 +852,7 @@ FREQ=WEEKLY;INTERVAL=2
           </xs:element> 
           
                       
-        </xs:sequence>
+        </xs:all>
         <xs:attribute fixed="0.1" name="schemaVersion" type="xs:decimal" use="required" />
     </xs:complexType>  
   </xs:element>
