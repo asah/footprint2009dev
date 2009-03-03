@@ -898,7 +898,7 @@ FREQ=WEEKLY;INTERVAL=2
     </xs:annotation>
     <xs:simpleContent>
       <xs:extension base="dateTimeNoTZ">
-         <xs:attribute default="America/Los_Angeles" name="olsonTZ" type="xs:string" use="optional" />
+         <xs:attribute name="olsonTZ" type="xs:string" use="optional" default="America/Los_Angeles"/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
@@ -914,7 +914,7 @@ FREQ=WEEKLY;INTERVAL=2
     </xs:annotation>
     <xs:simpleContent>
       <xs:extension base="timeNoTZ">
-         <xs:attribute default="" name="olsonTZ" type="xs:string" use="optional" />
+         <xs:attribute name="olsonTZ" type="xs:string" use="optional" default="" />
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
