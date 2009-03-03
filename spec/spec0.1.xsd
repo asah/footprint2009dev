@@ -188,7 +188,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Whether the opportunity is limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ignores startDate and endDate fields.
+             Whether the opportunity is not limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ignores startDate and endDate fields.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -255,11 +255,22 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:annotation>
       </xs:element>
 
+      <xs:element name="timeFlexible" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is Yes if both startTime and endTime are missing; default is No otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+
       <xs:element name="commitmentHoursPerWeek" type="xs:decimal" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             For long-term opportunities, how many hours per week are expected? Decimal values allowed. Optional.
+             For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. Recommended if either openEnded or timeFlexible is Yes.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -573,24 +584,53 @@ FREQ=WEEKLY;INTERVAL=2
                         </xs:annotation>
                       </xs:element>
 
-                      <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0">
-                        <xs:annotation>
+                      <xs:element name="sponsoringOrganizationIDs" minOccurs="0">
+                        <xs:annotation>                       
                           <xs:documentation>
                             <![CDATA[
-                              Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended. Up to three sponsoring organizations allowed. If more than three sponsoring organizations exist, use the description field for the extras.
+                              Wrapper for <code>sponsoringOrganizationID</code> fields to allow multiple sponsoring organizations. Order <b>does</b> matter semantically and indicates the order that the sponsors should be shown (i.e., first sponsor is lead sponsor). Optional. Recommended.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
+                        
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="sponsoringOrganizationID" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                              <xs:annotation>
+                                <xs:documentation>
+                                  <![CDATA[
+                                    Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended.
+                                  ]]>
+                                </xs:documentation>
+                              </xs:annotation>
+                            </xs:element>
+                          </xs:sequence>
+                        </xs:complexType>
                       </xs:element>
+                            
                       
-                      <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0">
+                      <xs:element name="volunteerHubOrganizationIDs" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional. Up to three volunteer hubs allowed.  If more than three volunteer hubs are related to opportunity, use the description field for the extras.
+                              Wrapper for <code>volunteerHubOrganizationID</code>. Semantic order of <code>volunteerHubOrganizationID</code> fields does not matter.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
+
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="volunteerHubOrganizationID" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                              <xs:annotation>
+                                <xs:documentation>
+                                  <![CDATA[
+                                    Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional.
+                                  ]]>
+                                </xs:documentation>
+                              </xs:annotation>
+                            </xs:element>
+                          </xs:sequence>
+                        </xs:complexType>
                       </xs:element>
 
                       <xs:element name="title" type="xs:string">
