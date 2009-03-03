@@ -144,16 +144,21 @@ def lookupLocationFields(node):
   if latlong == "":
     # missing or bogus address lines
     loc = cityLocationFields(node)
-    latlong = geocode(loc)
   if latlong == "":
     # missing or bogus city name
     loc = addrField(node, "postalCode")
     loc += addrField(node, "country")
+    latlong = geocode(loc)
   if latlong == "":
     # missing or bogus postalcode
     loc = addrField(node, "city")
     loc += addrField(node, "region")
     loc += addrField(node, "country")
+    latlong = geocode(loc)
+  if latlong == "":
+    loc += addrField(node, "region")
+    loc += addrField(node, "country")
+    latlong = geocode(loc)
   if debug:
     print datetime.now(),"geocode: "+loc+"="+latlong
   return (fullloc, latlong, loc)
@@ -321,36 +326,50 @@ def outputOpportunity(opp, feedinfo, known_orgs, totrecs):
   repeatedFields += FIELDSEP + getBaseEventRequiredFields(opp, org)
   repeatedFields += FIELDSEP + getBaseOtherFields(opp, org)
   repeatedFields += FIELDSEP + getDirectMappedField(opp, org)
+  if len(opp_times) == 0:
+    opp_times = [ None ]
   for opptime in opp_times:
-    # event_date_range
-    # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-    startDate = xml_helpers.getTagValue(opptime, "startDate")
-    startTime = xml_helpers.getTagValue(opptime, "startTime")
-    endDate = xml_helpers.getTagValue(opptime, "endDate")
-    endTime = xml_helpers.getTagValue(opptime, "endTime")
-    openended = xml_helpers.getTagValue(opptime, "openEnded")
+    if opptime == None:
+      startend = cvtDateTimeToGoogleBase("1971-01-01", "00:00:00-00:00", "UTC")
+      openended = "Yes"
+    else:
+      # event_date_range
       # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-    if (startDate == ""):
-      startDate = "1971-01-01"
-      startTime = "00:00:00-00:00"
-    startend = cvtDateTimeToGoogleBase(startDate, startTime, "UTC")
-    if (endDate != "" and endDate+endTime > startDate+startTime):
-      startend += "/"
-      startend += cvtDateTimeToGoogleBase(endDate, endTime, "UTC")
+      startDate = xml_helpers.getTagValue(opptime, "startDate")
+      startTime = xml_helpers.getTagValue(opptime, "startTime")
+      endDate = xml_helpers.getTagValue(opptime, "endDate")
+      endTime = xml_helpers.getTagValue(opptime, "endTime")
+      openended = xml_helpers.getTagValue(opptime, "openEnded")
+      # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
+      if (startDate == ""):
+        startDate = "1971-01-01"
+        startTime = "00:00:00-00:00"
+      startend = cvtDateTimeToGoogleBase(startDate, startTime, "UTC")
+      if (endDate != "" and endDate+endTime > startDate+startTime):
+        startend += "/"
+        startend += cvtDateTimeToGoogleBase(endDate, endTime, "UTC")
     duration = xml_helpers.getTagValue(opptime, "duration")
     commitmentHoursPerWeek = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
     timeFields = FIELDSEP + outputField("openended", openended)
     timeFields += FIELDSEP + outputField("duration", duration)
     timeFields += FIELDSEP + outputField("commitmentHoursPerWeek", commitmentHoursPerWeek)
     timeFields += FIELDSEP + outputField("event_date_range", startend)
+    if len(opp_locations) == 0:
+      opp_locations = [ None ]
     for opploc in opp_locations:
       totrecs = totrecs + 1
       if progress and totrecs%250==0:
         print datetime.now(),": ",totrecs," records generated."
-      locstr,latlong,geocoded_loc = lookupLocationFields(opploc)
-      locFields = FIELDSEP + outputField("location", latlong)
-      locFields += FIELDSEP + outputField("location_string", geocoded_loc)
-      locFields += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
+      if opploc == None:
+        locstr,latlong,geocoded_loc = ("","","")
+        locFields = FIELDSEP + outputField("location", "")
+        locFields += FIELDSEP + outputField("location_string", "")
+        locFields += FIELDSEP + outputField("venue_name", "")
+      else:
+        locstr,latlong,geocoded_loc = lookupLocationFields(opploc)
+        locFields = FIELDSEP + outputField("location", latlong)
+        locFields += FIELDSEP + outputField("location_string", geocoded_loc)
+        locFields += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
       #if locstr != geocoded_loc:
       #  #print datetime.now(),"locstr: ", locstr, " geocoded_loc: ", geocoded_loc
       #  descs = opp.getElementsByTagName("description")
@@ -457,7 +476,6 @@ def convertToGoogleBaseEventsType(instr, do_fastparse, maxrecs, progress):
           s += outputHeader(feedinfo, node, example_org)
         totrecs,spiece = outputOpportunity(opp, feedinfo, known_orgs, totrecs)
         s += spiece
-        totrecs = totrecs + 1
         if (maxrecs > 0 and totrecs > maxrecs):
           break
     if progress:
@@ -514,13 +532,7 @@ def ftpActivity():
 def ftpToBase(f, ftpinfo, s):
   ftplib = __import__('ftplib')
   StringIO = __import__('StringIO')
-  fh = StringIO.StringIO(s)
-  host = 'uploads.google.com'
-  (user,passwd) = ftpinfo.split(":")
-  print datetime.now(),"connecting to " + host + " as user " + user + "..."
-  ftp = ftplib.FTP(host)
-  print ftp.getwelcome()
-  ftp.login(user, passwd)
+
   fn = "footprint1.txt"
   if re.search("usa-?service", f):
     fn = "usaservice1.gz"
@@ -534,12 +546,26 @@ def ftpToBase(f, ftpinfo, s):
     fn = "volunteermatch1.gz"
 
   if re.search(r'[.]gz$', fn):
-    s = zlib.compress(s, 9)
+    print "compressing data from",len(s),"bytes"
+    f = gzip.open(fn, 'wb', 9)
+    f.write(s)
+    f.close()
+    fh = open(fn, 'rb')
+  else:
+    fh = StringIO.StringIO(s)
 
+  host = 'uploads.google.com'
+  (user,passwd) = ftpinfo.split(":")
+  print datetime.now(),"connecting to " + host + " as user " + user + "..."
+  ftp = ftplib.FTP(host)
+  print datetime.now(),"FTP server says:",ftp.getwelcome()
+  ftp.login(user, passwd)
   print datetime.now(),"uploading",len(s),"bytes under filename",fn
   ftp.storbinary("STOR " + fn, fh, 8192)
   print datetime.now(),"done."
   ftp.quit()
+  fh.close()
+
   #print datetime.now(),"file:"
   #print s,
 
