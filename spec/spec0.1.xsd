@@ -10,274 +10,7 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:simpleType name="yesNoEnum">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Yes"/>
-      <xs:enumeration value="No"/>
-    </xs:restriction>
-  </xs:simpleType>
 
-  <xs:simpleType name="dateTimeNoTZ">
-    <xs:restriction base="xs:dateTime">
-      <xs:pattern value=".+[0-9]"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="timeNoTZ">
-    <xs:restriction base="xs:time">
-      <xs:pattern value=".+[0-9]"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:complexType name="dateTimeOlsonDefaultPacific">
-    <xs:simpleContent>
-      <xs:extension base="dateTimeNoTZ">
-         <xs:attribute default="America/Los_Angeles" name="olsonTZ" type="xs:string" use="optional" />
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-
-  <xs:complexType name="timeOlson">
-    <xs:simpleContent>
-      <xs:extension base="timeNoTZ">
-         <xs:attribute default="" name="olsonTZ" type="xs:string" use="optional" />
-      </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
-
-  <xs:simpleType name="sexRestrictedEnum">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Female"/>
-      <xs:enumeration value="Male"/>
-      <xs:enumeration value="Neither"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-
-  <xs:complexType name="locationType">
-    <xs:all>
-      <xs:element name="virtual" type="yesNoEnum" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-           Is the opportunity virtual (i.e., not physically located anywhere)? Domain: Yes, No (default). Optional.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-        
-      <xs:element name="name" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Name of physical location. Example: Camelot Elementary School. Optional.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      
-      <xs:element name="streetAddress1" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             First line of street address. Optional. Not expected from most providers.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-            
-      <xs:element name="streetAddress2" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Second line of street address. Optional. Not expected from most providers.
-             Only provide if streetAddress1 is provided.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="streetAddress3" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Third line of street address. Optional. Not expected from most providers.
-             Only provide if streetAddress1 and streetAddress2 are provided.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-        
-      <xs:element name="city" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             City of physical location. Optional. Expected from most providers.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-        
-      <xs:element name="region" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Region (e.g., State or Province) of physical location. Optional. Expected from most providers.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="postalCode" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Postal Code (e.g., zip code) of physical location. Optional. Expected from most providers.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-           
-      <xs:element name="country" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Country. Optional. Defaults to "US".
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="latitude" type="xs:decimal" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Latitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="longitude" type="xs:decimal" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Longitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="directions" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Directions to or special instructions for the location. Optional.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      
-    </xs:all>
-  </xs:complexType>
-
-
-  <xs:complexType name="dateTimeDurationType">
-    <xs:all>
-      <xs:element name="openEnded" type="yesNoEnum" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Whether the opportunity is not limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ignores startDate and endDate fields.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="startDate" type="xs:date" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             The start date of the opportunity. Optional; highly recommended if openEnded is No.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="endDate" type="xs:date" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             The end date of the opportunity. Optional; highly recommended if openEnded is No.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
-FREQ=WEEKLY;INTERVAL=2
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="duration" type="xs:duration" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      
-      <xs:element name="startTime" type="timeOlson" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="endTime" type="timeOlson" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="timeFlexible" type="yesNoEnum" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is Yes if both startTime and endTime are missing; default is No otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-
-      <xs:element name="commitmentHoursPerWeek" type="xs:decimal" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. Recommended if either openEnded or timeFlexible is Yes.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      
-    </xs:all>
-  </xs:complexType>
     
   <xs:element name="FootprintFeed">
     <xs:complexType>
@@ -896,5 +629,322 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:all>
     </xs:complexType>  
   </xs:element>
+
+
+  <xs:complexType name="locationType">
+    <xs:all>
+      <xs:element name="virtual" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+           Is the opportunity virtual (i.e., not physically located anywhere)? Domain: Yes, No (default). Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+        
+      <xs:element name="name" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Name of physical location. Example: Camelot Elementary School. Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+      <xs:element name="streetAddress1" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             First line of street address. Optional. Not expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+            
+      <xs:element name="streetAddress2" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Second line of street address. Optional. Not expected from most providers.
+             Only provide if streetAddress1 is provided.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="streetAddress3" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Third line of street address. Optional. Not expected from most providers.
+             Only provide if streetAddress1 and streetAddress2 are provided.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+        
+      <xs:element name="city" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             City of physical location. Optional. Expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+        
+      <xs:element name="region" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Region (e.g., State or Province) of physical location. Optional. Expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="postalCode" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Postal Code (e.g., zip code) of physical location. Optional. Expected from most providers.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+           
+      <xs:element name="country" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Country. Optional. Defaults to "US".
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="latitude" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Latitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="longitude" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Longitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="directions" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Directions to or special instructions for the location. Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+    </xs:all>
+  </xs:complexType>
+
+
+  <xs:complexType name="dateTimeDurationType">
+    <xs:all>
+      <xs:element name="openEnded" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Whether the opportunity is not limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ignores startDate and endDate fields.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="startDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The start date of the opportunity. Optional; highly recommended if openEnded is No.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="endDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The end date of the opportunity. Optional; highly recommended if openEnded is No.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
+FREQ=WEEKLY;INTERVAL=2
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="duration" type="xs:duration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+      <xs:element name="startTime" type="timeOlson" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="endTime" type="timeOlson" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="timeFlexible" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is Yes if both startTime and endTime are missing; default is No otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+
+      <xs:element name="commitmentHoursPerWeek" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. Recommended if either openEnded or timeFlexible is Yes.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+    </xs:all>
+  </xs:complexType>
+
+
+  <xs:simpleType name="yesNoEnum">
+    <xs:annotation>
+      <xs:documentation>
+       <![CDATA[
+         Specific type of string with the restricted domain of "Yes" or "No" (without quotes).
+       ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Yes"/>
+      <xs:enumeration value="No"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sexRestrictedEnum">
+    <xs:annotation>
+      <xs:documentation>
+       <![CDATA[
+         Specific type of string with the restricted domain of "Female", "Male", or "Neither" (without quotes). For sex restriction.
+       ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Female"/>
+      <xs:enumeration value="Male"/>
+      <xs:enumeration value="Neither"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="dateTimeOlsonDefaultPacific">
+    <xs:annotation>
+      <xs:documentation>
+       <![CDATA[
+         Date/time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<p>
+         The content is of the base type <code>xs:datetime</code>, except any additional timezone data is disalloed.
+       ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="dateTimeNoTZ">
+         <xs:attribute default="America/Los_Angeles" name="olsonTZ" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="timeOlson">
+    <xs:annotation>
+      <xs:documentation>
+       <![CDATA[
+         Time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<p>
+         The content is of the base type <code>xs:time</code>, except any additional timezone data is disalloed.
+       ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="timeNoTZ">
+         <xs:attribute default="" name="olsonTZ" type="xs:string" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="dateTimeNoTZ">
+    <xs:annotation>
+      <xs:documentation>
+       <![CDATA[
+         Date/time without time zone.
+       ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:dateTime">
+      <xs:pattern value=".+[0-9]"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="timeNoTZ">
+    <xs:annotation>
+      <xs:documentation>
+       <![CDATA[
+         Time without time zone.
+       ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:time">
+      <xs:pattern value=".+[0-9]"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
 </xs:schema>
 
