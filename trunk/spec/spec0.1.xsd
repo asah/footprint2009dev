@@ -293,6 +293,7 @@ FREQ=WEEKLY;INTERVAL=2
         </xs:documentation>
       </xs:annotation>
     
+        <xs:attribute name="schemaVersion" type="xs:decimal" use="required" fixed="0.1" />
         <xs:all>
 
           <xs:element name="FeedInfo" minOccurs="1">
@@ -893,7 +894,6 @@ FREQ=WEEKLY;INTERVAL=2
           
                       
         </xs:all>
-        <xs:attribute fixed="0.1" name="schemaVersion" type="xs:decimal" use="required" />
     </xs:complexType>  
   </xs:element>
 </xs:schema>
