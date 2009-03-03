@@ -31,10 +31,8 @@
                                           "{{result.interest|escape}}")'>
         {% if result.interest %}
           <img src='images/star-on.png' alt=''/>
-          {{result.interest_count|escape}}
         {% else %}
           <img src='images/star-off.png' alt=''/>
-          {{result.interest_count|escape}}
         {% endif %}
       </div>
     </div>
@@ -60,6 +58,16 @@
       </div>
       <div class='snippet_url'>
         <a href='{{ result.url }}'>{{ result.url_short }}</a>
+      </div>
+
+      <div class='snippet_star_count'>
+      {% if result.interest_count %}
+        {% ifequal result.interest_count 1 %}
+          Starred by one other person.
+        {% else %}
+          Starred by {{result.interest_count}} other people.
+        {% endifequal %}
+      {% endif %}
       </div>
     </div>
     </td>

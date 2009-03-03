@@ -7,5 +7,12 @@
        onclick="location.href = '/myevents'">My Events</div>
   <div class='noselect pointer {% ifequal current_page "POST" %} tab_active {% else %} tab_inactive {% endifequal %}'
        onclick="location.href = '/post'">Add an event</div>
+
+  {% if user_display_name %}
+  <div class='hello_name'>
+  Hello, {{ user_display_name }}
+  </div>
+  {% endif %}
+
   <div style='clear: both; float: none'></div>
 </div>
