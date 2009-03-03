@@ -14,6 +14,7 @@ l={{location}}
 {{result.idx}}. {{result.title}} @ {{result.location}} ({{result.latlong}})
 link: <a href="{{result.url|escape}}">{{result.url}}</a>
 desc: {{result.snippet}}
+id: {{result.id}}
 {% endfor %}
 
 {%include 'paginator.html' %}

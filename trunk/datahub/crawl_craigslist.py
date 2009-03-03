@@ -167,14 +167,14 @@ def crawl_metro_page(urlbase, indexstr):
   for nextpage_url in nextpages:
       id = thread.start_new_thread(crawl_metro_page, (urlbase+nextpage_url, "foo"))
 
-def parse_cache_file(s, listings_only=True, printerrors=True):
+def parse_cache_file(s, listings_only=False, printerrors=True):
   global pages
   for i,line in enumerate(s.splitlines()):
       #print line[0:100]
       res = re.findall(r'^(.+?)-Q-(.+)', line)
       try:
           url,page = res[0][0], res[0][1]
-          if not listings_only or re.search(r'html$', url):
+          if (not listings_only or re.search(r'html$', url)):
               pages[url] = page
       except:
           if printerrors:

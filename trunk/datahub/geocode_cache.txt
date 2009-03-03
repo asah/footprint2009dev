@@ -9689,3 +9689,1066 @@ san jose ca 95101|37.3435000,-121.8887000
 mailing) 8304 wayne ave, stanwood, wa. 98292 stanwood wa 98292|
 various) events held statewide ga 30310|
 and more! ca 91409|47.7329890,-117.4443280
+seoul 61820 us|28.9905100,-82.5386370
+st. thomas and st. croix, u.s.virgin islands, 00802 st thomas vi 00802 us|
+st thomas vi 00802 us|18.3436000,-64.9322000
+frederiksted vi 00840 us|17.7135000,-64.8827000
+3569 rt. 30 n bomoseen vt 05735 us|43.6631660,-73.1907810
+4501 diplomacy drive anchorage ak 99508 us|61.1819850,-149.7962750
+anchorage ak 99501 us|61.2165305,-149.8669328
+304 hancock street, suite 3a bangor me 04401 us|44.8030142,-68.7598385
+1202 mullen rd (rt222) stetson me 04488 us|
+stetson me 04488 us|44.8706280,-69.1187945
+160 north main st. north anson me 04958 us|44.8594980,-69.8948737
+new castle de 19720 us|39.6643360,-75.5639280
+pob: 1983 huntington wv 25720 us|
+huntington wv 25720 us|38.4195000,-82.4455000
+charleston wv 25313 us|38.4145914,-81.7458845
+wheeling wv 26003 us|40.0774560,-80.6928360
+marlinton wv 24954 us|38.2204590,-80.0887770
+salt wells creek, hwy. 430 r @ bridge rock springs wy 82901 us|
+rock springs wy 82901 us|41.8519395,-109.1880047
+rapid city sd 57703 us|44.0817120,-103.2307110
+pierre sd 57501 us|44.3776320,-100.3177480
+17 prospect street nashua nh 03060 us|42.7560967,-71.4606932
+merchantsauto.com stadium manchester nh 03101 us|
+manchester nh 03101 us|42.9901899,-71.4625883
+89 route 101a amherst nh 03031 us|42.8108610,-71.5785370
+6 mountain laurels drive nashua nh 03062 us|42.7060956,-71.4689401
+pike nh 03780 us|44.0304620,-72.0090790
+21 comet lane, unit a, airport industrial district hailey id 83333 us|
+hailey id 83333 us|43.5196710,-114.3153960
+414 church street sandpoint id 83864 us|48.2740264,-116.5520584
+east end of meppen dr. idaho falls id 83404 us|
+idaho falls id 83404 us|43.4908420,-112.0390870
+coeur d alene id 83814 us|47.6416827,-116.5747083
+lewiston id 83501 us|46.3913520,-116.9903780
+kailua beach park at ramp kailua hi 96734 us|
+kailua hi 96734 us|21.3997110,-157.7362300
+46-060 konane pl suite 3615 kaneohe hi 96744 us|21.4246200,-157.7936970
+2000 n. poplar st hutchinson ks 67502 us|38.0751107,-97.9286083
+shawnee ks 66203 us|39.0234301,-94.7018900
+salina ks 67401 us|38.8180320,-97.6130360
+123 n esplanade st leavenworth ks 66048 us|39.3197780,-94.9097642
+overland park ks 66207 us|38.9530417,-94.6398693
+ames ia 50014 us|42.0228640,-93.6267920
+461 brow'n's woods dr west des moines ia 50265 us|
+west des moines ia 50265 us|41.5507357,-93.7333537
+hoover state office building, 1305 e walnut des moines ia 50319 us|41.6366730,-93.6830020
+311 westminster street providence ri 02903 us|41.8221590,-71.4139150
+newport ri 02840 us|41.4788712,-71.3052383
+samuel gorton avenue warwick ri 02889 us|41.7019290,-71.3728860
+westerly ri 02891 us|41.3729810,-71.8046530
+north kingstown ri 02852 us|41.6070730,-71.4655565
+100 save the bay drive providence ri 02905 us|41.7863640,-71.3830440
+portsmouth ri 02871 us|41.5712711,-71.2517835
+546 w.center st. fayetteville ar 72701 us|36.0627777,-94.1661654
+1201 sw 2nd street bentonville ar 72712 us|36.3716744,-94.2248703
+1017 van ronkle st conway ar 72034 us|35.0917388,-92.4388951
+sunset mesa school, north campus, 3020 morris ne albuquerque nm 87111 us|
+albuquerque nm 87111 us|35.1322706,-106.4994889
+santa fe nm 87505 us|35.6816220,-105.9380670
+3020 morris ne albuquerque nm 87111 us|35.1168460,-106.5238230
+lindrith nm 87029 us|36.3044780,-107.0453290
+1606 central ave se suite 105 albuquerque nm 87106 us|35.0815391,-106.6284687
+1401 14th st bessemer bessemer al 35020 us|33.4060288,-86.9727983
+915 south jackson street, rm. 7 j. garrick hardy university center montgomery al 36104 us|
+montgomery al 36104 us|32.3986364,-86.3123197
+100 mt olive road apt b alabaster al 35007 us|33.2450280,-86.8106480
+805 flagg circle florence al 35630 us|34.8077230,-87.6875641
+2501 bell rd, suite 3 montgomery al 36117 us|32.3453288,-86.1943494
+selma al 36703 us|32.4152760,-87.0307100
+1705 15th street tuscaloosa al 35401 us|33.1995446,-87.5588888
+byram ms 39272 us|32.3500000,-90.4612000
+1800 state fair park drive lincoln ne 68508 us|40.8389020,-96.6807630
+lincoln ne 68501 us|40.8000000,-96.6664000
+1222 s 27 lincoln ne 68502 us|40.8009702,-96.6822924
+8901 s. 154th st. omaha ne 68138 us|41.1771976,-96.1547160
+1156 15th st nw washington dc 20006 us|38.9053350,-77.0349590
+1101 24th st. nw washington dc 20006 us|38.9039750,-77.0510030
+6th and neil streets, n.e. washington dc 20002 us|
+washington dc 20002 us|38.9052763,-76.9815877
+300 van buren st., nw, washington, dc 20011 washington dc 20011 us|38.9698771,-77.0161349
+rock creek park nature center, 5200 glover road nw washington dc 20015 us|
+washington dc 20015 us|38.9679397,-77.0593246
+1525 newton st nw washington dc 20010 us|38.9331293,-77.0361161
+1875 connecticut ave nw suite 730 washington dc 20009 us|38.9156430,-77.0459880
+6th and neils streets n.e. washington dc 20002 us|
+1250 connecticute ave. washington dc 20036 us|38.9068390,-77.0422340
+washington dc 20032 us|38.8372336,-77.0161436
+6th and neil streets ne washington dc 20002 us|
+national mall, 3rd street and madison avenue washington dc 20560 us|
+washington dc 20560 us|38.8951000,-77.0369000
+washington dc 20005 us|38.9030927,-77.0305390
+washington dc 20004 us|38.8921706,-77.0247810
+8100 block of beach drive, nw, near the 8200 block of 16th street, nw and the dc/md line (eastern avenue). washington dc 20012 us|
+washington dc 20012 us|38.9749644,-77.0305390
+15th street at madison drive washington dc 20001 us|38.8901510,-77.0330440
+1763 columbia rd nw washington dc 20009 us|38.9238200,-77.0419680
+washington dc 20006 us|38.8992513,-77.0420541
+801 mount vernon place nw washington dc 20001 us|38.9037000,-77.0234640
+www.exhalefirstlady.com, tbd washington dc 20505 us|
+washington dc 20505 us|38.8951000,-77.0369000
+and pennsylvania avenues, nw washington dc 20004 us|
+washinton dc or arkansas, washington dc or arkansas washington dc 20004 us|
+dc, dc washington dc 20004 us|38.8921706,-77.0247810
+2132 frandfort avenue louisville ky 40206 us|38.2537985,-85.7071752
+1578 bardstown road louisville ky 40205 us|38.2310534,-85.7056621
+louisville ky 40203 us|38.2429908,-85.7641013
+louisville ky 40202 us|38.2556928,-85.7512830
+550 s. first st. louisville ky 40202 us|38.2494690,-85.7526684
+2200 bardstown road louisville ky 40202 us|38.2352590,-85.7152260
+550 s first street louisville ky 40202 us|38.2494690,-85.7526684
+400 s first street louisville ky 40202 us|38.2525207,-85.7521650
+multiple locations - check their websites louisville ky 40201 us|
+louisville ky 40201 us|38.2545000,-85.7595000
+2132 frankfort ave (enter the back of the building - this is behind the clifton center) louisville ky 40206 us|
+louisville ky 40206 us|38.2647327,-85.7102437
+9900 old brownsboro road louisville ky 40241 us|38.3004200,-85.5926910
+1100 trevillian way louisville ky 40213 us|38.2065755,-85.7106162
+louisville ky 40245 us|38.2601333,-85.4478726
+6th &amp; jefferson (downtown louisville) louisville ky 40203 us|38.2542030,-85.7602620
+corner of dutchmans lane &amp; gast avenue louisville ky 40209 us|38.2241320,-85.6546450
+river road louisville ky 40206 us|38.2669600,-85.7198280
+353 harbor drive duluth mn 55802 us|46.7812242,-92.0965610
+2729 5th ave s. minneapolis mn 55408 us|44.9525326,-93.2689977
+316 4th avenue se minneapolis mn 55414 us|44.9857040,-93.2498230
+white bear and vadnais heights mn 55110 us|
+1600 grand ave saint paul mn 55105 us|44.9400460,-93.1670973
+1600 grand avenue saint paul mn 55105 us|44.9400460,-93.1670973
+155th street south glyndon mn 56547 us|
+glyndon mn 56547 us|46.8772250,-96.5786820
+w lake street and e calhoun parkway minneapolis mn 55408 us|44.9485050,-93.3055150
+henderson nv 89014 us|36.0633189,-115.0525302
+las vegas nv 89108 us|36.2030945,-115.2244853
+701 jacks valley road carson city nv 89701 us|39.0953380,-119.7948600
+101 north pavilion center drive las vegas nv 89144 us|36.1736694,-115.3324909
+reno nv 89523 us|39.5444839,-119.9509260
+las vegas nv 89147 us|36.1148054,-115.2778317
+memphis tn 38101 us|35.1497000,-90.0487000
+1887 lamar ave memphis tn 38114 us|35.1154540,-89.9992773
+1800 berryhill road cordova tn 38016 us|35.1734533,-89.7565952
+nashville tn 37217 us|36.1198745,-86.6913222
+clarksville tn 37043 us|36.5288780,-87.3529570
+2247 western ave. knoxville tn 37921 us|35.9673478,-83.9472383
+910 vance avenue memphis tn 38126 us|35.1343470,-90.0317240
+pavilion memphis tn 38134 us|35.0633420,-90.1147850
+knoxville, tn knoxville tn 37918 us|36.0539129,-83.9003022
+civic, or community location of your choice as available. nashville tn 37214 us|
+nashville tn 37214 us|36.1404654,-86.6510329
+chattanooga tn 37405 us|35.1503998,-85.4169211
+3737 bell road nashville tn 37214 us|36.1535323,-86.6223527
+7501 highway 52 orlinda tn 37141 us|36.5992480,-86.7000590
+350 john a. merritt blvd. nashville tn 37209 us|36.1669750,-86.8280090
+303 e. kirkwood bloomington in 47408 us|39.1665468,-86.5310511
+bloomington in 47401 us|39.1642870,-86.5269040
+535 broadway chesterton in 46304 us|41.6111953,-87.0577121
+1163 n. belmont street indianapolis in 46222 us|39.7836083,-86.1967653
+55 4th ave se carmel in 46032 us|39.9779304,-86.1226380
+2451 n keystone ave. indianapolis in 46218 us|39.8023720,-86.1202550
+2634 n. walnut st. bloomington in 47408 us|39.1919444,-86.5330880
+414 n main st hobart in 46342 us|41.5307466,-87.2540796
+5209 homan avenue hammond in 46320 us|41.5818950,-87.4531090
+10955 wicker av. saint john in 46373 us|41.4208688,-87.4700604
+grand st. east chicago in 46312 us|41.6426160,-87.4497510
+4 galleria drive metairie la 70001 us|29.9924455,-90.1528717
+natchitoches la 71457 us|31.7252690,-93.0981650
+1520 thomas h delpit baton rouge la 70802 us|30.4340655,-91.1786614
+501 n galvez st new orleans la 70119 us|29.9653569,-90.0794752
+little farms church new orleans la 70129 us|
+new orleans la 70129 us|30.1126874,-89.8879304
+12003 ne shaver st portland or 97220 us|45.5549020,-122.5429350
+portland or 97222 us|45.4485068,-122.6286110
+814 sw first ave portland or 97204 us|45.5167600,-122.6738020
+ne 12th street newport or 97365 us|44.6453930,-124.0457080
+se 19th ave &amp; se sparrow st portland or 97222 us|45.4345530,-122.6440030
+1355 n. barlow st cornelius or 97113 us|45.5217820,-123.0558924
+777 ne martin luther king blvd. portland or 97232 us|45.5283050,-122.6645470
+2105 w. antler redmond or 97756 us|44.2764138,-121.1918894
+wilsonville or 97070 us|45.3028770,-122.7690830
+medford or 97504 us|42.3278780,-122.8682900
+97201 salem or 97302 us|44.9216880,-123.0079710
+416 e main street west plains mo 65775 us|36.7280751,-91.8486926
+1800 ne independence ave lees summit mo 64086 us|38.9434020,-94.3645800
+920 moreland avenue saint louis mo 63122 us|38.5914610,-90.3837220
+saint peters mo 63376 us|38.7866410,-90.6034140
+1 south old orchard saint louis mo 63119 us|38.5819350,-90.3403070
+saint louis mo 63141 us|38.6625698,-90.4596721
+3741 walnut street kansas city mo 64111 us|39.0586870,-94.5846070
+1700 north highway 67 florissant mo 63033 us|38.7992194,-90.3174833
+1800 ne independence ave lees summit mo 64081 us|38.9434020,-94.3645800
+tba kansas city mo 64109 us|
+kansas city mo 64109 us|39.0703574,-94.5676009
+5th &amp; walnut thayer mo 65791 us|36.5230970,-91.5427230
+springfield mo 65804 us|37.1565149,-93.2483058
+cape girardeau mo 63701 us|37.3131670,-89.5524210
+forest park - lower muny lot saint louis mo 63108 us|
+joplin mo 64804 us|37.0904830,-94.5087110
+520 nw murray road lees summit mo 64081 us|38.9221613,-94.4035491
+n hwy 63 - west side west plains mo 65775 us|
+west plains mo 65775 us|36.7388340,-91.8690810
+eminence, mo. mountain view mo 65548 us|
+mountain view mo 65548 us|36.9925890,-91.7032690
+1306 west 39th street kansas city mo 64111 us|39.0571632,-94.6016728
+please call and rsvp detroit mi 48202 us|
+detroit mi 48202 us|42.3664506,-83.0737195
+4301 s. lilley road canton mi 48188 us|42.2748790,-83.4563440
+1077 jefferson st. muskegon mi 49440 us|43.2327717,-86.2466004
+315 east warren avenue detroit mi 48201 us|42.3590990,-83.0608810
+207 e fulton fourth floor grand rapids mi 49503 us|
+grand rapids mi 49503 us|42.9616689,-85.6588999
+detroit mi 48205 us|42.4290772,-82.9770371
+2535 michigan ave.@18th st. detroit mi 48210 us|43.0000689,-82.4454751
+9268 pelham rd., on the corner of wick and pelham taylor mi 48180 us|
+taylor mi 48180 us|42.2164077,-83.2720082
+17150 inkster rd redford mi 48240 us|42.4138940,-83.3147400
+21801 nine mile rd. saint clair shores mi 48080 us|42.4662813,-82.9042313
+3335 lakeshore lexington mi 48450 us|43.3321202,-82.5352946
+3335 lakeshore, lexington, mi 48450 lexington mi 48025 us|43.3321202,-82.5352946
+west olive mi 49460 us|42.9213540,-86.1482730
+100 east green street marshall mi 49068 us|42.2710363,-84.9586673
+clarkston mi 48348 us|42.7712149,-83.4003037
+downtown grand rapids grand rapids mi 49501 us|42.9634000,-85.6681000
+clawson &amp; redford see discription redford mi 48240 us|
+redford mi 48240 us|42.4242100,-83.3041061
+25940 grand river avenue redford mi 48240 us|42.4343750,-83.2986380
+mt. olivet at gilbo detroit mi 48234 us|42.4159390,-83.0192260
+839 s crooks road clawson mi 48071 us|42.5318060,-83.1648110
+3100 donna warren mi 48091 us|42.4857270,-83.0740280
+200 west big beaver road troy mi 48084 us|42.5627850,-83.1522040
+633 king street charleston sc 29413 us|32.7944120,-79.9427980
+350 columbiana drive columbia sc 29212 us|34.0797673,-81.1601247
+4 elm street conway sc 29526 us|33.8286424,-79.0448355
+mcalister square, pleasenburg dr. greenville sc 29607 us|
+greenville sc 29607 us|34.8551090,-82.3912400
+one exposition dr. greenville sc 29607 us|34.8537165,-82.3519641
+columbia sc 29205 us|33.9900337,-80.9981576
+4565 old kings hwy murrells inlet sc 29576 us|33.5700833,-79.0338360
+corner of marlborand ballpark street bennettsville sc 29512 us|
+bennettsville sc 29512 us|34.6278450,-79.6919700
+400 east 1700 south salt lake city ut 84115 us|40.7335079,-111.8796082
+210 e 400 s, suite 8 salt lake city ut 84111 us|40.7605900,-111.8850320
+815 south freedom blvd., #100 provo ut 84601 us|40.2234026,-111.6622701
+1113 odenton rd, odenton md 21113 us|39.0785420,-76.6863570
+rm - 111, 313 wayne ave silver spring md 20910 us|
+silver spring md 20910 us|39.0041504,-77.0391754
+81 shipping place dundalk md 21222 us|39.2565625,-76.5222525
+jmg@do-good-today.org, joanne gigliotti gaithersburg md 20877 us|
+gaithersburg md 20877 us|39.1438746,-77.1887747
+11001 rhode island avenue beltsville md 20705 us|39.0356700,-76.9122600
+8320 stevens road, p. o. box 181 owings md 20736 us|38.6956380,-76.5799669
+parkville md 21234 us|39.3803310,-76.5561080
+4814 laurel ave. baltimore md 21215 us|39.3481810,-76.6657890
+prince george's county, campus bowie md 20721 us|38.9134770,-76.8299250
+prince georges county md 20743 us|38.8845491,-76.8893907
+400 cathedral street baltimore md 21201 us|39.2945710,-76.6170430
+north lake st. salisbury md 21804 us|38.3731970,-75.6036710
+2001 twin arch road mount airy md 21771 us|39.3637570,-77.1393080
+12901 town commons drive germantown md 20874 us|39.1810257,-77.2671470
+5851 robert oliver place columbia md 21045 us|39.2096161,-76.8463395
+5207nwestrnave oklahoma city ok 73118 us|
+oklahoma city ok 73118 us|35.5162828,-97.5355555
+1357 e. 15th st tulsa ok 74127 us|36.1406291,-95.9735003
+1000 garth brooks blvd. yukon ok 73099 us|35.4986999,-97.7602476
+oklahoma city ok 73121 us|35.5165585,-97.4435441
+6230 n gillette ave tulsa ok 74130 us|36.2468670,-95.9598800
+meeting location tbd tulsa ok 74106 us|
+tulsa ok 74106 us|36.1948497,-95.9885456
+sparks ok 73101 us|35.6085190,-96.7129850
+usa poteau ok 74953 us|35.0625491,-94.5830789
+12775 e. maryann cleveland way tucson az 85747 us|32.0564948,-110.7231607
+1735 s college ave. tempe az 85281 us|33.4082800,-111.9345980
+4101 e. valencia rd tucson az 85706 us|32.1363340,-110.9051160
+phoenix az 85022 us|33.6233419,-112.0535987
+yuma az 85364 us|32.7024917,-114.6430427
+tucson az 85706 us|32.0869687,-110.8791343
+phoenix az 85032 us|33.6151653,-112.0118669
+2071 w drexel rd tucson az 85746 us|32.1479300,-111.0111730
+tucson az 85710 us|32.2165669,-110.8195292
+7121 w bell rd, lowest level glendale az 85308 us|
+glendale az 85308 us|33.6690037,-112.1787896
+1700 block college ave tempe az 85281 us|
+tempe az 85281 us|33.4324361,-111.9343636
+100 n. 15th ave. phoenix az 85007 us|33.4490430,-112.0927340
+10000 n. oracle rd. tucson az 85704 us|32.3882208,-110.9643116
+7001 east williams field rd mesa az 85212 us|33.3071559,-111.6834413
+5550 s. mill avenue tempe az 85283 us|33.3711740,-111.9348380
+400 east apachie tempe az 85281 us|33.4147880,-111.9306186
+3003 s. country club rd, community food bank tucson az 85726 us|
+tucson az 85726 us|32.2192000,-110.9471000
+scottsdale az 85254 us|33.6071829,-111.9403254
+caguas pr 00725 us|18.2056459,-66.0344581
+san juan pr 00926 us|18.3419118,-66.0582490
+toa baja pr 00949 us|18.4305854,-66.2248174
+bayamon pr 00956 us|18.3132359,-66.1772208
+mayaguez pr 00680 us|18.2100089,-67.1060353
+trujillo alto pr 00976 us|18.3651180,-66.0190240
+arecibo pr 00612 us|18.3880086,-66.6652785
+compo beach road westport ct 06880 us|41.1086060,-73.3559350
+35 governor winthrop boulevard new london ct 06320 us|41.3562334,-72.0970568
+1 museum drive greenwich ct 06830 us|41.0208793,-73.6199198
+600 main street bridgeport ct 06604 us|41.1745684,-73.1881435
+34 hobart street southington ct 06489 us|41.6052280,-72.8761700
+785 mill street berlin ct 06037 us|41.6178440,-72.7298478
+sandy hook ct 06482 us|41.4201620,-73.2822140
+140 legion avenue new haven ct 06511 us|41.3060969,-72.9403766
+310 main street old saybrook ct 06475 us|41.2892850,-72.3754660
+12 roosevelt avenue mystic ct 06355 us|41.3504510,-71.9612550
+grand junction co 81501 us|39.0791169,-108.5581899
+1615 e. cheyenne rd. colorado springs co 80906 us|38.8035783,-104.8035968
+605 s. mason fort collins co 80524 us|40.5799126,-105.0789044
+7th st. and auraria pkwy. denver co 80204 us|39.7450250,-105.0094300
+20 n. cascade ave. colorado springs co 80903 us|38.8351390,-104.8258330
+littleton co 80126 us|39.5511448,-104.9505671
+1 olympic plaza colorado springs co 80909 us|38.8387759,-104.7981866
+colorado springs co 80922 us|38.8870447,-104.6995991
+710 golden ridge rd, #114 golden co 80401 us|39.7287870,-105.2081030
+lamar co 81052 us|38.0798470,-102.6184780
+710 10th street, suite 210 golden co 80401 us|39.7581990,-105.2230290
+2001 jodeco road stockbridge ga 30281 us|33.4824916,-84.2283308
+http://www.kidsread4seed.com/registerforanevent.html kennesaw ga 30152 us|
+kennesaw ga 30152 us|34.0253750,-84.6190980
+246 perimeter center parkway ne atlanta ga 30346 us|33.9172190,-84.3445760
+1679 columbia drive decatur ga 30032 us|33.7410230,-84.2549230
+craft street macon ga 31201 us|32.8424560,-83.6464940
+atlanta ga 30329 us|33.8281050,-84.3279093
+4786 jimmy lee smith pkwy/278 hiram ga 30141 us|33.8997597,-84.7691627
+corner of east lindsey drive and college drive, 4225 university avenue, columbus, georgia 31907 columbus ga 31906 us|
+columbus ga 31906 us|32.4702170,-84.9505398
+3820 macedonia road. powder springs ga 30127 us|33.8753080,-84.6645815
+atlanta ga 30363 us|33.7929288,-84.3955967
+2500 walton way augusta ga 30904 us|33.4782593,-82.0227679
+anderson park police athletic league atlanta ga 30314 us|
+atlanta ga 30314 us|33.7549449,-84.4330214
+decatur ga 30032 us|33.7414395,-84.2594861
+3201 martin luther king jr. dr. sw atlanta ga 30311 us|33.7517841,-84.4912651
+p.o. box 373277 decatur ga 30037 us|33.7749000,-84.2965000
+macy's court columbus ga 31904 us|
+columbus ga 31904 us|32.5629968,-85.0129509
+acworth ga 30101 us|34.0601160,-84.6650770
+138 coppahaunk ave waverly va 23890 us|37.0245537,-77.0995886
+500 albemarle square charlottesville va 22901 us|38.0829340,-78.4704290
+800 preston aveune charlottesville va 22903 us|38.0365810,-78.4877751
+575 alderman road charlottesville va 22903 us|38.0360270,-78.5158990
+590 peter jefferson parkway charlottesville va 22911 us|38.0216615,-78.4401028
+250 pantops mountain road charlottesville va 22911 us|38.0294453,-78.4392570
+111 bowen loop charlottesville va 22901 us|38.1400277,-78.4487371
+3580 spotswood trail barboursville va 22923 us|38.1984984,-78.3155511
+481 wellons street suffolk va 23434 us|36.7212356,-76.5916883
+next to lincoln terrace elem school roanoke va 24012 us|
+roanoke va 24012 us|37.3172783,-79.8912813
+2326 w. mercury blvd. hampton va 23666 us|37.0379550,-76.4066880
+washington plaza, 1609 washington plaza n reston va 20191 us|
+reston va 20191 us|38.9359914,-77.3496708
+970 hilton heights road charlottesville va 22901 us|38.0991740,-78.4662940
+204 new life drive ruckersville va 22968 us|38.2373762,-78.3818939
+purcellville va 20132 us|39.1366980,-77.7150670
+120 white marsh lane walkerton va 23177 us|
+walkerton va 23177 us|37.7260520,-77.0231180
+virginia beach va 23456 us|36.6069678,-75.9230976
+virginia beach va 23464 us|36.7946114,-76.1667807
+2351 anderson highway powhatan va 23139 us|37.5183452,-77.8069597
+20221 cox road sutherland va 23885 us|37.1943404,-77.5483648
+13201 rittenhouse drive midlothian va 23112 us|37.4154320,-77.6409360
+hopewell va 23860 us|37.2925310,-77.2979660
+7700 east parham road richmond va 23294 us|37.6302274,-77.5259076
+21668 heritage farm lane sterling va 20164 us|39.0166960,-77.4040930
+737 coalfield road midlothian va 23113 us|37.4914370,-77.6548020
+586 virginian dr norfolk va 23505 us|36.9058449,-76.2595985
+8260 atlee road mechanicsville va 23116 us|37.6274146,-77.3888030
+109 campus drive alberta va 23821 us|36.8399078,-77.9191890
+11255 nuckols road glen allen va 23059 us|37.6784080,-77.5899560
+norfolk va 23504 us|36.8537392,-76.2652909
+saint stephens church va 23148 us|37.8869200,-77.0636150
+11010 kentland trail providence forge va 23140 us|
+providence forge va 23140 us|37.4424140,-77.0440560
+front royal va 22630 us|38.9265190,-78.1850950
+norfolk va 23508 us|36.8816364,-76.3232042
+345 south main street harrisonburg va 22801 us|38.4461225,-78.8694584
+richmond va 23218 us|37.5539000,-77.4608000
+600 east laburnum avenue richmond va 23222 us|37.5856380,-77.4207983
+701 east water street charlottesville va 22902 us|38.0287889,-78.4768919
+blacksburg va 24060 us|37.2315020,-80.4288160
+berkley community center @ 121 w liberty st. norfolk va 23513 us|
+norfolk va 23513 us|36.8932460,-76.2421185
+201selma road orange va 22960 us|38.2456606,-78.0974303
+virginia beach va 23451 us|36.8643566,-75.9985693
+6809 airlee road warrenton va 20187 us|38.7566000,-77.7935110
+newport news va 23606 us|37.0672839,-76.5141380
+100 east constance road suffolk va 23434 us|36.7377666,-76.5825148
+staunton va 24401 us|38.1571520,-79.0627890
+high street portsmouth va 23704 us|36.8350180,-76.3134465
+549 rochambeau drive williamsburg va 23185 us|37.3489985,-76.7281578
+southwestern park chesapeake va 23321 us|36.8510295,-76.3550457
+401 campus boulevard winchester va 22601 us|39.1966640,-78.1938430
+franklin va 23851 us|36.6820350,-76.9366840
+harrisonburg va 22801 us|38.4392780,-78.8764690
+2825 emerywood parkway richmond va 23294 us|37.6087570,-77.5251979
+9200 arboretum parkway suite 102 richmond va 23236 us|37.4943280,-77.5685360
+108 n patrick st. alexandria va 22314 us|38.8058270,-77.0503440
+2401 hydraulic road charlottesville va 22901 us|38.0653499,-78.4950452
+4211 old hundred road chester va 23831 us|37.3558457,-77.4451103
+culpeper va 22701 us|38.4683730,-77.9979210
+614 south main street woodstock va 22664 us|38.8762410,-78.5103450
+waverly street kilmarnock va 22482 us|37.7054570,-76.3662260
+seattle wa 98106 us|47.5476069,-122.3514653
+barker creek on tracyton blvd. bremerton wa 98311 us|
+bremerton wa 98311 us|47.6355461,-122.6447815
+314 e. holly bellingham wa 98225 us|48.7483154,-122.4769621
+27307 ne 100th carnation wa 98014 us|47.6866391,-121.9854774
+please call or email for more information tacoma wa 98408 us|
+tacoma wa 98408 us|47.1907035,-122.4448476
+4219 wallingford ave n. seattle wa 98103 us|47.6581911,-122.3362378
+20312 fifteenth ave. nw shoreline wa 98160 us|47.7762403,-122.3774184
+206 north j street tacoma wa 98403 us|47.2613410,-122.4530160
+26230 ne 34th street redmond wa 98053 us|47.6394870,-121.9885550
+ne 60th st and pullman ave seattle wa 98105 us|47.6721320,-122.2714330
+16224 pioneer way e. orting wa 98360 us|47.1083040,-122.1477220
+seattle wa 98116 us|47.5745802,-122.4047843
+sammamish wa 98074 us|47.6211532,-122.0471292
+3414 168th st. se bothell wa 98012 us|47.8444600,-122.1876850
+graham wa 98338 us|47.0531080,-122.2948070
+tukwila seattle wa 98178 us|47.4996364,-122.2432632
+550 semanski st. enumclaw wa 98022 us|47.1953008,-122.0055796
+10004 sw bank road vashon wa 98070 us|47.4474396,-122.4612074
+tacoma wa 98401 us|47.2534000,-122.4432000
+20312 15th ave nw shoreline wa 98160 us|47.7762403,-122.3774184
+2300 arboretum dr e seattle wa 98112 us|47.6388914,-122.2945981
+6500 roosevelt way ne seattle wa 98115 us|47.6758505,-122.3173579
+johnson street centralia wa 98531 us|46.7348140,-122.9818320
+430 se 192nd ave vancouver wa 98683 us|45.6176645,-122.4760596
+15610 92nd st. kp n lakebay wa 98349 us|47.3403990,-122.7458320
+olympia wa 98506 us|47.0795302,-122.8777835
+tacoma wa 98406 us|47.2646948,-122.5204872
+spokane wa 99205 us|47.7000703,-117.4516702
+charlestown ma 02129 us|42.3795409,-71.0646337
+merrimack st lawrence ma 01843 us|42.7025630,-71.1513540
+196 adams st boston ma 02122 us|42.3023460,-71.0599940
+137 warren avenue plymouth ma 02360 us|41.9385700,-70.6249980
+81 highland ave somerville ma 02143 us|42.3865537,-71.0978893
+64 marshall street north adams ma 01247 us|42.7014864,-73.1137334
+140 brandeis road newton center ma 02459 us|42.3137420,-71.1917250
+830 scenic highway buzzards bay ma 02532 us|41.7729312,-70.5619562
+163 lincoln avenue haverhill ma 01832 us|42.7631700,-71.0508700
+600 atlantic avenue boston ma 02205 us|42.3530011,-71.0549279
+350 main st. haverhill ma 01830 us|42.7827410,-71.0775900
+800 boylston street boston ma 02199 us|42.3486907,-71.0825232
+city hall plaza boston ma 02108 us|42.3591970,-71.0580380
+393 washington avenue belleville nj 07109 us|40.7943940,-74.1501330
+garden state pky - milepost 100 belmar nj 07719 us|
+belmar nj 07719 us|40.1813880,-74.0248660
+135 lafayette street paterson nj 07501 us|40.9255461,-74.1598809
+400 n. 14th street kenilworth nj 07033 us|40.6828997,-74.2989875
+union city nj 07087 us|40.7736940,-74.0270745
+world financial center - plaza 2 jersey city nj 07311 us|
+jersey city nj 07311 us|40.7246000,-74.0599000
+45 stockton street princeton nj 08540 us|40.3475092,-74.6654757
+passaic nj 07055 us|40.8599040,-74.1248640
+n/a maplewood nj 07040 us|40.7312956,-74.2707509
+695 springfield avenue summit nj 07901 us|40.7130590,-74.3763620
+1200 kuser rd. hamilton nj 08619 us|40.2110732,-74.7042808
+west new york nj 07093 us|40.7851820,-74.0085160
+2 jean walling civic center drive east brunswick nj 08816 us|
+east brunswick nj 08816 us|40.4333407,-74.4115246
+rumson nj 07760 us|40.3576530,-74.0064150
+congratulation! "president obama' somerset/all areas nj 08873 us|
+somerset/all areas nj 08873 us|
+sewell nj 08080 us|39.7680590,-75.1412550
+e. greystone rd old bridge nj 08857 us|40.3656580,-74.3374320
+573 valley rd, suite 2 wayne nj 07470 us|40.9314087,-74.2279311
+monmouth county park system, ocean avenue long branch nj 07740 us|
+long branch nj 07740 us|40.2947027,-73.9888797
+intersection of heathcote road &amp;ridge road kingston nj 08528 us|
+kingston nj 08528 us|40.3885695,-74.6210115
+princeton nj 08540 us|40.3496620,-74.6597080
+monmouth county park system, 805 newman springs road lincroft nj 07738 us|
+lincroft nj 07738 us|40.3344821,-74.1298684
+wayne nj 07470 us|40.9411487,-74.2531465
+mountainside nj 07092 us|40.6849340,-74.3646122
+trenton nj 08648 us|40.2912966,-74.7220017
+leonia nj 07605 us|40.8624613,-73.9918181
+main acsnj office - 100 essex avenue, suite 300 bellmawr nj 08031 us|
+bellmawr nj 08031 us|39.8670843,-75.0932352
+1 harbour blvd (susquehanna bank center) camden nj 08103 us|
+camden nj 08103 us|39.9347500,-75.1107527
+1880 princeton avenue trenton nj 08648 us|40.2478359,-74.7445861
+west windsor-plainsboro high school south, 346 clarksville rd. plainsboro nj 08536 us|
+plainsboro nj 08536 us|40.3335090,-74.6004880
+375 mount hope ave rockaway nj 07866 us|40.9055830,-74.5494250
+the corner of springwood ave and memorial dr. asbury park nj 07712 us|40.2148440,-74.0156260
+80 johnson ave. newark nj 07108 us|40.7193293,-74.1914334
+hillcrest ave. and albrecht lane east brunswick nj 08816 us|
+verona nj 07040 us|40.8419440,-74.2481390
+88 jefferson st newark nj 07105 us|40.7298810,-74.1610700
+400 south orange avenue south orange nj 07079 us|40.7432110,-74.2460510
+wharton nj 07885 us|40.9001960,-74.5824110
+311 w. mackie st beaver dam wi 53916 us|43.4605621,-88.8396607
+hwy 18 &amp; hwy 83 wales wi 53188 us|
+wales wi 53188 us|43.0046770,-88.3841010
+100 manpower place milwaukee wi 53212 us|
+milwaukee wi 53212 us|43.0732715,-87.9089623
+madison wi 53701 us|43.0733000,-89.4012000
+w6711 hwy 33 juneau wi 53039 us|43.6446569,-89.8185236
+ripon wi 54971 us|43.8462690,-88.8409870
+2201 darwin rd madison wi 53704 us|43.1288931,-89.3533765
+hwy 83 &amp; hwy 18 wales wi 53183 us|
+wales wi 53183 us|43.0046770,-88.3841010
+corner of chestnut and third marshfield wi 54449 us|44.6655910,-90.1764370
+s76 w20415 hillendale drive muskego wi 53150 us|42.9059670,-88.1689420
+800 north avenue hartland wi 53029 us|43.1139411,-88.3433118
+15350 w national ave new berlin wi 53151 us|42.9793620,-88.1056230
+one organic way la farge wi 54639 us|
+la farge wi 54639 us|43.5743730,-90.6363270
+14th and lehigh streets easton pa 18042 us|40.6819200,-75.2287590
+7311 new falls road levittown pa 19055 us|40.1555280,-74.8538546
+5600 christian street philadelphia pa 19143 us|39.9484395,-75.2355209
+7137 germantown avenue philadelphia pa 19118 us|40.0594064,-75.1903216
+5541 baltimore avenue philadelphia pa 19143 us|39.9472920,-75.2349280
+1300 w. godfrey ave. rm. 143 philadelphia pa 19141 us|
+philadelphia pa 19141 us|40.0326222,-75.1487007
+highland park blvd, wilkes barre pa wilkes barre pa 18701 us|41.2374730,-75.8548970
+route 191 ( hamlin corners) hamlin pa 18427 us|
+hamlin pa 18427 us|41.4038348,-75.3528779
+rr 1 box 1366 hop bottom pa 18824 us|41.6952658,-75.7952840
+philadelphia pa 19143 us|39.9428031,-75.2304038
+philadelphia pa 19120 us|40.0295701,-75.1253492
+altoona pa 16602 us|40.5079530,-78.4001790
+allentown pa 18106 us|40.5596303,-75.5917092
+pleasant valley road murrysville pa 15668 us|40.4117370,-79.6913270
+7028 easton road (route 611) pipersville pa 18947 us|40.7513610,-75.1978910
+4014 wood street erie pa 16509 us|42.0929600,-80.0794510
+2840 strasburg road coatesville pa 19320 us|39.9553580,-75.8507560
+909 fairfield road gettysburg pa 17325 us|39.8285605,-77.2474993
+franklin st. new freedom pa 17349 us|39.7395950,-76.7012080
+900 waggoner's gap raod carlisle pa 17013 us|40.2155952,-77.2069179
+7th and monroe streets stroudsburg pa 18360 us|40.9865040,-75.1948100
+1838 colonial village lane lancaster pa 17601 us|40.0500180,-76.2381940
+chambersburg pa 17201 us|39.9358120,-77.6541640
+philadelphia pa 19110 us|39.9514000,-75.1636000
+crescent pa 15046 us|40.5572954,-80.2293430
+penn's landing, 401 south columbus blvd. philadelphia pa 19106 us|39.9415481,-75.1421362
+6th and market streets philadelphia pa 19106 us|39.9507440,-75.1503610
+eakins oval, next to love park start philadelphia pa 19107 us|
+philadelphia pa 19107 us|39.9509036,-75.1574567
+610 king of prussia road radnor pa 19087 us|40.0703717,-75.3787401
+12025 susquehanna trail glen rock pa 17327 us|39.8022404,-76.6801443
+183 cuyahoga falls avenue akron oh 44310 us|41.1081820,-81.5094760
+126 hopewell ave tiffin oh 44883 us|41.1119381,-83.1989694
+876 glenwood avenue cincinnati oh 45229 us|39.1478690,-84.4853560
+11205 euclid ave cleveland oh 44106 us|41.5083890,-81.6065800
+3341 east livingston avenue columbus oh 43227 us|39.9459840,-82.9075990
+union cemetery rd. loveland oh 45140 us|39.2834047,-84.2957204
+600 v.odom boulevard akron oh 44307 us|41.0709960,-81.5443380
+dublin oh 43017 us|40.1156740,-83.1327332
+45 reed road springboro oh 45066 us|39.5747580,-84.1918310
+1111 east stewart ave columbus oh 43206 us|39.9406576,-82.9664077
+570 n. state rt. 741 lebanon oh 45036 us|39.4254205,-84.2292109
+231 south plum st. marysville oh 43040 us|40.2344250,-83.3660350
+7120 tarlton road circleville oh 43113 us|39.5655269,-82.9033314
+cleveland oh 44101 us|41.4995000,-81.6959000
+5600 post road dublin oh 43017 us|40.1044913,-83.1381320
+denison university granville oh 43023 us|
+granville oh 43023 us|40.0668230,-82.5050320
+gambier oh 43022 us|40.3768400,-82.3970720
+670 harmon avenue columbus oh 43223 us|39.9464280,-83.0166350
+http://www.handsontiffin.net/penniesforpeace tiffin oh 44883 us|
+tiffin oh 44883 us|41.1145670,-83.1765520
+one otterbein college westerville oh 43081 us|
+westerville oh 43081 us|40.1200810,-82.9177860
+800 amrine mill rd. marysville oh 43040 us|40.2466980,-83.3758810
+1048 carmack rd. columbus oh 43210 us|40.0023002,-83.0396278
+212 south court street circleville oh 43113 us|39.6007089,-82.9456629
+akron university stadium akron oh 44320 us|
+akron oh 44320 us|41.0827008,-81.5706109
+555 s. old 3c rd. sunbury oh 43074 us|40.2367804,-82.8611496
+117 columbus rd fredericktown oh 43019 us|40.4732136,-82.5485799
+4664 hoover rd. grove city oh 43123 us|39.8671305,-83.0706700
+sandusky oh 44870 us|41.4458940,-82.7202920
+7118 mount royal ave. westerville oh 43082 us|40.1560397,-82.9048286
+cleveland oh 44114 us|41.5139193,-81.6747295
+8868 watkins rd. sw pataskala oh 43062 us|39.9638930,-82.6514020
+one children plaza dayton oh 45404 us|40.0306311,-84.1349677
+one children's plaza dayton oh 45404 us|39.7735349,-84.1690417
+1704 oberlin rd. raleigh nc 27608 us|35.8066280,-78.6555080
+1100 eastway dr., suite d charlotte nc 28205 us|35.2423590,-80.7828590
+1002 slaughter street goldsboro nc 27530 us|35.3694994,-77.9876611
+charlotte nc 28202 us|35.2272302,-80.8460822
+3700 prosperity church road charlotte nc 28269 us|35.3485870,-80.7738040
+2080 jordan dam rd. moncure nc 27559 us|35.6383290,-79.0858240
+roanoke rapids nc 27870 us|36.4539910,-77.6509400
+1701 cherry street winston salem nc 27106 us|36.1160510,-80.2548028
+east fifth street greenville nc 27858 us|35.6066470,-77.3560030
+2516 australia dr raleigh nc 27610 us|35.7451020,-78.6223170
+120 maury o'dell place cary nc 27513 us|35.7848060,-78.8260530
+1133 north wendover road charlotte nc 28211 us|35.1945260,-80.7954080
+elizabeth city nc 27906 us|36.3018000,-76.2238000
+kannapolis nc 28081 us|35.4871817,-80.6548882
+pisgah national forest brevard nc 28712 us|
+brevard nc 28712 us|35.2389520,-82.7303730
+manteo nc 27954 us|35.8925950,-75.6444370
+935 yuma street, charlotte north carolina nc 28213 us|35.2722080,-80.7929430
+forest city nc 28043 us|35.3346260,-81.8681690
+durham nc durham nc 27707 us|35.9763040,-78.9175088
+fuquay varina nc 27526 us|35.5914550,-78.7930660
+various various nc 28207 us|
+various nc 28207 us|
+2500 w. lunt chicago il 60645 us|42.0085808,-87.6925528
+6434 ogden ave berwyn il 60402 us|41.8299223,-87.7846113
+http://vad.aidmatrix.org/vadxml.cfm?driveid=3331 waukegan il 60087 us|
+waukegan il 60087 us|42.4035176,-87.8647961
+20 kansas street frankfort il 60423 us|41.4984829,-87.8498967
+9400 southwest highway oak lawn il 60453 us|41.7220859,-87.7664532
+chicago il 60636 us|41.7719816,-87.6729074
+11121 south loomis chicago il 60643 us|41.6915337,-87.6569172
+rt. 23 at bethany rd. sycamore il 60178 us|41.9660340,-88.7192910
+1934 w. irving park rd chicago il 60613 us|41.9544600,-87.6779610
+2793 yosemite dr. aurora il 60503 us|41.7015772,-88.2448778
+63 rice lake square wheaton il 60187 us|41.8297137,-88.0989742
+3000 glenview road wilmette il 60091 us|42.0686812,-87.7498988
+olivett nazarene u, bradley il 60915 us|41.1569543,-87.8684783
+9800 old lincoln trail fairview heights il 62208 us|38.5877309,-90.0258249
+camp mcdonald rd and wolf rd wheeling il 60090 us|42.0951070,-87.9080220
+chicago il 60629 us|41.7677004,-87.7074089
+chicago il 60623 us|41.8472079,-87.7074089
+chicago il 60647 us|41.9215421,-87.7024817
+chicago il 60618 us|41.9464283,-87.7074089
+chicago il 60617 us|41.7149099,-87.5593613
+chicago il 60639 us|41.9225138,-87.7517295
+chicago il 60608 us|41.8464166,-87.6679765
+chicago il 60625 us|41.9711068,-87.7024817
+chicago il 60628 us|41.6864807,-87.6285099
+chicago il 60632 us|41.8074687,-87.7074089
+cicero il 60804 us|41.8436340,-87.7636280
+chicago il 60620 us|41.7466135,-87.6482474
+chicago il 60609 us|41.8062766,-87.6482474
+chicago il 60651 us|41.9024826,-87.7418842
+473 keller drive park city il 60085 us|42.3543222,-87.8929304
+1715 sycamore drive fairview heights il 62208 us|38.6037675,-90.0472968
+233 oriole trail cary il 60013 us|42.2153306,-88.2446742
+178 e. 155th street harvey il 60426 us|41.6080633,-87.6459350
+178 e. 155th harvey il 60636 us|41.6080633,-87.6459350
+376 e st. charles rd #22 lombard il 60148 us|41.8894745,-88.0096514
+201 recreation drive bolingbrook il 60440 us|41.6949279,-88.0578499
+chicago il 60622 us|41.9011099,-87.6729074
+bartlett il 60103 us|41.9749611,-88.1974148
+chicago il 60619 us|41.7458012,-87.6087638
+chicago il 60634 us|41.9479690,-87.7861711
+chicago il 60640 us|41.9703133,-87.6630450
+chicago il 60641 us|41.9472058,-87.7468071
+waukegan il 60085 us|42.3641878,-87.8647961
+chicago il 60657 us|41.9403795,-87.6531805
+30w150 roosevelt rd. west chicago il 60185 us|
+west chicago il 60185 us|41.8812990,-88.2190080
+2221 walnut st. murphysboro il 62966 us|37.7643099,-89.3503240
+290 lindsey lane bolingbrook il 60440 us|41.7046293,-88.1086570
+10251 lincoln trail fairview heights il 62208 us|38.5932610,-90.0060760
+445 west 111th st. chicago il 60628 us|41.6924197,-87.6344939
+401 pleasant ridge road fairview heights il 62208 us|38.6125460,-90.0104960
+161 northfield road northfield il 60093 us|42.0964430,-87.7702510
+7351 stony island chicago il 60649 us|41.7613992,-87.5857535
+612 n george st clinton il 61727 us|40.1566376,-88.9535103
+3540 s. hermitage ave. chicago il 60609 us|41.8292788,-87.6691371
+1656 west 63rd street chicago il 60636 us|41.7793164,-87.6663132
+chicago il 60637 us|41.7805099,-87.6038260
+1405 north fifth avenue saint charles il 60174 us|41.9296896,-88.3097097
+892 shootingstar road grayslake il 60030 us|
+grayslake il 60030 us|42.3449020,-88.0332160
+1350 w. 89th street chicago il 60620 us|41.7322831,-87.6576179
+525 south ruby lane fairview heights il 62208 us|38.5852095,-89.9941179
+one south sixth avenue saint charles il 60174 us|41.9138704,-88.3076210
+springfield il 62701 us|39.7994846,-89.6475216
+300 w. briarcliff road bolingbrook il 60440 us|41.6982701,-88.0781360
+8300 s saint louis ave chicago il 60652 us|41.7422755,-87.7094080
+800 n kinzie bradley il 60915 us|41.1540280,-87.8511197
+various --- tbd - visit our website:, www.gohabitat.net riverdale il 60827 us|
+riverdale il 60827 us|41.6444880,-87.6414560
+55110 us|45.0911599,-93.0112457
+08873 us|40.4933734,-74.5228916
+28207 us|35.1928527,-80.8239380
+oak brook terrace il 60181 us|41.8492090,-87.9839640
+5100 w. irving park road chicago il 60641 us|41.9535610,-87.7548760
+110 e 79th street chicago il 60619 us|41.7508952,-87.6211131
+3911 farmington lane johnsburg il 60051 us|42.3841115,-88.2556622
+rsvp to gardenoprf@sbcglobal.net, bob haisman -vol co-ord oak park il 60304 us|
+oak park il 60304 us|41.8736647,-87.7910891
+421 n. county farm road wheaton il 60187 us|41.8675773,-88.1437842
+217 home ave, (corner of pleasant &amp; home aves) oak park il 60302 us|
+oak park il 60302 us|41.8933254,-87.7812524
+east peoria, embassy suites hotel peoria il 61615 us|
+peoria il 61615 us|40.7660679,-89.6722171
+75 highcroft rd. toronto, ontario, m4l 3g4, canada glenview il 60025 us|
+glenview il 60025 us|42.0723953,-87.8205864
+5501 w. fullerton ave. chicago il 60639 us|41.9239519,-87.7635440
+chicago il 60605 us|41.8677988,-87.6211061
+saint charles il 60174 us|41.9168830,-88.3174810
+rockford il 61102 us|42.2133849,-89.1515476
+route 83 and 76th avenue, palos heights, il 60463 palos heights il 60463 us|
+palos heights il 60463 us|41.6644110,-87.7965190
+bloomington il 61704 us|40.4740340,-88.9843260
+springfield il 62704 us|39.7648453,-89.6910223
+urbana il 61801 us|40.1059233,-88.2120315
+central and jackson chicago il 60644 us|41.8765200,-87.7647040
+7100 n. harlem ave chicago il 60631 us|42.0107984,-87.8065871
+chicago il 60649 us|41.7600005,-87.5741877
+222 merchandise mart plaza, (corner of kinzie &amp; wells) chicago il 60654 us|
+chicago il 60654 us|41.8882450,-87.6349872
+13300 s lagrange rd. orland park il 60462 us|41.6172500,-87.8546370
+geneva il 60134 us|41.8891120,-88.3165460
+375 w. briarcliff bolingbrook il 60440 us|41.6981903,-88.0810064
+hammel woods, crumby recreation area, off of black road, just east of route 59 joliet il 60435 us|
+joliet il 60435 us|41.5359304,-88.1193763
+1850 s. blue island ave. chicago il 60608 us|41.8566290,-87.6625930
+jourdan st newton il 62448 us|38.9909220,-88.1461800
+700 ashland ave chicago heights il 60411 us|41.5200442,-87.6550395
+4999 old orchard way, gigant tent in rear parking lot skokie il 60077 us|
+skokie il 60077 us|42.0390627,-87.7591120
+6111 w. 175th street tinley park il 60477 us|41.5734619,-87.7674798
+1959 n. waukegan rd. deerfield il 60015 us|42.1883050,-87.8573035
+downers grove il 60515 us|41.8132909,-88.0216334
+dekalb il 60115 us|41.9312110,-88.7538330
+water st south inn joliet il 60436 us|
+joliet il 60436 us|41.4959577,-88.1193763
+7001 s. south chicago ave chicago il 60637 us|41.7679510,-87.6079160
+401 north larkin ave. joliet il 60435 us|41.5299614,-88.1249486
+13049 s. ridgeland palos heights il 60463 us|41.6559142,-87.7773404
+755 pulaski rd. calumet city il 60409 us|41.6154660,-87.5436306
+15601 s. central oak forest il 60452 us|41.6085430,-87.7560252
+3600 west 203rd st. olympia fields il 60461 us|41.5207404,-87.7038169
+2423 e. 82nd st. (83rd &amp; yates) chicago il 60649 us|
+9901 s. kedzie ave evergreen park il 60805 us|41.7131438,-87.7015194
+9401 s oak park ave oak lawn il 60453 us|41.7212978,-87.7896776
+15320 center ave harvey il 60426 us|41.6109280,-87.6466340
+147 south park street wilmington il 60481 us|41.3032528,-88.1490768
+1911 s. lawrence lockport il 60441 us|41.5770180,-88.0543871
+plano il 60545 us|41.6615120,-88.5345580
+14011 s kenton ave. crestwood il 60445 us|41.6370802,-87.7327983
+peoria il 61614 us|40.7658303,-89.5969060
+mirdamadnesaparciya194 chicago il 60604 us|
+chicago il 60604 us|41.8789910,-87.6223402
+chicago il 60602 us|41.8834474,-87.6278930
+palatine il 60067 us|42.1112958,-88.0607565
+palos hills il 60465 us|41.6892220,-87.8254820
+chicago il 60601 us|41.8864341,-87.6223402
+evanston il 60201 us|42.0602081,-87.7024817
+125 south clark st.; 9th floor chicago il 60603 us|
+chicago il 60603 us|41.8809409,-87.6266591
+1585 n. rand rd. palatine il 60074 us|42.1379740,-88.0189530
+tba bronx ny 10466 us|
+bronx ny 10466 us|40.8887394,-73.8477874
+252 west 116 street new york ny 10026 us|40.8039470,-73.9549940
+932 second avenue, between 49th and 50th streets new york ny 10022 us|
+new york ny 10022 us|40.7589765,-73.9668408
+tba bronx ny 10462 us|
+bronx ny 10462 us|40.8382522,-73.8566087
+1 pier pointe street yonkers ny 10701 us|
+yonkers ny 10701 us|40.9413523,-73.8713099
+149 larchmont avenue larchmont ny 10538 us|40.9285145,-73.7525958
+135 marginal road herkimer ny 13350 us|43.0193317,-74.9888070
+732 nostrand ave brooklyn ny 11216 us|40.6735825,-73.9501444
+55 washington square south new york ny 10012 us|40.7302030,-73.9984320
+2495 main street, suite 118 buffalo ny 14214 us|42.9352090,-78.8421890
+266 genesee street buffalo ny 14215 us|42.9152760,-78.8071310
+60 east 94th street brooklyn ny 11212 us|40.6635754,-73.9269743
+750 classon ave brooklyn ny 11238 us|40.6744746,-73.9602274
+corner of cayuga and buffalo streets ithaca ny 14850 us|42.4413090,-76.4991220
+brooklyn ny 11226 us|40.6470923,-73.9536163
+elmhurst ny 11373 us|40.7379750,-73.8801301
+new york ny 10021 us|40.7686267,-73.9565551
+corona ny 11368 us|40.7469400,-73.8605600
+ridgewood ny 11385 us|40.7075826,-73.9095279
+new york ny 10025 us|40.7949848,-73.9683102
+brooklyn ny 11236 us|40.6403969,-73.9065883
+bronx ny 10467 us|40.8822543,-73.8713099
+brooklyn ny 11220 us|40.6434731,-74.0153231
+brooklyn ny 11230 us|40.6190629,-73.9653715
+woodside ny 11377 us|40.7452800,-73.9058300
+brooklyn ny 11208 us|40.6749343,-73.8713099
+brooklyn ny 11234 us|40.6140484,-73.9301037
+brooklyn ny 11207 us|40.6684027,-73.8948295
+brooklyn ny 11219 us|40.6310753,-73.9976946
+brooklyn ny 11212 us|40.6639181,-73.9154069
+brooklyn ny 11211 us|40.7142790,-73.9565551
+new york ny 10002 us|40.7184530,-73.9859414
+staten island ny 10314 us|40.5919248,-74.1592278
+brooklyn ny 11203 us|40.6515882,-73.9330429
+brooklyn ny 11214 us|40.6042563,-74.0006328
+flushing ny 11355 us|40.7646110,-73.8234620
+brooklyn ny 11229 us|40.5988077,-73.9447994
+bronx ny 10468 us|40.8687887,-73.8977693
+bronx ny 10458 us|40.8621792,-73.8860100
+brooklyn ny 11223 us|40.6009233,-73.9771260
+brooklyn ny 11235 us|40.5889016,-73.9447994
+rectory street, (back entrance) rye ny 10580 us|
+rye ny 10580 us|40.9848079,-73.6948234
+270 west 96th street new york ny 10025 us|40.7947860,-73.9728510
+bronx ny 10453 us|40.8515872,-73.9154069
+bronx ny 10456 us|40.8310224,-73.9095279
+brooklyn ny 11221 us|40.6903213,-73.9271644
+new york ny 10029 us|40.7916407,-73.9447994
+brooklyn ny 11204 us|40.6195067,-73.9859414
+brooklyn ny 11218 us|40.6425910,-73.9741874
+bronx ny 10452 us|40.8376318,-73.9212858
+jackson heights ny 11372 us|40.7527924,-73.8801301
+forest hills ny 11375 us|40.7161100,-73.8505600
+brooklyn ny 11209 us|40.6212119,-74.0329499
+bronx ny 10457 us|40.8441387,-73.8977693
+brooklyn ny 11206 us|40.7047738,-73.9418603
+75 n. franklin avenue hempstead ny 11550 us|40.7082850,-73.6275960
+140 benchley place, apt # 26g bronx ny 10475 us|40.8741566,-73.8258688
+new york, new jersey &amp; pa new york ny 10016 us|
+new york ny 10016 us|40.7472700,-73.9800645
+20 wiedy road kingston ny 12401 us|41.9405950,-74.0202210
+1650 bedford avenue brooklyn ny 11225 us|40.6662846,-73.9566509
+40 walnut street oneonta ny 13820 us|42.4574695,-75.0601392
+jamaica, queens jamaica ny 11432 us|40.7142493,-73.8007340
+503 washington rd kingston ny 12401 us|41.9394660,-74.0291660
+1535 broadway, 6th fl., at 45th st new york ny 10036 us|
+new york ny 10036 us|40.7598450,-73.9903489
+584 route 9d garrison ny 10524 us|41.3475810,-73.9508380
+111 n oceanside rd rockville centre ny 11570 us|40.6578841,-73.6304732
+1160 e. 213th street bronx ny 10469 us|40.8755619,-73.8525421
+71 mitchell avenue poughkeepsie ny 12603 us|41.6790990,-73.9107020
+new paltz ny 12561 us|41.7481240,-74.0850830
+965 longwood avenue bronx ny 10459 us|40.8175278,-73.8982482
+635 broadway kingston ny 12401 us|41.9299230,-74.0062240
+818 south ave rochester ny 14620 us|43.1391160,-77.6052100
+125 penksa road worcester ny 12197 us|
+worcester ny 12197 us|42.5915650,-74.7504570
+2541 route 44 salt point ny 12578 us|41.7823144,-73.7546157
+olean ny 14760 us|42.0822720,-78.4299130
+2000 frost valley rd claryville ny 12725 us|41.9888570,-74.5055180
+new york ny 10001 us|40.7489381,-73.9918181
+1368 fulton st. brooklyn ny 11216 us|40.6801949,-73.9459400
+chatham ny 12037 us|42.3621320,-73.5966370
+62nd street &amp; columbus avenue new york ny 10023 us|40.7711170,-73.9834010
+www.getyourlifebackmin.org queens ny 11412 us|
+queens ny 11412 us|40.6963978,-73.7624950
+266 genesee street, buffalo new york 14204 buffalo ny 14215 us|42.8983810,-78.8486860
+760 fifth avenue new york ny 10023 us|40.7636764,-73.9734569
+route 9d wappingers falls ny 12590 us|41.5673110,-73.9369000
+198 central avenue white plains ny 10606 us|41.0371700,-73.7788160
+maple lane woodstock ny 12498 us|42.0402320,-74.1178590
+244 east 163rd street, bronx, new york 10451 bronx ny 10451 us|40.8275840,-73.9186029
+cyberspace ny 11777 us|
+11777 us|40.9496630,-73.0582368
+40 center st. ellenville ny 12428 us|41.7180826,-74.3978701
+rego park ny 11374 us|40.7255722,-73.8624893
+neptune ave, w. 25th st, bklyn brooklyn ny 11224 us|
+brooklyn ny 11224 us|40.5749261,-73.9859414
+135 glen street glen cove ny 11542 us|40.8632559,-73.6258121
+community wide, schools, libraries, businesses, residential homes buffalo ny 14226 us|
+buffalo ny 14226 us|42.9674726,-78.7986181
+brooklyn ny 11205 us|40.6953390,-73.9624327
+dunedin fl 34698 us|28.0272822,-82.7670745
+311 9th street (@4th avenue north) suite 108 naples fl 34106 us|
+naples fl 34106 us|26.1418000,-81.7950000
+100 macarthur causeway miami beach fl 33139 us|25.7722459,-80.1477045
+11901 beach blvd. jacksonville fl 32246 us|30.2872264,-81.5047885
+fort lauderdale fl 33319 us|26.1865098,-80.2265545
+winter haven fl 33884 us|27.9890156,-81.6802054
+hollywood fl 33020 us|26.0174129,-80.1484407
+miami beach fl 33140 us|25.8200354,-80.1289010
+hialeah fl 33012 us|25.8703495,-80.3101684
+fort lauderdale fl 33301 us|26.1219240,-80.1372757
+3 dolphin blvd court ponte vedra beach fl 32082 us|30.2394120,-81.3901980
+136 north myrtle ave jacksonville fl 32204 us|30.3313080,-81.6765070
+501 seabreeze blvd fort lauderdale fl 33316 us|26.1166099,-80.1056852
+2100 sweetwater dr, melbourne fl 32904 us|28.0801390,-80.7457770
+3800 pluckebaum rd., cocoa fl 32926 us|28.3454690,-80.7693790
+8189 sr 520, cocoa cocoa fl 32926 us|28.3690599,-80.8678500
+miami fl 33186 us|25.6653934,-80.3992652
+650 okeechobee boulevard west palm beach fl 33401 us|26.7058029,-80.0586533
+3400 ne 163rd street north miami beach fl 33160 us|25.9281929,-80.1356788
+naples fl 34104 us|26.1527657,-81.7404134
+starbucks-- ocean drive and 2nd street miami beach fl 33139 us|
+miami beach fl 33139 us|25.7856697,-80.1400671
+9939 universal blvd orlando fl 32819 us|28.4266225,-81.4426082
+12400 sw 152nd st miami fl 33177 us|25.6267822,-80.3936327
+9425 immokalee rd naples fl 34120 us|26.2731961,-81.6745364
+7000 powers ave jacksonville fl 32217 us|30.2522646,-81.6152641
+fort lauderdale fl 33331 us|26.0621374,-80.3769999
+vero beach fl 32960 us|27.6499311,-80.3992652
+3980 12th st vero beach fl 32960 us|27.6238439,-80.4260759
+2005 n. lamar ave tampa fl 33602 us|27.9625480,-82.4542710
+1321 nw 33rd ave, lauderhill fl 33311 fort lauderdale fl 33311 us|26.1421120,-80.1907122
+401 channeliside drive tampa fl 33602 us|27.9427030,-82.4517720
+miami fl 33172 us|25.7858514,-80.3602970
+400 n.w. 65th ave. #107 margate fl 33063 us|26.2354280,-80.2118233
+boca raton fl 33431 us|26.3767589,-80.1037721
+540 university dr, suite 107 port saint lucie fl 34986 us|27.3219213,-80.4017934
+2506 17th ave vero beach fl 32960 us|27.6445020,-80.4022890
+daytona beach fl 32120 us|29.2107000,-81.0232000
+5104 horton road plant city fl 33567 us|27.9434497,-82.0801863
+orlando fl 32802 us|28.5383000,-81.3794000
+3900 miller road rowlett tx 75088 us|32.8937722,-96.5654259
+arlington tx 76011 us|32.7497381,-97.0767365
+6030 padre san antonio tx 78205 us|29.3609770,-98.4714190
+1607 nashby street, la marque texas city tx 77591 us|29.3776880,-94.9753460
+your favorite food pantry, abilene, haskell, hamlin, hawley, tye, merkel, anson, stamford areas abilene tx 79604 us|
+abilene tx 79604 us|32.4487000,-99.7329000
+1709 blanco rd. san antonio tx 78212 us|29.4620162,-98.5078613
+2800 s. center st off matlock, vandergriff park in arlington tx arlington tx 76114 us|
+arlington tx 76114 us|29.8205440,-95.3947240
+houston tx 77002 us|29.7525540,-95.3704009
+henry st. hamilton tx 76531 us|31.7029060,-98.1175120
+8018 sunshine tower san antonio tx 78244 us|29.4944900,-98.3294810
+mission tx 78572 us|26.2147460,-98.3258900
+el paso tx 79936 us|31.7599791,-106.2875210
+edinburg tx 78539 us|26.2707448,-98.1447804
+brownsville tx 78521 us|25.9102521,-97.4273195
+207 w. morgan mount pleasant tx 75455 us|33.1409061,-94.9694217
+houston tx 77036 us|29.7024650,-95.5354816
+dallas tx 75217 us|32.7099886,-96.6745042
+dallas tx 75211 us|32.7433629,-96.8887202
+san antonio tx 78250 us|29.4956954,-98.6490584
+one utsa circle, convocation center san antonio tx 78249 us|
+san antonio tx 78249 us|29.5676137,-98.6050736
+1400 main st # 130 southlake tx 76092 us|32.9429080,-97.1312020
+galveston tx 77550 us|29.3034631,-94.7846938
+800 north main street duncanville tx 75116 us|32.6620012,-96.9065917
+723 n. drennan st. houston tx 77003 us|29.7579490,-95.3265810
+900 s. e. green oaks blvd. arlington tx 76018 us|32.6514780,-97.0951220
+1604 10th street huntsville tx 77340 us|30.7250817,-95.5590418
+3410 taft blvd. wichita falls tx 76308 us|33.8776612,-98.5184477
+street dallas tx 75205 us|32.8417690,-96.8144230
+4306 nw loop 410 san antonio tx 78229 us|29.4883740,-98.5673860
+1201 thorpe ln san marcos tx 78666 us|29.8878150,-97.9234032
+12625 dover drive montgomery tx 77356 us|30.3945637,-95.6181084
+6901 bertner houston tx 77030 us|29.7054113,-95.3991112
+110 lexington ave. san antonio tx 78205 us|29.4322500,-98.4883370
+hwy 80 south, fentress airpark fentress tx 78705 us|
+fentress tx 78705 us|31.1932150,-98.7306770
+houston tx 77064 us|29.9152880,-95.5512280
+9955 buffalo speedway houston tx 77054 us|29.6752940,-95.4228010
+3800 parry ave dallas tx 75226 us|32.7828028,-96.7657473
+longhorn stadium, 1 longhorn blvd. cedar hill tx 75104 us|
+cedar hill tx 75104 us|32.5849600,-96.9511010
+willis tx 77318 us|30.4249030,-95.4800130
+103 page lane huffman tx 77336 us|30.0158730,-95.1166800
+19500 bulverde rd. san antonio tx 78259 us|29.6250150,-98.4212590
+tba league city tx 77573 us|
+league city tx 77573 us|29.4947986,-95.0911062
+200 s alamo san antonio tx 78205 us|29.4222177,-98.4874361
+san antonio tx 78217 us|29.5389660,-98.4239055
+1900 n orgen el paso tx 79912 us|31.7714950,-106.4992520
+5931 roft rd. san antonio tx 78253 us|29.4933568,-98.7416742
+3400 turtle creek blvd. dallas tx 75219 us|32.8081330,-96.8024480
+e. houston and 410 southwest corner, meet and park there &amp; work westward san antonio tx 78220 us|
+san antonio tx 78220 us|29.4143476,-98.3910127
+your street your town ca 90210 us|41.3829159,-82.9540547
+los angeles ca 90020 us|34.0655627,-118.3096648
+1420 santa maria st san leandro ca 94577 us|37.7255658,-122.1496012
+750 lindaro street, suite 120 san rafael ca 94901 us|37.9700160,-122.5261881
+11149 picard lane beaumont ca 92223 us|33.9608972,-117.0388571
+1000-1199 n. cuyamaca st, rear alley el cajon ca 92020 us|
+6401 linda vista rd. san diego ca 92111 us|32.7697650,-117.1795930
+long beach ca 90807 us|33.8332465,-118.1766294
+potter st. and bolivar dr. berkeley ca 94710 us|37.8504240,-122.2960310
+20545 haynes street winnetka ca 91306 us|34.1896820,-118.5813090
+234 bayview street san rafael ca 94901 us|37.9678093,-122.5336728
+1095 west grand ave. pomona ca 91768 us|34.0478340,-117.7626380
+131 n grand ave san pedro ca 90731 us|33.7435650,-118.2904600
+walnut creek ca 94597 us|37.9193365,-122.0780632
+bell ca 90201 us|33.9773050,-118.1802830
+norwalk ca 90650 us|33.9143570,-118.0771515
+los angeles ca 90011 us|34.0078890,-118.2585096
+south gate ca 90280 us|33.9444120,-118.2075720
+hawthorne ca 90250 us|33.9127807,-118.3520389
+long beach ca 90805 us|33.8640647,-118.1766294
+santa ana ca 92704 us|33.7246333,-117.9073244
+antioch ca 94509 us|38.0015243,-121.8220980
+westminster ca 92683 us|33.7592150,-117.9895160
+los angeles ca 90044 us|33.9581345,-118.2935891
+la puente ca 91744 us|34.0302720,-117.9538710
+fontana ca 92335 us|34.0837870,-117.4673845
+sylmar ca 91342 us|34.3076080,-118.4496980
+anaheim ca 92804 us|33.8235300,-117.9659037
+watsonville ca 95076 us|36.9165300,-121.7715850
+oxnard ca 93030 us|34.2023849,-119.1797650
+pittsburg ca 94565 us|38.0143720,-121.8974120
+huntington park ca 90255 us|33.9756107,-118.2234229
+oxnard ca 93033 us|34.1599885,-119.1274334
+fairfield ca 94533 us|38.2889263,-122.0041790
+baldwin park ca 91706 us|34.0854950,-117.9647510
+livermore ca 94550 us|37.6820320,-121.7683630
+rialto ca 92376 us|34.1064219,-117.3733989
+chino ca 91710 us|34.0120229,-117.6786847
+san diego ca 92126 us|32.9184763,-117.1382404
+chula vista ca 91910 us|32.6385134,-117.0617553
+san diego ca 92105 us|32.7348953,-117.0970596
+bellflower ca 90706 us|33.8822393,-118.1239717
+sacramento ca 95823 us|38.4603864,-121.4341900
+riverside ca 92503 us|33.8833867,-117.4438924
+chula vista ca 91911 us|32.6059744,-117.0441009
+santa ana ca 92703 us|33.7526686,-117.9190418
+pomona ca 91766 us|34.0360078,-117.7490656
+lynwood ca 90262 us|33.9198647,-118.2000277
+tracy ca 95376 us|37.7397260,-121.4364100
+anaheim ca 92805 us|33.8276052,-117.9073244
+san diego ca 92154 us|32.5649071,-116.9499191
+los angeles ca 90022 us|34.0238187,-118.1532280
+hesperia ca 92345 us|34.4220150,-117.3048490
+reseda ca 91335 us|34.2010780,-118.5360420
+los angeles ca 90004 us|34.0748887,-118.3082034
+davis ca 95616 us|38.5527820,-121.7347790
+la habra ca 90631 us|33.9318690,-117.9504730
+san diego ca 92114 us|32.7040143,-117.0499859
+chino hills ca 91709 us|33.9594530,-117.7256083
+37th avenue and pacheco street san francisco ca 94116 us|37.7496870,-122.4955300
+37th avenue and ortega street san francisco ca 94132 us|37.7515440,-122.4956740
+2100 hwy 37, sears point ranch petaluma ca 94954 us|
+petaluma ca 94954 us|38.2458480,-122.6287550
+los angeles ca 90006 us|34.0470832,-118.2965121
+knockash court san francisco ca 94127 us|37.7422100,-122.4578280
+woodside ca 94062 us|37.4273340,-122.2618080
+key ave. san francisco ca 94124 us|37.7185080,-122.3950500
+310 s. east end ave. pomona ca 91766 us|34.0567600,-117.7231370
+tba closer to event moorpark ca 93021 us|
+moorpark ca 93021 us|34.2964360,-118.8565280
+bosworth st. and elk st. san francisco ca 94131 us|37.7349340,-122.4400810
+2000 main street huntington beach ca 92648 us|33.6785912,-118.0015541
+san diego ca 92123 us|32.8102534,-117.1323579
+the shallow water nature store, 221 culver boulevard playa del rey ca 90293 us|
+los osos ca 93402 us|35.3111190,-120.8322620
+227 so. roberstson blvd. beverly hills ca 90210 us|34.0638720,-118.3838640
+mil potrero highway pine mountain club ca 93222 us|34.8522711,-119.1468330
+601 s. san pedro street los angeles ca 90014 us|34.0423290,-118.2458510
+1590 las plumas avenue san jose ca 95133 us|37.3593523,-121.8698713
+10200 crow canyon road castro valley ca 94552 us|37.7520145,-122.0293384
+www.ojaifoundation.org ojai ca 93023 us|
+2803 royal palm costa mesa ca 92626 us|33.6739550,-117.9223480
+2925 e sierra madre blvd pasadena ca 91107 us|34.1616027,-118.0913267
+1050 neroly rd. oakley ca 94561 us|37.9690238,-121.7156298
+980 fremont st. monterey ca 93940 us|36.5941066,-121.8845822
+904 east california street ontario ca 91762 us|34.0558020,-117.6364771
+1095 west grand ave. pomona ca 91766 us|34.0478340,-117.7626380
+11450 sharp avenue mission hills ca 91345 us|34.2778903,-118.4572376
+410 s 4th street rio vista ca 94571 us|38.1537890,-121.6966855
+2451 teagarden san leandro ca 94577 us|37.7104715,-122.1611717
+2001 cottle avenue san jose ca 95125 us|37.2916298,-121.8963572
+1011 military west benicia ca 94510 us|38.0604670,-122.1693320
+27170 mission blvd. hayward ca 94542 us|37.6444460,-122.0600830
+marina ca 93933 us|36.6801940,-121.7822278
+655 south first street dixon ca 95620 us|38.4400753,-121.8225066
+healdsburg ca 95448 us|38.6206410,-122.8632990
+to be announced glenview ca 60025 us|
+glenview ca 60025 us|44.9303720,-76.0816260
+1325 east calaveras blvd. milpitas ca 95035 us|37.4357916,-121.8836103
+411 central ave salinas ca 93901 us|36.6754923,-121.6652748
+100 w. monte vista ave vacaville ca 95687 us|38.3588320,-121.9933900
+39350 gallaudet drive fremont ca 94538 us|37.5589114,-121.9655617
+2700 e. leland rd. pittsburg ca 94565 us|38.0055420,-121.8630960
+rohnert park ca 94928 us|38.3472630,-122.6922480
+9870 broadmoor san ramon ca 94583 us|37.7475850,-121.9451590
+concord ca 94520 us|37.9899071,-122.0496521
+19600 cull canyon road castro valley ca 94546 us|37.7057725,-122.0543295
+4000 suisun valley rd fairfield ca 94533 us|38.2351603,-122.1259077
+windsor ca 95492 us|38.5456440,-122.8049580
+3131 stone valley rd. danville ca 94526 us|37.8429240,-121.9820030
+crenshaw blvd. torrance ca 90501 us|33.8322775,-118.3286190
+union city ca 94587 us|37.6022190,-122.0156810
+4105 pacheco blvd. martinez ca 94553 us|38.0088670,-122.0925500
+chico ca 95926 us|39.9285000,-121.8223000
+2960 soquel avenue santa cruz ca 95062 us|36.9859450,-121.9851960
+18381 goldenwest street huntington beach ca 92648 us|33.6959281,-118.0063975
+top of the twin peaks mountains san francisco ca 94110 us|
