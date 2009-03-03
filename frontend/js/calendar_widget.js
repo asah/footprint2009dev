@@ -3,6 +3,10 @@ vol.Calendar = function(element, events) {
   this.date_.setDate(1);
   this.element_ = element;
   this.events_ = events;
+  this.numRows_ = 0;
+
+  // Grab the first <TABLE> inside element.  Assumes that's the calendar table.
+  this.table_ = element.getElementsByTagName('table')[0];
 };
 
 
@@ -39,8 +43,21 @@ vol.Calendar.prototype.render = function() {
   day.setDate(day.getDate() - (day.getDay() + 6) % 7);
 
   var content = [];
+
+  var tbody = this.table_.getElementsByTagName('tbody')[0];
+
+  // Delete last five rows, if present (that is, after changing the
+  // current month).
+  var numRows = this.table_.rows.length;
+  if (numRows >= 6) {
+    for (var i = 0; i < 6; i++) {
+      this.table_.deleteRow(this.table_.rows.length - 1);
+    }
+  }
+
   for (var row = 0; row < 6; row++) {
-    content.push('<tr>');
+    var tr = document.createElement('tr');
+    tbody.appendChild(tr);
     for (var col = 0; col < 7; col++) {
       var classes = [];
       // days cannot be marked as 'event' and 'weekend' at the same time
@@ -53,24 +70,18 @@ vol.Calendar.prototype.render = function() {
       if (vol.Calendar.isToday(day)) {
         classes.push('calendar_days_today');
       }
+      var td = document.createElement('td');
       if (classes.length > 0) {
-        content.push('<td class="', classes.join(' '), '">');
+        td.className = classes.join(' ');
       } else {
-        content.push('<td>');
       }
-      content.push(day.getDate(), '</td>');
+      tr.appendChild(td);
+      td.innerHTML = day.getDate();
       day.setDate(day.getDate() + 1);
     }
-    content.push('</tr>');
   }
-  var html = content.join('');
-  forEachElementOfClass('calendar_days', function(e) {
-    e.innerHTML = html;
-  }, this.element_);
 
-  forEach(this.element_.getElementsByTagName('table'), function(e) {
-    e.style.display = '';
-  });
+  this.table_.style.display = '';
 };
 
 

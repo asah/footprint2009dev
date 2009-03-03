@@ -202,11 +202,11 @@ body {
 #calendar td,
 #calendar th {
   padding: 3px;
-  width: 1.5em;
   text-align: center;
 }
 
 #calendar td {
+  width: 1.5em;
   background: #a3bfdc;
 }
 
@@ -238,4 +238,3 @@ body {
 .pointer {
   cursor: pointer;
 }
-

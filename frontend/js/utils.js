@@ -19,7 +19,24 @@ function forEach(array, fn) {
 
 function forEachElementOfClass(classname, fn, opt_element) {
   var root = opt_element || document;
-  forEach(root.getElementsByClassName(classname), fn);
+  var elements;
+  if (root.getElementsByClassName) {
+    elements = root.getElementsByClassName(classname);
+  } else {
+    // Dustin Diaz's implementation.
+    // http://ejohn.org/blog/getelementsbyclassname-speed-comparison
+    var elements = new Array();
+    var tag = '*';
+    var els = root.getElementsByTagName(tag);
+    var elsLen = els.length;
+    var pattern = new RegExp("(^|\\s)" + classname + "(\\s|$)");
+    for (i = 0; i < elsLen; i++) {
+      if (pattern.test(els[i].className)) {
+        elements.push(els[i]);
+      }
+    }
+  }
+  forEach(elements, fn);
 }
 
 function addListener(element, type, callback) {
