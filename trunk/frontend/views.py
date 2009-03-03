@@ -116,7 +116,7 @@ def get_interest_for_opportunities(opp_id):
   #logging.info("oppids are %s" % opp_id)
 
   for interest in models.VolunteerOpportunityStats.get_by_key_name(opp_id):
-    logging.info("interest is %s" % interest)
+    # logging.info("interest is %s" % interest)
     if interest:
       others_interests[interest.key().name()[3:]] = interest.interested_count
   return others_interests
@@ -133,9 +133,7 @@ def get_annotated_results(user, result_set):
   """
 
   # Get all the ids of items we've found
-  opp_ids = []
-  for result in result_set.results:
-    opp_ids.append('id:' + result.id)
+  opp_ids = ['id:' + result.id for result in result_set.results];
 
   # mark the items the user is interested in
   user_interests = get_user_interests(user)
@@ -162,8 +160,8 @@ class search_view(webapp.RequestHandler):
     # Perform the search.
     result_set = search.search(unique_args)
 
-    user_id = ""
-    user_display_name = ""
+    user_id = None
+    user_display_name = None
 
     output = None
     if "output" in unique_args:

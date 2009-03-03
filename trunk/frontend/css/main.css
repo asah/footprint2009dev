@@ -35,6 +35,11 @@ body {
   padding: 6px;
 }
 
+.snippet_star_count {
+  font-weight: bold;
+  font-size: small;
+}
+
 #snippet_pane {
   margin-left: 8px;
 }
@@ -237,4 +242,12 @@ body {
 
 .pointer {
   cursor: pointer;
+}
+
+.hello_name {
+  font-size: small;
+  float: right;
+  font-weight: bold;
+  margin-right: 10px;
+  color: white;
 }
