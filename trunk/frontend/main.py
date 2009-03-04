@@ -12,7 +12,6 @@ application = webapp.WSGIApplication(
     [(urls.URL_HOME, views.main_page_view),
      (urls.URL_SEARCH, views.search_view),
      (urls.URL_API_SEARCH, views.search_view),
-     (urls.URL_MEMBER_ACTIVITY, views.member_activity_view),
      (urls.URL_MY_EVENTS, views.my_events_view),
      (urls.URL_POST, views.post_view)
     ],
