@@ -16,7 +16,7 @@ version = (re.findall(r'<xs:schema version="(.+?)"', s))[0]
 s = re.sub(r'(\r?\n|\r)', r'', s)
 s = re.sub(r'<[?]xml.+?>', r'', s)
 s = re.sub(r'</?xs:schema.*?>', r'', s)
-s = re.sub(r'<(/?(code|p|a|br).*?)>', r'QQ\1EE', s)
+s = re.sub(r'<(/?(code|p|a|br|b).*?)>', r'QQ\1EE', s)
 s = re.sub(r'</?xs:(complexType)>', r'', s)
 s = re.sub(r'</?xs:(restriction).*?>', r'', s)
 s = re.sub(r'<', r'', s)
