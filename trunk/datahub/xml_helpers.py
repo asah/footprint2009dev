@@ -98,8 +98,10 @@ def simpleParser(s, known_elnames_list, progress):
     outfh.close()
     sys.exit(0)
 
-def prettyxml(doc):
+def prettyxml(doc, strip_header = False):
   s = doc.toxml("UTF-8")
+  if strip_header:
+    s = re.sub(r'<\?xml version="1.0" encoding="UTF-8"\?>', r'', s)
   s = re.sub(r'><', r'>\n<', s)
   # toprettyxml wasn't that pretty...
   return s

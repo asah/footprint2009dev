@@ -13,16 +13,22 @@ def ParseFast(instr, maxrecs, progress):
   outstr = '<?xml version="1.0" ?>'
   outstr += '<FootprintFeed schemaVersion="0.1">'
   # note: preserves order, so diff works (vs. one sweep per element type)
-  chunks = re.findall(r'<(?:Organization|VolunteerOpportunity|FeedInfo)>.+?</(?:Organization|VolunteerOpportunity|FeedInfo)>', instr, re.DOTALL)
+  chunks = re.findall(r'<(?:Organizations|VolunteerOpportunities|FeedInfo)>.+?</(?:Organizations|VolunteerOpportunities|FeedInfo)>', instr, re.DOTALL)
   for chunk in chunks:
-    if re.search("<VolunteerOpportunity>", chunk):
-      totrecs = totrecs + 1
-      if (maxrecs > 0 and totrecs > maxrecs):
-        break
-      if progress and totrecs%250==0:
-        print datetime.now(),": ",totrecs," records generated."
+    subchunks = re.findall(r'<(?:VolunteerOpportunity)>.+?</(?:VolunteerOpportunity)>', chunk, re.DOTALL)
+    for subchunk in subchunks:
+      totrecs += 1
+      
+    #if re.search("<VolunteerOpportunity>", chunk):
+      #totrecs = totrecs + 1
+      
+    if (maxrecs > 0 and totrecs > maxrecs):
+      break
+    if progress and totrecs%250==0:
+      print datetime.now(),": ",totrecs," records generated."
+      
     node = xml_helpers.simpleParser(chunk, known_elnames, False)
-    s = xml_helpers.prettyxml(node)
+    s = xml_helpers.prettyxml(node, True)
     outstr += s
   outstr += '</FootprintFeed>'
   if progress:

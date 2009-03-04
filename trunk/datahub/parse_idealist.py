@@ -109,9 +109,9 @@ def ParseHelper(instr, maxrecs, progress):
     id_link = xml_helpers.getTagValue(opp, "id")
     s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (id_link)
     orgname = xml_helpers.getTagValue(org, "name")  # ok to be lazy-- no other 'name's in this feed
-    s += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (organizations[orgname])
+    s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (organizations[orgname])
     # hardcoded: volunteerHubOrganizationID
-    s += '<volunteerHubOrganizationID>0</volunteerHubOrganizationID>'
+    s += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>0</volunteerHubOrganizationID></volunteerHubOrganizationIDs>'
     s += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "title"))
     # lazy: id is the same as the link field...
     s += '<detailURL>%s</detailURL>' % (id_link)
@@ -119,8 +119,10 @@ def ParseHelper(instr, maxrecs, progress):
     s += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "div"))
     s += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(opp, "summary"))
     pubdate = xml_helpers.getTagValue(opp, "published")
+    ts = dateutil.parser.parse(pubdate)
+    pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
     s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
-    s += '<expires>%s</expires>' % (xml_helpers.getTagValue(opp, "gg_expiration_date"))
+    s += '<expires>%sT23:59:59</expires>' % (xml_helpers.getTagValue(opp, "gg_expiration_date"))
     dbevents = opp.getElementsByTagName("gg_event_date_range")
     if (dbevents.length != 1):
       print datetime.now(),"parse_idealist: only 1 db:event supported."
@@ -140,8 +142,14 @@ def ParseHelper(instr, maxrecs, progress):
     s += '<openEnded>No</openEnded>'
     # ignore duration
     # ignore commitmentHoursPerWeek
-    s += '<startDate>%s</startDate>' % (xml_helpers.getTagValue(dbscheduledTime, "gg_start"))
-    s += '<endDate>%s</endDate>' % (xml_helpers.getTagValue(dbscheduledTime, "gg_end"))
+    tempdate = xml_helpers.getTagValue(dbscheduledTime, "gg_start")
+    ts = dateutil.parser.parse(tempdate)
+    tempdate = ts.strftime("%Y-%m-%d")
+    s += '<startDate>%s</startDate>' % (tempdate)
+    tempdate = xml_helpers.getTagValue(dbscheduledTime, "gg_end")
+    ts = dateutil.parser.parse(tempdate)
+    tempdate = ts.strftime("%Y-%m-%d")
+    s += '<endDate>%s</endDate>' % (tempdate)
     # TODO: timezone???
     s += '</dateTimeDuration></dateTimeDurations>'
     s += '<categoryTags>'

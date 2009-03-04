@@ -67,9 +67,9 @@ def Parse(s, maxrecs, progress):
     orgs = item.getElementsByTagName("parent")
     if (orgs.length == 1):
       org = orgs[0]
-      s += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (xml_helpers.getTagValue(org, "key"))
+      s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (xml_helpers.getTagValue(org, "key"))
     else:
-      s += '<sponsoringOrganizationID>0</sponsoringOrganizationID>'
+      s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>0</sponsoringOrganizationID></sponsoringOrganizationIDs>'
       print datetime.now(),"parse_volunteermatch: listing does not have an organization"
       
     s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
@@ -167,7 +167,8 @@ def Parse(s, maxrecs, progress):
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
 
-  s = re.sub(r'><([^/])', r'>\n<\1', s)
+  #s = re.sub(r'><([^/])', r'>\n<\1', s)
+  #print(s)
   return s
 
 if __name__ == "__main__":

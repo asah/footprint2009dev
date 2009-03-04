@@ -61,9 +61,9 @@ def Parse(instr, maxrecs, progress):
     s += '<VolunteerOpportunity>'
     s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(item, "guid"))
     # hardcoded: sponsoringOrganizationID
-    s += '<sponsoringOrganizationID>0</sponsoringOrganizationID>'
+    s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>0</sponsoringOrganizationID></sponsoringOrganizationIDs>'
     # hardcoded: volunteerHubOrganizationID
-    s += '<volunteerHubOrganizationID>0</volunteerHubOrganizationID>'
+    s += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>0</volunteerHubOrganizationID></volunteerHubOrganizationIDs>'
     s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
     s += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(item, "abstract"))
     s += '<volunteersNeeded>-8888</volunteersNeeded>'
@@ -77,11 +77,8 @@ def Parse(instr, maxrecs, progress):
     length = xml_helpers.getTagValue(dbscheduledTime, "db_length")
     if length == "" or length == "-1":
       s += '<openEnded>Yes</openEnded>'
-      s += '<duration></duration>'
     else:
       s += '<openEnded>No</openEnded>'
-      s += '<duration>P%dH</duration>' % (int(int(length) / 60))
-    # hardcoded: commitmentHoursPerWeek
     s += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
     date,time = xml_helpers.getTagValue(dbscheduledTime, "db_dateTime").split(" ")
     s += '<startDate>%s</startDate>' % (date)
@@ -101,8 +98,8 @@ def Parse(instr, maxrecs, progress):
     s += '<region>%s</region>' % (xml_helpers.getTagValue(dbaddress, "db_state"))
     s += '<country>%s</country>' % (xml_helpers.getTagValue(dbaddress, "db_country"))
     s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(dbaddress, "db_zipcode"))
-    s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(dbaddress, "db_latitude"))
-    s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(dbaddress, "db_longitude"))
+    s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(item, "db_latitude"))
+    s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(item, "db_longitude"))
     s += '</location></locations>'
 
     type = xml_helpers.getTagValue(item, "db_eventType")

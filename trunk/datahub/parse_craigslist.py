@@ -10,6 +10,9 @@ import xml.sax.saxutils
 import crawl_craigslist
 from datetime import datetime
 
+import dateutil.parser
+
+
 def extract(instr, rx):
   res = re.findall(rx, instr, re.DOTALL)
   if len(res) > 0:
@@ -61,6 +64,9 @@ def Parse(instr, maxrecs, progress):
     body = extract(page, '<div id="userbody">(.+?)<')
     locstr = extract(page, "Location: (.+?)<")
     datestr = extract(page, "Date: (.+?)<")
+    ts = dateutil.parser.parse(datestr)
+    datetimestr = ts.strftime("%Y-%m-%dT%H:%M:%S")
+    datestr = ts.strftime("%Y-%m-%d")
 
     # skip bogus listings
     if title == "":
@@ -85,8 +91,8 @@ def Parse(instr, maxrecs, progress):
 
     s += '<VolunteerOpportunity>'
     s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (id)
-    s += '<sponsoringOrganizationID>0</sponsoringOrganizationID>'
-    s += '<volunteerHubOrganizationID>0</volunteerHubOrganizationID>'
+    s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>0</sponsoringOrganizationID></sponsoringOrganizationIDs>'
+    s += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>0</volunteerHubOrganizationID></volunteerHubOrganizationIDs>'
     s += '<title>%s</title>' % (title)
     s += '<detailURL>%s</detailURL>' % (url)
     # avoid CDATA in body...
@@ -94,10 +100,10 @@ def Parse(instr, maxrecs, progress):
     esc_body100 = xml.sax.saxutils.escape(body[0:100])
     s += '<description>%s</description>' % (esc_body)
     s += '<abstract>%s</abstract>' % (esc_body100 + "...")
-    s += '<lastUpdated>%s</lastUpdated>' % (datestr)
+    s += '<lastUpdated>%s</lastUpdated>' % (datetimestr)
     # TODO: expires
     # TODO: synthesize location from metro...
-    s += '<locations/>'
+    s += '<locations><location><city>metro</city></location></locations>'
     #s += '<locations><location>'
     #s += '<city>%s</city>' % (
     #s += '<region>%s</region>' % (
