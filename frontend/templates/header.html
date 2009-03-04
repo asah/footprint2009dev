@@ -8,10 +8,31 @@
   <div class='noselect pointer {% ifequal current_page "POST" %} tab_active {% else %} tab_inactive {% endifequal %}'
        onclick="location.href = '/post'">Add an event</div>
 
-  {% if user_display_name %}
+  <script type="text/javascript">
+    document.userId = "{{user_id}}";
+    document.userType = "{{user_type}}";
+    document.userDisplayName = "{{user_display_name}}";
+  </script>
+
+  {% if user_id %}
   <div class='hello_name'>
-  Hello, {{ user_display_name }}
+    Hello, {{ user_display_name }} |
+
+    {% ifequal user_type "friendconnect"%}
+      <a href="#" onclick="google.friendconnect.requestSettings()">Settings</a> |
+      <a href="#" onclick="google.friendconnect.requestInvite()">Invite</a> |
+      <a href="#" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
+    {% else %} {% ifequal user_type "facebook" %}
+      <a href="#" onclick="FB.Connect.logout(function() {window.location.reload();});">Sign Out</a>
+    {% endifequal %}{% endifequal %}
   </div>
+
+  {% else %}
+  <div class='hello_name'>
+    <button onclick="google.friendconnect.requestSignIn()">Sign in</button> with FriendConnect or
+    <fb:login-button onlogin="window.location.reload()"></fb:login-button> with Facebook
+  </div>
+
   {% endif %}
 
   <div style='clear: both; float: none'></div>

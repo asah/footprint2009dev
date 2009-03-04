@@ -77,9 +77,9 @@ class UserInfo(db.Model):
 
   # Known types of accounts. Type must not start with a number.
   FRIENDCONNECT = 'friendconnect'
-  GOOGLE = 'google'  # Google Account; not Google Apps account.
+  FACEBOOK = 'facebook'
   TEST = 'test'
-  KNOWN_TYPES = (FRIENDCONNECT, GOOGLE, TEST)
+  KNOWN_TYPES = (FRIENDCONNECT, FACEBOOK, TEST)
 
   @classmethod
   def get_or_insert_user(cls, account_type, user_id):
@@ -205,4 +205,3 @@ class VolunteerOpportunity(db.Model):
   # to load the data from base but fail. Also the last date/time seen.
   base_url_failure_count = db.IntegerProperty(default=0)
   last_base_url_update_failure = db.DateTimeProperty()
-
