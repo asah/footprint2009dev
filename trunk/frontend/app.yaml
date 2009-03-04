@@ -22,6 +22,11 @@ handlers:
   static_files: templates/canvas.html
   upload: templates/canvas.html
 
+# For FacebookConnect
+- url: /xd_receiver.htm
+  static_files: templates/xd_receiver.htm
+  upload: templates/xd_receiver.htm
+
 - url: /test/.*
   script: testpages.py
 
