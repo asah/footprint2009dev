@@ -28,7 +28,6 @@ SEARCH_RESULTS_DEBUG_TEMPLATE = 'search_results_debug.html'
 SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
-MEMBER_ACTIVITY_TEMPLATE = 'member_activity.html'
 MY_EVENTS_TEMPLATE = 'my_events.html'
 POST_TEMPLATE = 'post.html'
 
@@ -182,6 +181,7 @@ class search_view(webapp.RequestHandler):
 
     user_id = None
     user_display_name = None
+    user_type = None
 
     output = None
     if "output" in unique_args:
@@ -220,10 +220,11 @@ class search_view(webapp.RequestHandler):
         template = SEARCH_RESULTS_TEMPLATE
 
       # Retrieve the user-specific information for the search result set.
-      user = userinfo.get_user()
+      user = userinfo.get_user(self.request)
       if user:
         user_id = user.user_id
         user_display_name = user.get_display_name()
+        user_type = user.account_type
         result_set = get_annotated_results(user, result_set)
 
     #logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
@@ -233,6 +234,7 @@ class search_view(webapp.RequestHandler):
         'current_page' : 'SEARCH',
         'user_id' : user_id,
         'user_display_name' : user_display_name,
+        'user_type' : user_type,
 
         'query_url_encoded': result_set.query_url_encoded,
         'query_url_unencoded': result_set.query_url_unencoded,
@@ -249,33 +251,9 @@ class search_view(webapp.RequestHandler):
     self.response.out.write(render_template(template, template_values))
 
 
-class member_activity_view(webapp.RequestHandler):
-  def get(self):
-    user_info = userinfo.get_user()
-    user_id = ""
-    days_since_joined = None
-    if user_info:
-      #we are logged in
-      user_id = user_info.user_id
-      display_name = user_info.get_display_name()
-      thumbnail_url = user_info.get_thumbnail_url()
-
-      days_since_joined = (datetime.datetime.now() -
-                           user_info.get_user_info().first_visit).days
-
-    template_values = {
-        'current_page' : 'MY_EVENTS',
-        'user_id': user_id,
-        'days_since_joined': days_since_joined
-      }
-
-    self.response.out.write(render_template(MEMBER_ACTIVITY_TEMPLATE,
-                                           template_values))
-
-
 class my_events_view(webapp.RequestHandler):
   def get(self):
-    user_info = userinfo.get_user()
+    user_info = userinfo.get_user(self.request)
     user_id = ''
     user_display_name = ''
     if not user_info:
@@ -285,6 +263,7 @@ class my_events_view(webapp.RequestHandler):
 
     user_id = user_info.user_id
     user_display_name = user_info.get_display_name()
+    user_type = user_info.account_type
     thumbnail_url = user_info.get_thumbnail_url()
 
     days_since_joined = (datetime.datetime.now() -
@@ -301,9 +280,9 @@ class my_events_view(webapp.RequestHandler):
     template_values = {
         'current_page' : 'MY_EVENTS',
         'result_set': result_set,
-        'current_page' : 'MY_EVENTS',
         'user_id' : user_id,
         'user_display_name' : user_display_name,
+        'user_type' : user_type,
 
         'query_url_encoded': "MyEvents",
         'query_url_unencoded': "MyEvents",
@@ -324,8 +303,22 @@ class my_events_view(webapp.RequestHandler):
 
 class post_view(webapp.RequestHandler):
   def get(self):
+    user_info = userinfo.get_user(self.request)
+    user_id = ''
+    user_display_name = ''
+    user_type = None
+
+    if user_info:
+      #we are logged in
+      user_id = user_info.user_id
+      user_type = user_info.account_type
+      user_display_name = user_info.get_display_name()
+
     template_values = {
-      'current_page' : 'POST'
+      'current_page' : 'POST',
+      'user_id' : user_id,
+      'user_display_name' : user_display_name,
+      'user_type' : user_type,
     }
 
     self.response.out.write(render_template(POST_TEMPLATE, template_values))

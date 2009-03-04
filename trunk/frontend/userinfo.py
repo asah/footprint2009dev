@@ -16,7 +16,7 @@ from django.utils import simplejson
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from StringIO import StringIO
-
+from facebook import Facebook
 
 import models
 
@@ -34,10 +34,10 @@ def get_cookie(cookie_name):
       if cookie[0] == cookie_name:
         return cookie[1]
 
-def get_user():
-  for cls in (TestUser, FriendConnectUser):
+def get_user(request):
+  for cls in (TestUser, FriendConnectUser, FacebookUser):
     if cls.get_cookie():
-      return cls()
+      return cls(request)
 
 class User(object):
   """The User info for a user related to a currently logged in session.."""
@@ -75,7 +75,7 @@ class FriendConnectUser(User):
   USER_INFO_URL = \
       'http://www.google.com/friendconnect/api/people/@viewer/@self?fcauth=%s'
 
-  def __init__(self):
+  def __init__(self, request):
     """Creates a friendconnect user from the current env, or raises error."""
     self.fc_user_info = self.get_fc_user_info()
     if not (self.fc_user_info):
@@ -114,10 +114,41 @@ class FriendConnectUser(User):
         memcache.set(key, user_info, time = USERINFO_CACHE_TIME)
     return user_info
 
+class FacebookUser(User):
+  def __init__(self, request):
+    self.get_fb_session(request)
+    if not (self.user_id):
+      raise NotLoggedInError()
+    super(FacebookUser, self).__init__(models.UserInfo.FACEBOOK, self.user_id)
+
+  def get_user_id(self):
+    return self.user_id
+
+  def get_display_name(self):
+    return self.display_name
+
+  def get_thumbnail_url(self):
+    return self.thumbnail_url
+
+  def get_fb_session(self, request):
+    facebook = Facebook('df68a40a4a90d4495ed03f920f16c333', 'b063a345dd9f0f9c6d3baad86dd5ae8a')
+    if not facebook.check_connect_session(request):
+      raise NotLoggedInError()
+
+    info = facebook.users.getInfo([facebook.uid], ['name'])[0]
+
+    self.user_id = facebook.uid
+    self.display_name = info['name']
+    self.thumbnail_url = 'TODO'
+
+  @classmethod
+  def get_cookie(cls):
+    return get_cookie('df68a40a4a90d4495ed03f920f16c333')
+
 class TestUser(User):
   """A really simple user example."""
 
-  def __init__(self):
+  def __init__(self, request):
     """Creates a , or raises error."""
     user_id = self.get_cookie()
     if not (user_id):
@@ -137,4 +168,3 @@ class TestUser(User):
   @classmethod
   def get_cookie(cls):
     return get_cookie('footprinttest')
-
