@@ -1,0 +1,474 @@
+<html>
+<head>
+<LINK REL="StyleSheet" HREF="spec.css" TYPE="text/css"/>
+</head>
+<body>
+<h1>Footprint XML Specification Version 0.1 </h1>
+<br/>
+<i style="font-size:80%">The Footprint XML Specification is design for easy delivery of volunteer opportunities that are collected by aggregating organizations (e.g., VolunteerMatch, Idealist). These organizations are referred to as "providers" as they provide opportunity information to the Footprint project. Footprint's goal is to organize these opportunities in one place and direct web traffic back to the provider when a user locates a suitable opportunity.<p>        Overall, there are four main stand-alone objects: the <code>FeedInfo</code>, <code>Organization</code>, and <code>VolunteerOpportunity</code>. The provider is the source of information for the FeedInfo object; this object specifies the details of the feed being transmitted to Footprint. The Organization object specifies the details of a any group involved in the process, whether it be a sponsoring organization or (e.g., Habitat for Humanity) a local volunteer hub that coordinates local opportunities from various organization. The <code>VolunteerOpportunity</code> object specifies the details of a volunteer opportunity and usually links to either at least one Organization (e.g., a sponsoring organization and/or a volunteer hub).<p>        The spec is based on several existing xml specifications (specifically the specs developed by Network for Good, <a href="http://www.volunteermatch.org/schema/2007/2/listings.xsd">VolunteerMatch</a>, and 1-800-Volunteer). The major difference is that volunteer organizations and hubs are stand-along objects to which opportunities refer, thus saving space in the xml document. For instance, if Habitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habitat Organization object and 100 <code>VolunteerOpportunity</code> objects, rather than 100 of each. Another difference is the use of the iCal <a href="">Recurrence Rule</a> format so that repeating opportunities need use multiple <code>dateTimeRecurrance</code> sub-objects to represent one opportunity.<p>        Quick access to objects:<p>        <a href="#FeedInfo"> <code>FeedInfo</code> elements</a><br>        <a href="#Organization"><code>Organization</code>elements</a><br>        <a href="#VolunteerOpportunity"><code>VolunteerOpportunity</code> elements</a><br>        <a href="#locationType"><code>location</code> type elements</a><br>        <a href="#dateTimeDurationType"><code>dateTimeDuration</code> type elements</a><br><p>        Sample data (so you can see the format in action) is available <a href="http://code.google.com/p/footprint2009dev/downloads/list">here</a>.          </i><br/>
+  <a name="FootprintFeed"><h3>FootprintFeed (element)</h3></a><br/>
+<i style="font-size:80%">The top-level object is <code>FootprintFeed</code> and requires a schemaVersion attribute. Order of objects does not matter. Thus, a feed would be wrapped in the following XML:<p><code>&lt;?xml version="1.0" ?&gt;<br>&lt;FootprintFeed schemaVersion="0.1"&gt;<br>...<br>&lt;/FootprintFeed&gt;</code>                 </i><br/>
+                <blockquote><a name="FeedInfo"><h3>FeedInfo (element)</h3></a>
+ required: at least 1 times<br/>
+ maxOccurs="1"<br/>
+<i style="font-size:80%">The <code>FeedInfo</code> object contains the information about the feed being delivered from the provider.                             </i><br/>
+                                                  <blockquote><a name="providerID"><h3>providerID (element)</h3></a>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">A unique ID for the provider organization. Either a number assigned by Footprint or a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.                                          </i><br/>
+<br/>
+<a name="providerName"><h3>providerName (element)</h3></a>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Name of organization providing the feed. Required.                                          </i><br/>
+<br/>
+<a name="feedID"><h3>feedID (element)</h3></a>
+ required: optional.<br/>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Only needed if the provider delivers multiple, mutually exclusive feeds (can be <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>). Optional. Default: "0".                                          </i><br/>
+<br/>
+<a name="createdDateTime"><h3>createdDateTime (element)</h3></a>
+ datatype: dateTimeOlsonDefaultPacific<br/>
+<br/>
+<i style="font-size:80%">The date+time (Olson time zone attribute optional, defaults to U.S. Pacific time zone) that this specific iteration of the feed was created. Required.                                          </i><br/>
+<br/>
+<a name="providerURL"><h3>providerURL (element)</h3></a>
+ required: optional.<br/>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">URL to the provider organization's homepage. Optional.                                          </i><br/>
+<br/>
+<a name="termsOfUse"><h3>termsOfUse (element)</h3></a>
+ required: optional.<br/>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Terms of use. Optional. Recommended.                                          </i><br/>
+<br/>
+<a name="description"><h3>description (element)</h3></a>
+ required: optional.<br/>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Any notes about the feed. Optional. Not recommended.                                          </i><br/>
+<br/>
+                                              </blockquote><br/>
+<a name="Organizations"><h3>Organizations (element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The <code>Organizations</code> object wraps a set of <code>Organization</code> objects. Order of <code>Organization</code> objects has no semantic meaning.                             </i><br/>
+            <a name="Organization"><h3>Organization (repeated element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The <code>Organization</code> object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). <code>Organization</code> objects are wrapped in an <code>Organizations</code>. Order of fields does not matter.                                         </i><br/>
+                                                                    <blockquote><a name="organizationID"><h3>organizationID (element)</h3></a>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Unique ID within the feed. Most likely a number (from a database primary key) but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required. Would be helpful if it were constant across feeds from one provider.                                                      </i><br/>
+<br/>
+<a name="nationalEIN"><h3>nationalEIN (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">National Employer Identification Number. Optional.                                                      </i><br/>
+<br/>
+<a name="guidestarID"><h3>guidestarID (element)</h3></a>
+ datatype: integer<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">ID number from guidestar.org. Optional.                                                      </i><br/>
+<br/>
+<a name="name"><h3>name (element)</h3></a>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Name of the organization. Required.                                                      </i><br/>
+<br/>
+<a name="missionStatement"><h3>missionStatement (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Mission statement of organization. Optional.                                                      </i><br/>
+<br/>
+<a name="description"><h3>description (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Description of organization. Optional.                                                      </i><br/>
+<br/>
+<a name="location"><h3>location (element)</h3></a>
+ datatype: locationType<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Physical location of organization. See locationType for type definition. Optional, but recommended at the city/regional/postalCode level.                                                      </i><br/>
+<br/>
+<a name="phone"><h3>phone (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Phone number (and extension) of organization. Optional. Not expected from most providers.                                                      </i><br/>
+<br/>
+<a name="fax"><h3>fax (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Fax number of organization. Optional. Not expected from most providers.                                                      </i><br/>
+<br/>
+<a name="email"><h3>email (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Email of organization. Optional. Not expected from most providers.                                                      </i><br/>
+<br/>
+<a name="organizationURL"><h3>organizationURL (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">URL of the organization's homepage. Optional.                                                      </i><br/>
+<br/>
+<a name="donateURL"><h3>donateURL (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">URL of the organization's donation page. Optional.                                                      </i><br/>
+<br/>
+<a name="logoURL"><h3>logoURL (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">URL of the organization's logo. Optional. Dimensions are TBD.                                                      </i><br/>
+<br/>
+<a name="detailURL"><h3>detailURL (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">URL of the organization's page on the providers site. Optional. Highly recommended.                                                      </i><br/>
+<br/>
+                                          </blockquote><br/>
+<br/>
+<a name="VolunteerOpportunities"><h3>VolunteerOpportunities (element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The <code>VolunteerOpportunities</code> object wraps a set of <code>VolunteerOpportunity</code> objects. Order of <code>VolunteerOpportunity</code> objects has no semantic meaning.                              </i><br/>
+            <a name="VolunteerOpportunity"><h3>VolunteerOpportunity (repeated element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The <code>VolunteerOpportunity</code> object represents one volunteer opportunity listing. It is capable of representing a repeating or on-going event.                        Often an <code>Opportunity</code> object will link to an <code>Organization</code> object via the sponsoringOrganizationID or volunteerHubOrganizationID fields. Order of fields does not matter.                                          </i><br/>
+                                                        <blockquote><a name="volunteerOpportunityID"><h3>volunteerOpportunityID (element)</h3></a>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Unique ID within the feed. Often a primary key from a database, but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.                                                      </i><br/>
+<br/>
+<a name="sponsoringOrganizationIDs"><h3>sponsoringOrganizationIDs (element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Wrapper for <code>sponsoringOrganizationID</code> fields to allow multiple sponsoring organizations. Order bdoes/b matter semantically and indicates the order that the sponsors should be shown (i.e., first sponsor is lead sponsor). Optional. Recommended.                                                      </i><br/>
+                        <a name="sponsoringOrganizationID"><h3>sponsoringOrganizationID (repeated element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended.                                                                  </i><br/>
+<br/>
+<br/>
+<a name="volunteerHubOrganizationIDs"><h3>volunteerHubOrganizationIDs (element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Wrapper for <code>volunteerHubOrganizationID</code>. Semantic order of <code>volunteerHubOrganizationID</code> fields does not matter.                                                      </i><br/>
+                        <a name="volunteerHubOrganizationID"><h3>volunteerHubOrganizationID (repeated element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional.                                                                  </i><br/>
+<br/>
+<br/>
+<a name="title"><h3>title (element)</h3></a>
+ datatype: string<br/>
+<br/>
+<i style="font-size:80%">Short title of the opportunity. Required.                                                      </i><br/>
+<br/>
+<a name="abstract"><h3>abstract (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Abstract of the opportunity. Generally one paragraph. Optional.                                                      </i><br/>
+<br/>
+<a name="volunteersNeeded"><h3>volunteersNeeded (element)</h3></a>
+ datatype: integer<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">How many volunteers are needed for this opportunity. Special codes: -999 for unlimited. -8888 for unknown number of volunteers. Other than those exceptions, must be a non-negative integer. Optional. Cannot be blank.                              May not be up-to-date as volunteers sign up.                              Design decision: large negative numbers for special codes since overbooking might lead to accidental use of negative numbers.                                                      </i><br/>
+<br/>
+<a name="dateTimeDurations"><h3>dateTimeDurations (element)</h3></a><br/>
+<i style="font-size:80%">A wrapper around one or more <code>dateTimeDuration</code> sub-objects. See the sub-object documentation. Given the recurrence field in <code>dateTimeDuration</code> sub-object, the vast majority of cases should only need one <code>dateTimeDuration</code> sub-object.  Order of <code>dateTimeDuration</code> objects has no semantic meaning. Required.                                                      </i><br/>
+                        <a name="dateTimeDuration"><h3>dateTimeDuration (repeated element)</h3></a>
+ datatype: dateTimeDurationType<br/>
+ required: at least 1 times<br/>
+<br/>
+<i style="font-size:80%">Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. ReOrder of objects must follow order below. Required. Order of fields does not matter.                                                                  </i><br/>
+<br/>
+<br/>
+<a name="locations"><h3>locations (element)</h3></a><br/>
+<i style="font-size:80%">A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order of <code>location</code> objects matters only in that the first location is the default time zone if the time zone for the opportunity start or end time is unspecified. Required.                                                      </i><br/>
+                        <a name="location"><h3>location (repeated element)</h3></a>
+ datatype: locationType<br/>
+ required: at least 1 times<br/>
+<br/>
+<i style="font-size:80%">Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Required. Order of fields does not matter.                                                                  </i><br/>
+<br/>
+<br/>
+<a name="paid"><h3>paid (element)</h3></a>
+ datatype: yesNoEnum<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Does the opportunity pay volunteers. Domain is {"Yes" | "No"}. Optional. Defaults to "No".                                                      </i><br/>
+<br/>
+<a name="audienceTags"><h3>audienceTags (element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order of <code>audienceTag</code> entries has no semantic meaning. Example:<br><code>                              &lt;audienceTags&gt;<br>                              &nbsp;&nbsp; &lt;audienceTag&gt;Teens&lt;/audienceTag&gt;<br>                              &nbsp;&nbsp; &lt;audienceTag&gt;College-aged&lt;/audienceTag&gt;<br>                              &lt;/audienceTags&gt;</code>                                                      </i><br/>
+                        <a name="audienceTag"><h3>audienceTag (repeated element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">String that represents a target audience. No domain. Optional.                                                                  </i><br/>
+<br/>
+<br/>
+<a name="categoryTags"><h3>categoryTags (element)</h3></a>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning. Example:<br><code>                             &lt;categoryTags&gt;<br>                             &nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>                             &nbsp;&nbsp; &lt;categoryTag&gt;Hunger&lt;/categoryTag&gt;<br>                             &nbsp;&nbsp; &lt;categoryTag&gt;Weekend opportunity&lt;/categoryTag&gt;<br>                             &lt;/categoryTags&gt;</code>                                                      </i><br/>
+                        <a name="categoryTag"><h3>categoryTag (repeated element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">String that represents a category of the opportunity or a key word/phrase of the opportunity. No domain. Optional. Recommended.                                                                  </i><br/>
+<br/>
+<br/>
+<a name="minimumAge"><h3>minimumAge (element)</h3></a>
+ datatype: integer<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The minimum age of volunteers. Optional. Recommended.                                                      </i><br/>
+<br/>
+<a name="sexRestrictedTo"><h3>sexRestrictedTo (element)</h3></a>
+ datatype: sexRestrictedEnum<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Is the opportunity restricted to one sex/gender. Domain: {"Female" | "Male" | "Neither"}. Default is "Neither". Optional.                                                      </i><br/>
+<br/>
+<a name="skills"><h3>skills (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">String of all the skills a volunteer needs. One (potentially long) string. Optional. Recommended.                                                      </i><br/>
+<br/>
+<a name="contactName"><h3>contactName (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Name of contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.                                                      </i><br/>
+<br/>
+<a name="contactPhone"><h3>contactPhone (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Phone number (and extension) for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.                                                      </i><br/>
+<br/>
+<a name="contactEmail"><h3>contactEmail (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Email for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.                                                      </i><br/>
+<br/>
+<a name="detailURL"><h3>detailURL (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Links to the page on the provider's website that displays detailed info about the opportunity. Optional. Highly recommended for feeds that do not transmit contact info.                                                      </i><br/>
+<br/>
+<a name="language"><h3>language (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Language of the opportunity. Default: English. Optional.                                                      </i><br/>
+<br/>
+<a name="description"><h3>description (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Full description of the opportunity. Optional.                                                      </i><br/>
+<br/>
+<a name="lastUpdated"><h3>lastUpdated (element)</h3></a>
+ datatype: dateTimeOlsonDefaultPacific<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone) of last update to the opportunity on the provider's site. Optional.                                                      </i><br/>
+<br/>
+<a name="expires"><h3>expires (element)</h3></a>
+ datatype: dateTimeOlsonDefaultPacific<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone) of when the ulisting/u of the opportunity (not the opportunity itself) expires on the provider's site. Optional.                                                      </i><br/>
+<br/>
+                    </blockquote><br/>
+<br/>
+                                         </blockquote><a name="schemaVersion"><h3>schemaVersion (attribute)</h3></a>
+ datatype: decimal<br/>
+ use is required<br/>
+ fixed="0.1"<br/>
+  <a name="locationType"><h3>locationType (complexType)</h3></a>
+    <blockquote><a name="virtual"><h3>virtual (element)</h3></a>
+ datatype: yesNoEnum<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Is the opportunity virtual (i.e., not physically located anywhere)? Domain: Yes, No (default). Optional.                     </i><br/>
+<br/>
+<a name="name"><h3>name (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Name of physical location. Example: Camelot Elementary School. Optional.                     </i><br/>
+<br/>
+<a name="streetAddress1"><h3>streetAddress1 (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">First line of street address. Optional. Not expected from most providers.                     </i><br/>
+<br/>
+<a name="streetAddress2"><h3>streetAddress2 (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Second line of street address. Optional. Not expected from most providers.             Only provide if streetAddress1 is provided.                     </i><br/>
+<br/>
+<a name="streetAddress3"><h3>streetAddress3 (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Third line of street address. Optional. Not expected from most providers.             Only provide if streetAddress1 and streetAddress2 are provided.                     </i><br/>
+<br/>
+<a name="city"><h3>city (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">City of physical location. Optional. Expected from most providers.                     </i><br/>
+<br/>
+<a name="region"><h3>region (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Region (e.g., State or Province) of physical location. Optional. Expected from most providers.                     </i><br/>
+<br/>
+<a name="postalCode"><h3>postalCode (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Postal Code (e.g., zip code) of physical location. Optional. Expected from most providers.                     </i><br/>
+<br/>
+<a name="country"><h3>country (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Country. Optional. Defaults to "US".                     </i><br/>
+<br/>
+<a name="latitude"><h3>latitude (element)</h3></a>
+ datatype: decimal<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Latitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.                     </i><br/>
+<br/>
+<a name="longitude"><h3>longitude (element)</h3></a>
+ datatype: decimal<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Longitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.                     </i><br/>
+<br/>
+<a name="directions"><h3>directions (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Directions to or special instructions for the location. Optional.                     </i><br/>
+<br/>
+          </blockquote>
+    <a name="dateTimeDurationType"><h3>dateTimeDurationType (complexType)</h3></a>
+    <blockquote><a name="openEnded"><h3>openEnded (element)</h3></a>
+ datatype: yesNoEnum<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Whether the opportunity is not limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ignores startDate and endDate fields.                     </i><br/>
+<br/>
+<a name="startDate"><h3>startDate (element)</h3></a>
+ datatype: date<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The start date of the opportunity. Optional; highly recommended if openEnded is No.                     </i><br/>
+<br/>
+<a name="endDate"><h3>endDate (element)</h3></a>
+ datatype: date<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The end date of the opportunity. Optional; highly recommended if openEnded is No.                     </i><br/>
+<br/>
+<a name="iCalRecurrence"><h3>iCalRecurrence (element)</h3></a>
+ datatype: string<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>FREQ=W>KLY;INTERVAL=2                     </i><br/>
+<br/>
+<a name="duration"><h3>duration (element)</h3></a>
+ datatype: duration<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.                     </i><br/>
+<br/>
+<a name="startTime"><h3>startTime (element)</h3></a>
+ datatype: timeOlson<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional.                     </i><br/>
+<br/>
+<a name="endTime"><h3>endTime (element)</h3></a>
+ datatype: timeOlson<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.                     </i><br/>
+<br/>
+<a name="timeFlexible"><h3>timeFlexible (element)</h3></a>
+ datatype: yesNoEnum<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is Yes if both startTime and endTime are missing; default is No otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.                     </i><br/>
+<br/>
+<a name="commitmentHoursPerWeek"><h3>commitmentHoursPerWeek (element)</h3></a>
+ datatype: decimal<br/>
+ required: optional.<br/>
+<br/>
+<i style="font-size:80%">For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. Recommended if either openEnded or timeFlexible is Yes.                     </i><br/>
+<br/>
+          </blockquote>
+    <a name="yesNoEnum"><h3>yesNoEnum (simpleType)</h3></a><br/>
+<i style="font-size:80%">Specific type of string with the restricted domain of "Yes" or "No" (without quotes).             </i><br/>
+              xs:enumeration value="Yes"      xs:enumeration value="No"<br/>
+  <a name="sexRestrictedEnum"><h3>sexRestrictedEnum (simpleType)</h3></a><br/>
+<i style="font-size:80%">Specific type of string with the restricted domain of "Female", "Male", or "Neither" (without quotes). For sex restriction.             </i><br/>
+              xs:enumeration value="Female"      xs:enumeration value="Male"      xs:enumeration value="Neither"<br/>
+  <a name="dateTimeOlsonDefaultPacific"><h3>dateTimeOlsonDefaultPacific (complexType)</h3></a><br/>
+<i style="font-size:80%">Date/time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<p>         The content is of the base type <code>xs:datetime</code>, except any additional timezone data is disallowed.             </i><br/>
+               derived from: <code>dateTimeNoTZ</code><br/>
+<a name="olsonTZ"><h3>olsonTZ (attribute)</h3></a>
+ datatype: string<br/>
+ use is optional<br/>
+ default value: <code>America/Los_Angeles</code><br/>
+              <a name="timeOlson"><h3>timeOlson (complexType)</h3></a><br/>
+<i style="font-size:80%">Time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<p>         The content is of the base type <code>xs:time</code>, except any additional timezone data is disallowed.             </i><br/>
+               derived from: <code>timeNoTZ</code><br/>
+<a name="olsonTZ"><h3>olsonTZ (attribute)</h3></a>
+ datatype: string<br/>
+ use is optional<br/>
+ default value: <code>(empty string)</code><br/>
+               <a name="dateTimeNoTZ"><h3>dateTimeNoTZ (simpleType)</h3></a><br/>
+<i style="font-size:80%">Date/time without time zone.             </i><br/>
+              xs:pattern value=".+[0-9]"<br/>
+  <a name="timeNoTZ"><h3>timeNoTZ (simpleType)</h3></a><br/>
+<i style="font-size:80%">Time without time zone.             </i><br/>
+              xs:pattern value=".+[0-9]"<br/>
+
+</body></html>
