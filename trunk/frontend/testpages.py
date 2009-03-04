@@ -1,6 +1,7 @@
 # Various test pages.
 
 import cgi
+import datetime
 import logging
 import os
 
@@ -54,7 +55,8 @@ class ExpressInterest(webapp.RequestHandler):
   def get(self):
     user = userinfo.get_user()
     opp_id = self.request.get('oid')
-    if (self.request.get('i')):
+    base_url = self.request.get('base_url')
+    if self.request.get('i') and self.request.get('i') != '0':
       expressed_interest = models.InterestTypeProperty.INTERESTED
       delta = 1
     else:
@@ -76,13 +78,20 @@ class ExpressInterest(webapp.RequestHandler):
     if opportunity.expressed_interest != expressed_interest:
       opportunity.expressed_interest = expressed_interest
       opportunity.put()
-      models.VolunteerOpportunityStats.increment(opp_id, interested_count=delta)
+      models.VolunteerOpportunityStats.increment(opp_id,
+                                                 interested_count=delta)
+      key = 'id:' + opp_id
+      info = models.VolunteerOpportunity.get_or_insert(key)
+      if info.base_url != base_url:
+        info.base_url = base_url
+        info.last_base_url_update = datetime.datetime.now()
+        info.base_url_failure_count = 0
+        info.put()
       logging.info('User %s has changed interest (%s) in %s' %
                  (user_entity.key().name(), expressed_interest, opp_id))
     else:
       logging.info('User %s has not changed interest (%s) in %s' %
                  (user_entity.key().name(), expressed_interest, opp_id))
-
 
     # TODO: Write something useful to the http output
 

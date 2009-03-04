@@ -28,6 +28,7 @@
       </div>
       <div class='snippet_button'
            onclick='expressInterest(this, "{{result.id|escape}}",
+                                          "{{result.base_url|escape}}",
                                           "{{result.interest|escape}}")'>
         {% if result.interest %}
           <img src='images/star-on.png' alt=''/>

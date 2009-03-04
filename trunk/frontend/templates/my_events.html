@@ -1,39 +1,37 @@
-{% extends "layout_full.html" %}
+{% extends "layout_two_column.html" %}
+
+
 {% block title %}
 My Events
-{% endblock %}
+{% endblock %}}
 
-{% block content %}
-  <div id="signInGadget"/>
+{% block subheader %}
+{% endblock subheader %}
 
-  <div id="signInPane" class="right_pane"></div>
-    {% if user_id %}
-    Loading...
-    {% else %}
-    <input type="button" value="Sign in" onclick="google.friendconnect.requestSignIn()"/>
-    <br/><br/>
+{% block content_left %}
+Your events.
+<br />
+<a href="/memberactivity">Activity stream of all members.</a>
+{% endblock content_left %}
 
-    <div class="pane_title"> Reasons to join: </div>
-    <ul>
-      <li>You can star events
-      <li>save your location data
-      <li>and more!
-    </ul>
-    {% endif %}
-  </div>
+{% block width_left %}320{% endblock %}
 
-  <div id="activeMemberPane" class="left_pane">
-    <div class="pane_title">Active members:</div>
-  </div>
+{% block content_right %}
+<div id='snippets_pane'>
+{% include 'snippets_list.html' %}
+</div>
+{% endblock content_right %}
 
-  <div id="activitiesPane" class="left_pane">
-    <div class="pane_title">All Activity:</div>
-  </div>
 
-  <script>
-    document.fcUserId = "{{user_id}}";
-    document.days_since_joined = "{{days_since_joined}}";
-  </script>
-  <script type="text/javascript" src="/js/my_events.js"></script>
+{% block width_right %}{% endblock %}
 
-{% endblock %}
+{% block prefooter %}
+<center>
+  {%include 'paginator.html' %}
+</center>
+
+<script>
+document.userDisplayName = "{{user_display_name}}";
+</script>
+
+{% endblock prefooter %}

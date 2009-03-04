@@ -41,7 +41,7 @@ function addToCalendar(div, type, eventUrl, eventTitle, eventSnippet,
   window.open(url, 'calendar');
 }
 
-function expressInterest(div, eventUrl, interest) {
+function expressInterest(div, eventUrl, baseUrl, interest) {
   // TODO: cycle star back to 'off' state
   if (div.interest != undefined) {
     interest = div.interest;
@@ -57,6 +57,7 @@ function expressInterest(div, eventUrl, interest) {
   // This escaping code is unsafe!
   div.childNodes[1].src='/test/interest?i=' + newinterest
                         + '&oid=' + escape(eventUrl)
+                        + '&base_url=' + escape(baseUrl)
                         + '&zx=' + Math.random();
   function fixit() {
     if (newinterest) {
