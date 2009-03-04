@@ -1,0 +1,39 @@
+{% extends "layout_full.html" %}
+{% block title %}
+My Events
+{% endblock %}
+
+{% block content %}
+  <div id="signInGadget"/>
+
+  <div id="signInPane" class="right_pane"></div>
+    {% if user_id %}
+    Loading...
+    {% else %}
+    <input type="button" value="Sign in" onclick="google.friendconnect.requestSignIn()"/>
+    <br/><br/>
+
+    <div class="pane_title"> Reasons to join: </div>
+    <ul>
+      <li>You can star events
+      <li>save your location data
+      <li>and more!
+    </ul>
+    {% endif %}
+  </div>
+
+  <div id="activeMemberPane" class="left_pane">
+    <div class="pane_title">Active members:</div>
+  </div>
+
+  <div id="activitiesPane" class="left_pane">
+    <div class="pane_title">All Activity:</div>
+  </div>
+
+  <script>
+    document.fcUserId = "{{user_id}}";
+    document.days_since_joined = "{{days_since_joined}}";
+  </script>
+  <script type="text/javascript" src="/js/my_events.js"></script>
+
+{% endblock %}

@@ -13,6 +13,7 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
+import base_search
 import geocode
 import models
 import search
@@ -27,6 +28,7 @@ SEARCH_RESULTS_DEBUG_TEMPLATE = 'search_results_debug.html'
 SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
+MEMBER_ACTIVITY_TEMPLATE = 'member_activity.html'
 MY_EVENTS_TEMPLATE = 'my_events.html'
 POST_TEMPLATE = 'post.html'
 
@@ -83,11 +85,12 @@ class main_page_view(webapp.RequestHandler):
                                            template_values))
 
 
-def get_user_interests(user):
+def get_user_interests(user, remove_no_interest):
   """Get the opportunities a user has expressed interest in.
 
   Args:
     user: userinfo.User of a user
+    remove_no_interest: Filter out items with expressed_interest = UNKNOWN.
   Returns:
     Dictionary of volunteer opportunity id: expressed_interest.
   """
@@ -97,7 +100,9 @@ def get_user_interests(user):
     # UserInterest entires, we'll have to do a more clever
     # query than the magic reverse reference query.
     for interest in user.get_user_info().interests:
-      user_interests[interest.key().name()[3:]] = interest.expressed_interest
+      if (not remove_no_interest or
+          interest.expressed_interest != models.InterestTypeProperty.UNKNOWN):
+        user_interests[interest.key().name()[3:]] = interest.expressed_interest
     #logging.info('Found interests: %s' % user_interests)
   return user_interests
 
@@ -136,17 +141,32 @@ def get_annotated_results(user, result_set):
   opp_ids = ['id:' + result.id for result in result_set.results];
 
   # mark the items the user is interested in
-  user_interests = get_user_interests(user)
+  user_interests = get_user_interests(user, True)
 
   # note the interest of others
   others_interests = get_interest_for_opportunities(opp_ids)
+  
+  return annotate_results(user_interests, others_interests, result_set)
+
+def annotate_results(user_interests, others_interests, result_set):
+  """Annotates results with the provided interests.
+
+  Args:
+    user_interests: User interests from get_user_interests. Can be None.
+    others_interests: Others interests from get_interest_for_opportunities.
+                      Can be None.
+    result_set: A search.SearchResultSet.
+  Returns:
+    The incoming result set, annotated with user-specific info.
+  """
 
   # Mark up the results
   for result in result_set.results:
-    if result.id in user_interests:
+    if user_interests and result.id in user_interests:
       result.interest = user_interests[result.id]
-    if result.id in others_interests:
+    if others_interests and result.id in others_interests:
       #logging.info("others interest in %s = %s " % (result.id, others_interests[result.id]))
+      # TODO: Consider updating the base url here if it's changed.
       result.interest_count = others_interests[result.id]
 
   return result_set
@@ -229,7 +249,7 @@ class search_view(webapp.RequestHandler):
     self.response.out.write(render_template(template, template_values))
 
 
-class my_events_view(webapp.RequestHandler):
+class member_activity_view(webapp.RequestHandler):
   def get(self):
     user_info = userinfo.get_user()
     user_id = ""
@@ -249,8 +269,57 @@ class my_events_view(webapp.RequestHandler):
         'days_since_joined': days_since_joined
       }
 
-    self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
+    self.response.out.write(render_template(MEMBER_ACTIVITY_TEMPLATE,
                                            template_values))
+
+
+class my_events_view(webapp.RequestHandler):
+  def get(self):
+    user_info = userinfo.get_user()
+    user_id = ''
+    user_display_name = ''
+    if not user_info:
+      # TODO: Nice page with login flow!
+      self.response.out.write('You are not logged in. Sorry.')
+      return
+
+    user_id = user_info.user_id
+    user_display_name = user_info.get_display_name()
+    thumbnail_url = user_info.get_thumbnail_url()
+
+    days_since_joined = (datetime.datetime.now() -
+                         user_info.get_user_info().first_visit).days
+
+    user_interests = get_user_interests(user_info, True)
+    result_set = base_search.get_from_ids(user_interests)
+
+    # This should be merged with the annotation code above.
+    annotate_results(user_interests, None, result_set)
+
+    # What to do about interests where we couldn't get the info from base?
+
+    template_values = {
+        'current_page' : 'MY_EVENTS',
+        'result_set': result_set,
+        'current_page' : 'MY_EVENTS',
+        'user_id' : user_id,
+        'user_display_name' : user_display_name,
+
+        'query_url_encoded': "MyEvents",
+        'query_url_unencoded': "MyEvents",
+
+        # TODO: remove this stuff...
+        'keywords': '',
+        'location': '',
+        'is_first_page': True,
+        'is_last_page': True,
+        'prev_page_url': '',
+        'next_page_url': '',
+        }
+
+    # Hack o rama: Use the search results page!
+    self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
+                                            template_values))
 
 
 class post_view(webapp.RequestHandler):

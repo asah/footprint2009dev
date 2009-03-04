@@ -2,6 +2,8 @@
 # Copyright 2009 Google Inc.  All Rights Reserved.
 #
 
+
+import datetime
 from google.appengine.ext import db
 
 
@@ -21,21 +23,22 @@ class InterestTypeProperty(db.IntegerProperty):
   HAVE_ATTENDED = 3
 
 
-def IncrementProperties(model_class, key, **kwargs):
-  """Generic method to increment statistics.
+def IncrementProperties(model_class, key, props_to_set, **kwargs):
+  """Generic method to increment statistics. Can also set properties.
 
   Example:
 
   Args:
     model_class: model class
     key: Entity key.
-    kwargs: Properties to increment.
+    props_to_set: Dictionary of properties to set to explicit values.
+    kwargs: Properties to increment by specified amount.
   """
 
   def txn():
     stats = model_class.get_by_key_name(key)
     if not stats:
-      stats = VolunteerOpportunityStats(key_name=key)
+      stats = model_class(key_name=key)
 
     def increment(prop):
       if getattr(stats, prop):
@@ -43,12 +46,19 @@ def IncrementProperties(model_class, key, **kwargs):
       else:
         setattr(stats, prop, kwargs[prop])
 
+    # Set explicit values first.
+    if props_to_set:
+      for prop in props_to_set.iterkeys():
+        setattr(stats, prop, props_to_set[prop])
+
+    # Increment properties by requested amount.
     for prop in kwargs.iterkeys():
       increment(prop)
 
     stats.put()
+    return stats
 
-  db.run_in_transaction(txn)
+  return db.run_in_transaction(txn)
 
 
 class UserInfo(db.Model):
@@ -151,21 +161,48 @@ class UserInterest(db.Model):
 
 
 class VolunteerOpportunityStats(db.Model):
-  """Basic statistics about opportunities. Probably calculated on the fly."""
-
+  """Basic statistics about opportunities."""
   # The __key__ is 'id:' + volunteer_opportunity_id
+  last_edit = db.DateTimeProperty(auto_now=True)
+  
+  # Statistics about expressed interest:
   broadcast_count = db.IntegerProperty(default=0)
-  # interestCount should probably be split into multiple properties for each
-  # possible interest type.
   interested_count = db.IntegerProperty(default=0)
   will_attend_count = db.IntegerProperty(default=0)
   have_attended_count = db.IntegerProperty(default=0)
 
   @classmethod
   def increment(cls, volunteer_opportunity_id, **kwargs):
-    # Example:
-    # models.VolunteerOpportunityStats.increment(opp_id, interested_count=1)
+    """Helper to increment volunteer opportunity stats.
+
+    Example:
+    models.VolunteerOpportunity.increment(opp_id, interested_count=1)
+    
+    Args:
+      volunteer_opportunity_id: ID of opportunity.
+      kwargs: Named properties to increment, and the delta to increment by.
+    """
+    props_to_set = {}
     return IncrementProperties(cls,
                                'id:' + volunteer_opportunity_id,
+                               None,
                                **kwargs)
+
+class VolunteerOpportunity(db.Model):
+  """Basic information about opportunities.
+  
+  Separate from VolunteerOpportunity because these entries need not be
+  operated on transactionally since there's no counts.
+  """
+  # The __key__ is 'id:' + volunteer_opportunity_id
+
+  # Information about the opportunity  
+  # URL to the Google Base entry
+  base_url = db.StringProperty()
+  # When we last update the Base URL.
+  last_base_url_update = db.DateTimeProperty()
+  # Incremented (possibly incorrectly to avoid transactions) when we try
+  # to load the data from base but fail. Also the last date/time seen.
+  base_url_failure_count = db.IntegerProperty(default=0)
+  last_base_url_update_failure = db.DateTimeProperty()
 
