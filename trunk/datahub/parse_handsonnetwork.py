@@ -133,66 +133,74 @@ def Parse(instr, maxrecs, progress):
     desc = xml_helpers.getTagValue(orgs[0], "Description")
     sponsor_id = sponsor_ids[name+desc]
     oppdates = opp.getElementsByTagName("OpportunityDate")
-    if (oppdates == None):
+    if (oppdates == None or oppdates.count == 0):
       oppdates = [ None ]
-    
-    # unmapped: LogoURL
-    # unmapped: OpportunityTypeID   (categoryTag?)
-    # unmapped: LocationClassificationID (flatten)
-    outstr_for_all_dates_pre = '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(opp, "LocalID"))
-    outstr_for_all_dates_pre += '<sponsoringOrganizationID>%s</sponsoringOrganizationID>' % (sponsor_id)
-      # unmapped: OrgLocalID
-    outstr_for_all_dates_pre += '<volunteerHubOrganizationID>%s</volunteerHubOrganizationID>' % (xml_helpers.getTagValue(opp, "AffiliateID"))
-    outstr_for_all_dates_pre += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "Title"))
-    outstr_for_all_dates_pre += '<abstract></abstract>'
-    outstr_for_all_dates_pre += '<volunteersNeeded>-8888</volunteersNeeded>'
-    
-
-    locations = opp.getElementsByTagName("Location")
-    if (locations.length != 1):
-      print datetime.now(),"parse_handsonnetwork: only 1 location supported."
-      return None
-    loc = locations[0]
-    outstr_for_all_dates_post = '<locations><location>'
-      # yuck, uses address1 for venue name... sometimes... no way to detect: presence of numbers?
-    outstr_for_all_dates_post += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(loc, "Address1"))
-    outstr_for_all_dates_post += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.getTagValue(loc, "Address2"))
-    outstr_for_all_dates_post += '<city>%s</city>' % (xml_helpers.getTagValue(loc, "City"))
-    outstr_for_all_dates_post += '<region>%s</region>' % (xml_helpers.getTagValue(loc, "State"))
-    outstr_for_all_dates_post += '<country>%s</country>' % (xml_helpers.getTagValue(loc, "Country"))
-    outstr_for_all_dates_post += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(loc, "ZipOrPostalCode"))
-      # no equivalent: latitude, longitude
-    outstr_for_all_dates_post += '</location></locations>'
-    
-    outstr_for_all_dates_post += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(opp, "DetailURL"))
-    outstr_for_all_dates_post += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "Description"))
-    outstr_for_all_dates_post += '<lastUpdated>%s</lastUpdated>' % (xml_helpers.getTagValue(opp, "DateListed"))
-
-    for oppdate in oppdates:
-      if progress:
-        totrecs = totrecs + 1
-        if totrecs%250==0:
-          print datetime.now(),": ",totrecs," records generated."
-
-      s += '<VolunteerOpportunity>'
-      s += outstr_for_all_dates_pre
+    else: 
+      # unmapped: LogoURL
+      # unmapped: OpportunityTypeID   (categoryTag?)
+      # unmapped: LocationClassificationID (flatten)
+      outstr_for_all_dates_pre = '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(opp, "LocalID"))
+      outstr_for_all_dates_pre += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (sponsor_id)
+        # unmapped: OrgLocalID
+      outstr_for_all_dates_pre += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>%s</volunteerHubOrganizationID></volunteerHubOrganizationIDs>' % (xml_helpers.getTagValue(opp, "AffiliateID"))
+      outstr_for_all_dates_pre += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "Title"))
+      outstr_for_all_dates_pre += '<abstract></abstract>'
+      outstr_for_all_dates_pre += '<volunteersNeeded>-8888</volunteersNeeded>'
       
-      s += '<dateTimeDurations><dateTimeDuration>'
-      if oppdate == None:
-        s += '<openEnded>Yes</openEnded>'
-      else:
-        s += '<openEnded>No</openEnded>'
-        # hardcoded: commitmentHoursPerWeek
-        s += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
-        # TODO: timezone
-        s += '<startDate>%s</startDate>' % (xml_helpers.getTagValue(oppdate, "StartDate"))
-        s += '<endDate>%s</endDate>' % (xml_helpers.getTagValue(oppdate, "EndDate"))
-        s += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(oppdate, "StartTime"))
-        s += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(oppdate, "EndTime"))
-      s += '</dateTimeDuration></dateTimeDurations>'
+  
+      locations = opp.getElementsByTagName("Location")
+      if (locations.length != 1):
+        print datetime.now(),"parse_handsonnetwork: only 1 location supported."
+        return None
+      loc = locations[0]
+      outstr_for_all_dates_post = '<locations><location>'
+        # yuck, uses address1 for venue name... sometimes... no way to detect: presence of numbers?
+      outstr_for_all_dates_post += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(loc, "Address1"))
+      outstr_for_all_dates_post += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.getTagValue(loc, "Address2"))
+      outstr_for_all_dates_post += '<city>%s</city>' % (xml_helpers.getTagValue(loc, "City"))
+      outstr_for_all_dates_post += '<region>%s</region>' % (xml_helpers.getTagValue(loc, "State"))
+      outstr_for_all_dates_post += '<country>%s</country>' % (xml_helpers.getTagValue(loc, "Country"))
+      outstr_for_all_dates_post += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(loc, "ZipOrPostalCode"))
+        # no equivalent: latitude, longitude
+      outstr_for_all_dates_post += '</location></locations>'
       
-      s += outstr_for_all_dates_post
-      s += '</VolunteerOpportunity>'
+      outstr_for_all_dates_post += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(opp, "DetailURL"))
+      outstr_for_all_dates_post += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "Description"))
+      outstr_for_all_dates_post += '<lastUpdated>%sT00:00:00</lastUpdated>' % (xml_helpers.getTagValue(opp, "DateListed"))
+  
+       
+      oppcount = 0
+      dtds = ''
+      for oppdate in oppdates:
+        oppcount = oppcount + 1
+        if progress:
+          totrecs = totrecs + 1
+          if totrecs%250==0:
+            print datetime.now(),": ",totrecs," records generated."
+  
+        dtds += '<dateTimeDuration>'
+        if oppdate == None:
+          dtds += '<openEnded>Yes</openEnded>'
+        else:
+          dtds += '<openEnded>No</openEnded>'
+          # hardcoded: commitmentHoursPerWeek
+          dtds += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
+          # TODO: timezone
+          dtds += '<startDate>%s</startDate>' % (xml_helpers.getTagValue(oppdate, "StartDate"))
+          dtds += '<endDate>%s</endDate>' % (xml_helpers.getTagValue(oppdate, "EndDate"))
+          dtds += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(oppdate, "StartTime"))
+          dtds += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(oppdate, "EndTime"))
+        dtds += '</dateTimeDuration>'
+        
+      if oppcount > 0: # if there are no oppdates (OpportunityDates), it's not going to show up at all
+        s += '<VolunteerOpportunity>'
+        s += outstr_for_all_dates_pre
+        s += '<dateTimeDurations>';
+        s += dtds
+        s += '</dateTimeDurations>';
+        s += outstr_for_all_dates_post
+        s += '</VolunteerOpportunity>'
+    
   if progress:
     print datetime.now(),"done with VolunteerOpportunities..."
   s += '</VolunteerOpportunities>'
