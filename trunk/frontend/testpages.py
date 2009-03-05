@@ -13,7 +13,7 @@ import userinfo
 
 class TestLogin(webapp.RequestHandler):
   def get(self):
-    user = userinfo.get_user()
+    user = userinfo.get_user(self.request)
     self.response.out.write('Login info<ul>')
     if user:
       self.response.out.write('<li>Account type: %s'
@@ -53,7 +53,7 @@ class TestLogin(webapp.RequestHandler):
 
 class ExpressInterest(webapp.RequestHandler):
   def get(self):
-    user = userinfo.get_user()
+    user = userinfo.get_user(self.request)
     opp_id = self.request.get('oid')
     base_url = self.request.get('base_url')
     if self.request.get('i') and self.request.get('i') != '0':
