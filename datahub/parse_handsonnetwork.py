@@ -192,14 +192,16 @@ def Parse(instr, maxrecs, progress):
           dtds += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(oppdate, "EndTime"))
         dtds += '</dateTimeDuration>'
         
-      if oppcount > 0: # if there are no oppdates (OpportunityDates), it's not going to show up at all
-        s += '<VolunteerOpportunity>'
-        s += outstr_for_all_dates_pre
-        s += '<dateTimeDurations>';
-        s += dtds
-        s += '</dateTimeDurations>';
-        s += outstr_for_all_dates_post
-        s += '</VolunteerOpportunity>'
+      if oppcount == 0: # insert an open ended datetimeduration
+        dtds = '<dateTimeDuration><openEnded>Yes</openEnded></dateTimeDuration>'
+        
+      s += '<VolunteerOpportunity>'
+      s += outstr_for_all_dates_pre
+      s += '<dateTimeDurations>';
+      s += dtds
+      s += '</dateTimeDurations>';
+      s += outstr_for_all_dates_post
+      s += '</VolunteerOpportunity>'
     
   if progress:
     print datetime.now(),"done with VolunteerOpportunities..."
