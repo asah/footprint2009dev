@@ -32,15 +32,16 @@ s = re.sub(r'/xs:all', r'</blockquote>\n', s)
 s = re.sub(r'xs:all', r'<blockquote>', s)
 s = re.sub(r'/xs:attribute', r'', s)
 s = re.sub(r'\s*xs:attribute name="(.+?)"', r'<a name="\1"><h3>\1 (attribute)</h3></a>\n', s)
-s = re.sub(r'/xs:sequence', r'', s)
+s = re.sub(r'/xs:sequence', r'</blockquote>', s)
 s = re.sub(r'xs:sequence.+?xs:element', r'xs:selement', s)
 s = re.sub(r'xs:pattern value="(.+?)"/', r'must match (regular expression): <code>\1</code><br/>', s)
 s = re.sub(r'/xs:element', r'<br/>', s)
-s = re.sub(r'\s*xs:selement name="(.+?)"', r'<a name="\1"><h3>\1 (repeated element)</h3></a>\n', s)
+s = re.sub(r'\s*xs:selement name="(.+?)"', r'<blockquote><a name="\1"><h3>\1 (repeated element)</h3></a>\n', s)
 s = re.sub(r'\s*xs:element name="(.+?)"', r'<a name="\1"><h3>\1 (element)</h3></a>\n', s)
 s = re.sub(r'type="(xs:)?(.+?)"', r'datatype: \2<br/>', s)
 s = re.sub(r'minOccurs="0"', r'required: optional.<br/>', s)
 s = re.sub(r'minOccurs="([0-9]+)"', r'required: at least \1 times<br/>', s)
+s = re.sub(r'minOccurs="1"', r'Multiple not allow<br/>', s)
 s = re.sub(r'maxOccurs="unbounded"', r'\n', s)
 s = re.sub(r'/xs:documentation', r'</i><br/>', s)
 s = re.sub(r'xs:documentation\s*', r'<br/><i style="font-size:80%">', s)
@@ -56,7 +57,12 @@ s = re.sub(r'\s*<br/>', r'<br/>\n', s)
 
 print "<html>"
 print "<head>"
-print '<LINK REL="StyleSheet" HREF="spec.css" TYPE="text/css"/>'
+print "<title>Footprint XML Specification Version",version,"</title>"
+#print '<LINK REL="StyleSheet" HREF="spec.css" TYPE="text/css"/>'
+print "<style>"
+f = open('spec.css')
+print f.read()
+print "</style>"
 print "</head>"
 print "<body>"
 print "<h1>Footprint XML Specification Version",version,"</h1>"
