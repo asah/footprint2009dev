@@ -1,10 +1,10 @@
 {% for result in result_set.results %}
 <item>
 <title><![CDATA[{{ result.title }}]]></title>  <!-- TODO: what about close-cdata-brackets in title? -->
-<link>{{ result.url }}</link>
+<link>{{ result.xml_url }}</link>
 <description><![CDATA[{{ result.snippet }}]]></description>
 <pubDate>Tue, 10 Feb 2009 17:04:28 PST</pubDate> <!-- TODO -->
-<guid isPermaLink="true">{{ result.url }}</guid>
+<guid isPermaLink="true">{{ result.xml_url }}</guid>
 <!-- category>category info goes here</category -->
 <!-- category>category info goes here</category -->
 </item>

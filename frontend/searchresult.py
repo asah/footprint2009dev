@@ -4,8 +4,9 @@
 import re
 import urlparse
 
-from google.appengine.api import memcache
 
+from google.appengine.api import memcache
+from xml.sax.saxutils import escape
 
 class SearchResult(object):
   def __init__(self, url, title, snippet, location, id, base_url):
@@ -20,6 +21,8 @@ class SearchResult(object):
     # so we have to do it our selves for now
     self.js_escaped_title = self.js_escape(title)
     self.js_escaped_snippet = self.js_escape(snippet)
+    
+    self.xml_url = escape(url)
 
     parsed_url = urlparse.urlparse(url)
     self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
@@ -39,5 +42,5 @@ class SearchResult(object):
 class SearchResultSet(object):
   def __init__(self, query_url_unencoded, query_url_encoded, results):
     self.query_url_unencoded = query_url_unencoded
-    self.query_url_encoded = query_url_encoded
+    self.query_url_encoded = escape(query_url_encoded)
     self.results = results
