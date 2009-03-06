@@ -171,10 +171,8 @@ body {
 
 /** Search results' calendar style **/
 #calendar {
-  border: 1px solid silver;
   margin-bottom: 15px;
   width: 300px;
-  height: 300px;
   float: left;
 }
 
@@ -208,6 +206,7 @@ body {
 #calendar th {
   padding: 3px;
   text-align: center;
+  font-size: small;
 }
 
 #calendar td {

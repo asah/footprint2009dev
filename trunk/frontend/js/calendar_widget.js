@@ -1,7 +1,6 @@
 vol.Calendar = function(element, events) {
   this.date_ = new Date();
   this.date_.setDate(1);
-  this.element_ = element;
   this.events_ = events;
   this.numRows_ = 0;
 
@@ -34,15 +33,13 @@ vol.Calendar.prototype.render = function() {
       + ' ' + this.date_.getFullYear();
   forEachElementOfClass('calendar_month', function(e) {
     e.innerHTML = month;
-  }, this.element_);
+  }, this.table_);
 
   // sets the days
 
   // warning: getDay() returns 0 for Sunday
   var day = vol.Calendar.copyDate(this.date_);
   day.setDate(day.getDate() - (day.getDay() + 6) % 7);
-
-  var content = [];
 
   var tbody = this.table_.getElementsByTagName('tbody')[0];
 
@@ -73,7 +70,6 @@ vol.Calendar.prototype.render = function() {
       var td = document.createElement('td');
       if (classes.length > 0) {
         td.className = classes.join(' ');
-      } else {
       }
       tr.appendChild(td);
       td.innerHTML = day.getDate();
