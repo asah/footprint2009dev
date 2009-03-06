@@ -21,6 +21,10 @@ handlers:
 - url: /canvas.html
   static_files: templates/canvas.html
   upload: templates/canvas.html
+  
+# Unit tests for API
+- url: /testapi/.*
+  script: testapi/main.py
 
 # For FacebookConnect
 - url: /xd_receiver.htm
