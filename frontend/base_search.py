@@ -3,9 +3,11 @@
 
 import cgi
 import datetime
+import time
 import os
 import urllib
 import logging
+import md5
 
 from google.appengine.api import users
 from google.appengine.api import urlfetch
@@ -26,7 +28,6 @@ import utils
 
 RESULT_CACHE_TIME = 900 # seconds
 
-
 # Google base namespace, typically xmlns:g='http://base.google.com/ns/1.0'
 XMLNS_BASE='http://base.google.com/ns/1.0'
 # Atom namespace, typically xmlns='http://www.w3.org/2005/Atom'
@@ -34,6 +35,16 @@ XMLNS_ATOM='http://www.w3.org/2005/Atom'
 
 def make_base_arg(x):
   return "base_" + x
+
+def make_base_orderby_arg(args):
+  # TODO: implement other scenarios for orderby
+  return "relevancy"
+  if args["sort"] == "r":
+    # newest
+    return "modification_time"
+  else:
+    # "relevancy" is the Base default 
+    return "relevancy"
 
 # note: many of the XSS and injection-attack defenses are unnecessary
 # given that the callers are also protecting us, but I figure better
@@ -43,14 +54,32 @@ def search(args):
 
   # TODO: injection attack on q
   if "q" in args:
-    base_query += ' '+args["q"]
+    base_query += ' ' + args["q"]
+
+  # TODO: injection attack on startDate
+  if "startDate" not in args:
+    # note: default startDate is "tomorrow"
+    # in base, event_date_range YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss
+    # appending "Z" to the datetime string would mean UTC
+    args["startDate"] = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+
+  if "stopDate" not in args:
+    tt = time.strptime(args["startDate"], "%Y-%m-%d")
+    args["stopDate"] = datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) + datetime.timedelta(days=60)
+ 
+  base_query += ' [event_date_range: %s..%s]' % (args["startDate"], args["stopDate"])
+
+  # TODO: injection attack on sort
+  if "sort" not in args:
+    args["sort"] = "r"
 
   # TODO: injection attacks in vol_loc
   if args["vol_loc"] != "":
     args["vol_dist"] = int(str(args["vol_dist"]))
-    base_query += ' [location: @"%s" + %dmi]' % (args["vol_loc"],args["vol_dist"])
+    # TODO: looks like the default is 25 mi, should we check for some value as a min here?
+    base_query += ' [location: @"%s" + %dmi]' % (args["vol_loc"], args["vol_dist"])
 
-  # Base URL for snipets search on Base.
+  # Base URL for snippets search on Base.
   #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
   # TODO: injection attack on backend
   if "backend" not in args:
@@ -60,22 +89,30 @@ def search(args):
     args[make_base_arg("customer")] = 5663714;
   base_query += ' [customer id: '+str(int(args[make_base_arg("customer")]))+']'
 
-  base_query += ' [detailurl]'
+  base_query += ' [detailurl][event_date_range]'
 
   if "num" not in args:
     args["num"] = 10
+
   if "start" not in args:
     args["start"] = 1
 
   #for k in args: logging.info("arg["+str(k)+"]="+str(args[k]))
-  url_params = urllib.urlencode({'max-results': args["num"],
+  #url_params = urllib.urlencode({'max-results': args["num"],
+  url_params = urllib.urlencode({'max-results': 200,
                                  'start-index': args["start"],
                                  'bq': base_query,
                                  'content': 'geocodes',
+                                 'orderby': make_base_orderby_arg(args),
                                  })
   query_url = '%s?%s' % (args["backends"], url_params)
 
-  return query(query_url, args, True)
+  return query(query_url, args, False)
+
+def hash_md5(s):
+  it = md5.new()
+  it.update(s)
+  return it.digest()
 
 def query(query_url, args, cache):
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
@@ -83,8 +120,9 @@ def query(query_url, args, cache):
                                             [])
   result_set.args = args
 
-  memcache_key = 'query:' + query_url
-  result_content = memcache.get('query:' + query_url)
+  # note: key cannot exceed 250 bytes
+  memcache_key = hash_md5('query:' + query_url)
+  result_content = memcache.get(memcache_key)
   if not result_content:
     fetch_result = urlfetch.fetch(query_url)
     if fetch_result.status_code != 200:
@@ -95,6 +133,8 @@ def query(query_url, args, cache):
 
   dom = minidom.parseString(result_content)
 
+  total_results = float(len(dom.getElementsByTagName('entry')))
+  t0 = time.mktime(time.strptime(args["startDate"], "%Y-%m-%d"))
   for i,entry in enumerate(dom.getElementsByTagName('entry')):
     # Note: using entry.getElementsByTagName('link')[0] isn't very stable;
     # consider iterating through them for the one where rel='alternate' or
@@ -121,6 +161,23 @@ def query(query_url, args, cache):
     if res.latlong == ",":
       res.latlong = ""
     res.startdate = utils.GetXmlElementText(entry, XMLNS_BASE, 'event_date_range')
+    # score results
+    res.score_by_base_rank = (total_results - i)/total_results 
+    res.score = res.score_by_base_rank
+    
+    t1 = time.mktime(time.strptime(res.startdate[:10], "%Y-%m-%d"))
+    if t1 == t0:
+      res.score_by_start_date = 1
+    elif t1 < t0:
+      res.score_by_start_date = .0001
+    else:
+      res.score_by_start_date = 1/((t1 - t0)/(24 * 3600))
+
+    res.score = res.score_by_base_rank * res.score_by_start_date
+    res.score_notes = str(res.score)
+    res.score_notes += "\nbase rank: " + str(res.score_by_base_rank)
+    res.score_notes += "\nstart date rank: " + str(res.score_by_start_date)
+
     result_set.results.append(res)
     if cache and res.id:
       key = "searchresult:" + res.id
@@ -129,7 +186,6 @@ def query(query_url, args, cache):
       # if a user expresses interest in an opportunity--e.g. elsewhere.
 
   return result_set
-
 
 def get_from_id(id):
   """Return a searchresult from the stable ID."""

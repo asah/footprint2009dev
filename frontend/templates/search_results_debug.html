@@ -14,7 +14,8 @@ l={{location}}
 {{result.idx}}. {{result.title}} @ {{result.location}} ({{result.latlong}})
 link: <a href="{{result.url|escape}}">{{result.url}}</a>
 desc: {{result.snippet}}
-id: {{result.id}}     date range: {{result.startdate}}
+id: {{result.id}}     date range: {{result.startdate}} 
+score: {{result.score_notes}}
 {% endfor %}
 
 {%include 'paginator.html' %}

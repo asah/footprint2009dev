@@ -1,4 +1,4 @@
-application: footprint2009dev
+application: echo3-test
 version: 1
 runtime: python
 api_version: 1
