@@ -9,6 +9,8 @@ import urllib
 import logging
 import md5
 
+# TODO: remove me
+
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 from google.appengine.api import memcache
@@ -120,6 +122,10 @@ def query(query_url, args, cache):
                                             [])
   result_set.args = args
 
+  # TODO: consider removing this-- urlfetch() already has a good cache.
+  # (avoids cache overflow).  If we still want it, then move to
+  # search.py, i.e. not Base specific.
+  # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
   # note: key cannot exceed 250 bytes
   memcache_key = hash_md5('query:' + query_url)
   result_content = memcache.get(memcache_key)
@@ -149,17 +155,21 @@ def query(query_url, args, cache):
     snippet = utils.GetXmlElementText(entry, XMLNS_ATOM, 'content')
     title = utils.GetXmlElementText(entry, XMLNS_ATOM, 'title')
     location = utils.GetXmlElementText(entry, XMLNS_BASE, 'location_string')
-    logging.info("title="+title+"  location="+str(location)+"  url="+url)
+    #logging.info("title="+title+"  location="+str(location)+"  url="+url)
+    logging.info("title="+title+"  location="+str(location))
     res = searchresult.SearchResult(url, title, snippet, location, id, base_url)
-    res.idx = i+1
-    lat_element = entry.getElementsByTagName('g:latitude')
-    long_element = entry.getElementsByTagName('g:longitude')
+    # TODO: escape?
+    res.provider = utils.GetXmlElementText(entry, XMLNS_BASE, 'feed_providername')
+    res.orig_idx = i+1
     res.latlong = ""
-    if lat_element and long_element:
-      res.latlong = utils.GetXmlDomText(lat_element[0]) + "," + \
-          utils.GetXmlDomText(long_element[0])
-    if res.latlong == ",":
-      res.latlong = ""
+    lat_element = utils.GetXmlElementText(entry, XMLNS_BASE, 'latitude')
+    long_element = utils.GetXmlElementText(entry, XMLNS_BASE, 'longitude')
+    if lat_element and lat_element != "" and long_element and long_element != "":
+      res.latlong = lat_element + "," + long_element
+
+    # TODO: remove-- this is working around a DB bug where all the latlongs are the same
+    res.latlong = geocode.geocode(location)
+
     res.startdate = utils.GetXmlElementText(entry, XMLNS_BASE, 'event_date_range')
     # score results
     res.score_by_base_rank = (total_results - i)/total_results 
@@ -167,23 +177,61 @@ def query(query_url, args, cache):
     
     t1 = time.mktime(time.strptime(res.startdate[:10], "%Y-%m-%d"))
     if t1 == t0:
-      res.score_by_start_date = 1
+      res.date_dist_multiplier = 1.0
     elif t1 < t0:
-      res.score_by_start_date = .0001
+      res.date_dist_multiplier = .0001
     else:
-      res.score_by_start_date = 1/((t1 - t0)/(24 * 3600))
+      res.date_dist_multiplier = 1/((t1 - t0)/(24 * 3600))
 
-    res.score = res.score_by_base_rank * res.score_by_start_date
-    res.score_notes = str(res.score)
-    res.score_notes += "\nbase rank: " + str(res.score_by_base_rank)
-    res.score_notes += "\nstart date rank: " + str(res.score_by_start_date)
+    if args["lat"] == "" or args["long"] == "" or res.latlong == "":
+      logging.info("qloc=%s,%s - listing=%s" % (args["lat"], args["long"], res.latlong))
+      res.geo_dist_multiplier = 0.5
+    else:
+      # TODO: grr... something's wrong in the DB and we're getting same geocodes for everything
+      lat,long = res.latlong.split(",")
+      latdist = float(lat) - float(args["lat"])
+      longdist = float(long) - float(args["long"])
+      # keep one value to right of decimal
+      delta_dist = latdist*latdist + longdist * longdist
+      logging.info("qloc=%s,%s - listing=%s,%s - dist=%s,%s - delta = %g" %
+                   (args["lat"], args["long"], lat, long, latdist, longdist, delta_dist))
+      # reasonably local
+      if delta_dist > 0.025:
+        delta_dist = 0.9 + delta_dist
+      else:
+        delta_dist = delta_dist / (0.025 / 0.9)
+      if delta_dist > 0.999:
+        delta_dist = 0.999
+      res.geo_dist_multiplier = 1.0 - delta_dist
 
+    score_notes = ""
+    res.score = res.score_by_base_rank
+    score_notes += "  GBase relevance score: " + str(res.score_by_base_rank)
+
+    res.score *= res.date_dist_multiplier
+    score_notes += "  date dist multiplier: " + str(res.date_dist_multiplier)
+
+    res.score *= res.geo_dist_multiplier
+    score_notes += "  geo dist multiplier: " + str(res.geo_dist_multiplier)
+
+    res.scorestr = "%.4g" % (res.score)
+    res.score_notes = score_notes
     result_set.results.append(res)
     if cache and res.id:
       key = "searchresult:" + res.id
       memcache.set(key, res, time=RESULT_CACHE_TIME)
       # Datastore updates are expensive and space-consuming, so only add them
       # if a user expresses interest in an opportunity--e.g. elsewhere.
+
+  def compare_scores(x,y):
+    diff = y.score - x.score
+    if (diff > 0): return 1
+    if (diff < 0): return -1
+    return 0
+
+  result_set.results.sort(cmp=compare_scores)
+  for i,res in enumerate(result_set.results):
+    res.idx = i+1
 
   return result_set
 

@@ -229,6 +229,7 @@ class search_view(webapp.RequestHandler):
 
     #logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
 
+    #logging.info("geocode("+result_set.args["vol_loc"]+")="+result_set.args["lat"]+","+result_set.args["long"])
     template_values = {
         'result_set': result_set,
         'current_page' : 'SEARCH',
@@ -240,6 +241,7 @@ class search_view(webapp.RequestHandler):
         'query_url_unencoded': result_set.query_url_unencoded,
 
         # TODO: remove this stuff...
+        'latlong': result_set.args["lat"]+","+result_set.args["long"],
         'keywords': result_set.args["q"],
         'location': result_set.args["vol_loc"],
         'is_first_page': result_set.is_first_page,

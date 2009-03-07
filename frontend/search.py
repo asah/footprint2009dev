@@ -2,6 +2,8 @@
 #
 
 import base_search
+import logging
+import geocode
 
 # args is expected to be a list of args
 # and any path info is supposed to be homogenized into this,
@@ -49,13 +51,15 @@ def search(args):
   # RESERVED: sort
   # RESERVED: type
 
-  location = ""
   if "vol_loc" in args:
+    res = geocode.geocode(args["vol_loc"])
+    if res != "":
+      args["lat"],args["long"] = res.split(",")
     if "vol_dist" not in args:
       args["vol_dist"] = 25
   else:
-    args["vol_loc"] = ""
-    args["vol_dist"] = ""
+    args["vol_loc"] = args["vol_dist"] = ""
+    args["vol_lat"] = args["vol_long"] = ""
 
   vol_start = ""
   if "vol_start" in args:

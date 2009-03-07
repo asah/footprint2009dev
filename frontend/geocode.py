@@ -1,26 +1,55 @@
+import re
+import urllib
+import logging
+import time
+from datetime import datetime
 from google.appengine.api import urlfetch
-from xml.dom import minidom
+from google.appengine.api import memcache
 
-def Geocode(address_plaintext):
-  location = address_plaintext.replace(' ', '+')
-  key = ''
-  url = ('http://maps.google.com/maps/geo?q=%s&output=xml&key=%s' %
-         (location, key))
-  result = urlfetch.fetch(url)
-  dom2 = minidom.parseString(result.content)
-  geo_status = int(dom2.getElementsByTagName('code')[0].childNodes[0].data)
+def geocode(addr, retries=4):
+  loc = addr.lower().strip()
+  loc = re.sub(r'^[^0-9a-z]+', r'', loc)
+  loc = re.sub(r'[^0-9a-z]+$', r'', loc)
+  loc = re.sub(r'\s\s+', r' ', loc)
+  #logging.info("geocode: loc="+loc)
 
-  #check to see if google was able to find the coordinates for the
-  # street address
-  if geo_status == 200:
-      coord = dom2.getElementsByTagName('coordinates')[0].childNodes[0].data
-      split_coord = coord.rsplit(',')
-      longitude = (split_coord[0])
-      latitude = (split_coord[1])
+  memcache_key = "geocode:"+loc
 
-      accuracy = dom2.getElementsByTagName('AddressDetails')[0].getAttribute('Accuracy')
+  val = memcache.get(memcache_key)
+  if val:
+    #logging.info("geocode: cache hit loc="+loc+"  val="+val)
+    return val
 
-      return {'latitude': latitude,
-              'longitude': longitude,
-              'accuracy': accuracy
-             }
+  params = urllib.urlencode({'q':loc.lower(), 'output':'csv',
+                             'oe':'utf8', 'sensor':'false',
+                             'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
+  fetchurl = "http://maps.google.com/maps/geo?%s" % params
+  #logging.info("geocode: cache miss, trying "+fetchurl)
+  fetch_result = urlfetch.fetch(fetchurl)
+  if fetch_result.status_code != 200:
+    # fail and also don't cache
+    return ""
+  res = fetch_result.content
+  if "," not in res:
+    # fail and also don't cache
+    return ""
+  try:
+    respcode,zoom,lat,long = res.split(",")
+  except:
+    logging.info(str(datetime.now())+"unparseable response: "+res[0:80])
+    respcode,zoom,lat,long = 999,0,0,0
+
+  respcode = int(respcode)
+  if respcode == 500 or respcode == 620:
+    logging.info(str(datetime.now())+"geocoder quota exceeded-- sleeping...")
+    time.sleep(1)
+    return geocode(addr, retries-1)
+
+  # these results get cached
+  val = ""
+  if respcode == 200:
+    val = lat+","+long
+
+  memcache.set(memcache_key, val)
+  return val
+
