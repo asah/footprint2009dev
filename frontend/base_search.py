@@ -120,6 +120,7 @@ def query(query_url, args, cache):
           utils.GetXmlDomText(long_element[0])
     if res.latlong == ",":
       res.latlong = ""
+    res.startdate = utils.GetXmlElementText(entry, XMLNS_BASE, 'event_date_range')
     result_set.results.append(res)
     if cache and res.id:
       key = "searchresult:" + res.id
