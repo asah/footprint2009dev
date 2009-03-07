@@ -184,7 +184,7 @@ def query(query_url, args, cache):
       res.date_dist_multiplier = 1/((t1 - t0)/(24 * 3600))
 
     if args["lat"] == "" or args["long"] == "" or res.latlong == "":
-      logging.info("qloc=%s,%s - listing=%s" % (args["lat"], args["long"], res.latlong))
+      #logging.info("qloc=%s,%s - listing=%s" % (args["lat"], args["long"], res.latlong))
       res.geo_dist_multiplier = 0.5
     else:
       # TODO: grr... something's wrong in the DB and we're getting same geocodes for everything
@@ -193,8 +193,8 @@ def query(query_url, args, cache):
       longdist = float(long) - float(args["long"])
       # keep one value to right of decimal
       delta_dist = latdist*latdist + longdist * longdist
-      logging.info("qloc=%s,%s - listing=%s,%s - dist=%s,%s - delta = %g" %
-                   (args["lat"], args["long"], lat, long, latdist, longdist, delta_dist))
+      #logging.info("qloc=%s,%s - listing=%s,%s - dist=%s,%s - delta = %g" %
+      #             (args["lat"], args["long"], lat, long, latdist, longdist, delta_dist))
       # reasonably local
       if delta_dist > 0.025:
         delta_dist = 0.9 + delta_dist
