@@ -53,7 +53,9 @@ def search(args):
 
   if "vol_loc" in args:
     res = geocode.geocode(args["vol_loc"])
-    if res != "":
+    if res == "":
+      args["lat"],args["long"] = ""
+    else:
       args["lat"],args["long"] = res.split(",")
     if "vol_dist" not in args:
       args["vol_dist"] = 25
