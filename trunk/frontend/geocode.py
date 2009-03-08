@@ -6,7 +6,7 @@ from datetime import datetime
 from google.appengine.api import urlfetch
 from google.appengine.api import memcache
 
-def geocode(addr, retries=4):
+def geocode(addr, usecache=True, retries=4):
   loc = addr.lower().strip()
   loc = re.sub(r'^[^0-9a-z]+', r'', loc)
   loc = re.sub(r'[^0-9a-z]+$', r'', loc)
@@ -16,7 +16,7 @@ def geocode(addr, retries=4):
   memcache_key = "geocode:"+loc
 
   val = memcache.get(memcache_key)
-  if val:
+  if usecache and val:
     #logging.info("geocode: cache hit loc="+loc+"  val="+val)
     return val
 
@@ -43,7 +43,7 @@ def geocode(addr, retries=4):
   if respcode == 500 or respcode == 620:
     logging.info(str(datetime.now())+"geocoder quota exceeded-- sleeping...")
     time.sleep(1)
-    return geocode(addr, retries-1)
+    return geocode(addr, usecache, retries-1)
 
   # these results get cached
   val = ""

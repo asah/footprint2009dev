@@ -205,6 +205,8 @@ class search_view(webapp.RequestHandler):
         # TODO: implement SEARCH_RESULTS_RSSDESC_TEMPLATE
         template = SEARCH_RESULTS_RSS_TEMPLATE
       elif output == "html":
+        if "geocode_responses" not in unique_args:
+          unique_args["geocode_responses"] = 1
         template = SEARCH_RESULTS_DEBUG_TEMPLATE
       else:
         # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
