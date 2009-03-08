@@ -12,6 +12,23 @@ from datetime import datetime
 
 import dateutil.parser
 
+craigslist_latlongs = None
+
+def load_craigslist_latlongs():
+  global craigslist_latlongs
+  craigslist_latlongs = {}
+  latlongs_fh = open('craigslist-metro-latlongs.txt')
+  for line in latlongs_fh:
+    line = re.sub(r'\s*#.*$', '', line).strip()
+    if line == "":
+      continue
+    try:
+      url,lat,long = line.strip().split("|")
+    except:
+      print "error parsing line",line
+      sys.exit(1)
+    craigslist_latlongs[url] = lat+","+long
+  latlongs_fh.close()
 
 def extract(instr, rx):
   res = re.findall(rx, instr, re.DOTALL)
@@ -20,6 +37,9 @@ def extract(instr, rx):
   return ""
 
 def Parse(instr, maxrecs, progress):
+  global craigslist_latlongs
+  if craigslist_latlongs == None:
+    load_craigslist_latlongs()
   if progress:
     print datetime.now(),"loading craigslist crawler output..."
   crawl_craigslist.parse_cache_file(instr, listings_only=True)
@@ -103,7 +123,21 @@ def Parse(instr, maxrecs, progress):
     s += '<lastUpdated>%s</lastUpdated>' % (datetimestr)
     # TODO: expires
     # TODO: synthesize location from metro...
-    s += '<locations><location><city>metro</city></location></locations>'
+    s += '<locations><location>'
+    s += '<name>%s</name>' % (xml.sax.saxutils.escape(locstr))
+    # what about the few that do geocode?
+    lat,long = "",""
+    try:
+      domain,unused = url.split("vol/")
+      lat,long = craigslist_latlongs[domain].split(",")
+    except:
+      # ignore for now
+      #print url
+      #continue
+      pass
+    s += '<latitude>%s</latitude>' % (lat)
+    s += '<longitude>%s</longitude>' % (long)
+    s += '</location></locations>'
     #s += '<locations><location>'
     #s += '<city>%s</city>' % (
     #s += '<region>%s</region>' % (
