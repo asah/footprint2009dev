@@ -46,7 +46,7 @@ def make_base_orderby_arg(args):
     # newest
     return "modification_time"
   else:
-    # "relevancy" is the Base default 
+    # "relevancy" is the Base default
     return "relevancy"
 
 # note: many of the XSS and injection-attack defenses are unnecessary
@@ -69,7 +69,7 @@ def search(args):
   if "stopDate" not in args:
     tt = time.strptime(args["startDate"], "%Y-%m-%d")
     args["stopDate"] = datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) + datetime.timedelta(days=60)
- 
+
   base_query += ' [event_date_range: %s..%s]' % (args["startDate"], args["stopDate"])
 
   # TODO: injection attack on sort
@@ -112,10 +112,12 @@ def search(args):
 
   return query(query_url, args, False)
 
+
 def hash_md5(s):
   it = md5.new()
   it.update(s)
   return it.digest()
+
 
 def query(query_url, args, cache):
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
@@ -194,12 +196,14 @@ def query(query_url, args, cache):
     else:
       res.date_dist_multiplier = 1/((t1 - t0)/(24 * 3600))
 
-    if args["lat"] == "" or args["long"] == "" or res.latlong == "":
+    if (("lat" not in args) or args["lat"] == "" or
+        ("long" not in args) or args["long"] == "" or
+         res.latlong == ""):
       #logging.info("qloc=%s,%s - listing=%s" % (args["lat"], args["long"], res.latlong))
       res.geo_dist_multiplier = 0.5
     else:
       # TODO: grr... something's wrong in the DB and we're getting same geocodes for everything
-      lat,long = res.latlong.split(",")
+      lat, long = res.latlong.split(",")
       latdist = float(lat) - float(args["lat"])
       longdist = float(long) - float(args["long"])
       # keep one value to right of decimal
