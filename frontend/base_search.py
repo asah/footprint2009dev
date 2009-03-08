@@ -5,6 +5,7 @@ import cgi
 import datetime
 import time
 import os
+import re
 import urllib
 import logging
 import md5
@@ -104,7 +105,7 @@ def search(args):
   url_params = urllib.urlencode({'max-results': 200,
                                  'start-index': args["start"],
                                  'bq': base_query,
-                                 'content': 'geocodes',
+                                 'content': 'geocodes,attributes,meta',
                                  'orderby': make_base_orderby_arg(args),
                                  })
   query_url = '%s?%s' % (args["backends"], url_params)
@@ -139,9 +140,10 @@ def query(query_url, args, cache):
 
   dom = minidom.parseString(result_content)
 
-  total_results = float(len(dom.getElementsByTagName('entry')))
+  elems = dom.getElementsByTagName('entry')
+  total_results = float(len(elems))
   t0 = time.mktime(time.strptime(args["startDate"], "%Y-%m-%d"))
-  for i,entry in enumerate(dom.getElementsByTagName('entry')):
+  for i,entry in enumerate(elems):
     # Note: using entry.getElementsByTagName('link')[0] isn't very stable;
     # consider iterating through them for the one where rel='alternate' or
     # whatever the right thing is.
@@ -162,15 +164,24 @@ def query(query_url, args, cache):
     res.provider = utils.GetXmlElementText(entry, XMLNS_BASE, 'feed_providername')
     res.orig_idx = i+1
     res.latlong = ""
-    lat_element = utils.GetXmlElementText(entry, XMLNS_BASE, 'latitude')
-    long_element = utils.GetXmlElementText(entry, XMLNS_BASE, 'longitude')
-    if lat_element and lat_element != "" and long_element and long_element != "":
-      res.latlong = lat_element + "," + long_element
+    logging.info(re.sub(r'><', r'>\n<',entry.toxml()))
+    latstr = utils.GetXmlElementText(entry, XMLNS_BASE, 'latitude')
+    longstr = utils.GetXmlElementText(entry, XMLNS_BASE, 'longitude')
+    if latstr and longstr and latstr != "" and longstr != "":
+      res.latlong = latstr + "," + longstr
+
+    #lat_element = utils.GetXmlElementText(entry, XMLNS_BASE, 'latitude')
+    #long_element = utils.GetXmlElementText(entry, XMLNS_BASE, 'longitude')
+    #if lat_element and lat_element != "" and long_element and long_element != "":
+    #  res.latlong = lat_element + "," + long_element
 
     # TODO: remove-- this is working around a DB bug where all the latlongs are the same
-    res.latlong = geocode.geocode(location)
+    if "geocode_responses" in args:
+      res.latlong = geocode.geocode(location, args["geocode_responses"]!="nocache" )
 
-    res.startdate = utils.GetXmlElementText(entry, XMLNS_BASE, 'event_date_range')
+    res.event_date_range = utils.GetXmlElementText(entry, XMLNS_BASE, 'event_date_range')
+    res.startdate = re.sub(r'[T ].+$', r'', res.event_date_range)
+    # todo: start time, etc.
     # score results
     res.score_by_base_rank = (total_results - i)/total_results 
     res.score = res.score_by_base_rank
