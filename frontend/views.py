@@ -81,7 +81,7 @@ class main_page_view(webapp.RequestHandler):
         'is_main_page' : True,
       }
     self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
-                                           template_values))
+                                            template_values))
 
 
 def get_user_interests(user, remove_no_interest):
@@ -231,6 +231,10 @@ class search_view(webapp.RequestHandler):
 
     #logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
 
+    latlng_string = ""
+    if "lat" in result_set.args and "long" in result_set.args:
+      latlng_string = "%s,%s" % (result_set.args["lat"], result_set.args["long"])
+
     #logging.info("geocode("+result_set.args["vol_loc"]+")="+result_set.args["lat"]+","+result_set.args["long"])
     template_values = {
         'result_set': result_set,
@@ -243,7 +247,7 @@ class search_view(webapp.RequestHandler):
         'query_url_unencoded': result_set.query_url_unencoded,
 
         # TODO: remove this stuff...
-        'latlong': result_set.args["lat"]+","+result_set.args["long"],
+        'latlong': latlng_string,
         'keywords': result_set.args["q"],
         'location': result_set.args["vol_loc"],
         'max_distance': result_set.args["vol_dist"],
