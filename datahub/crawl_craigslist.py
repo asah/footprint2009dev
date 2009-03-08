@@ -86,7 +86,8 @@ def crawl(url, ignore):
   crawlers = crawlers + 1
   crawlers_lock.release()
 
-  proxied_url = "http://suprfetch.appspot.com/?url="+urllib.quote(url+"?for_google_and_craigslist.org_project_footprint_please_dont_block")
+  #proxied_url = "http://suprfetch.appspot.com/?url="+urllib.quote(url+"?for_google_and_craigslist.org_project_footprint_please_dont_block")
+  proxied_url = "http://suprfetch.appspot.com/?url="+urllib.quote(url)
 
   page = ""
   attempts = 0
@@ -103,12 +104,12 @@ def crawl(url, ignore):
 
   if re.search(r'This IP has been automatically blocked', page, re.DOTALL):
       print "uh oh: craiglist is blocking us (IP blocking).  exiting..."
-      exit(1)
+      sys.exit(1)
 
   if (re.search(r'sorry.google.com/sorry/', page) or
       re.search(r'to automated requests from a computer virus or spyware', page, re.DOTALL)):
       print "uh oh: google is blocking us (DOS detector).  exiting..."
-      exit(1)
+      sys.exit(1)
 
   if re.search(r'<TITLE>302 Moved</TITLE>"',page, re.DOTALL):
       newlocstr = re.findall(r'The document has moved <A HREF="(.+?)"',page)          
@@ -147,25 +148,31 @@ def wait_for_page(url):
   return res
 
 def sync_fetch(url):
-    id = thread.start_new_thread(crawl, (url,"foo"))
-    return wait_for_page(url)
+  crawl(url, "")
+  if url not in pages:
+    print "sync_fetch, failed to crawl url",url
+    sys.exit(1)
+  return pages[url]
+
 
 progstart = time.time()
 def secs_since_progstart():
     global progstart
     return time.time() - progstart
 
-def crawl_metro_page(urlbase, indexstr):
+def crawl_metro_page(url, unused):
   global crawlers, crawlers_lock, pages, page_lock
-  url = urlbase + indexstr
   listingpage = sync_fetch(url)
   listingurls = re.findall(r'<p><a href="/(.+?)">', listingpage)
+  base = re.sub(r'.org/.+', '.org/', url)
   for listing_url in listingurls:
-      #print "found",listing_url,"in",url
-      id = thread.start_new_thread(crawl, (urlbase+listing_url, "foo"))
-  nextpages = re.findall(r'<a href="(index[0-9]+[.]html)">', listingpage)
+    #print "found",base+listing_url,"in",url
+    crawl(base+listing_url, "")
+  path = re.sub(r'[^/]+$', '', url)
+  nextpages = re.findall(r'<a href="(index[0-9]+[.]html)"', listingpage)
   for nextpage_url in nextpages:
-      id = thread.start_new_thread(crawl_metro_page, (urlbase+nextpage_url, "foo"))
+    #print "found",path+nextpage_url,"in",url
+    thread.start_new_thread(crawl_metro_page, (path+nextpage_url, ""))
 
 def parse_cache_file(s, listings_only=False, printerrors=True):
   global pages
@@ -195,6 +202,14 @@ def load_cache():
       # ignore errors if file doesn't exist
       pass
 
+def print_status():
+  global pages, num_cached_pages, crawlers
+  crawled_pages = len(pages) - num_cached_pages
+  pages_per_sec = int(crawled_pages/secs_since_progstart())
+  print str(secs_since_progstart())+": main thread: waiting for",crawlers,"crawlers.",
+  print crawled_pages,"pages crawled so far ("+str(pages_per_sec)+" pages/sec). ",
+  print len(pages),"total pages."
+
 from optparse import OptionParser
 if __name__ == "__main__":
   sys = __import__('sys')
@@ -210,17 +225,9 @@ if __name__ == "__main__":
 
   outstr = ""
   for url in metros:
-    thread.start_new_thread(crawl_metro_page, (url, "vol/"))
+    thread.start_new_thread(crawl_metro_page, (url+"vol/", ""))
 
-  time.sleep(1)
-  while crawlers > 0:
-      while crawlers > 0:
-          crawled_pages = len(pages) - num_cached_pages
-          pages_per_sec = int(crawled_pages/secs_since_progstart())
-          print str(secs_since_progstart())+": main thread: waiting for",crawlers,"crawlers.",
-          print crawled_pages,"pages crawled so far ("+str(pages_per_sec)+" pages/sec). ",
-          print len(pages),"total pages."
-          time.sleep(2)
-      # avoid race condition-- give it another 2secs to spawn more threads...
-      time.sleep(2)
+  while True:
+    print_status()
+    time.sleep(2)
   sys.exit(0)

@@ -16,6 +16,7 @@ import parse_usaservice
 import parse_handsonnetwork
 import parse_idealist
 import parse_craigslist
+import parse_americorps
 import parse_volunteermatch
 import os
 import subprocess
@@ -542,6 +543,8 @@ def ftpToBase(f, ftpinfo, s):
     fn = "idealist1.gz"
   elif re.search("craigslist", f):
     fn = "craigslist1.gz"
+  elif re.search("americorps", f):
+    fn = "americorps1.gz"
   elif re.search("volunteermatch", f):
     fn = "volunteermatch1.gz"
 
@@ -626,6 +629,10 @@ if __name__ == "__main__":
         (options.inputfmt == None and
          re.search("craigslist", f))):
     parsefunc = parse_craigslist.Parse
+  elif (options.inputfmt == "americorps" or
+        (options.inputfmt == None and
+         re.search("americorps", f))):
+    parsefunc = parse_americorps.Parse
   elif (options.inputfmt == "handson" or
         options.inputfmt == "handsonnetwork" or
         (options.inputfmt == None and
@@ -644,7 +651,18 @@ if __name__ == "__main__":
     print datetime.now(),"unknown input format-- try --inputfmt"
     sys.exit(1)
 
-  if re.search(r'[.]gz$', f):
+  if re.search(r'^https?://', f):
+    fh = urllib.urlopen(f)
+    if (re.search(r'[.]gz$', f)):
+      # is there a way to fetch and unzip an URL in one shot?
+      content = fh.read()
+      fh.close()
+      tmp_fn = "/tmp/tmp-"+hashlib.md5().hexdigest()
+      tmpfh = open(tmp_fn, "wb+")
+      tmpfh.write(content)
+      tmpfh.close()
+      fh = gzip.open(tmp_fn, 'rb')
+  elif re.search(r'[.]gz$', f):
     fh = gzip.open(f, 'rb')
   elif f == "-":
     fh = sys.stdin
