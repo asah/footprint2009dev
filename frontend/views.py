@@ -246,6 +246,7 @@ class search_view(webapp.RequestHandler):
         'latlong': result_set.args["lat"]+","+result_set.args["long"],
         'keywords': result_set.args["q"],
         'location': result_set.args["vol_loc"],
+        'max_distance': result_set.args["vol_dist"],
         'is_first_page': result_set.is_first_page,
         'is_last_page': result_set.is_last_page,
         'prev_page_url': result_set.prev_page_url,
