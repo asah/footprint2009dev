@@ -6,11 +6,12 @@ This is debug output for developers only.  If you are an end user here by accide
    If you are a developer, please use other &amp;output= formats to build your applications, including
    output=rss,tsv,csv,rssdesc and xml.  Documentation available here (TODO: need link).
 
-query: {{result_set.query_url_encoded}}
-q={{keywords}}
-vol_loc={{location}} @ {{latlong}}
+links: <a href="{{result_set.query_url_encoded}}">Google Base query</a>
+query (q)={{keywords}}
+location center (vol_loc)={{location}} / {{latlong}}   (center point)
+max distance from center (vol_dist)={{max_distance}}  (max distance)
 
-{% for result in result_set.results %}
+<hr/>{% for result in result_set.results %}
 {{result.idx}}. {{result.title}} @ {{result.location}} ({{result.latlong}})
 link: <a href="{{result.url|escape}}">{{result.url}}</a>
 desc: {{result.snippet}}

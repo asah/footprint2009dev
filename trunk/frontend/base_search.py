@@ -158,13 +158,13 @@ def query(query_url, args, cache):
     title = utils.GetXmlElementText(entry, XMLNS_ATOM, 'title')
     location = utils.GetXmlElementText(entry, XMLNS_BASE, 'location_string')
     #logging.info("title="+title+"  location="+str(location)+"  url="+url)
-    logging.info("title="+title+"  location="+str(location))
+    #logging.info("title="+title+"  location="+str(location))
     res = searchresult.SearchResult(url, title, snippet, location, id, base_url)
     # TODO: escape?
     res.provider = utils.GetXmlElementText(entry, XMLNS_BASE, 'feed_providername')
     res.orig_idx = i+1
     res.latlong = ""
-    logging.info(re.sub(r'><', r'>\n<',entry.toxml()))
+    #logging.info(re.sub(r'><', r'>\n<',entry.toxml()))
     latstr = utils.GetXmlElementText(entry, XMLNS_BASE, 'latitude')
     longstr = utils.GetXmlElementText(entry, XMLNS_BASE, 'longitude')
     if latstr and longstr and latstr != "" and longstr != "":
