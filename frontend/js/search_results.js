@@ -75,21 +75,30 @@ function mapApiLoadComplete() {
 function doInlineSearch(keywords, location, date, updateMap) {
   var xmlHttp = GXmlHttp.create();
 
-  var url = '/search?output=snippets_list';
+  var url = '/search?output=snippets_list&';
+  var query = '';
+
+  function addQueryParam(name, value) {
+    if (query.length > 0) {
+      query += '&';
+    }
+    query += name + '=' + escape(value);
+  }
 
   if (keywords && keywords.length > 0) {
-    url += '&q=' + escape(keywords);
+    addQueryParam('q', keywords);
   }
   if (location && location.length > 0) {
-    url += '&vol_loc=' + escape(location);
+    addQueryParam('vol_loc', location);
     if (updateMap) {
       map.setCenterGeocode(location);
     }
   }
-  xmlHttp.open('GET', url, true);
+  xmlHttp.open('GET', url + query, true);
 
   xmlHttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+   //   window.location.hash = query;
       el('snippets_pane').innerHTML = this.responseText;
     }
   }
