@@ -5,16 +5,40 @@ body {
     padding: 0;
 }
 
-i {
-  font-style: normal;
+.doc-text {
+    padding-top: 0.3%;
+    font-size: 100%;
 }
 
-h1 {
+.info {
+    font-size: 95%;
+}
+
+.entryName {
+    padding-top: 0.5%;
+    font-size: 130%;
+    font-weight: bold;
+    color: darkgreen;
+}
+
+.titleText {
+  color: darkgreen;
+  font-size: 150%;
+  font-weight: bold;
   text-align:center;
 }
 
+.entry {
+  border-bottom: thin dotted #000000;
+}
+
+.namedType {
+  border-bottom: thin dotted #000000;
+}
+
 blockquote {
-  margin-left: 4%;
-  border-left: medium solid #0000ff;
+  margin-left: 3%;
+  border-left: medium solid green;
   padding-left: 0.3%;
 }
+
