@@ -125,6 +125,57 @@ WorkQueue.prototype.addCallback = function(callback) {
   this.queue_.push(callback);
 }
 
+/**
+ * Class to manage the asynchronous loading of components at runtime.
+ * When this class is created, give it an array of strings, where
+ * each string corresponds to a load eventname.  Register functions for
+ * each eventname.  Later, when appropriate, call the function
+ * doneLoading(eventName) to trigger each registered function for that
+ * eventname.  Now, this is almost exactly like a regular event registration
+ * system, except: (1) if a particular load type already occurred
+ * BEFORE a function callback is registered, that callback will be
+ * triggered immediately; and (2) each load-event is only ever triggered once.
+ *
+ * @param {Array} eventNamesArray Array of strings, the load eventnames.
+ **/
+function AsyncLoadManager(eventNamesArray) {
+  this.callbacks_ = {};
+  this.loadStatus_ = {};
+
+  for (var i = 0; i < eventNamesArray.length; i++) {
+    var eventName = eventNamesArray[i]
+    this.loadStatus_[eventName] = false;
+    this.callbacks_[eventName] = new WorkQueue();
+  }
+}
+
+/** Register a callback for a given load type (eventName).
+ * The eventName must have been part of eventNamesArray in the class ctor.
+ */
+AsyncLoadManager.prototype.registerCallback = function(eventName, callback) {
+  if ((eventName in this.loadStatus_) && (eventName in this.callbacks_)) {
+    if (this.loadStatus_[eventName] == true) {
+      // This load event already completed.  Execute the callback immediately.
+      callback();
+    } else {
+      // Load event hasn't yet completed.  Queue it up.
+      this.callbacks_[eventName].addCallback(callback);
+    }
+  }
+}
+
+/** Mark a load event as having completed.  This executes all pending
+ * callbacks for that event.
+ */
+AsyncLoadManager.prototype.doneLoading = function(eventName) {
+  if ((eventName in this.loadStatus_) && (eventName in this.callbacks_)) {
+    if (this.loadStatus_[eventName] == false) {
+      this.loadStatus_[eventName] = true;
+      this.callbacks_[eventName].execute();
+    }
+  }
+}
+
 // Globals
 var queryParams = GetQueryParams();
 var hashParams = GetHashParams();

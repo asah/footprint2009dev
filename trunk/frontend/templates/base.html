@@ -27,9 +27,15 @@
   <script type="text/javascript" src="/js/friendconnect_header.js"></script>
   <script type='text/javascript' src='/js/utils.js'></script>
   <script type='text/javascript'>
-    // Create a WorkQueue (defined in utils.js) to queue any
-    // JS callbacks to be invoked on body onload event.
-    var onloadWorkQueue = new WorkQueue();
+    // These components load asynchronously.  We use AsyncLoadManager to
+    // queue up function callbacks until each component is loaded.
+    var asyncLoadManager = new AsyncLoadManager(
+        ['map', 'jquery', 'bodyload']
+    );
+
+    // var jqueryLoaded = false;
+    // google.load("jquery", "1",
+    //             { "callback" : function() { jqueryLoaded = true; }});
 
     // ...and one to queue JS callbacks on body unload event.
     var onUnloadWorkQueue = new WorkQueue();

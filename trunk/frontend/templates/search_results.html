@@ -1,10 +1,10 @@
-{% extends "layout_two_column.html" %}
+{% extends 'layout_two_column.html' %}
 
 {% block js_files %}
-  <script type="text/javascript" src="/js/map.js"></script>
-  <script type="text/javascript" src="/js/search_results.js"></script>
-  <script type="text/javascript" src="/js/calendar_widget.js"></script>
-  <script type="text/javascript" src="http://w.sharethis.com/button/sharethis.js#tabs=email%2Cweb%2Cpost&amp;charset=utf-8&amp;style=default&amp;publisher=53d633da-5f45-4163-9dfa-6874\4e89a302"></script>
+  <script type='text/javascript' src='/js/map.js'></script>
+  <script type='text/javascript' src='/js/search_results.js'></script>
+  <script type='text/javascript' src='/js/calendar_widget.js'></script>
+  <script type='text/javascript' src='http://w.sharethis.com/button/sharethis.js#tabs=email%2Cweb%2Cpost&amp;charset=utf-8&amp;style=default&amp;publisher=53d633da-5f45-4163-9dfa-6874\4e89a302'></script>
 {% endblock %}
 
 {% block subheader %}
@@ -15,7 +15,7 @@
     What's going on this month?
   </div>
   <div id='calendar'>
-    {% include "calendar_widget.html" %}
+    {% include 'calendar_widget.html' %}
   </div>
   <br/>
   <br/>
@@ -58,12 +58,16 @@
 </div>
 
 <script>
-document.userDisplayName = "{{user_display_name}}";
+document.userDisplayName = '{{user_display_name}}';
 </script>
-<script type="text/javascript" src="/js/snippets_list.js"></script>
+<script type='text/javascript' src='/js/snippets_list.js'></script>
 
-<script type="text/javascript">
-  google.load("maps", "2");
-  google.setOnLoadCallback(mapApiLoadComplete);
+<script type='text/javascript'>
+  asyncLoadManager.registerCallback('map', mapApiLoadComplete);
+  google.load('maps', '2',
+              { 'callback' : function() {
+                                 asyncLoadManager.doneLoading('map');
+                             }});
+
 </script>
 {% endblock prefooter %}
