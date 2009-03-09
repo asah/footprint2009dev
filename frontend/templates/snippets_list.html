@@ -44,7 +44,7 @@
     <div>
       {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
       {% if location %}
-        <script>workQueue.addCallback(function(){
+        <script>asyncLoadManager.addCallback('map', function(){
             map.addMarkerGeocode("{{ result.location }}")});</script>
       {% endif %}
 
@@ -78,8 +78,3 @@
     </table>
   </div>
 {% endfor %}
-<script type='text/javascript'>
-  if (map) {
-    workQueue.execute();
-  }
-</script>

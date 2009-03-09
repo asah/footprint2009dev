@@ -1,7 +1,7 @@
 var map;
-var workQueue = new WorkQueue();
+var clientLocationString;
 
-workQueue.addCallback(function() {
+function initCalendar() {
   var events = {
     '20090228': 'something',
     '20090301': 'something else',
@@ -32,38 +32,46 @@ workQueue.addCallback(function() {
   }
   // TODO(oansaldi): cleanup event listeners on unload
   // unloadWorkQueue.addCallback(unregisterEventListeners);
-});
+}
+asyncLoadManager.addCallback('bodyload', initCalendar);
 
 function mapApiLoadComplete() {
   map = new SimpleMap(el('map'));
+}
 
-  // Call any queued-up functions that needed to wait for
-  // initialization to complete.
-  workQueue.execute();
-
-  if (getObjectLength(hashParams) == 0 && getObjectLength(queryParams) == 0) {
-    // Page wasn't given any search params.
-
-    var location = '';
-    try {
-      lat = google.loader.ClientLocation.latitude;
-      lon = google.loader.ClientLocation.longitude;
-      if (lat > 0) {
-        lat = '+' + lat;
-      }
-      if (lon > 0) {
-        lon = '+' + lon;
-      }
-      location = lat + lon;
-    } catch (err) {}
-
-    doInlineSearch('', location, '', false);
-  } else {
-    if (getParam('vol_loc')) {
-      map.setCenterGeocode(getParam('vol_loc'));
+/** Get the IP geolocation given by the Common Ajax Loader.
+ */
+function readClientLocation() {
+  try {
+    lat = google.loader.ClientLocation.latitude;
+    lon = google.loader.ClientLocation.longitude;
+    if (lat > 0) {
+      lat = '+' + lat;
     }
+    if (lon > 0) {
+      lon = '+' + lon;
+    }
+    clientLocationString = lat + lon;
+  } catch (err) {
+    clientLocationString = '';
   }
 }
+
+/** Perform a search using the current URL parameters and IP geolocation.
+ */
+function runCurrentSearch() {
+  readClientLocation();
+
+  var q = getHashOrQueryParam('q');
+  var location = getHashOrQueryParam('vol_loc');
+  if (!location || !location.length) {
+    // Not vol_loc param, so use IP geolocation (which defaults to '').
+    location = clientLocationString;
+  }
+
+  doInlineSearch(q, location, '', true);
+}
+asyncLoadManager.addCallback('bodyload', runCurrentSearch);
 
 /** Perform an inline search, meaning avoid round trip html fetch.
  * @param {string} keywords Search keywords.
@@ -73,36 +81,41 @@ function mapApiLoadComplete() {
  * @param {bool} updateMap Move the map to the new location?
  */
 function doInlineSearch(keywords, location, date, updateMap) {
-  var xmlHttp = GXmlHttp.create();
+  asyncLoadManager.addCallback('map', function() {
+    // This code is dependent on MapsAPI being loaded, for GXmlHttp and
+    // for setting the map position post-search.
 
-  var url = '/search?output=snippets_list&';
-  var query = '';
+    var xmlHttp = GXmlHttp.create();
 
-  function addQueryParam(name, value) {
-    if (query.length > 0) {
-      query += '&';
+    var url = '/search?output=snippets_list&';
+    var query = '';
+
+    function addQueryParam(name, value) {
+      if (query.length > 0) {
+        query += '&';
+      }
+      query += name + '=' + escape(value);
     }
-    query += name + '=' + escape(value);
-  }
 
-  if (keywords && keywords.length > 0) {
-    addQueryParam('q', keywords);
-  }
-  if (location && location.length > 0) {
-    addQueryParam('vol_loc', location);
-    if (updateMap) {
-      map.setCenterGeocode(location);
+    if (keywords && keywords.length > 0) {
+      addQueryParam('q', keywords);
     }
-  }
-  xmlHttp.open('GET', url + query, true);
+    if (location && location.length > 0) {
+      addQueryParam('vol_loc', location);
+    }
+    xmlHttp.open('GET', url + query, true);
 
-  xmlHttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-   //   window.location.hash = query;
-      el('snippets_pane').innerHTML = this.responseText;
+    xmlHttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        if (updateMap) {
+          map.setCenterGeocode(location);
+        }
+        window.location.hash = query;
+        el('snippets_pane').innerHTML = this.responseText;
+      }
     }
-  }
-  xmlHttp.send(null);
+    xmlHttp.send(null);
+  });
 }
 
 /** Called from the "Refine" button's onclick, and the main form onsubmit.
@@ -113,6 +126,12 @@ function doInlineSearch(keywords, location, date, updateMap) {
 function submitForm(fromWhere) {
   var keywords = el('keywords').value;
   var location = el('location').value;
+
+  // TODO: strip leading/trailing whitespace.
+
+  if (location == '') {
+    location = clientLocationString;
+  }
 
   var updateMap = (fromWhere == "map");
   doInlineSearch(keywords, location, '', updateMap);
