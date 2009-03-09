@@ -32,11 +32,15 @@ function SimpleMap(div) {
   }
 }
 
+SimpleMap.prototype.setCenter = function(latLng) {
+  this.map_.setCenter(latLng, this.defaultZoom_);
+}
+
 SimpleMap.prototype.setCenterGeocode = function(locationString) {
   var me = this;
   this.geocoder_.getLatLng(locationString, function(latLng) {
     if (latLng) {
-      me.map_.setCenter(latLng, me.defaultZoom_);
+      me.setCenter(latLng);
     }
   });
 }
@@ -55,3 +59,14 @@ SimpleMap.prototype.addMarkerGeocode = function(locationString) {
     }
   });
 }
+
+/** callback is a function that accepts a GLatLng and an accuracy.
+ */
+SimpleMap.prototype.geocode = function(locationString, callback) {
+  var me = this;
+  this.geocoder_.getLatLng(locationString, function(latLng) {
+    // TODO: implement accuracy.
+    callback(latLng, 0);
+  });
+}
+

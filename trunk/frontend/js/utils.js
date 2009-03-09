@@ -89,7 +89,7 @@ function GetHashParams() {
  * Hashstring takes precedence.
  * @param {string} paramName Parameter name
  */
-function getParam(paramName) {
+function getHashOrQueryParam(paramName) {
   if (hashParams[paramName]) {
     return hashParams[paramName];
   } else if (queryParams[paramName]) {
@@ -135,6 +135,10 @@ WorkQueue.prototype.addCallback = function(callback) {
  * system, except: (1) if a particular load type already occurred
  * BEFORE a function callback is registered, that callback will be
  * triggered immediately; and (2) each load-event is only ever triggered once.
+ * The first point above is a reason to use AsyncLoadManager instead of
+ * body.onload or the equivalent events in jQuery or other toolkits:
+ * this class guarantees that the callback dispatches even if it is
+ * registered after the event fires.
  *
  * @param {Array} eventNamesArray Array of strings, the load eventnames.
  **/
@@ -152,7 +156,7 @@ function AsyncLoadManager(eventNamesArray) {
 /** Register a callback for a given load type (eventName).
  * The eventName must have been part of eventNamesArray in the class ctor.
  */
-AsyncLoadManager.prototype.registerCallback = function(eventName, callback) {
+AsyncLoadManager.prototype.addCallback = function(eventName, callback) {
   if ((eventName in this.loadStatus_) && (eventName in this.callbacks_)) {
     if (this.loadStatus_[eventName] == true) {
       // This load event already completed.  Execute the callback immediately.
