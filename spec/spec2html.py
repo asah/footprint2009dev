@@ -16,42 +16,65 @@ version = (re.findall(r'<xs:schema version="(.+?)"', s))[0]
 s = re.sub(r'(\r?\n|\r)', r'', s)
 s = re.sub(r'<[?]xml.+?>', r'', s)
 s = re.sub(r'</?xs:schema.*?>', r'', s)
-s = re.sub(r'<(/?(code|p|a|br|b).*?)>', r'QQ\1EE', s)
-s = re.sub(r'</?xs:(complexType)>', r'', s)
-s = re.sub(r'</?xs:(restriction).*?>', r'', s)
+s = re.sub(r'<code>(.+?)</code>', r'<a href="#\1"><code>\1</code></a>', s)
+s = re.sub(r'<pcode>(.+?)</pcode>', r'<code>\1</code>', s)
+s = re.sub(r'<(/?(code|p|a|br|b).*?)>', r'&&\1@@', s)
 s = re.sub(r'<', r'', s)
 s = re.sub(r'/?>', r'', s)
-s = re.sub(r'/xs:(simple|complex)Type', r'<br/>', s)
-s = re.sub(r'xs:((simple|complex)Type) name="(.+?)"', r'<a name="\3"><h3>\3 (\1)</h3></a>\n', s)
-s = re.sub(r'base="(xs:)?(.+?)"', r'derived from: <code>\2</code><br/>', s)
-s = re.sub(r'use="(.+?)"', r'use is \1<br/>', s)
-s = re.sub(r'default=""', r'default value: <code>(empty string)</code><br/>', s)
-s = re.sub(r'default="(.+?)"', r'default value: <code>\1</code><br/>', s)
-s = re.sub(r'xs:enumeration value="(.+?)"/', r'allowed value: <code>\1</code><br/>', s)
-s = re.sub(r'/xs:all', r'</blockquote>\n', s)
-s = re.sub(r'xs:all', r'<blockquote>', s)
-s = re.sub(r'/xs:attribute', r'', s)
-s = re.sub(r'\s*xs:attribute name="(.+?)"', r'<a name="\1"><h3>\1 (attribute)</h3></a>\n', s)
-s = re.sub(r'/xs:sequence', r'</blockquote>', s)
-s = re.sub(r'xs:sequence.+?xs:element', r'xs:selement', s)
-s = re.sub(r'xs:pattern value="(.+?)"/', r'must match (regular expression): <code>\1</code><br/>', s)
-s = re.sub(r'/xs:element', r'<br/>', s)
-s = re.sub(r'\s*xs:selement name="(.+?)"', r'<blockquote><a name="\1"><h3>\1 (repeated element)</h3></a>\n', s)
-s = re.sub(r'\s*xs:element name="(.+?)"', r'<a name="\1"><h3>\1 (element)</h3></a>\n', s)
-s = re.sub(r'type="(xs:)?(.+?)"', r'datatype: \2<br/>', s)
-s = re.sub(r'minOccurs="0"', r'required: optional.<br/>', s)
-s = re.sub(r'minOccurs="([0-9]+)"', r'required: at least \1 times<br/>', s)
-s = re.sub(r'minOccurs="1"', r'Multiple not allow<br/>', s)
+
+#blockquoting
+s = re.sub(r'/xs:(all|sequence)', r'</blockquote>', s)
+#Change element to selement for distinguishing multiple entries later on
+s = re.sub(r'xs:sequence(.+?)xs:element', r'xs:sequence\1xs:selement', s)
+#blockquoting
+s = re.sub(r'xs:(all|sequence)', r'<blockquote>', s)
+
+#Named types
+s = re.sub(r'xs:(simple|complex)Type name="(.+?)"(.+?)/xs:(simple|complex)Type', r'<div class="namedType"><div class="entryName"><a name="\2">\2 (\1 type)</a></div>\3</div>', s)
+
+#Extension
+s = re.sub(r'xs:extension\s+?base="(xs:)?(.+?)"(.+?)/xs:extension', r'<div class="info">derived from: \2</div>\3', s)
+
+#restriction
+s = re.sub(r'xs:restriction\s+?base="(xs:)?(.+?)"(.+?)/xs:restriction', r'<div class="info">derived from: \2</div>\3', s)
+
+#attribute entries
+s = re.sub(r'/xs:attribute', r'</blockquote></div>\n', s)
+s = re.sub(r'\s*xs:attribute name="(.+?)"', r'<div class="entry"><blockquote><div class="entryName"><a name="\1">\1 (attribute)</a></div>\n', s)
+
+#element entries
+s = re.sub(r'/xs:element', r'</div>\n', s)
+s = re.sub(r'\s*xs:selement name="(.+?)"(.+?)', r'<div class="entry repeated"><div class="entryName"><a name="\1">\1 (repeated element)</a></div>\n', s)
+s = re.sub(r'\s*xs:element name="(.+?)"(.+?)', r'<div class="entry"><div class="entryName"><a name="\1">\1 (element)</a></div>\n', s)
+
+#documentation
+s = re.sub(r'xs:annotation\s+xs:documentation\s+!\[CDATA\[\s*(.+?)\s*\]\]\s+/xs:documentation\s+/xs:annotation', r'<div class="doc-text">\1</div>', s)
+
+#Little stuff in entries
+s = re.sub(r'use="(.+?)"', r'<span class="info">use is \1</span><br/>', s)
+s = re.sub(r'default=""', r'<span class="info">default value: <code>(empty string)</code></span><br/>', s)
+s = re.sub(r'default="(.+?)"', r'<span class="info">default value: <code>\1</code></span><br/>', s)
+s = re.sub(r'fixed="(.+?)"', r'<span class="info">fixed value: <code>\1</code></span><br/>', s)
+s = re.sub(r'xs:enumeration value="(.+?)"', r'<span class="info">allowed value: <code>\1</code></span><br/>', s)
+s = re.sub(r'xs:pattern value="(.+?)"', r'<span class="info">must match (regular expression): <code>\1</code></span><br/>', s)
+s = re.sub(r'type="(xs:)?(.+?)"', r'<span class="info">datatype: \2</span><br/>', s)
+s = re.sub(r'minOccurs="0"', r'<span class="info">required: optional.</span><br/>', s)
+s = re.sub(r'minOccurs="([0-9]+)"', r'<span class="info">required: at least \1 times</span><br/>', s)
+s = re.sub(r'maxOccurs="1"', r'<span class="info">Multiple not allowed</span><br/>', s)
 s = re.sub(r'maxOccurs="unbounded"', r'\n', s)
-s = re.sub(r'/xs:documentation', r'</i><br/>', s)
-s = re.sub(r'xs:documentation\s*', r'<br/><i style="font-size:80%">', s)
-s = re.sub(r'/?xs:annotation', r'', s)
-s = re.sub(r'/?xs:simpleContent', r'', s)
-s = re.sub(r'/?xs:extension', r'', s)
-s = re.sub(r'!\[CDATA\[\s*', r'', s)
-s = re.sub(r'\]\]', r'', s)
-s = re.sub(r'QQ', r'<', s)
-s = re.sub(r'EE', r'>', s)
+
+#putting in links
+s = re.sub(r'(datatype|derived from): (locationType|dateTimeDurationType|yesNoEnum|sexRestrictedEnum|dateTimeOlsonDefaultPacific|timeOlson|dateTimeNoTZ|timeNoTZ)', r'\1: <a href="#\2"><code>\2</code></a>\n', s)
+s = re.sub(r'(datatype|derived from): (string)', r'\1: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>\2</code></a>\n', s)
+s = re.sub(r'(datatype|derived from): (dateTime|date|time|duration)', r'\1: <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp"><code>\2</code></a>\n', s)
+s = re.sub(r'(datatype|derived from): (integer|decimal)', r'\1: <a href="http://www.w3schools.com/Schema/schema_dtypes_numeric.asp"><code>\2</code></a>\n', s)
+
+#Drop stuff we don't care about
+s = re.sub(r'/?xs:(simpleContent|complexType)', r'', s)
+
+#clean-up
+s = re.sub(r'&&', r'<', s)
+s = re.sub(r'@@', r'>', s)
 s = re.sub(r'\s*<br/>', r'<br/>\n', s)
 
 
@@ -65,6 +88,6 @@ print f.read()
 print "</style>"
 print "</head>"
 print "<body>"
-print "<h1>Footprint XML Specification Version",version,"</h1>"
+print '<div class="titleText">Footprint XML Specification Version',version,'</div><br>'
 print s
 print "</body></html>"
