@@ -33,11 +33,13 @@
 {% block content_right %}
   <div class='top_search'>
     Show me all the activities:
-    <input type='text' id='keywords'
-           onchange='submitForm("keywords"); return false;'
-           size='60' value='{{ keywords }}' />
-    <input type=submit id='refine' value='Refine'
-           onclick='submitForm("keywords"); return false;' />
+    <nobr class='nobreak'>
+      <input type='text' id='keywords'
+             onchange='submitForm("keywords"); return false;'
+             size='60' value='{{ keywords }}' />
+      <input type=submit id='refine' value='Refine'
+             onclick='submitForm("keywords"); return false;' />
+    </nobr>
   </div>
   <div id='snippets_pane'>
     {% include 'snippets_list.html' %}
