@@ -1,0 +1,156 @@
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<font size="-1"><pre>
+Keys:  <span id='shortcut_dbg'></span>
+ - next listing: J or &gt; or Down
+ - prev listing: K or &lt; or Up
+ - reject: M or D or X
+ - accept: A or (space)
+ - defer: Q or ? or /
+ - process changes: (enter)
+</pre></font>
+
+{% if item_id %}
+<p>
+{{item_id}}
+<p>
+{{item_xml}}
+{% else %}
+
+<span style="font-family: Lucida Console, Andale Mono, Courier New, arial;">
+<form>
+{% for result in result_set %}
+<div id='r{{result.idx}}'>
+<span id='mk{{result.idx}}'>&nbsp;</span>
+{{result.idx}}. {{result.start_date}} {{result.quality_score}} {{result.title}}<br/>
+<span id='st{{result.idx}}'>&nbsp;&nbsp;&nbsp;&nbsp;</span> {{result.description}}<br/>
+</div>
+{% endfor %}
+</form>
+</span>
+<script>
+var current_row = 1;
+
+function highlight(i) {
+  var marker = document.getElementById('mk'+i);
+  if (marker != null) {
+    marker.innerText = "> "
+  }
+  var row = document.getElementById('r'+i);
+  if (row != null) {
+    row.style.backgroundColor = "yellow";
+  }
+}
+function unhighlight(i) {
+  var marker = document.getElementById('mk'+i);
+  if (marker != null) {
+    marker.innerHTML = "&nbsp;";
+  }
+  var row = document.getElementById('r'+i);
+  if (row != null) {
+    row.style.backgroundColor = "white";
+  }
+}
+
+function setStatus(s) {
+  var status = document.getElementById('st'+current_row);
+  if (status == null) { return; }
+  status.innerHTML = s;
+}
+function reset_listing() {
+  var row = document.getElementById('r'+current_row);
+  if (row == null) { return; }
+  row.style.textDecoration = "none";
+  row.style.color = "black";
+  row.style.fontWeight = "normal";
+  setStatus("&nbsp;&nbsp;&nbsp;&nbsp;");
+}
+
+function accept_listing() {
+  var row = document.getElementById('r'+current_row);
+  if (row == null) { return; }
+  if (row.style.fontWeight == "bold") {
+    reset_listing();
+  } else {
+    reset_listing();
+    row.style.fontWeight = "bold";
+    setStatus("<font size='-2'>ACCEPTED</font>");
+  }
+}
+function reject_listing() {
+  var row = document.getElementById('r'+current_row);
+  if (row == null) { return; }
+  if (row.style.textDecoration == "line-through") {
+    reset_listing();
+  } else {
+    reset_listing();
+    row.style.textDecoration = "line-through";
+    setStatus("<font size='-2'>REJECTED</font>");
+  }
+}
+function defer_listing() {
+  var row = document.getElementById('r'+current_row);
+  if (row == null) { return; }
+  if (row.style.color == "gray") {
+    reset_listing();
+  } else {
+    reset_listing();
+    row.style.color = "gray";
+    setStatus("<font size='-2'>DEFERRED</font>");
+  }
+}
+function next_listing() {
+  var i = current_row;
+  var marker = document.getElementById('mk'+(i+1));
+  if (marker == null) { return; }
+  unhighlight(i);
+  highlight(i+1);
+  current_row++;
+}
+function prev_listing() {
+  var i = current_row;
+  var marker = document.getElementById('mk'+(i-1));
+  if (marker == null) { return; }
+  unhighlight(i);
+  highlight(i-1);
+  current_row--;
+}
+function process_changes() {
+  alert("saving changes");
+}
+  
+highlight(current_row);
+</script>
+{% endif %}
+
+<script src="/js/shortcut.js"></script>
+<script>
+// J/K doesn't work in Chrome?!
+shortcut.add("K",prev_listing, {'keycode':75});
+shortcut.add("J",next_listing, {'keycode':74});
+shortcut.add(",",prev_listing);
+shortcut.add(".",next_listing);
+shortcut.add("<",prev_listing);
+shortcut.add(">",next_listing);
+shortcut.add("Up",prev_listing);
+shortcut.add("Down",next_listing);
+
+shortcut.add("D",reject_listing, {'keycode':68});
+shortcut.add("M",reject_listing, {'keycode':77});
+shortcut.add("X",reject_listing, {'keycode':88});
+
+shortcut.add("A",accept_listing, {'keycode':65});
+shortcut.add("Space",accept_listing);
+
+shortcut.add("?",defer_listing, {'keycode':191});
+shortcut.add("/",defer_listing);
+shortcut.add("Q",defer_listing, {'keycode':81});
+
+shortcut.add("Enter",process_changes);
+</script>
+
+{% endblock %}
+

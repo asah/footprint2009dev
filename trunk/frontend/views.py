@@ -7,6 +7,7 @@ import os
 import urllib
 import urlparse
 import logging
+import posting
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -30,6 +31,7 @@ SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 MY_EVENTS_TEMPLATE = 'my_events.html'
 POST_TEMPLATE = 'post.html'
+MODERATE_TEMPLATE = 'moderate.html'
 
 DEFAULT_NUM_RESULTS = 10
 
@@ -327,5 +329,53 @@ class post_view(webapp.RequestHandler):
       'user_display_name' : user_display_name,
       'user_type' : user_type,
     }
-
     self.response.out.write(render_template(POST_TEMPLATE, template_values))
+
+class moderate_view(webapp.RequestHandler):
+  def get(self):
+    user_info = userinfo.get_user(self.request)
+    user_id = ''
+    user_display_name = ''
+    user_type = None
+
+    if user_info:
+      #we are logged in
+      user_id = user_info.user_id
+      user_type = user_info.account_type
+      user_display_name = user_info.get_display_name()
+
+    action = self.request.get('action')
+    if action == "test":
+      posting.createTestDatabase()
+
+    item_xml = ""
+    item_id = None
+    reslist = None
+    if item_xml == "":
+      reslist = posting.query()
+      def compare_quality_scores(x,y):
+        diff = y.quality_score - x.quality_score
+        if (diff > 0): return 1
+        if (diff < 0): return -1
+        return 0
+      reslist.sort(cmp=compare_quality_scores)
+      for i,res in enumerate(reslist):
+        res.idx = i+1
+        if res.description > 100:
+          res.description = res.description[0:97]+"..."
+    else:
+      item_id = posting.create(item_xml)
+
+    template_values = {
+      'current_page' : 'MODERATE',
+      'user_id' : user_id,
+      'user_display_name' : user_display_name,
+      'user_type' : user_type,
+      'item_id' : item_id,
+      'item_xml' : item_xml,
+      'result_set' : reslist,
+    }
+
+    self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))
+
+
