@@ -6,6 +6,7 @@ google.friendconnect.container.loadOpenSocialApi({site: SITE_ID, onload: functio
 function checkForViewer() {
   // If the viewer is != null and the userId == null reload page.
   // This is a temporary placeholder until FC gives us an onSignIn callback
+  if (typeof(opensocial) == 'undefined') { return; }
   var req = opensocial.newDataRequest();
   req.add(req.newFetchPersonRequest('VIEWER'), 'viewer');
   req.send(setupData);

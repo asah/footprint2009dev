@@ -13,7 +13,8 @@ application = webapp.WSGIApplication(
      (urls.URL_SEARCH, views.search_view),
      (urls.URL_API_SEARCH, views.search_view),
      (urls.URL_MY_EVENTS, views.my_events_view),
-     (urls.URL_POST, views.post_view)
+     (urls.URL_POST, views.post_view),
+     (urls.URL_MODERATE, views.moderate_view)
     ],
     debug=True)
 
