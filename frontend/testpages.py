@@ -72,15 +72,16 @@ class ExpressInterest(webapp.RequestHandler):
     # Note: this is inscure and should use some simple xsrf protection like
     # a token in a cookie.
     user_entity = user.get_user_info()
-    opportunity = models.UserInterest.get_or_insert('id:' + opp_id,
-                                                    user=user_entity)
+    opportunity = models.UserInterest.get_or_insert(
+        models.UserInterest.DATASTORE_PREFIX + opp_id,
+        user=user_entity)
 
     if opportunity.expressed_interest != expressed_interest:
       opportunity.expressed_interest = expressed_interest
       opportunity.put()
       models.VolunteerOpportunityStats.increment(opp_id,
                                                  interested_count=delta)
-      key = 'id:' + opp_id
+      key = models.UserInterest.DATASTORE_PREFIX + opp_id
       info = models.VolunteerOpportunity.get_or_insert(key)
       if info.base_url != base_url:
         info.base_url = base_url
