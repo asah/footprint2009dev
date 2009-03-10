@@ -7,11 +7,16 @@ import xml.sax.saxutils
 import re
 import sys
 
-DEFAULT_TEST_BACKEND_TYPE = 'localdynamic'
-DEFAULT_TEST_URL = 'http://localhost:8088/api/search'
+DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/search'
 DEFAULT_RESPONSE_TYPES = 'rss'
 LOCAL_STATIC_URL = 'http://localhost:8080/test/sampleData.xml'
 CURRENT_STATIC_XML = 'sampleData0.1.xml'
+
+class ApiResult(object):
+  def __init__(self, title, description, url):
+    self.title = title
+    self.description = description
+    self.url = url
 
 def getNodeData(entity):
   if (entity.firstChild == None):
@@ -67,7 +72,10 @@ def MakeUri(apiUrl, responseType, options):
   return result
 
 def RunTests(webApp, testType, apiUrl, responseType):
+  webApp.response.out.write('<h2>running all test for response type: <em>' + responseType + '</em>')
+  
   TestNumResults(webApp, apiUrl, responseType)
+  TestQueryTerm(webApp, apiUrl, responseType)
   return True
 
 def RetrieveRawData(fullUri):
@@ -80,7 +88,7 @@ def ParseRSS(data):
   xmldoc = minidom.parseString(data)
   items = xmldoc.getElementsByTagName('item')
   for item in items:
-    result.append(getTagValue(item, 'title'))
+    result.append(ApiResult(getTagValue(item, 'title'), getTagValue(item, 'description'), getTagValue(item, 'link')))
   
   return result
   
@@ -115,10 +123,41 @@ def TestNumResults(webApp, apiUrl, responseType):
   if (len(opps) == requestCount):
     webApp.response.out.write('<p class="result success">Passed</p>')
   else:
-    webApp.response.out.write('<p class="result fail">Fail. <span>Requested ' + str(requestCount) + ', received ' + str(len(opps)) + '</p>')
+    webApp.response.out.write('<p class="result fail">Fail. <span>Requested ' + str(requestCount) + ', received ' + str(len(opps)) + '</span></p>')
     result = False
   #except:
   #  webApp.response.out.write('<p class="result fail">ParseRawData failed. Unable to parse response.</p>')
+  
+  return result
 
+def TestQueryTerm(webApp, apiUrl, responseType):
+  result = True
+  term = 'walk'
+  
+  webApp.response.out.write('<p class="test">TestQueryTerm running...</p>')
+  # quick test to see if the api returns the requested number of results
+  fullUri = MakeUri(apiUrl, responseType, ["q=" + str(term)])
+  webApp.response.out.write('<p class="uri">' + fullUri + '</p>')
+  
+  try:
+    data = RetrieveRawData(fullUri)
+  except:
+    webApp.response.out.write('<p class="result fail">RetrieveRawData failed.</p>')
+    return False
+  
+  #try:
+  opps = ParseRawData(data, responseType)
+  for opp in opps:
+    if re.search(term, opp.title, re.I) == None and re.search(term, opp.description, re.I) == None:
+      webApp.response.out.write('<p class="result amplification">Did not find search term <strong>' + term + '</strong> in item ' + opp.title + ': ' + opp.description)
+      result = False
+    
+  if result:
+    webApp.response.out.write('<p class="result success">Passed</p>')
+  else:
+    webApp.response.out.write('<p class="result fail">Fail. <span>One or more items did not match search term <strong>' + term + '</strong></span></p>')
+    result = False
+  #except:
+  #  webApp.response.out.write('<p class="result fail">ParseRawData failed. Unable to parse response.</p>')
   
   return result
