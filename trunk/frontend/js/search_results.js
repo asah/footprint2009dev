@@ -87,7 +87,7 @@ function doInlineSearch(keywords, location, date, updateMap) {
 
     var xmlHttp = GXmlHttp.create();
 
-    var url = '/search?output=snippets_list&';
+    var url = '/api/search?output=snippets_list&';
     var query = '';
 
     function addQueryParam(name, value) {
@@ -110,8 +110,13 @@ function doInlineSearch(keywords, location, date, updateMap) {
         if (updateMap) {
           map.setCenterGeocode(location);
         }
-        window.location.hash = query;
         el('snippets_pane').innerHTML = this.responseText;
+
+        // Set the URL hash, but only if the query string is not empty.
+        // Setting hash to an empty string causes a page reload.
+        if (query.length > 0) {
+          window.location.hash = query;
+        }
       }
     }
     xmlHttp.send(null);

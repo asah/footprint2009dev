@@ -183,3 +183,22 @@ AsyncLoadManager.prototype.doneLoading = function(eventName) {
 // Globals
 var queryParams = GetQueryParams();
 var hashParams = GetHashParams();
+
+// Define console.log in case it's not already.
+try {
+  var console = {};
+  console.text_ = '';
+  console.visible_ = false;
+  console.div_ = null;
+  console.log = function(text) {
+    if (!console.visible_ && getHashOrQueryParam('debugjs') != null) {
+      console.visible_ = true;
+      console.div_ = document.createElement('div');
+      console.div_.style.border = '1px solid silver';
+      console.div_.style.padding = '4px';
+      document.body.appendChild(console.div_);
+    }
+    console.text_ += text + '<br>';
+    console.div_.innerHTML = console.text_;
+  }
+} catch(err) {}

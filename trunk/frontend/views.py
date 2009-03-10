@@ -9,6 +9,7 @@ import urlparse
 import logging
 import posting
 
+from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -31,6 +32,7 @@ SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 MY_EVENTS_TEMPLATE = 'my_events.html'
 POST_TEMPLATE = 'post.html'
+ADMIN_TEMPLATE = 'admin.html'
 MODERATE_TEMPLATE = 'moderate.html'
 
 DEFAULT_NUM_RESULTS = 10
@@ -75,7 +77,6 @@ class test_page_views_view(webapp.RequestHandler):
 
 class main_page_view(webapp.RequestHandler):
   def get(self):
-    template_values = []
     result_set = {}
     template_values = {
         'result_set': result_set,
@@ -208,26 +209,21 @@ class search_view(webapp.RequestHandler):
         if "geocode_responses" not in unique_args:
           unique_args["geocode_responses"] = 1
         template = SEARCH_RESULTS_DEBUG_TEMPLATE
+      elif output == "snippets_list":
+        # Return just the snippets list HTML.
+        template = SNIPPETS_LIST_TEMPLATE
+
+        # Retrieve the user-specific information for the search result set.
+        user = userinfo.get_user(self.request)
+        if user:
+          user_id = user.user_id
+          user_display_name = user.get_display_name()
+          user_type = user.account_type
+          result_set = get_annotated_results(user, result_set)
       else:
         # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
         # TODO: careful about escapification/XSS
         template = SEARCH_RESULTS_RSS_TEMPLATE
-    else:
-      # Not an api call.  Use the consumer UI output template
-      if output == "snippets_list":
-        # Return just the snippets list HTML.
-        template = SNIPPETS_LIST_TEMPLATE
-      else:
-        # The main search results page.
-        template = SEARCH_RESULTS_TEMPLATE
-
-      # Retrieve the user-specific information for the search result set.
-      user = userinfo.get_user(self.request)
-      if user:
-        user_id = user.user_id
-        user_display_name = user.get_display_name()
-        user_type = user.account_type
-        result_set = get_annotated_results(user, result_set)
 
     #logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
 
@@ -331,6 +327,22 @@ class post_view(webapp.RequestHandler):
     }
     self.response.out.write(render_template(POST_TEMPLATE, template_values))
 
+
+class admin_view(webapp.RequestHandler):
+  def get(self):
+    template_values = {
+      'logout_link': users.create_logout_url('/'),
+    }
+
+    user = users.get_current_user()
+    if user and users.is_current_user_admin():
+      self.response.out.write(render_template(ADMIN_TEMPLATE,
+                                              template_values))
+    else:
+      html = "<html><body><a href=\'%s\'>Sign in</a></body></html>"
+      self.response.out.write(html % (users.create_login_url(self.request.url)))
+
+
 class moderate_view(webapp.RequestHandler):
   def get(self):
     user_info = userinfo.get_user(self.request)
@@ -377,5 +389,3 @@ class moderate_view(webapp.RequestHandler):
     }
 
     self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))
-
-
