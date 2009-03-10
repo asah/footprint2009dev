@@ -23,7 +23,7 @@ Keys:  <span id='shortcut_dbg'></span>
 <span style="font-family: Lucida Console, Andale Mono, Courier New, arial;">
 <form>
 {% for result in result_set %}
-<div id='r{{result.idx}}'>
+<div style='padding:5px 7px 5px 7px' id='r{{result.idx}}' name='id{{result.id}}'>
 <span id='mk{{result.idx}}'>&nbsp;</span>
 {{result.idx}}. {{result.start_date}} {{result.quality_score}} {{result.title}}<br/>
 <span id='st{{result.idx}}'>&nbsp;&nbsp;&nbsp;&nbsp;</span> {{result.description}}<br/>
