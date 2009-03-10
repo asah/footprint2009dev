@@ -30,6 +30,7 @@ import searchresult
 import utils
 
 RESULT_CACHE_TIME = 900 # seconds
+RESULT_CACHE_KEY = 'searchresult:'
 
 # Google base namespace, typically xmlns:g='http://base.google.com/ns/1.0'
 XMLNS_BASE='http://base.google.com/ns/1.0'
@@ -125,10 +126,9 @@ def query(query_url, args, cache):
                                             [])
   result_set.args = args
 
-  # TODO: consider removing this-- urlfetch() already has a good cache.
-  # (avoids cache overflow).  If we still want it, then move to
-  # search.py, i.e. not Base specific.
+  # TODO: consider moving this to search.py, i.e. not Base specific.
   # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
+  # I (mblain) suggest using "zx", which is used at Google for most services.
   # note: key cannot exceed 250 bytes
   memcache_key = hash_md5('query:' + query_url)
   result_content = memcache.get(memcache_key)
@@ -185,9 +185,9 @@ def query(query_url, args, cache):
     res.startdate = re.sub(r'[T ].+$', r'', res.event_date_range)
     # todo: start time, etc.
     # score results
-    res.score_by_base_rank = (total_results - i)/total_results 
+    res.score_by_base_rank = (total_results - i)/total_results
     res.score = res.score_by_base_rank
-    
+
     t1 = time.mktime(time.strptime(res.startdate[:10], "%Y-%m-%d"))
     if t1 == t0:
       res.date_dist_multiplier = 1.0
@@ -233,7 +233,7 @@ def query(query_url, args, cache):
     res.score_notes = score_notes
     result_set.results.append(res)
     if cache and res.id:
-      key = "searchresult:" + res.id
+      key = RESULT_CACHE_KEY + res.id
       memcache.set(key, res, time=RESULT_CACHE_TIME)
       # Datastore updates are expensive and space-consuming, so only add them
       # if a user expresses interest in an opportunity--e.g. elsewhere.
@@ -250,52 +250,79 @@ def query(query_url, args, cache):
 
   return result_set
 
-def get_from_id(id):
-  """Return a searchresult from the stable ID."""
-  key = 'searchresult:' + id
-  try:
-    search_result = memcache.get(key)
-    if search_result:
-      return search_result
-  except Exception:
-    search_result = None
-  
-  # Now things get more complex: We need to find the base entry from the
-  # datastore, then look that up in base, then return that info.
-  key = 'id:' + id
-  info = models.VolunteerOpportunity.get_by_key_name(key)
-  if not info:
-    logging.warning('Could not find entry in datastore for id: %s' % id)
-    return None
-  if not info.base_url:
-    logging.warning('Could not find base_url in datastore for id: %s' % id)
-    return None
-  result_set = query(info.base_url, None, True)
-  if not result_set.results:
-    # The base URL may have changed from under us. Oh well.
-    logging.warning('Did not get results from base. id: %s base_url: %s '
-                    'Last update: %s Previous failure: %s' %
-                    (id, info.base_url, info.last_base_url_update, 
-                     info.last_base_url_update_failure))
-    info.base_url_failure_count += 1
-    info.last_base_url_update_failure = datetime.datetime.now()
-    info.put()
-    return None
-  
-  if (result_set.results[0].id != id):
-    logging.error('First result is not expected result. '
-                  'Expected: %s Found: %s. len(results): %s' %
-                  (id, result_set.results[0].id, len(results)))
-    # Not sure if we should touch the VolunteerOpportunity or not.
-    return None
-  
-  return result_set.results[0]
-  
 def get_from_ids(ids):
-  """Return a result set containing multiple results for multiple ids."""
+  """Return a result set containing multiple results for multiple ids.
+
+  Args:
+    ids: Iterable of stable IDs of volunteer opportunities.
+
+  Returns:
+    searchresult.SearchResultSet with just the entries in ids.
+  """
+
   result_set = searchresult.SearchResultSet('', '', [])
+
+  # First get all that we can from memcache
+  results = {}
+  try:
+    results = memcache.get(ids, RESULT_CACHE_KEY)
+  except Exception:
+    pass  # Memcache is busted. Oh well.
+  for (id, result) in results:
+    result_set.results.append(result)
+
+  #logging.debug("Got these: %s", results.keys())
+
+  # OK, we've collected what we can from memcache. Now look up the rest.
+  # Find the Google Base url from the datastore, then look that up in base.
+  missing_ids = []
   for id in ids:
-    result = get_from_id(id)
-    if result:
-      result_set.results.append(result)
+    if not id in results:
+      missing_ids.append(id)
+
+  #logging.debug("About to get these: %s", missing_ids)
+  datastore_results = models.get_by_ids(models.VolunteerOpportunity, missing_ids)
+
+  datastore_missing_ids = []
+  for id in ids:
+    if not id in datastore_results:
+      datastore_missing_ids.append(id)
+  if datastore_missing_ids:
+    logging.warning('Could not find entry in datastore for ids: %s' %
+                    datastore_missing_ids)
+
+  # Bogus args for search. TODO: Remove these, why are they needed above?
+  args = {}
+  args["startDate"] = (datetime.date.today() + 
+                       datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+  tt = time.strptime(args["startDate"], "%Y-%m-%d")
+  args["stopDate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
+                      datetime.timedelta(days=60))
+
+  # TODO(mblain): Figure out how to pull in multiple base entries in one call.
+  for (id, volunteer_opportunity_entity) in datastore_results.iteritems():
+    if not volunteer_opportunity_entity.base_url:
+      logging.warning('Could not find base_url in datastore for id: %s' % id)
+      continue
+    temp_results = query(volunteer_opportunity_entity.base_url, args, True)
+    if not temp_results.results:
+      # The base URL may have changed from under us. Oh well.
+      logging.warning('Did not get results from base. id: %s base_url: %s '
+                      'Last update: %s Previous failure: %s' %
+                      (id, info.base_url, info.last_base_url_update,
+                       info.last_base_url_update_failure))
+      volunteer_opportunity_entity.base_url_failure_count += 1
+      volunteer_opportunity_entity.last_base_url_update_failure = \
+          datetime.datetime.now()
+      volunteer_opportunity_entity.put()
+      continue
+    if temp_results.results[0].id != id:
+      logging.error('First result is not expected result. '
+                    'Expected: %s Found: %s. len(results): %s' %
+                    (id, temp_results.results[0].id, len(results)))
+      # Not sure if we should touch the VolunteerOpportunity or not.
+      continue
+    result_set.results.append(temp_results.results[0])
+
   return result_set
+

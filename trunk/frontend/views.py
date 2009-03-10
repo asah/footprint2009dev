@@ -106,23 +106,21 @@ def get_user_interests(user, remove_no_interest):
   return user_interests
 
 
-def get_interest_for_opportunities(opp_id):
+def get_interest_for_opportunities(opp_ids):
   """Get the interest statistics for a set of volunteer opportunities.
 
   Args:
-    opp_id: volunteer opportunity id, or list of volunteer opportunity ids.
+    opp_ids: list of volunteer opportunity ids.
 
   Returns:
     Dictionary of volunteer opportunity id: interested_count.
   """
   others_interests = {}
 
-  #logging.info("oppids are %s" % opp_id)
-
-  for interest in models.VolunteerOpportunityStats.get_by_key_name(opp_id):
-    # logging.info("interest is %s" % interest)
+  interests = models.get_by_ids(models.VolunteerOpportunityStats, opp_ids)
+  for (id, interest) in interests.iteritems():
     if interest:
-      others_interests[interest.key().name()[3:]] = interest.interested_count
+      others_interests[id] = interest.interested_count
   return others_interests
 
 
@@ -137,14 +135,14 @@ def get_annotated_results(user, result_set):
   """
 
   # Get all the ids of items we've found
-  opp_ids = ['id:' + result.id for result in result_set.results];
+  opp_ids = [result.id for result in result_set.results];
 
   # mark the items the user is interested in
   user_interests = get_user_interests(user, True)
 
   # note the interest of others
   others_interests = get_interest_for_opportunities(opp_ids)
-  
+
   return annotate_results(user_interests, others_interests, result_set)
 
 def annotate_results(user_interests, others_interests, result_set):
