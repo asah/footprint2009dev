@@ -121,6 +121,15 @@ body, html {
   margin: 5px 0px;
 }
 
+.unstarred {
+  background-image: url(/images/Event-UnSelected-Star.png);
+  height: 16px;
+}
+
+.starred {
+  background-image: url(/images/Event-Selected-Star.png);
+  height: 16px;
+}
 
 /** ShareThis defined style **/
 .stbutton {

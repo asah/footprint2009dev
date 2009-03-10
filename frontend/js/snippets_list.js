@@ -41,31 +41,26 @@ function addToCalendar(div, type, eventUrl, eventTitle, eventSnippet,
   window.open(url, 'calendar');
 }
 
-function expressInterest(div, eventUrl, baseUrl, interest) {
-  // TODO: cycle star back to 'off' state
-  if (div.interest != undefined) {
-    interest = div.interest;
-  }
-  interest = 0 + interest;
-  // hack!
-  newinterest = 1;
-  if (interest > 0) {
-    newinterest = 0;
-  }
-  div.interest = newinterest;
+function toggleInterest(div, eventUrl, baseUrl) {
+  // TODO: First need to check if the user is logged in
 
-  // This escaping code is unsafe!
-  div.childNodes[1].src='/test/interest?i=' + newinterest
+  var interest;
+  if (div.className == 'snippet_button unstarred') {
+    div.className = 'snippet_button starred';
+    interest = 1;
+  } else {
+    div.className = 'snippet_button unstarred';
+    interest = 0;
+  }
+
+
+  // TODO: This escaping code is unsafe!
+  var path = '/test/interest?i=' + interest
                         + '&oid=' + escape(eventUrl)
                         + '&base_url=' + escape(baseUrl)
                         + '&zx=' + Math.random();
-  function fixit() {
-    if (newinterest) {
-      // TODO: different icon for new interest?
-      div.childNodes[1].src='images/star-on.png';
-    } else {
-      div.childNodes[1].src='images/star-on.png';
-    }
-  }
-  window.setTimeout(fixit, 10);
+
+  var xmlHttp = GXmlHttp.create();
+  xmlHttp.open('GET', path, true);
+  xmlHttp.send(null);
 }
