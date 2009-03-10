@@ -15,9 +15,8 @@ function SimpleMap(div) {
 
     this.map_.setCenter(new GLatLng(lat, lon), zoom);
     this.map_.enableContinuousZoom();
-    this.map_.enableScrollWheelZoom();
     this.geocoder_ = new GClientGeocoder();
-    this.map_.addControl(new GSmallMapControl());
+    this.map_.addControl(new GSmallZoomControl());
 
     if (false) {
       this.icon_ = new GIcon(G_DEFAULT_ICON, "/images/markers/red.png");
@@ -69,4 +68,3 @@ SimpleMap.prototype.geocode = function(locationString, callback) {
     callback(latLng, 0);
   });
 }
-
