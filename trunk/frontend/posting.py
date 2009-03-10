@@ -5,6 +5,7 @@
 
 from datetime import datetime
 import logging
+import hashlib
 from xml.dom import minidom
 from google.appengine.ext import db
 
@@ -29,6 +30,7 @@ class Error(Exception):
 class Posting(db.Model):
   """Postings going through the approval process."""
   # Key is assigned ID (not the stable ID)
+  id = db.StringProperty(default="")
   status = db.StringProperty(default="NEW")
 
   # for queries, parse-out these fields - note that we don't care about datatypes
@@ -105,6 +107,7 @@ def create(listing_xml):
   except:
     pass
     # ignore bad start date
+  posting.id = hashlib.md5(listing_xml+str(posting.creation_time)).hexdigest()
   posting.put()
   return posting.key()
 
