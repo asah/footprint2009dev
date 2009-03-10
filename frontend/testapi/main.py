@@ -20,23 +20,15 @@ class DumpSampleData(webapp.RequestHandler):
 class RunTests(webapp.RequestHandler):
   def get(self):
     testType = self.request.get('test_type') or 'default'
-    backendType = self.request.get('backend_type') or testapi.helpers.DEFAULT_TEST_BACKEND_TYPE
     responseTypes = self.request.get('response_types') or testapi.helpers.DEFAULT_RESPONSE_TYPES
     remoteUrl = self.request.get('url') or ''
     errors = ''
-    
-    if backendType == 'localstatic':
-      apiUrl = testapi.helpers.LOCAL_STATIC_URL
+
+    if remoteUrl == '':
+      errors = 'No remote url given in request, using default url'
+      apiUrl = testapi.helpers.DEFAULT_TEST_URL
     else:
-      if backendType == 'localdynamic':
-        apiUrl = testapi.helpers.DEFAULT_TEST_URL
-      else:
-        #backendType = 'remote'
-        if remoteUrl == '':
-          errors = 'No remote url given in request, using localdynamic url'
-          apiUrl = testapi.helpers.DEFAULT_TEST_URL
-        else:
-          apiUrl = remoteUrl
+      apiUrl = remoteUrl
         
     self.response.out.write('<style>')
     self.response.out.write('p {font-family: Arial, sans-serif; font-size: 10pt; margin: 0;}')
@@ -46,10 +38,10 @@ class RunTests(webapp.RequestHandler):
     self.response.out.write('.result {font-size: 11pt; font-weight: normal; margin-left: 8px; margin-bottom: 4px;}')
     self.response.out.write('.fail {color: #880000;}')
     self.response.out.write('.success {color: #008800;}')
+    self.response.out.write('.amplification {color: gray; margin-left: 16px;}')
     self.response.out.write('</style>')
     self.response.out.write('<h1>Running test: ' + testType + '</h1>')
     self.response.out.write('<p class="error">' + errors + '</p>')
-    self.response.out.write('<p>Backend type: ' + backendType + '</p>')
     self.response.out.write('<p>Response types: ' + responseTypes + '</p>')
     self.response.out.write('<p>API url: ' + apiUrl + '</p>')
     
