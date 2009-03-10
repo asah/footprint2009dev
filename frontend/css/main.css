@@ -3,6 +3,89 @@ body, html {
   margin: 0px;
 }
 
+
+/** Header Styles **/
+
+.header_title {
+  float: left;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  padding-left: 10px;
+  width: 240px;
+}
+
+#header_top_spacer {
+  height: 15px;
+}
+
+.header {
+  background: #2475B6;
+  border-bottom: 1px solid #193b6b;
+  height: 40px;
+}
+
+.tab_active,
+.tab_inactive {
+  float: left;
+  font-weight: bold;
+  color: #193B6B;
+  border-style: solid;
+  border-width: 1px;
+  height: 24px;
+  padding: 0px 10px;
+  margin-right: 8px;
+}
+
+.tab_active {
+  border-color: #333333 #333333 white;
+  background: white;
+}
+
+.tab_inactive {
+  border-color: #669FCC #669FCC #333333;
+  background: #669FCC;
+}
+
+.hello_name {
+  font-size: small;
+  float: right;
+  font-weight: bold;
+  margin-right: 10px;
+  color: white;
+}
+
+
+/** Content sections **/
+#content {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 15px;
+}
+
+#content_left {
+}
+
+#content_right {
+  padding-left: 10px;
+}
+
+
+/** Row highlighting **/
+.row_plain {
+  background-color: white;
+}
+
+.row_highlight {
+  background-color: #ECF3F8;
+}
+
+
+/** Search results page **/
+.top_search {
+  margin-bottom: 10px;
+}
+
 .snippet {
   margin-bottom: 10px;
 }
@@ -25,111 +108,8 @@ body, html {
   color: #669FCC;
 }
 
-.snippet_location {
+.snippet_sub_text {
   color: #999999;
-}
-
-.snippet_actions {
-  width: 600px;
-  margin-left: 10px;
-  padding: 6px;
-}
-
-.snippet_star_count {
-  font-weight: bold;
-  font-size: small;
-}
-
-#snippet_pane {
-  margin-left: 8px;
-}
-
-.header_title {
-  float: left;
-  color: white;
-  font-weight: bold;
-  font-size: x-large;
-  padding: 0px 30px 0px 15px;
-  width: 290px;
-}
-
-#header_top_spacer {
-  height: 15px;
-  background: #2475b6;
-}
-
-.header {
-  background: #2475B6;
-  border-bottom: 1px solid #193b6b;
-}
-
-.tab_active,
-.tab_inactive {
-  float: left;
-  font-weight: bold;
-  color: #193B6B;
-  border-style: solid;
-  border-width: 1px;
-  padding: 5px 10px;
-  margin-right: 8px;
-  margin-bottom: -1px;
-  cursor: pointer;
-}
-
-.tab_active {
-  border-color: #333333 #333333 white;
-  background: white;
-}
-
-.tab_inactive {
-  border-color: #669FCC #669FCC #333333;
-  background: #669FCC;
-}
-
-/*
- * NOTE: I don't really know what I'm doing here in terms of css.
- * It all looks nice on my box but is definitely not cross browser
- * and cross screen size friendly!
- **/
-.right_pane {
-  float: left;
-  width: 200px;
-  background-color: #ECF3F8;
-  margin-right: 10px;
-  margin-top: 10px;
-  padding: 10px;
-  height: 100%;
-}
-
-.left_pane {
-  margin-top: 10px;
-  padding: 10px;
-  padding-top: 0px;
-  float: left;
-  width: 550px;
-}
-
-/** end of questionable css */
-
-.pane_title {
-  font-weight: bold;
-  color: #2475B6;
-}
-
-.member_row0,
-.member_row1 {
-  padding: 5px;
-  margin-bottom: 5px;
-  background-color: white;
-}
-
-.member_row0 {
-  background-color: #ECF3F8;
-}
-
-.member_photo {
-  width: 45px;
-  height: 45px;
 }
 
 .snippet_buttons {
@@ -141,58 +121,26 @@ body, html {
   margin: 5px 0px;
 }
 
-.activity {
-  margin-bottom: 10px;
-  padding: 5px;
-  background-color: #ECF3F8;
-}
 
-.activity_body {
-  padding-left: 10px;
-}
-
-/** Friend Connect defined style **/
-.ot-activity-metadata {
-  display: none;
-}
-
-/** ShareThis defined styles **/
+/** ShareThis defined style **/
 .stbutton {
   color: white;
   text-decoration: none;
 }
 
+
+/** Search results - map **/
 #map {
   border: 1px solid silver;
   margin-bottom: 10px;
-  width: 300px;
-  height: 300px;
-  float: left;
+  width: 228px;
+  height: 228px;
 }
 
-/** Search results' calendar style **/
+/** Search results - calendar **/
 #calendar {
-  margin-bottom: 15px;
-  width: 300px;
-  float: left;
-}
-
-.top_search {
-  margin-top: 15px;
   margin-bottom: 10px;
-}
-
-#content {
-  margin: 0px 10px;
-}
-
-#content_left {
-  margin-left: 10px;
-}
-
-#content_right {
-  margin-left: 10px;
-  margin-right: 10px;
+  width: 230px;
 }
 
 #calendar table {
@@ -227,11 +175,14 @@ body, html {
   background: #fff;
 }
 
+/* TODO(doll): remove this unneccesary div */
 .calendar_container {
-/*  background: #e5e3df;*/
   width: 100%;
   height: 100%;
 }
+
+
+/** Generic Styles **/
 
 /* TODO(paul): unselectable in IE */
 .noselect {
@@ -242,14 +193,6 @@ body, html {
 
 .pointer {
   cursor: pointer;
-}
-
-.hello_name {
-  font-size: small;
-  float: right;
-  font-weight: bold;
-  margin-right: 10px;
-  color: white;
 }
 
 .nobreak {

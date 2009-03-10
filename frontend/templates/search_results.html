@@ -17,26 +17,21 @@
   <div id='calendar'>
     {% include 'calendar_widget.html' %}
   </div>
-  <br/>
-  <br/>
   <div id='map'></div>
-  <div style='float:none; clear:both;'></div>
   <div>
     In or near: <input style='margin-left: 10px;' id='location'
                        onchange='submitForm("map"); return false;'
-                       type='text' size='30' value='{{ location }}'/>
+                       type='text' size='18' value='{{ location }}'/>
   </div>
 {% endblock content_left %}
 
-{% block width_left %}320{% endblock %}
-
 {% block content_right %}
   <div class='top_search'>
-    Show me all the activities:
+    Show me all activities:
     <nobr class='nobreak'>
       <input type='text' id='keywords'
              onchange='submitForm("keywords"); return false;'
-             size='60' value='{{ keywords }}' />
+             size='40' value='{{ keywords }}' />
       <input type=submit id='refine' value='Refine'
              onclick='submitForm("keywords"); return false;' />
     </nobr>
@@ -45,8 +40,6 @@
     {% include 'snippets_list.html' %}
   </div>
 {% endblock content_right %}
-
-{% block width_right %}{% endblock %}
 
 {% block prefooter %}
 <center>
