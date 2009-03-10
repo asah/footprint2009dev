@@ -1,43 +1,45 @@
 {% for result in result_set.results %}
-  <div class='snippet'>
+  <div class='snippet {% cycle row_highlight,row_plain %}'>
     <table>
     <tr>
     <td valign='top'>
     <div class='snippet_buttons'>
-      <!--<script type="text/javascript">
-        SHARETHIS.addEntry({
-            url: "{{result.url|escape}}",
-            title: "{{result.js_escaped_title|escape}}",
-            summary: "{{result.js_escaped_snippet|escape}}"
-        }, {offsetLeft: -250});
-      </script>-->
-      <!-- TODO: We need locations and dates for adding to calendars -->
-
       <div class='snippet_button'
            onclick='expressInterest(this, "{{result.id|escape}}",
                                           "{{result.base_url|escape}}",
                                           "{{result.interest|escape}}")'>
         {% if result.interest %}
-          <img src='images/star-on.png' alt=''/>
+          <img src='images/Event-Selected-Star.png' alt=''/>
         {% else %}
-          <img src='images/star-off.png' alt=''/>
+          <img src='images/Event-UnSelected-Star.png' alt=''/>
         {% endif %}
       </div>
 
+      <!-- TODO(doll): Add to calendar functions need dates in the right format -->
       <div class='snippet_button'
            onclick='addToCalendar(this, "YAHOO", "{{result.url|escape}}",
                                   "{{result.js_escaped_title|escape}}",
                                   "{{result.js_escaped_snippet|escape}}",
-                                  "20090214", "locationPlaceholder")'>
-        <img src='images/yahoo.gif' height="16px" alt='Yahoo! Calendar'/>
+                                  "20090214", "{{result.location}}")'>
+        <img src='images/Event-AddToCalendar.png' height="16px" alt='Yahoo! Calendar'/>
       </div>
       <div class='snippet_button'
            onclick='addToCalendar(this, "GOOGLE", "{{result.url|escape}}",
                                   "{{result.js_escaped_title|escape}}",
                                   "{{result.js_escaped_snippet|escape}}",
-                                  "20090214", "locationPlaceholder")'>
-        <img src='images/google.png' height="16px" alt='Google Calendar'/>
+                                  "20090214", "{{result.location}}")'>
+        <img src='images/Event-AddToCalendar.png' height="16px" alt='Google Calendar'/>
       </div>
+      <div class='snippet_button'>
+        <script type="text/javascript">
+        SHARETHIS.addEntry({
+            url: "{{result.url|escape}}",
+            title: "{{result.js_escaped_title|escape}}",
+            summary: "{{result.js_escaped_snippet|escape}}"
+        }, {offsetLeft: 0});
+        </script>
+      </div>
+
     </div>
     </td>
     <td valign='top'>
@@ -51,9 +53,14 @@
       <div class='snippet_title'>
         <a href='{{ result.url }}'>{{ result.title }}</a>
       </div>
-      {% if location %}
-        <div class='snippet_location'>
+      {% if location or result.interest_count %}
+        <div class='snippet_sub_text'>
           {{ result.location }}
+          {% if result.interest_count %}
+            {% if location %}-{% endif %}
+            <img src="images/Event-StarredByOthers.png" alt="Starred"/> by {{result.interest_count}}
+            {% ifequal result.interest_count 1 %} person {% else %} people {% endifequal %}
+          {% endif %}
         </div>
       {% endif %}
       <div class='snippet_text'>
@@ -63,15 +70,6 @@
         <a href='{{ result.url }}'>{{ result.url_short }}</a>
       </div>
 
-      <div class='snippet_star_count'>
-      {% if result.interest_count %}
-        {% ifequal result.interest_count 1 %}
-          Starred by one other person.
-        {% else %}
-          Starred by {{result.interest_count}} other people.
-        {% endifequal %}
-      {% endif %}
-      </div>
     </div>
     </td>
     </tr>
