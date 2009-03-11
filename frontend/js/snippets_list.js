@@ -1,5 +1,3 @@
-google.friendconnect.container.loadOpenSocialApi({site: SITE_ID, onload: function() {}});
-
 function broadcastEvent(div, eventUrl, eventTitle, eventSnippet) {
   opensocial.requestCreateActivity(opensocial.newActivity(
       {title: document.userDisplayName

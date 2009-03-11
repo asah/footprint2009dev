@@ -95,7 +95,7 @@ class FriendConnectUser(User):
 
   @classmethod
   def get_cookie(cls):
-    return get_cookie('_ps_auth02962301966004179520')
+    return get_cookie('fcauth02962301966004179520')
 
   @classmethod
   def get_fc_user_info(cls):
