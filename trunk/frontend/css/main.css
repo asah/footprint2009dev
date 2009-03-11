@@ -112,6 +112,11 @@ body, html {
   color: #999999;
 }
 
+.snippet_sub_text A {
+  color: #9999cc;
+  text-decoration: underline;
+}
+
 .snippet_buttons {
   float: left;
   color: gray;
@@ -121,10 +126,17 @@ body, html {
   margin: 5px 0px;
 }
 
+<<<<<<< .mine
+.more_link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+=======
 .unstarred {
   background-image: url(/images/Event-UnSelected-Star.png);
   height: 16px;
 }
+>>>>>>> .r181
 
 .starred {
   background-image: url(/images/Event-Selected-Star.png);

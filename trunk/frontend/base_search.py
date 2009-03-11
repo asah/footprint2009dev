@@ -65,13 +65,16 @@ def search(args):
     # note: default startDate is "tomorrow"
     # in base, event_date_range YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss
     # appending "Z" to the datetime string would mean UTC
-    args["startDate"] = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+    args["startDate"] = (datetime.date.today() 
+                    + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
   if "stopDate" not in args:
     tt = time.strptime(args["startDate"], "%Y-%m-%d")
-    args["stopDate"] = datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) + datetime.timedelta(days=60)
+    args["stopDate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) 
+                    + datetime.timedelta(days=60))
 
-  base_query += ' [event_date_range: %s..%s]' % (args["startDate"], args["stopDate"])
+  base_query += ' [event_date_range: %s..%s]' % (args["startDate"], 
+  args["stopDate"])
 
   # TODO: injection attack on sort
   if "sort" not in args:
@@ -80,8 +83,9 @@ def search(args):
   # TODO: injection attacks in vol_loc
   if args["vol_loc"] != "":
     args["vol_dist"] = int(str(args["vol_dist"]))
-    # TODO: looks like the default is 25 mi, should we check for some value as a min here?
-    base_query += ' [location: @"%s" + %dmi]' % (args["vol_loc"], args["vol_dist"])
+    # TODO: looks like the default is 25 mi, check for value as a min here?
+    base_query += ' [location: @"%s" + %dmi]' % (args["vol_loc"], 
+    args["vol_dist"])
 
   # Base URL for snippets search on Base.
   #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
@@ -91,7 +95,8 @@ def search(args):
 
   if make_base_arg("customer") not in args:
     args[make_base_arg("customer")] = 5663714;
-  base_query += ' [customer id: '+str(int(args[make_base_arg("customer")]))+']'
+  base_query += (' [customer id: '
+           + str(int(args[make_base_arg("customer")])) + ']')
 
   base_query += ' [detailurl][event_date_range]'
 
@@ -113,12 +118,10 @@ def search(args):
 
   return query(query_url, args, False)
 
-
 def hash_md5(s):
   it = md5.new()
   it.update(s)
   return it.digest()
-
 
 def query(query_url, args, cache):
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
@@ -161,9 +164,11 @@ def query(query_url, args, cache):
     location = utils.GetXmlElementText(entry, XMLNS_BASE, 'location_string')
     #logging.info("title="+title+"  location="+str(location)+"  url="+url)
     #logging.info("title="+title+"  location="+str(location))
-    res = searchresult.SearchResult(url, title, snippet, location, id, base_url)
+    res = searchresult.SearchResult(url, title, snippet, 
+                                    location, id, base_url)
     # TODO: escape?
-    res.provider = utils.GetXmlElementText(entry, XMLNS_BASE, 'feed_providername')
+    res.provider = utils.GetXmlElementText(entry, 
+                                    XMLNS_BASE, 'feed_providername')
     res.orig_idx = i+1
     res.latlong = ""
     #logging.info(re.sub(r'><', r'>\n<',entry.toxml()))
@@ -177,11 +182,13 @@ def query(query_url, args, cache):
     #if lat_element and lat_element != "" and long_element and long_element != "":
     #  res.latlong = lat_element + "," + long_element
 
-    # TODO: remove-- this is working around a DB bug where all the latlongs are the same
+    # TODO: remove-- working around a DB bug where all latlongs are the same
     if "geocode_responses" in args:
-      res.latlong = geocode.geocode(location, args["geocode_responses"]!="nocache" )
+      res.latlong = geocode.geocode(location, 
+            args["geocode_responses"]!="nocache" )
 
-    res.event_date_range = utils.GetXmlElementText(entry, XMLNS_BASE, 'event_date_range')
+    res.event_date_range = utils.GetXmlElementText(entry, 
+            XMLNS_BASE, 'event_date_range')
     res.startdate = re.sub(r'[T ].+$', r'', res.event_date_range)
     # todo: start time, etc.
     # score results
@@ -199,17 +206,16 @@ def query(query_url, args, cache):
     if (("lat" not in args) or args["lat"] == "" or
         ("long" not in args) or args["long"] == "" or
          res.latlong == ""):
-      #logging.info("qloc=%s,%s - listing=%s" % (args["lat"], args["long"], res.latlong))
       res.geo_dist_multiplier = 0.5
     else:
-      # TODO: grr... something's wrong in the DB and we're getting same geocodes for everything
+      # TODO: error in the DB, we're getting same geocodes for everything
       lat, long = res.latlong.split(",")
       latdist = float(lat) - float(args["lat"])
       longdist = float(long) - float(args["long"])
       # keep one value to right of decimal
       delta_dist = latdist*latdist + longdist * longdist
       #logging.info("qloc=%s,%s - listing=%s,%s - dist=%s,%s - delta = %g" %
-      #             (args["lat"], args["long"], lat, long, latdist, longdist, delta_dist))
+      # args["lat"], args["long"], lat, long, latdist, longdist, delta_dist))
       # reasonably local
       if delta_dist > 0.025:
         delta_dist = 0.9 + delta_dist
@@ -245,9 +251,7 @@ def query(query_url, args, cache):
     return 0
 
   result_set.results.sort(cmp=compare_scores)
-  for i,res in enumerate(result_set.results):
-    res.idx = i+1
-
+  result_set.dedup()
   return result_set
 
 def get_from_ids(ids):
@@ -281,7 +285,8 @@ def get_from_ids(ids):
       missing_ids.append(id)
 
   #logging.debug("About to get these: %s", missing_ids)
-  datastore_results = models.get_by_ids(models.VolunteerOpportunity, missing_ids)
+  datastore_results = models.get_by_ids(models.VolunteerOpportunity, 
+      missing_ids)
 
   datastore_missing_ids = []
   for id in ids:

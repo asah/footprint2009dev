@@ -1,4 +1,4 @@
-{% for result in result_set.results %}
+{% for result in result_set.merged_results %}
   <div class='snippet {% cycle row_highlight,row_plain %}'>
     <table>
     <tr>
@@ -64,13 +64,24 @@
           {% endif %}
         </div>
       {% endif %}
+      {% if result.have_more %}
+<div class="snippet_sub_text" style="display:inline">
+      {% endif %}
+      {% for entry in result.less_list %}{{ entry }}{% endfor %}
+      {% if result.have_more %}
+<div id="{{ result.more_id }}" style="display:none;">
+      {% for entry in result.more_list %}{{ entry }}{% endfor %}
+<div onclick="showLessDuplicates('{{ result.more_id }}')" class="more_link"> show fewer locations and times...</div>
+</div>
+<span id="s{{ result.more_id }}" onclick="showMoreDuplicates('{{ result.more_id }}')"') class="more_link"> more locations and times...</span>
+</div>
+      {% endif %}
       <div class='snippet_text'>
         {{ result.snippet }}
       </div>
       <div class='snippet_url'>
         <a href='{{ result.url }}'>{{ result.url_short }}</a>
       </div>
-
     </div>
     </td>
     </tr>
