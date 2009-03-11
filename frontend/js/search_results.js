@@ -166,3 +166,35 @@ function submitForm(fromWhere) {
   var updateMap = (fromWhere == "map");
   doInlineSearch(keywords, location, '', updateMap);
 }
+
+/** Called from the onclick in the "more" prompt of a snippet
+ *
+ * @param {string} id the element id of the "more", "less" div's
+ *     
+ */
+function showMoreDuplicates(id) {
+  var it = document.getElementById(id);
+  if (it) {
+    it.style.display = 'inline';
+  }
+  it = document.getElementById('s' + id);
+  if (it) {
+    it.style.display = 'none';
+  }
+}
+
+/** Called from the onclick in the "less" prompt of a snippet
+ *
+ * @param {string} id the element id of the "more", "less" div's
+ *     
+ */
+function showLessDuplicates(id) {
+  var it = document.getElementById(id);
+  if (it) {
+    it.style.display = 'none';
+  }
+  it = document.getElementById('s' + id);
+  if (it) {
+    it.style.display = 'inline';
+  }
+}
