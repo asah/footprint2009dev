@@ -78,8 +78,24 @@ class test_page_views_view(webapp.RequestHandler):
 class main_page_view(webapp.RequestHandler):
   def get(self):
     result_set = {}
+
+    user_id = None
+    user_display_name = None
+    user_type = None
+
+    # Retrieve the user-specific information for the search result set.
+    user = userinfo.get_user(self.request)
+    if user:
+      user_id = user.user_id
+      user_display_name = user.get_display_name()
+      user_type = user.account_type
+
     template_values = {
         'result_set': result_set,
+        'user_id' : user_id,
+        'user_display_name' : user_display_name,
+        'user_type' : user_type,
+
         'current_page' : 'SEARCH',
         'is_main_page' : True,
       }
@@ -180,10 +196,6 @@ class search_view(webapp.RequestHandler):
     # Perform the search.
     result_set = search.search(unique_args)
 
-    user_id = None
-    user_display_name = None
-    user_type = None
-
     output = None
     if "output" in unique_args:
       output = unique_args["output"]
@@ -212,13 +224,9 @@ class search_view(webapp.RequestHandler):
       elif output == "snippets_list":
         # Return just the snippets list HTML.
         template = SNIPPETS_LIST_TEMPLATE
-
         # Retrieve the user-specific information for the search result set.
         user = userinfo.get_user(self.request)
         if user:
-          user_id = user.user_id
-          user_display_name = user.get_display_name()
-          user_type = user.account_type
           result_set = get_annotated_results(user, result_set)
       else:
         # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
@@ -235,9 +243,6 @@ class search_view(webapp.RequestHandler):
     template_values = {
         'result_set': result_set,
         'current_page' : 'SEARCH',
-        'user_id' : user_id,
-        'user_display_name' : user_display_name,
-        'user_type' : user_type,
 
         'query_url_encoded': result_set.query_url_encoded,
         'query_url_unencoded': result_set.query_url_unencoded,
