@@ -1,5 +1,4 @@
-var map;
-var clientLocationString;
+var map;var clientLocationString;
 
 function initCalendar() {
   var events = {
@@ -103,20 +102,46 @@ function doInlineSearch(keywords, location, date, updateMap) {
     if (location && location.length > 0) {
       addQueryParam('vol_loc', location);
     }
-    xmlHttp.open('GET', url + query, true);
+    var callback = function(text) {
+      if (updateMap) {
+        map.setCenterGeocode(location);
+      }
+      el('snippets_pane').innerHTML = text;
 
+      // Set the URL hash, but only if the query string is not empty.
+      // Setting hash to an empty string causes a page reload.
+      if (query.length > 0) {
+        window.location.hash = query;
+      }
+
+      // Inline scripts inside the html won't be invoked
+      // when .innerHTML is set.  Here we iterate through each inline
+      // <script> node and execute it directly (by creating a new
+      // script node and replacing the old one).
+      var scripts = el('snippets_pane').getElementsByTagName('script');
+      forEach (scripts, function(script, index) {
+          if (index >= 30) {
+            // TODO: remove this once we retrieve geocoded search results, and
+            // the too-many-search-results bug is fixed.
+            return;
+          }
+          var newScript = document.createElement('script');
+          var scriptText = script.innerHTML;
+          if (newScript.text) {
+            newScript.text = scriptText;
+            script.parentNode.replaceChild(newScript, script);
+          } else {
+            var textNode = document.createTextNode(scriptText);
+            newScript.appendChild(textNode);
+            script.parentNode.replaceChild(newScript, script);
+          }
+      });
+    }
+
+    xmlHttp.open('GET', url + query, true);
     xmlHttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        if (updateMap) {
-          map.setCenterGeocode(location);
-        }
-        el('snippets_pane').innerHTML = this.responseText;
-
-        // Set the URL hash, but only if the query string is not empty.
-        // Setting hash to an empty string causes a page reload.
-        if (query.length > 0) {
-          window.location.hash = query;
-        }
+        callback(this.responseText);
       }
     }
     xmlHttp.send(null);

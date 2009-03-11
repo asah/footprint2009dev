@@ -1,7 +1,7 @@
 /* A GMap-management object.  Simplifies viewpoint and marker geocoding. */
 function SimpleMap(div) {
   this.div_ = div;
-  this.defaultZoom_ = 12;
+  this.defaultZoom_ = 10;
 
   if (GBrowserIsCompatible()) {
     this.map_ = new GMap2(div);
