@@ -24,14 +24,15 @@
                                   "20090214", "{{result.location}}")'>
         <img src='images/Event-AddToCalendar.png' height="16px" alt='Google Calendar'/>
       </div>
-      <div class='snippet_button'>
-        <script type="text/javascript">
-        SHARETHIS.addEntry({
-            url: "{{result.url|escape}}",
-            title: "{{result.js_escaped_title|escape}}",
-            summary: "{{result.js_escaped_snippet|escape}}"
-        }, {offsetLeft: 0});
-        </script>
+      <div class='snippet_button' id='addthis{{ forloop.counter0 }}'>
+        <a _orig_addthis_href="http://www.addthis.com/bookmark.php?v=20"
+           href="javascript:addthis_open(this, '', '{{result.url|escape}}', '{{result.js_escaped_title|escape}}');void(0);"
+           onmouseover="return addthis_open(this, '', '{{result.url|escape}}', '{{result.js_escaped_title|escape}}')"
+           onmouseout="addthis_close()"
+           _orig_addthis__onclick="return addthis_sendto()"
+           onclick="return addthis_open(this, '', '{{result.url|escape}}', '{{result.js_escaped_title|escape}}')" >
+          <img src="/images/Event-Share.png" width="16" height="16" alt="Bookmark and Share" style="border:0"/>
+        </a>
       </div>
 
     </div>
@@ -40,8 +41,10 @@
     <div>
       {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
       {% if location %}
-        <script>asyncLoadManager.addCallback('map', function(){
-            map.addMarkerGeocode("{{ result.location }}")});</script>
+        <script type='text/javascript'>
+           asyncLoadManager.addCallback('map', function(){
+               map.addMarkerGeocode("{{ result.location }}")});
+        </script>
       {% endif %}
 
       <div class='snippet_title'>
