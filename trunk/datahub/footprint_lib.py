@@ -318,7 +318,7 @@ def outputOpportunity(opp, feedinfo, known_orgs, totrecs):
     return totrecs,""
   org_id = xml_helpers.getTagValue(opp, "sponsoringOrganizationID")
   if (org_id not in known_orgs):
-    print datetime.now(),"unknown org_id: " + org_id + ".  skipping opportunity " + id
+    print datetime.now(),"unknown sponsoringOrganizationID: " + org_id + ".  skipping opportunity " + id
     return totrecs,""
   org = known_orgs[org_id]
   opp_locations = opp.getElementsByTagName("location")

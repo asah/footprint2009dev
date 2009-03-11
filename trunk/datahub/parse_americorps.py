@@ -12,6 +12,8 @@ orgs = {}
 orgids = {}
 max_orgid = 0
 def Parse(instr, maxrecs, progress):
+  global max_orgid, orgs, orgids
+
   # TODO: progress
   known_elnames = [ 'Abstract', 'Categories', 'Category', 'CategoryID', 'Country', 'DateListed', 'Description', 'DetailURL', 'Duration', 'DurationQuantity', 'DurationUnit', 'EndDate', 'KeyWords', 'LocalID', 'Location', 'LocationClassification', 'LocationClassificationID', 'LocationClassifications', 'Locations', 'LogoURL', 'Name', 'OpportunityDate', 'OpportunityDates', 'OpportunityType', 'OpportunityTypeID', 'SponsoringOrganization', 'SponsoringOrganizations', 'StartDate', 'StateOrProvince', 'Title', 'VolunteerOpportunity', 'ZipOrPostalCode', ]
 
@@ -32,8 +34,9 @@ def Parse(instr, maxrecs, progress):
       orgstr += '<logoURL></logoURL>'
       orgstr += '<detailURL></detailURL>'
       orgstr += '</Organization>'
-      orgs[orgname] = orgstr
-      orgids[max_orgid] = orgname
+      orgs[max_orgid] = orgstr
+      orgids[orgname] = max_orgid
+      return max_orgid
 
   instr = re.sub(r'<(/?db):', r'<\1_', instr)
   opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>', instr, re.DOTALL)
@@ -52,8 +55,8 @@ def Parse(instr, maxrecs, progress):
 
     # logoURL -- sigh, this is for the opportunity not the org
     volopps += '<VolunteerOpportunity>'
-    volopps += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (str(orgid))
-    volopps += '<sponsoringOrganizationID>0</sponsoringOrganizationID>'
+    volopps += '<volunteerOpportunityID>%d</volunteerOpportunityID>' % (i)
+    volopps += '<sponsoringOrganizationID>%d</sponsoringOrganizationID>' % (orgid)
     volopps += '<volunteerHubOrganizationID>%s</volunteerHubOrganizationID>' % (xml_helpers.getTagValue(item, "LocalID"))
     volopps += '<title>%s</title>' % (xml_helpers.getTagValue(item, "Title"))
     volopps += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(item, "Abstract"))

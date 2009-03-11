@@ -1376,7 +1376,15 @@ def RealMain(argv, data=None):
 
 def main():
   try:
-    RealMain(sys.argv)
+    if len(sys.argv) > 1:
+      args = [sys.argv[0], "-s", "footprint2009reviews.appspot.com"]
+      args.append("--cc=footprint-eng@googlegroups.com")
+      args.append("--send_mail")
+      args.append("-r")
+      args += sys.argv[1:]
+      sys.argv = args
+    print " ".join(sys.argv)
+    RealMain(args)
   except KeyboardInterrupt:
     print
     StatusUpdate("Interrupted.")
