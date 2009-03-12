@@ -8,9 +8,6 @@
     var vol = {};  // Namespace
   </script>
   <script src='http://www.google.com/jsapi?key=ABQIAAAAHtEBbyenR4BaYGl54_p0fRTpeCj-9ism2i6Mt7fLlVoN6HsfDBS56p13NY7E4BKFD32PG4jrxn4P1g' type='text/javascript'></script>
-  <script type='text/javascript'>
-    google.load('friendconnect', '0.8');
-  </script>
   <script type='text/javascript' src='/js/utils.js'></script>
   <script type='text/javascript'>
     // These components load asynchronously.  We use AsyncLoadManager to
@@ -27,7 +24,6 @@
     // ...and one to queue JS callbacks on body unload event.
     var onUnloadWorkQueue = new WorkQueue();
   </script>
-  <script type='text/javascript' src='/js/friendconnect_header.js'></script>
 {% block js_files %}{% endblock %}
 
 {% endblock %}
@@ -36,11 +32,6 @@
 
 {% block body %}
 <body onload='asyncLoadManager.doneLoading("bodyload");'>
-  <!-- Facebook Connect scripts must be loaded in the body of the page -->
-  <script src='http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' type='text/javascript'></script>
-  <script type='text/javascript'>
-    FB.init('df68a40a4a90d4495ed03f920f16c333', 'xd_receiver.htm');
-  </script>
   {% include 'header.html' %}
   {% block subheader %}{% endblock %}
   {% block content_layout %}{% endblock %}
