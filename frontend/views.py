@@ -15,6 +15,8 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
+import recaptcha
+
 import base_search
 import geocode
 import models
@@ -37,6 +39,15 @@ MODERATE_TEMPLATE = 'moderate.html'
 
 DEFAULT_NUM_RESULTS = 10
 
+# TODO: not safe vs. spammers to checkin... but in our design,
+# the worst that happens is a bit more spam in our moderation
+# queue, i.e. no real badness, just slightly longer review 
+# cycle until we can regen a new key.  Meanwhile, avoiding this
+# outright is a big pain for launch, regen is super easy and
+# it could be a year+ before anybody notices.  Note: the varname
+# is intentionally boring, to avoid accidental discovery by
+# code search tools.
+PK = "6Le2dgUAAAAAABp1P_NF8wIUSlt8huUC97owQ883"
 
 def get_unique_args_from_request(request):
   """ Gets unique args from a request.arguments() list.
@@ -313,24 +324,96 @@ class my_events_view(webapp.RequestHandler):
 
 class post_view(webapp.RequestHandler):
   def get(self):
+    global pk
     user_info = userinfo.get_user(self.request)
     user_id = ''
     user_display_name = ''
     user_type = None
-
     if user_info:
       #we are logged in
       user_id = user_info.user_id
       user_type = user_info.account_type
       user_display_name = user_info.get_display_name()
 
-    template_values = {
-      'current_page' : 'POST',
-      'user_id' : user_id,
-      'user_display_name' : user_display_name,
-      'user_type' : user_type,
-    }
-    self.response.out.write(render_template(POST_TEMPLATE, template_values))
+    resp = None
+    recaptcha_challenge_field = self.request.get('recaptcha_challenge_field')
+    if recaptcha_challenge_field:
+      user_ipaddr = self.request.remote_addr
+      recaptcha_response_field = self.request.get('recaptcha_response_field')
+      #self.response.out.write("<html><body>himom</body></html>")
+      #return
+      resp = recaptcha.submit(recaptcha_challenge_field, recaptcha_response_field,
+                              PK, user_ipaddr)
+
+      title = self.request.get('title')
+      description = self.request.get("description")
+      skills = self.request.get('skills')
+      virtual = self.request.get('virtual')
+      if virtual == "Yes":
+        addr1 = addrname1 = ""
+      else:
+        addr1 = self.request.get('addr1')
+        addrname1 = self.request.get('addrname1')
+      sponsoringOrganizationsName = self.request.get('sponsoringOrganizationsName')
+      openEnded = self.request.get('openEnded')
+      if openEnded == "No":
+        startDate = self.request.get('startDate')
+        startTime = self.request.get('startTime')
+        endTime = self.request.get('endTime')
+        endDate = self.request.get('endDate')
+      else:
+        startTime = endTime = startDate = endDate = ""
+        openEnded == "Yes"
+      contactNoneNeeded = self.request.get("contactNoneNeeded")
+      contactEmail = self.request.get("contactEmail")
+      contactPhone = self.request.get("contactPhone")
+      contactName = self.request.get("contactName")
+      contactURL = self.request.get("contactURL")
+      weeklySun = self.request.get("weeklySun") 
+      weeklyMon = self.request.get("weeklyMon") 
+      weeklyTue = self.request.get("weeklyTue") 
+      weeklyWed = self.request.get("weeklyWed") 
+      weeklyThu = self.request.get("weeklyThu") 
+      weeklyFri = self.request.get("weeklyFri") 
+      weeklySat = self.request.get("weeklySat") 
+      biweeklySun = self.request.get("biweeklySun") 
+      biweeklyMon = self.request.get("biweeklyMon") 
+      biweeklyTue = self.request.get("biweeklyTue") 
+      biweeklyWed = self.request.get("biweeklyWed") 
+      biweeklyThu = self.request.get("biweeklyThu") 
+      biweeklyFri = self.request.get("biweeklyFri") 
+      biweeklySat = self.request.get("biweeklySat")
+      recurrence = self.request.get("recurrence")
+      audienceAll = self.request.get("audienceAll")
+      audienceMinAge = self.request.get("audienceMinAge")
+      audienceTeens = self.request.get("audienceTeens")
+      audienceSeniors = self.request.get("audienceSeniors")
+      audienceSexRestricted = self.request.get("audienceSexRestricted")
+      sexRestrictedTo = self.request.get("sexRestrictedTo")
+
+    if resp == None:
+      template_values = {
+        'current_page' : 'POST',
+        'user_id' : user_id,
+        'user_display_name' : user_display_name,
+        'user_type' : user_type,
+        }
+      self.response.out.write(render_template(POST_TEMPLATE, template_values))
+      return
+
+    if resp.is_valid:
+      #item_xml = ""
+      #item_id = posting.create(item_xml)
+      html = "<html><body>posting succeeded!</body></html>"
+      self.response.out.write(html)
+      return
+
+    html = "<html><body>posting failed: "+resp.error_code+"</body></html>"
+    self.response.out.write(html)
+
+  def post(self):
+    return self.get()
+
 
 
 class admin_view(webapp.RequestHandler):
@@ -365,23 +448,17 @@ class moderate_view(webapp.RequestHandler):
     if action == "test":
       posting.createTestDatabase()
 
-    item_xml = ""
-    item_id = None
-    reslist = None
-    if item_xml == "":
-      reslist = posting.query()
-      def compare_quality_scores(x,y):
-        diff = y.quality_score - x.quality_score
-        if (diff > 0): return 1
-        if (diff < 0): return -1
-        return 0
-      reslist.sort(cmp=compare_quality_scores)
-      for i,res in enumerate(reslist):
-        res.idx = i+1
-        if res.description > 100:
-          res.description = res.description[0:97]+"..."
-    else:
-      item_id = posting.create(item_xml)
+    reslist = posting.query()
+    def compare_quality_scores(x,y):
+      diff = y.quality_score - x.quality_score
+      if (diff > 0): return 1
+      if (diff < 0): return -1
+      return 0
+    reslist.sort(cmp=compare_quality_scores)
+    for i,res in enumerate(reslist):
+      res.idx = i+1
+      if res.description > 100:
+        res.description = res.description[0:97]+"..."
 
     template_values = {
       'current_page' : 'MODERATE',

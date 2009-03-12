@@ -1,42 +1,52 @@
-{% extends "layout_full.html" %}
+{% extends "base_min.html" %}
 
 {% block title %}
 Post a listing
-{% endblock %}}
+{% endblock %}
 
-{% block content %}
+{% block head %}
+  <link href='css/main.css' rel='stylesheet'/>
+  <style>
+  table {
+    padding: 0;
+    border-spacing: 0;
+  }
+  .caption {
+    font-size: 12px;
+    font-style: italic;
+  }
+  .expand {
+    font-size: 10px;
+  }
+  .debug {
+    position: absolute;
+    top: 100px;
+    right: 20px;
+    width: 400px;
+    height: 400px;
+    border: 1px solid black;
+    background-color: #ddf;
+    overflow: auto;
+    font-size: 10px;
+    font-family: courier;
+    display:none;
+  }
+  </style>
+{% endblock %}
 
-<style>
-table {
-  padding: 0;
-  border-spacing: 0;
-}
-.caption {
-  font-size: 12px;
-  font-style: italic;
-}
-.expand {
-  font-size: 10px;
-}
-.debug {
-  position: absolute;
-  top: 100px;
-  right: 20px;
-  width: 400px;
-  height: 400px;
-  border: 1px solid black;
-  background-color: #ddf;
-  overflow: auto;
-  font-size: 10px;
-  font-family: courier;
-  display:none;
-}
-</style>
+{% block body %}
+<body>
 
+<h1>Post a volunteer listing</h1>
 
-(instructions go here...)
+<i>
+Instructions go here: warn that illegal postings may be reported.<br/>
+explain privacy and offer login/logout?  "logged-in users postings tend to get approved faster" <br/>
+</i>
 
-<form target="_blank" onsubmit="return window.confirm(&quot;You are submitting information to an external page.\nAre you sure?&quot;);"> 
+<p/>
+
+<form id='form' method='POST' onsubmit="return validate_form()"> 
 
 <div id='dbg' class='debug'></div>
  
@@ -50,7 +60,7 @@ Describe the activity:
 <br/>
 <textarea name="description" rows="3" cols="80"></textarea><p/>
 
-(optional) Describe any special skills or equipment that is needed:
+Describe any special skills or equipment that is needed: (optional)
 <a id='skills_link' class='expand' href='#' onclick='expandTextbox("skills", 2, 8)'>give me more room to write...</a>
 <br/>
 <textarea name="skills" rows="3" cols="80"></textarea><p/> 
@@ -58,8 +68,13 @@ Describe the activity:
 Is the opportunity happening at an address or can volunteers help remotely from their homes?<br/> 
 <table>
 <tr><td><input type="radio" name="virtual" value="Yes">Help from home</td></tr>
-<tr><td><input type="radio" name="virtual" value="No">Specific Location:</td><td align='right'>location name:</td><td><input type="text" name="addrname1" size="40"><span class='caption'>e.g. Ohlone Park</span></td></tr>
-<tr><td></td><td align='right'>street address:</td><td><textarea onchange='location_ok="unchecked";' onblur='checkLocation()' style='margin:0' rows='3' cols='45' name="addr1"></textarea></td></tr>
+<tr><td valign='top'><input type="radio" name="virtual" value="No">Specific location&nbsp;&nbsp;</td>
+    <td><table style='margin-top:3px'>
+    <tr><td style='font-size:12px; text-align:right; vertical-align:top;'>location name:</td>
+        <td><input type="text" name="addrname1" size="40"><span class='caption'> e.g. Ohlone Park</span></td></tr>
+    <tr><td style='font-size:12px; text-align:right; vertical-align:top'>street address:</td>
+        <td><textarea onchange='location_ok="unchecked";' onblur='checkLocation()' style='margin:0' rows='3' cols='45' name="addr1"></textarea></td></tr>
+    </table></td></tr>
 </table>
 
 Is the opportunity sponsored by an organization?<br/> 
@@ -68,13 +83,13 @@ Is the opportunity sponsored by an organization?<br/>
  
 When does the opportunity start?<br/> 
 <input type="radio" name="openEnded" value="Yes"> Now/anytime<br/> 
-<input type="radio" name="openEnded" value="No"> On <input type="text" name="startMonth" size="2" maxlength="2" value="MM"> / <input type="text" name="startDay" size="2" maxlength="2" value="DD"> / <input type="text" name="startYear" size="4" maxlength="4" value="YYYY">, from <input type="text" name="startTime" size="20" value="[HH:MM] [am/pm]"> to <input type="text" name="endTime" size="20" value="[HH:MM] [am/pm]"><p/> 
+<input type="radio" name="openEnded" value="No"> On <input type="text" name="startDate" size="10" maxlength="10" value="MM/DD/YYYY">, from <input type="text" name="startTime" size="20" value="[HH:MM] [am/pm]"> to <input type="text" name="endTime" size="20" value="[HH:MM] [am/pm]"><p/> 
  
 How can people learn more about this opportunity and reserve a place? (check all that apply)<br/> 
-<input type="checkbox" name="contact" value="none"> No need to contact -- just show up<br/> 
-<input type="checkbox" name="contact" value="email"> Email this address <input type="text" name="contactEmail"><br/> 
-<input type="checkbox" name="contact" value="phone"> Call <input type="text" name="contactPhone" value="xxx-xxx-xxxx" size="15"> and ask for <input type="text" name="conactName"><br/> 
-<input type="checkbox" name="contact" value="url"> Visit this web site <input type="text" name="contactURL" size="30"><br/> 
+<input type="checkbox" name="contactNoneNeeded"> No need to contact -- just show up<br/> 
+<input type="checkbox" name="contactEmail"> Email this address <input type="text" name="contactEmail"><br/> 
+<input type="checkbox" name="contactPhone"> Call <input type="text" name="contactPhone" value="xxx-xxx-xxxx" size="15"> and ask for <input type="text" name="conactName"><br/> 
+<input type="checkbox" name="contactURL"> Visit this web site <input type="text" name="contactURL" size="30"><br/> 
 <p/> 
 
 show <a href='javascript:toggleElement("advd");'>advanced options</a> including age and gender restrictions, end time, recurring events, and more.<p/>
@@ -85,47 +100,65 @@ How often does it happen?<br/>
 <tr><td><input type="radio" name="recurrence" value="No"></td><td> Once</td></tr>
 <tr><td><input type="radio" name="recurrence" value="Daily"></td><td> Daily</td></tr>
 <tr><td><input type="radio" name="recurrence" value="Weekly"></td><td> Weekly, on
-  Sun: <input type="checkbox" name="weekly" value="Sunday"> 
-  Mon: <input type="checkbox" name="weekly" value="Monday"> 
-  Tues: <input type="checkbox" name="weekly" value="Tuesday"> 
-  Wed: <input type="checkbox" name="weekly" value="Wednesday"> 
-  Thur: <input type="checkbox" name="weekly" value="Thursday"> 
-  Fri: <input type="checkbox" name="weekly" value="Friday"> 
-  Sat: <input type="checkbox" name="weekly" value="Saturday"> 
+  Sun: <input type="checkbox" name="weeklySun"> 
+  Mon: <input type="checkbox" name="weeklyMon"> 
+  Tue: <input type="checkbox" name="weeklyTue"> 
+  Wed: <input type="checkbox" name="weeklyWed"> 
+  Thu: <input type="checkbox" name="weeklyThu"> 
+  Fri: <input type="checkbox" name="weeklyFri"> 
+  Sat: <input type="checkbox" name="weeklySat"> 
 </td></tr>
 <tr><td><input type="radio" name="recurrence" value="BiWeekly"></td><td> Every other week, on
-  Sun: <input type="checkbox" name="biweekly" value="Sunday"> 
-  Mon: <input type="checkbox" name="biweekly" value="Monday"> 
-  Tues: <input type="checkbox" name="biweekly" value="Tuesday"> 
-  Wed: <input type="checkbox" name="biweekly" value="Wednesday"> 
-  Thur: <input type="checkbox" name="biweekly" value="Thursday"> 
-  Fri: <input type="checkbox" name="biweekly" value="Friday"> 
-  Sat: <input type="checkbox" name="biweekly" value="Saturday">
+  Sun: <input type="checkbox" name="biweeklySun"> 
+  Mon: <input type="checkbox" name="biweeklyMon"> 
+  Tue: <input type="checkbox" name="biweeklyTue"> 
+  Wed: <input type="checkbox" name="biweeklyWed"> 
+  Thu: <input type="checkbox" name="biweeklyThu"> 
+  Fri: <input type="checkbox" name="biweeklyFri"> 
+  Sat: <input type="checkbox" name="biweeklySat">
 </td></tr>
 <tr><td><input type="radio" name="recurrence" value="Monthly"></td><td> Monthly</td></tr>
 </table>
 <p/> 
-The opportunity ends on: <input type="text" name="endMonth" size="2" maxlength="2" value="MM"> / <input type="text" name="endDay" size="2" maxlength="2" value="DD"> / <input type="text" name="endYear" size="4" maxlength="4" value="YYYY"><br/>
+The opportunity ends on: <input type="text" name="endDate" size="10" maxlength="10" value="MM/DD/YYYY"><br/>
 Are attendees paid? <select name="paid"><option value="Yes">Yes</option><option value="No" selected>No</option></select><br/>
 How many hours per week should a volunteer be ready to commit to? <input type="text" name="commitmentHoursPerWeek"><br/>
 Who is allowed to participate? (check all that apply)<br/> 
-<input type="checkbox" name="audience" value="all"> Anyone, including kids under 13<br/> 
-<input type="checkbox" name="audience" value="minAge"> Anyone at least <input type="text" name="minimumAge" size="3"> years of age<br/> 
-<input type="checkbox" name="audience" value="teens"> Teenagers only please<br/> 
-<input type="checkbox" name="audience" value="seniors"> Seniors only please<br/> 
-<input type="checkbox" name="audience" value="sexRestricted"> <select name="sexRestrictedTo"><option value="Neither" selected>[Women/Men]</option><option value="Female">Women</option><option value="Male">Men</option></select> only please.<p/> 
+<input type="checkbox" name="audienceAll"> Anyone, including kids under 13<br/> 
+<input type="checkbox" name="audienceMinAge"> Anyone at least <input type="text" name="minimumAge" size="3"> years of age<br/> 
+<input type="checkbox" name="audienceTeens"> Teenagers only please<br/> 
+<input type="checkbox" name="audienceSeniors"> Seniors only please<br/> 
+<input type="checkbox" name="audienceSexRestricted"> <select name="sexRestrictedTo"><option value="Neither" selected>[Women/Men]</option><option value="Female">Women</option><option value="Male">Men</option></select> only please.<p/> 
 </div>
 
 <script type="text/javascript" 
  src="http://api.recaptcha.net/js/recaptcha_ajax.js"></script>
 
 <br/>
-<span id='submit' onclick='submit()' style='padding:4px 10px 4px 10px;background-color:#ddf;border:1px solid #333;font-size:24px;'>submit</span>
 
+<table><tr>
+<td><div id='recaptcha_div'></div>
+<noscript>
+   <iframe src="http://api.recaptcha.net/noscript?k=6Le2dgUAAAAAAEP97PJfAlWV09PlFLc-xbte2Zt-"
+       height="300" width="500" frameborder="0"></iframe><br>
+   <textarea name="recaptcha_challenge_field" rows="3" cols="40">
+   </textarea>
+   <input type="hidden" name="recaptcha_response_field" 
+       value="manual_challenge">
+</noscript>
+</td>
+<td style='padding-left:5px; vertical-align:middle; font-size:12px'>
+<span style='width:200px'>Sorry, no robots allowed:<br/>please enter words to the left,<br/>it's only human.</span><p/>
+<span id='submit' onclick='submit_form()' style='padding:4px 10px 4px 10px;background-color:#ddf;border:1px solid #333;font-size:24px;'>submit</span></td>
+</tr></table>
 
 </form>
 
 <script>
+Recaptcha.create("6Le2dgUAAAAAAEP97PJfAlWV09PlFLc-xbte2Zt-", "recaptcha_div", {
+  theme: "blackglass",
+});
+
 var location_ok = false;
 var qry = location.search.substring(1);
 var args = qry.split('&');
@@ -174,22 +207,33 @@ function checkLocation() {
    
 }
 
-function submit() {
-  d("submit");
+function reset_submit() {
+  var submit = document.getElementById('submit');
+  submit.style.backgroundColor = '#ddf';
+  submit.style.color = 'black';
+  submit.style.borderColor = 'black';
+  submit.innerHTML = 'submit';
+}
+
+function submit_form() {
+  d("submit_form")
+  res = validate_form();
+  if (!res) { return false; }
+  var form = document.getElementById('form');
+  form.submit();
+}
+
+function validate_form() {
+  d("validate_form");
   var submit = document.getElementById('submit');
   submit.style.backgroundColor = '#eef';
   submit.style.color = 'gray';
   submit.style.borderColor = '#666';
 
-  submit.innerHTML = 'checking location...';
-  if (location_ok == "unchecked") {  
-    // in case the browser didn't fire onblur event in the form
-    checkLocation();
-  }
-  if (location_ok != "ok") {
-    alert("cannot find street address-- please try again."
-    return;
-  }
+  d("challenge: "+Recaptcha.get_challenge());
+  d("response: "+Recaptcha.get_response());
+
+  reset_submit(); return true;
 
   submit.innerHTML = 'checking location...';
   if (location_ok == "unchecked") {  
@@ -197,9 +241,14 @@ function submit() {
     checkLocation();
   }
   if (location_ok != "ok") {
-    // TODO: error
+    msg = "cannot locate street address-- please try again.";
+    d("error: "+msg);
+    reset_submit();
+    return false;
   }
+
+  return true;
 }
 </script>
-
+</body>
 {% endblock %}
