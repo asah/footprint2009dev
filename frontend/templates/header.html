@@ -8,10 +8,23 @@
   <div class='noselect pointer {% ifequal current_page "POST" %} tab_active {% else %} tab_inactive {% endifequal %}'
        onclick="location.href = '/post'">Add an event</div>
 
+  <script src='http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' type='text/javascript'></script>
   <script type="text/javascript">
     document.userId = "{{user_id}}";
     document.userType = "{{user_type}}";
     document.userDisplayName = "{{user_display_name}}";
+
+    var FC_SITE_ID = '02962301966004179520';
+    var FB_SITE_ID = 'df68a40a4a90d4495ed03f920f16c333';
+
+    FB.init(FB_SITE_ID, 'xd_receiver.htm');
+
+    google.load('friendconnect', '0.8');
+    google.setOnLoadCallback(function() {
+      google.friendconnect.container.loadOpenSocialApi({site: FC_SITE_ID, onload: function() { 
+        {% if not user_id %} checkForViewer(); {% endif %}
+      }});
+    });
   </script>
 
   {% if user_id %}
@@ -28,9 +41,38 @@
   </div>
 
   {% else %}
-  <div class='hello_name'>
-    <button onclick="google.friendconnect.requestSignIn()">Sign in</button> with FriendConnect or
-    <fb:login-button onlogin="window.location.reload()"></fb:login-button> with Facebook
+  <div class='sign_in'>
+    Sign in with <span id="signInProvider"></span> :
+    <img src="images/signin-yahoo.gif" onmouseover="setSignIn('Yahoo!');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
+    <img src="images/signin-google.gif" onmouseover="setSignIn('Google');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
+    <img src="images/signin-aol.gif" onmouseover="setSignIn('AOL');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
+    <img src="images/signin-facebook.gif" onmouseover="setSignIn('Facebook');" onmouseout="setSignIn();" onclick="requestFacebookSignIn()"/>
+    <!--img src="images/signin-myspace.gif" onmouseover="setSignIn('MySpace');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/-->    
+    <img src="images/signin-openid.gif" onmouseover="setSignIn('OpenID');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
+
+    <script type="text/javascript"> 
+      function setSignIn(value) {
+        document.getElementById('signInProvider').innerHTML = value || '';
+      }
+
+      function requestFacebookSignIn() {
+        FB.Connect.requireSession();
+        FB.Facebook.get_sessionState().waitUntilReady(function() {
+          window.location.reload();
+        });
+      }
+
+      function checkForViewer() {
+        // If the viewer is != null and the userId == null reload page.
+        // This is a temporary placeholder until FC gives us an onSignIn callback
+        var req = opensocial.newDataRequest();
+        req.add(req.newFetchPersonRequest('VIEWER'), 'viewer');
+        req.send(function(data) {
+          if (data.get('viewer').getData()) { window.location.reload();}
+        });
+      }
+    </script>
+
   </div>
 
   {% endif %}
