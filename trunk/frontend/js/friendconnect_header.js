@@ -25,7 +25,7 @@ function initializeFriendConnect() {
 
   function setupData(data) {
     var viewer = data.get('viewer').getData();
-    if (viewer && !document.userId) {
+    if (viewer && (!document.userId || document.userId == 'None')) {
       window.location.reload();
     }
   }
