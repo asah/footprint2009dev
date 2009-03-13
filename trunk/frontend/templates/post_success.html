@@ -1,0 +1,20 @@
+{% extends "base_min.html" %}
+
+{% block title %}
+Post successful!
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<body>
+
+<pre>
+post successful!
+{% for fieldname in fieldnames %}
+{{% fieldname %}} = {{% vals[fieldname] %}}
+{% endfor %}
+
+</body>
+{% endblock %}

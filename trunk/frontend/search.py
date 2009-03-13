@@ -2,8 +2,11 @@
 #
 
 import base_search
+import views
 import logging
 import geocode
+import math
+import scoring
 
 # args is expected to be a list of args
 # and any path info is supposed to be homogenized into this,
@@ -78,13 +81,15 @@ def search(args):
   if "id" in args:
     id = args["id"]
 
-  res = base_search.search(args)
-
-  res.is_first_page = (start_index == 1)
+  result_set = base_search.search(args)
+  scoring.score_results_set(result_set, args)
+  result_set.dedup()
+  
+  result_set.is_first_page = (start_index == 1)
   # TODO: detect last page
-  res.is_last_page = True
+  result_set.is_last_page = True
   # TODO: remove-- urls should be implemented by the caller
-  res.prev_page_url = ""
-  res.next_page_url = ""
+  result_set.prev_page_url = ""
+  result_set.next_page_url = ""
 
-  return res
+  return result_set
