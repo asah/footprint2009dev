@@ -1,18 +1,24 @@
-var map;var clientLocationString;
+var map;
+var calendar;
+var clientLocationString;
 
 function initCalendar() {
-  var events = {
-    '20090228': 'something',
-    '20090301': 'something else',
-    '20090305': 'one more thing',
-    '20090315': 'and one last thing'
-  };
   var element = el('calendar');
-  var calendar = new vol.Calendar(element, events);
+  calendar = new vol.Calendar(element);
   calendar.render();
 
-  function nextMonth() { calendar.nextMonth(); }
-  function previousMonth() { calendar.previousMonth(); }
+  function nextMonth() {
+    calendar.nextMonth();
+    submitForm('calendar');
+  }
+  function previousMonth() {
+    calendar.previousMonth();
+    submitForm('calendar');
+  }
+  function changePeriod() {
+    calendar.clearMarks();
+    submitForm('calendar');
+  }
 
   forEachElementOfClass('calendar_month_previous', function(e) {
     addListener(e, 'click', previousMonth);
@@ -20,6 +26,7 @@ function initCalendar() {
   forEachElementOfClass('calendar_month_next', function(e) {
     addListener(e, 'click', nextMonth);
   }, element);
+  addListener(calendar.periodSelector, 'change', changePeriod);
 
   function unregisterEventListeners() {
     forEachElementOfClass('calendar_month_previous', function(e) {
@@ -28,9 +35,9 @@ function initCalendar() {
     forEachElementOfClass('calendar_month_next', function(e) {
       removeListener(e, 'click', nextMonth);
     }, element);
+    removeListener(calendar.periodSelector, 'change', changePeriod);
   }
-  // TODO(oansaldi): cleanup event listeners on unload
-  // unloadWorkQueue.addCallback(unregisterEventListeners);
+  onUnloadWorkQueue.addCallback(unregisterEventListeners);
 }
 asyncLoadManager.addCallback('bodyload', initCalendar);
 
@@ -68,7 +75,7 @@ function runCurrentSearch() {
     location = clientLocationString;
   }
 
-  doInlineSearch(q, location, '', true);
+  doInlineSearch(q, location, calendar.getDateRange(), true);
 }
 asyncLoadManager.addCallback('bodyload', runCurrentSearch);
 
@@ -76,10 +83,11 @@ asyncLoadManager.addCallback('bodyload', runCurrentSearch);
  * @param {string} keywords Search keywords.
  * @param {string|GLatLng} location Location in either string form (address) or
  *      a GLatLng object.
- * @param {string} date Date in string form (TBD).
+ * @param {Array.<Date>} dateRange The date range for the search, as a two
+ *     element array of dates.
  * @param {bool} updateMap Move the map to the new location?
  */
-function doInlineSearch(keywords, location, date, updateMap) {
+function doInlineSearch(keywords, location, dateRange, updateMap) {
   asyncLoadManager.addCallback('map', function() {
     // This code is dependent on MapsAPI being loaded, for GXmlHttp and
     // for setting the map position post-search.
@@ -102,6 +110,27 @@ function doInlineSearch(keywords, location, date, updateMap) {
     if (location && location.length > 0) {
       addQueryParam('vol_loc', location);
     }
+    
+    if (dateRange && dateRange.length == 2) {
+      function formatDate(date) {
+        var buffer = [date.getFullYear(), '-'];
+        var month = date.getMonth() + 1;
+        if (month < 10) {
+          buffer.push('0');
+        }
+        buffer.push(month, '-');
+        var day = date.getDate();
+        if (day < 10) {
+          buffer.push('0');
+        }
+        buffer.push(day);
+        return buffer.join('');
+      }
+    
+      addQueryParam('startDate', formatDate(dateRange[0]));
+      addQueryParam('stopDate', formatDate(dateRange[1]));
+    }
+
     var callback = function(text) {
       if (updateMap) {
         map.setCenterGeocode(location);
@@ -123,6 +152,10 @@ function doInlineSearch(keywords, location, date, updateMap) {
           if (index >= 30) {
             // TODO: remove this once we retrieve geocoded search results, and
             // the too-many-search-results bug is fixed.
+            
+            // Force rendering of the calendar, since the last <script> won't be
+            // executed.
+            calendar.render();
             return;
           }
           var newScript = document.createElement('script');
@@ -150,7 +183,7 @@ function doInlineSearch(keywords, location, date, updateMap) {
 
 /** Called from the "Refine" button's onclick, and the main form onsubmit.
  *
- * @param {string} fromWhere One of "map" or "keywords", indicating
+ * @param {string} fromWhere One of "map", "calendar" or "keywords", indicating
  *     which input form triggered this search
  */
 function submitForm(fromWhere) {
@@ -164,8 +197,12 @@ function submitForm(fromWhere) {
   }
 
   var updateMap = (fromWhere == "map");
-  doInlineSearch(keywords, location, '', updateMap);
+  el('snippets_pane').innerHTML = 'Loading...';
+  calendar.clearMarks();
+  calendar.render();
+  doInlineSearch(keywords, location, calendar.getDateRange(), updateMap);
 }
+
 
 /** Called from the onclick in the "more" prompt of a snippet
  *

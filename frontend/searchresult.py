@@ -66,7 +66,7 @@ class SearchResultSet(object):
           + safe_str(res.snippet) + safe_str(res.location))
       # we will be sorting & de-duping the merged results
       # by start date so we need an epoch time
-      res.t_startdate = time.strptime(res.startdate[:10], "%Y-%m-%d")
+      res.t_startdate = res.startdate.timetuple()
       # this is for the list of any results merged with this one
       res.merged_list = []
       res.merged_debug = []
@@ -86,7 +86,8 @@ class SearchResultSet(object):
 
           if not listed:
             set[i].merged_list.append(res)
-            set[i].merged_debug.append(res.location + ":" + res.startdate)
+            set[i].merged_debug.append(
+                res.location + ":" + res.startdate.strftime("%Y-%m-%d"))
           break
       if not merged:
         set.append(res)
