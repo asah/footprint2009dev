@@ -112,23 +112,8 @@ function doInlineSearch(keywords, location, dateRange, updateMap) {
     }
     
     if (dateRange && dateRange.length == 2) {
-      function formatDate(date) {
-        var buffer = [date.getFullYear(), '-'];
-        var month = date.getMonth() + 1;
-        if (month < 10) {
-          buffer.push('0');
-        }
-        buffer.push(month, '-');
-        var day = date.getDate();
-        if (day < 10) {
-          buffer.push('0');
-        }
-        buffer.push(day);
-        return buffer.join('');
-      }
-    
-      addQueryParam('startDate', formatDate(dateRange[0]));
-      addQueryParam('stopDate', formatDate(dateRange[1]));
+      addQueryParam('startDate', vol.Calendar.dateAsString(dateRange[0]));
+      addQueryParam('stopDate', vol.Calendar.dateAsString(dateRange[1]));
     }
 
     var callback = function(text) {
