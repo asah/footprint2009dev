@@ -791,6 +791,10 @@ class SubversionVCS(VersionControlSystem):
     cmd = ["svn", "diff"]
     if self.options.revision:
       cmd += ["-r", self.options.revision]
+    if "--diff-cmd" not in args and os.path.isfile("/usr/bin/diff"):
+      # force /usr/bin/diff as the diff command used by subversion
+      # to override user settings (fixes issue with colordiff)
+      cmd += ["--diff-cmd", "/usr/bin/diff"]
     cmd.extend(args)
     data = RunShell(cmd)
     count = 0
