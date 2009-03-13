@@ -13,13 +13,29 @@ def GetXmlDomText(node):
       text += child.data
   return text
 
-def GetXmlElementText(node, namespace, tagname):
+def GetXmlElementTextNS(node, namespace, tagname):
   """Returns the text of the first node found with the given namespace/tagname.
   
   May return None if no node found."""
   child_nodes = node.getElementsByTagNameNS(namespace, tagname)
   if child_nodes:
     return GetXmlDomText(child_nodes[0])
+
+def GetXmlElementText(node, tagname):
+  """Returns the text of the first node found with the given tagname.
+  
+  May return None if no node found."""
+  child_nodes = node.getElementsByTagName(tagname)
+  if child_nodes:
+    return GetXmlDomText(child_nodes[0])
+
+def GetXmlElementTextOrEmpty(node, tagname):
+  """Returns the text of the first node found with the given namespace/tagname.
+  returns empty string if no node found."""
+  res = GetXmlElementText(node, tagname)
+  if res == None:
+    return ""
+  return res
 
 def StringToInt(string):
   try:

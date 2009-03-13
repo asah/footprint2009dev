@@ -6,23 +6,9 @@
 from datetime import datetime
 import logging
 import hashlib
+import utils
 from xml.dom import minidom
 from google.appengine.ext import db
-
-def GetXmlDomText(node):
-  text = ''
-  for child in node.childNodes:
-    if child.nodeType == minidom.Node.TEXT_NODE:
-      text += child.data
-  return text
-
-def GetXmlElementText(node, tagname):
-  """Returns the text of the first node found with the given namespace/tagname.
-  returns empty string if no node found."""
-  child_nodes = node.getElementsByTagName(tagname)
-  if child_nodes:
-    return GetXmlDomText(child_nodes[0])
-  return ""
 
 class Error(Exception):
   pass
@@ -99,10 +85,10 @@ def query(num=25, start=1, quality_score=0.0, start_date="2009-01-01"):
 def create(listing_xml):
   posting = Posting(listing_xml=listing_xml)
   dom = minidom.parseString(listing_xml)
-  posting.title = GetXmlElementText(dom, "title")
-  posting.description = GetXmlElementText(dom, "description")
+  posting.title = utils.GetXmlElementTextOrEmpty(dom, "title")
+  posting.description = utils.GetXmlElementTextOrEmpty(dom, "description")
   try:
-    start_date = datetime.strptime(GetXmlElementText(dom, "startDate"), "%Y-%m-%d")
+    start_date = datetime.strptime(utils.GetXmlElementTextOrEmpty(dom, "startDate"), "%Y-%m-%d")
     posting.start_date = start_date.date()
   except:
     pass

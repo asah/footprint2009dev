@@ -34,6 +34,7 @@ SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 MY_EVENTS_TEMPLATE = 'my_events.html'
 POST_TEMPLATE = 'post.html'
+POST_SUCCESS_TEMPLATE = 'post_success.html'
 ADMIN_TEMPLATE = 'admin.html'
 MODERATE_TEMPLATE = 'moderate.html'
 
@@ -330,7 +331,7 @@ class post_view(webapp.RequestHandler):
     user_display_name = ''
     user_type = None
     if user_info:
-      #we are logged in
+      # logged in
       user_id = user_info.user_id
       user_type = user_info.account_type
       user_display_name = user_info.get_display_name()
@@ -340,57 +341,8 @@ class post_view(webapp.RequestHandler):
     if recaptcha_challenge_field:
       user_ipaddr = self.request.remote_addr
       recaptcha_response_field = self.request.get('recaptcha_response_field')
-      #self.response.out.write("<html><body>himom</body></html>")
-      #return
       resp = recaptcha.submit(recaptcha_challenge_field, recaptcha_response_field,
                               PK, user_ipaddr)
-
-      title = self.request.get('title')
-      description = self.request.get("description")
-      skills = self.request.get('skills')
-      virtual = self.request.get('virtual')
-      if virtual == "Yes":
-        addr1 = addrname1 = ""
-      else:
-        addr1 = self.request.get('addr1')
-        addrname1 = self.request.get('addrname1')
-      sponsoringOrganizationsName = self.request.get('sponsoringOrganizationsName')
-      openEnded = self.request.get('openEnded')
-      if openEnded == "No":
-        startDate = self.request.get('startDate')
-        startTime = self.request.get('startTime')
-        endTime = self.request.get('endTime')
-        endDate = self.request.get('endDate')
-      else:
-        startTime = endTime = startDate = endDate = ""
-        openEnded == "Yes"
-      contactNoneNeeded = self.request.get("contactNoneNeeded")
-      contactEmail = self.request.get("contactEmail")
-      contactPhone = self.request.get("contactPhone")
-      contactName = self.request.get("contactName")
-      contactURL = self.request.get("contactURL")
-      weeklySun = self.request.get("weeklySun") 
-      weeklyMon = self.request.get("weeklyMon") 
-      weeklyTue = self.request.get("weeklyTue") 
-      weeklyWed = self.request.get("weeklyWed") 
-      weeklyThu = self.request.get("weeklyThu") 
-      weeklyFri = self.request.get("weeklyFri") 
-      weeklySat = self.request.get("weeklySat") 
-      biweeklySun = self.request.get("biweeklySun") 
-      biweeklyMon = self.request.get("biweeklyMon") 
-      biweeklyTue = self.request.get("biweeklyTue") 
-      biweeklyWed = self.request.get("biweeklyWed") 
-      biweeklyThu = self.request.get("biweeklyThu") 
-      biweeklyFri = self.request.get("biweeklyFri") 
-      biweeklySat = self.request.get("biweeklySat")
-      recurrence = self.request.get("recurrence")
-      audienceAll = self.request.get("audienceAll")
-      audienceMinAge = self.request.get("audienceMinAge")
-      audienceTeens = self.request.get("audienceTeens")
-      audienceSeniors = self.request.get("audienceSeniors")
-      audienceSexRestricted = self.request.get("audienceSexRestricted")
-      sexRestrictedTo = self.request.get("sexRestrictedTo")
-
     if resp == None:
       template_values = {
         'current_page' : 'POST',
@@ -402,10 +354,62 @@ class post_view(webapp.RequestHandler):
       return
 
     if resp.is_valid:
-      #item_xml = ""
-      #item_id = posting.create(item_xml)
-      html = "<html><body>posting succeeded!</body></html>"
-      self.response.out.write(html)
+      argnames = [
+        "title", "description", "skills", "virtual", "addr1", "addrname1", 
+        "sponsoringOrganizationsName", "openEnded", "startDate",
+        "startTime", "endTime", "endDate", "contactNoneNeeded",
+        "contactEmail", "contactPhone", "contactName", "contactURL",
+        "weeklySun", "weeklyMon", "weeklyTue", "weeklyWed", "weeklyThu",
+        "weeklyFri", "weeklySat", "biweeklySun", "biweeklyMon",
+        "biweeklyTue", "biweeklyWed", "biweeklyThu", "biweeklyFri",
+        "biweeklySat", "recurrence", "audienceAll", "audienceMinAge",
+        "audienceTeens", "audienceSeniors", "audienceSexRestricted",
+        "sexRestrictedTo"]
+      vals = {}
+      for arg in argnames:
+        vals[arg] = self.request.get(arg)
+      if vals["virtual"] != "No":
+        vals["virtual"] = "Yes"
+        vals["addr1"] = vals["addrname1"] = ""
+      # 
+      if vals["openEnded"] == "No":
+        pass
+      else:
+        vals["openEnded"] = "Yes"
+        vals["startTime"] = vals["endTime"] = ""
+        vals["startDate"] = vals["endDate"] = ""
+      # footprint isn't that flexible about gender
+      if vals["sexRestrictedTo"][0].upper() == "M":
+        vals["sexRestrictedTo"] = "M"
+      elif vals["sexRestrictedTo"][0].upper() == "F":
+        vals["sexRestrictedTo"] = "F"
+      else:
+        vals["sexRestrictedTo"] = ""
+      # once, one-time or weekly, then blank-out biweekly
+      if (vals["recurrence"] == "Weekly" or
+          vals["recurrence"] == "No" or
+          vals["recurrence"] == "Daily"):
+        for arg in argnames:
+          if arg.find("biweekly") == 0:
+            vals[arg] == ""
+      # once, one-time or biweekly, then blank-out weekly
+      if (vals["recurrence"] == "BiWeekly" or
+          vals["recurrence"] == "No" or
+          vals["recurrence"] == "Daily"):
+        for arg in argnames:
+          if arg.find("weekly") == 0:
+            vals[arg] == ""
+          
+
+      template_values = {
+        'current_page' : 'POST',
+        'fieldnames' : argnames,
+        'vals' : vals,
+        'user_id' : user_id,
+        'user_display_name' : user_display_name,
+        'user_type' : user_type,
+        }
+      self.response.out.write(render_template(POST_SUCCESS_TEMPLATE, template_values))
       return
 
     html = "<html><body>posting failed: "+resp.error_code+"</body></html>"
