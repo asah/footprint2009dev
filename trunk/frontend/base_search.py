@@ -37,6 +37,9 @@ XMLNS_BASE='http://base.google.com/ns/1.0'
 # Atom namespace, typically xmlns='http://www.w3.org/2005/Atom'
 XMLNS_ATOM='http://www.w3.org/2005/Atom'
 
+# Date format pattern used in date ranges.
+DATE_FORMAT_PATTERN = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')
+
 def make_base_arg(x):
   return "base_" + x
 
@@ -54,6 +57,7 @@ def make_base_orderby_arg(args):
 # given that the callers are also protecting us, but I figure better
 # safe than sorry, and defense-in-depth.
 def search(args):
+  logging.info(args);
   base_query = ""
 
   # TODO: injection attack on q
@@ -189,13 +193,25 @@ def query(query_url, args, cache):
 
     res.event_date_range = utils.GetXmlElementText(entry, 
             XMLNS_BASE, 'event_date_range')
-    res.startdate = re.sub(r'[T ].+$', r'', res.event_date_range)
-    # todo: start time, etc.
+    
+    # res.event_date_range follows one of these two formats:
+    #     <start_date>T<start_time> <end_date>T<end_time>
+    #     <date>T<time>
+    m = DATE_FORMAT_PATTERN.findall(res.event_date_range)
+    if not m:
+      # TODO(oansaldi): should we accept an event with an invalid date range?
+      logging.info('invalid date range: %s for %s' % (res.event_date_range, url))
+    else:
+      # first match is start date/time
+      res.startdate = datetime.datetime.strptime(m[0], '%Y-%m-%dT%H:%M:%S')
+      # last match is either end date/time or start/date time
+      res.enddate = datetime.datetime.strptime(m[-1], '%Y-%m-%dT%H:%M:%S')
+
     # score results
     res.score_by_base_rank = (total_results - i)/total_results
     res.score = res.score_by_base_rank
 
-    t1 = time.mktime(time.strptime(res.startdate[:10], "%Y-%m-%d"))
+    t1 = time.mktime(res.startdate.date().timetuple())
     if t1 == t0:
       res.date_dist_multiplier = 1.0
     elif t1 < t0:

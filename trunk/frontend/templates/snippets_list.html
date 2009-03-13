@@ -46,6 +46,16 @@
                map.addMarkerGeocode("{{ result.location }}")});
         </script>
       {% endif %}
+      {# TODO(oansaldi): escape dates for extra-care (they are already safe) #}
+      {% if result.startdate %}
+        <script>
+          asyncLoadManager.addCallback('bodyload', function() {
+            calendar.markRange(
+                new Date('{{ result.startdate|date:"r" }}'),
+                new Date('{{ result.enddate|date:"r" }}'));
+          });
+        </script>
+      {% endif %}
 
       <div class='snippet_title'>
         <a href='{{ result.url }}'>{{ result.title }}</a>
@@ -53,14 +63,15 @@
       {% if result.location or result.startdate or result.interest_count %}
         <div class='snippet_sub_text'>
           {{ result.location }}
-          {% if result.startdate %}
-            {% if result.location %}-{% endif %}
-            {{ result.startdate }}
-          {% endif %}
+          {% if result.location %}-{% endif %}
+          {{ result.startdate|date:"m/d/Y" }}
+          {% ifnotequal result.startdate.date result.enddate.date %}
+          - {{ result.enddate|date:"m/d/Y" }}
+          {% endifnotequal %}
           {% if result.interest_count %}
             {% if result.location or result.startdate %}-{% endif %}
             <img src="images/Event-StarredByOthers.png" alt="Starred"/> by {{result.interest_count}}
-            {% ifequal result.interest_count 1 %} person {% else %} people {% endifequal %}
+            {{ result.interest_count|pluralize:"person,people" }}
           {% endif %}
         </div>
       {% endif %}
@@ -73,7 +84,7 @@
       {% for entry in result.more_list %}{{ entry }}{% endfor %}
 <div onclick="showLessDuplicates('{{ result.more_id }}')" class="more_link"> show fewer locations and times...</div>
 </div>
-<span id="s{{ result.more_id }}" onclick="showMoreDuplicates('{{ result.more_id }}')"') class="more_link"> more locations and times...</span>
+<span id="s{{ result.more_id }}" onclick="showMoreDuplicates('{{ result.more_id }}')" class="more_link"> more locations and times...</span>
 </div>
       {% endif %}
       <div class='snippet_text'>
@@ -88,3 +99,8 @@
     </table>
   </div>
 {% endfor %}
+<script>
+  asyncLoadManager.addCallback('bodyload', function() {
+    calendar.render();
+  });
+</script>
