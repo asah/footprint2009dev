@@ -1,78 +1,4 @@
 /**
- * Creates a interval set.
- * The set is stored as an ordered list of intervals. The addInterval operation
- * ensures the intervals do not overlap.
- * @constructor
- */
-vol.IntervalSet = function() {
-  this.intervals_ = [];
-};
-
-
-/**
- * Adds an interval to this set. Attempts to simplify the set as the new
- * interval is added. Examples:
- * [[0,1], [4,5]] + [2,2] = [[0,2],[4,5]]
- * [[0,1], [4,5]] + [0,5] = [0,5]
- *
- * TODO(oansaldi): since the array is actually sorted, we can use binary search
- *     to find the ideal place to insert the new interval in.
- *
- * @param {number} low the lower bound of the interval (inclusive).
- * @param {number} high the lower bound of the interval (inclusive).
- */
-vol.IntervalSet.prototype.addInterval = function(low, high) {
-  // TODO(oansaldi): binary search can be used to further improve performance
-  for (var i = 0, l = this.intervals_.length; i < l; i++) {
-    var interval = this.intervals_[i];
-    if (high < interval[0]) {
-      // case: [[4,6]] + [1,2] = [[1,2], [4,6]]
-      this.intervals_.splice(i, 0, [low, high]);
-      return;
-    } else if (low < interval[0] && high <= interval[1]) {
-      // case: [[2,4]] + [1,2] = [[1,4]]
-      interval[0] = low;
-      return;
-    } else if (low >= interval[0] && high <= interval[1]) {
-      // case: [[1,4]] + [2,3] = [[1,4]]
-      return;
-    } else if (low <= interval[1] && high > interval[1]) {
-      // case: [[2,4]] + [3,5] = [[2,5]]
-      interval[1] = high;
-      // can we merge with next interval?
-      if (i + 1 < l) {
-        var nextInterval = this.intervals_[i + 1];
-        // case: [[2,4], [5,6]] + [3,5] = [[2,6]]
-        if (high >= nextInterval[0]) {
-          interval[1] = nextInterval[1];
-          this.intervals_.splice(i + 1, 1);
-        }
-      }
-      return;
-    }
-  }
-  // case: [[1,2]] + [4,5] = [[1,2], [4,5]]
-  this.intervals_.push([low, high]);
-};
-
-
-/**
- * Checks whether the interval set contains the given value.
- * @param {number} value the value.
- * @return {boolean} whether the value is contained.
- */ 
-vol.IntervalSet.prototype.contains = function(value) {
-  for (var i = 0, l = this.intervals_.length; i < l; i++) {
-    var interval = this.intervals_[i];
-    if (value >= interval[0] && value <= interval[1]) {
-      return true;
-    }
-  }
-  return false;
-};
-
-
-/**
  * Creates a new calendar and attaches it to an element.
  * @param {Element} element the element to attach to.
  * @constructor
@@ -80,7 +6,7 @@ vol.IntervalSet.prototype.contains = function(value) {
 vol.Calendar = function(element) {
   this.date_ = new Date();
   this.date_.setDate(1);
-  this.events_ = new vol.IntervalSet();
+  this.events_ = {};
   this.numRows_ = 0;
 
   // Grab the first <TABLE> inside element.  Assumes that's the calendar table.
@@ -94,6 +20,10 @@ vol.Calendar.MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
+
+
+vol.Calendar.ROWS = 6;
+vol.Calendar.COLUMNS = 7;
 
 
 /**
@@ -116,13 +46,29 @@ vol.Calendar.prototype.previousMonth = function() {
 
 /**
  * Highlights a range of date in the calendar.
- * @param {Date} fromDate start date of the the range (inclusive).
- * @param {Date} toDate end date fo the range (inclusive).
+ * @param {Date} t0 start date of the the range (inclusive).
+ * @param {Date} t1 end date fo the range (inclusive).
  */
-vol.Calendar.prototype.markRange = function(fromDate, toDate) {
-  this.events_.addInterval(
-    vol.Calendar.copyDatePart(fromDate).getTime(),
-    vol.Calendar.copyDatePart(toDate).getTime());
+vol.Calendar.prototype.markRange = function(t0, t1) {
+  if (t0.getTime() > t1.getTime()) {
+    var tmp = t0;
+    t0 = t1;
+    t1 = tmp;
+  }
+  t0 = vol.Calendar.copyDatePart(t0);
+  t1 = vol.Calendar.copyDatePart(t1);
+  
+  var firstDay = this.getFirstDay();
+  if (t0.getTime() < firstDay.getTime()) {
+    t0 = firstDay;
+  }
+  var lastDay = this.getLastDay();
+  if (t1.getTime() > lastDay.getTime()) {
+    t1 = lastDay;
+  }
+  for (var d = t0; d.getTime() <= t1.getTime(); d.setDate(d.getDate() + 1)) {
+    this.events_[vol.Calendar.dateAsString(d)] = true;
+  }
 };
 
 
@@ -130,7 +76,7 @@ vol.Calendar.prototype.markRange = function(fromDate, toDate) {
  * Remove all highlighted days in the calendar.
  */
 vol.Calendar.prototype.clearMarks = function() {
-  this.events_ = new vol.IntervalSet();
+  this.events_ = {};
 };
 
 
@@ -169,6 +115,36 @@ vol.Calendar.prototype.getDateRange = function() {
 
 
 /**
+ * Computes the date of the first day displayed by the calendar.
+ * For March 2009 the first day is February the 23rd:
+ *  M  T  W  T  F  S  S
+ * 23 24 25 26 27 28  1
+ * ...
+ * @return {Date} the first day displayed by the calendar.
+ */
+vol.Calendar.prototype.getFirstDay = function() {
+  var day = vol.Calendar.copyDatePart(this.date_);
+  day.setDate(day.getDate() - (day.getDay() + 6) % 7);
+  return day;
+};
+
+
+/**
+ * Computes the last day displayed by the calendar.
+ * For March 2009 the last day is April the 5h:
+ *  M  T  W  T  F  S  S
+ * ...
+ * 30 31  1  2  3  4  5
+ * @return {Date} the last day displayed by the calendar.
+ */
+vol.Calendar.prototype.getLastDay = function() {
+  var day = this.getFirstDay();
+  day.setDate(day.getDate() + vol.Calendar.ROWS * vol.Calendar.COLUMNS - 1);
+  return day;
+};
+
+
+/**
  * Renders the calendar.
  */
 vol.Calendar.prototype.render = function() {
@@ -179,14 +155,6 @@ vol.Calendar.prototype.render = function() {
     e.innerHTML = month;
   }, this.table_);
 
-  // sets the days
-
-  // warning: getDay() returns 0 for Sunday
-  var day = vol.Calendar.copyDatePart(this.date_);
-  day.setDate(day.getDate() - (day.getDay() + 6) % 7);
-
-  var tbody = this.table_.getElementsByTagName('tbody')[0];
-
   // Delete last five rows, if present (that is, after changing the
   // current month).
   var numRows = this.table_.rows.length;
@@ -196,14 +164,15 @@ vol.Calendar.prototype.render = function() {
     }
   }
 
-  for (var row = 0; row < 6; row++) {
+  var tbody = this.table_.getElementsByTagName('tbody')[0];
+  for (var row = 0, day = this.getFirstDay(); row < vol.Calendar.ROWS; row++) {
     var tr = document.createElement('tr');
     tbody.appendChild(tr);
-    for (var col = 0; col < 7; col++) {
+    for (var col = 0; col < vol.Calendar.COLUMNS; col++) {
       var classes = [];
       // days cannot be marked as 'event' and 'weekend' at the same time
       // to avoid multi-class problems with IE.
-      if (this.events_.contains(day.getTime())) {
+      if (vol.Calendar.dateAsString(day) in this.events_) {
         classes.push('calendar_days_event');
       } else if ((day.getDay() + 6) % 7 > 4) {
         classes.push('calendar_days_weekend');
@@ -246,4 +215,25 @@ vol.Calendar.isToday = function(date) {
  */
 vol.Calendar.copyDatePart = function(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
+
+/**
+ * Converts a date to a 'yyyy-mm-dd' formatted string.
+ * @param {Date} date a date.
+ * @return {string} the date formatted as per 'yyyy-mm-dd'.
+ */
+vol.Calendar.dateAsString = function(date) {
+  var buffer = [date.getFullYear(), '-'];
+  var month = date.getMonth() + 1; // Date.getMonth() returns 0 based months
+  if (month < 10) {
+    buffer.push('0');
+  }
+  buffer.push(month, '-');
+  var day = date.getDate();
+  if (day < 10) {
+    buffer.push('0');
+  }
+  buffer.push(day);
+  return buffer.join('');
 };
