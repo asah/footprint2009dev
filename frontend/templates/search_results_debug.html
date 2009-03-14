@@ -19,7 +19,11 @@ link: <a href="{{result.url|escape}}">{{result.url}}</a>
 desc: {{result.snippet}}
 id: {{result.id}}     date range: {{result.startdate}}    provider: {{result.provider}} 
 score: {{result.scorestr}} (orig result #{{result.orig_idx}}){{result.score_notes}}
-{% if result.merged_list %}merged: {% for it in result.merged_debug %}{{it}} {% endfor %}{% endif %}
+start: {{result.starttime}} stop: {{result.endtime}}
+{% if result.merged_list %}
+merged: {% for it in result.merged_debug %}{{it}} {% endfor %}
+{% if result.have_more %}more_id: {{res.more_id}}{% endif %}
+{% endif %}
 {% endfor %}
 
 {%include 'paginator.html' %}
