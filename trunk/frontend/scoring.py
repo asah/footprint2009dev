@@ -24,11 +24,11 @@ def score_results_set(result_set, args):
 
     # TODO: match on start time, etc.
     delta = res.startdate - datetime.datetime.now()
-    if delta.days <= 0 or delta.seconds < 30:
+    if delta.days <= 0:
       # good luck joining event this quickly; also covers divide-by-zero and past-dates
       res.date_dist_multiplier = .0001
-    else:
-      res.date_dist_multiplier = 1.0/(delta.seconds/3600.0/24.0)
+    else:  
+      res.date_dist_multiplier = 1.0/(delta.days + (delta.seconds/(24 * 3600)))
 
     if (("lat" not in args) or args["lat"] == "" or
         ("long" not in args) or args["long"] == "" or
@@ -57,7 +57,6 @@ def score_results_set(result_set, args):
       res.interest = others_interests[res.id]
     elif "test_stars" in args:
       res.interest = i % 6
-
 
     score_notes = ""
     res.score = res.score_by_base_rank
