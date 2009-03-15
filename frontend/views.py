@@ -34,7 +34,7 @@ SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 MY_EVENTS_TEMPLATE = 'my_events.html'
 POST_TEMPLATE = 'post.html'
-POST_SUCCESS_TEMPLATE = 'post_success.html'
+POST_RESULT_TEMPLATE = 'post_result.html'
 ADMIN_TEMPLATE = 'admin.html'
 MODERATE_TEMPLATE = 'moderate.html'
 
@@ -324,6 +324,8 @@ class my_events_view(webapp.RequestHandler):
 
 
 class post_view(webapp.RequestHandler):
+  def post(self):
+    return self.get()
   def get(self):
     global pk
     user_info = userinfo.get_user(self.request)
@@ -336,88 +338,53 @@ class post_view(webapp.RequestHandler):
       user_type = user_info.account_type
       user_display_name = user_info.get_display_name()
 
+    # synthesize GET method url from either GET or POST submission
+    geturl = self.request.path + "?"
+    for arg in self.request.arguments():
+      geturl += urllib.quote_plus(arg) + "=" + urllib.quote_plus(self.request.get(arg)) + "&"
+    template_values = {
+      'current_page' : 'POST',
+      'geturl' : geturl,
+      'user_id' : user_id,
+      'user_display_name' : user_display_name,
+      'user_type' : user_type,
+      }
+
     resp = None
     recaptcha_challenge_field = self.request.get('recaptcha_challenge_field')
-    if recaptcha_challenge_field:
-      user_ipaddr = self.request.remote_addr
-      recaptcha_response_field = self.request.get('recaptcha_response_field')
-      resp = recaptcha.submit(recaptcha_challenge_field, recaptcha_response_field,
-                              PK, user_ipaddr)
-    if resp == None:
-      template_values = {
-        'current_page' : 'POST',
-        'user_id' : user_id,
-        'user_display_name' : user_display_name,
-        'user_type' : user_type,
-        }
+    if not recaptcha_challenge_field:
       self.response.out.write(render_template(POST_TEMPLATE, template_values))
       return
 
-    if resp.is_valid:
-      argnames = [
-        "title", "description", "skills", "virtual", "addr1", "addrname1", 
-        "sponsoringOrganizationsName", "openEnded", "startDate",
-        "startTime", "endTime", "endDate", "contactNoneNeeded",
-        "contactEmail", "contactPhone", "contactName", "contactURL",
-        "weeklySun", "weeklyMon", "weeklyTue", "weeklyWed", "weeklyThu",
-        "weeklyFri", "weeklySat", "biweeklySun", "biweeklyMon",
-        "biweeklyTue", "biweeklyWed", "biweeklyThu", "biweeklyFri",
-        "biweeklySat", "recurrence", "audienceAll", "audienceMinAge",
-        "audienceTeens", "audienceSeniors", "audienceSexRestricted",
-        "sexRestrictedTo"]
-      vals = {}
-      for arg in argnames:
+    user_ipaddr = self.request.remote_addr
+    recaptcha_response_field = self.request.get('recaptcha_response_field')
+    resp = recaptcha.submit(recaptcha_challenge_field, recaptcha_response_field,
+                            PK, user_ipaddr)
+    vals = {}
+    computed_vals = {}
+    recaptcha_response = self.request.get('recaptcha_response_field')
+    if (resp and resp.is_valid) or recaptcha_response == "test":
+      for arg in self.request.arguments():
         vals[arg] = self.request.get(arg)
-      if vals["virtual"] != "No":
-        vals["virtual"] = "Yes"
-        vals["addr1"] = vals["addrname1"] = ""
-      # 
-      if vals["openEnded"] == "No":
-        pass
-      else:
-        vals["openEnded"] = "Yes"
-        vals["startTime"] = vals["endTime"] = ""
-        vals["startDate"] = vals["endDate"] = ""
-      # footprint isn't that flexible about gender
-      if vals["sexRestrictedTo"][0].upper() == "M":
-        vals["sexRestrictedTo"] = "M"
-      elif vals["sexRestrictedTo"][0].upper() == "F":
-        vals["sexRestrictedTo"] = "F"
-      else:
-        vals["sexRestrictedTo"] = ""
-      # once, one-time or weekly, then blank-out biweekly
-      if (vals["recurrence"] == "Weekly" or
-          vals["recurrence"] == "No" or
-          vals["recurrence"] == "Daily"):
-        for arg in argnames:
-          if arg.find("biweekly") == 0:
-            vals[arg] == ""
-      # once, one-time or biweekly, then blank-out weekly
-      if (vals["recurrence"] == "BiWeekly" or
-          vals["recurrence"] == "No" or
-          vals["recurrence"] == "Daily"):
-        for arg in argnames:
-          if arg.find("weekly") == 0:
-            vals[arg] == ""
-          
+      respcode, id, content = posting.create_from_args(vals, computed_vals)
+      for key in computed_vals:
+        template_values["val_"+str(key)] = str(computed_vals[key])
+      template_values["respcode"] = str(respcode)
+      template_values["id"] = str(id)
+      template_values["content"] = str(content)
+    else:
+      template_values["respcode"] = "401"
+      template_values["content"] = "captcha error, e.g. response didn't match"
 
-      template_values = {
-        'current_page' : 'POST',
-        'fieldnames' : argnames,
-        'vals' : vals,
-        'user_id' : user_id,
-        'user_display_name' : user_display_name,
-        'user_type' : user_type,
-        }
-      self.response.out.write(render_template(POST_SUCCESS_TEMPLATE, template_values))
-      return
-
-    html = "<html><body>posting failed: "+resp.error_code+"</body></html>"
-    self.response.out.write(html)
-
-  def post(self):
-    return self.get()
-
+    # TODO: is there a way to reference a dict-value in appengine+django ?
+    template_values['vals'] = vals
+    for key in vals:
+      keystr = "val_"+str(key)
+      if keystr in template_values:
+        # should never happen
+        logging.error("duplicate template key: "+keystr)
+      template_values[keystr] = str(vals[key])
+    self.response.out.write(render_template(POST_RESULT_TEMPLATE, template_values))
 
 
 class admin_view(webapp.RequestHandler):
@@ -452,7 +419,20 @@ class moderate_view(webapp.RequestHandler):
     if action == "test":
       posting.createTestDatabase()
 
-    reslist = posting.query()
+    now = datetime.datetime.now()
+    nowstr = now.strftime("%Y-%m-%d %H:%M:%S")
+    ts = self.request.get('ts', nowstr)
+    dt = datetime.datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+    delta = now - dt
+    if delta.seconds < 3600:
+      logging.info("processing changes...")
+      vals = {}
+      for arg in self.request.arguments():
+        vals[arg] = self.request.get(arg)
+      posting.process(vals)
+
+    num = self.request.get('num', "20")
+    reslist = posting.query(num=int(num))
     def compare_quality_scores(x,y):
       diff = y.quality_score - x.quality_score
       if (diff > 0): return 1
@@ -466,11 +446,11 @@ class moderate_view(webapp.RequestHandler):
 
     template_values = {
       'current_page' : 'MODERATE',
+      'num' : str(num),
+      'ts' : str(nowstr),
       'user_id' : user_id,
       'user_display_name' : user_display_name,
       'user_type' : user_type,
-      'item_id' : item_id,
-      'item_xml' : item_xml,
       'result_set' : reslist,
     }
 

@@ -73,7 +73,10 @@ Is the opportunity happening at an address or can volunteers help remotely from 
     <tr><td style='font-size:12px; text-align:right; vertical-align:top;'>location name:</td>
         <td><input type="text" name="addrname1" size="40"><span class='caption'> e.g. Ohlone Park</span></td></tr>
     <tr><td style='font-size:12px; text-align:right; vertical-align:top'>street address:</td>
-        <td><textarea onchange='location_ok="unchecked";' onblur='checkLocation()' style='margin:0' rows='3' cols='45' name="addr1"></textarea></td></tr>
+        <td><input type="text" size='45' name="street1" value="street address" onclick="this.value='';"><br/>
+            <input type="text" size='45' name="street2"><br/>
+            <input type="text" size='20' name="city" value="city" onclick="this.value='';">
+            <input type="text" size='5' name="state" value="state" onclick="this.value='';"><br/></td></tr>
     </table></td></tr>
 </table>
 
@@ -89,7 +92,7 @@ How can people learn more about this opportunity and reserve a place? (check all
 <input type="checkbox" name="contactNoneNeeded"> No need to contact -- just show up<br/> 
 <input type="checkbox" name="contactEmail"> Email this address <input type="text" name="contactEmail"><br/> 
 <input type="checkbox" name="contactPhone"> Call <input type="text" name="contactPhone" value="xxx-xxx-xxxx" size="15"> and ask for <input type="text" name="conactName"><br/> 
-<input type="checkbox" name="contactURL"> Visit this web site <input type="text" name="contactURL" size="30"><br/> 
+<input type="checkbox" name="detailURL"> Visit this web site <input type="text" name="detailURL" size="30"><br/> 
 <p/> 
 
 show <a href='javascript:toggleElement("advd");'>advanced options</a> including age and gender restrictions, end time, recurring events, and more.<p/>
@@ -124,10 +127,10 @@ The opportunity ends on: <input type="text" name="endDate" size="10" maxlength="
 Are attendees paid? <select name="paid"><option value="Yes">Yes</option><option value="No" selected>No</option></select><br/>
 How many hours per week should a volunteer be ready to commit to? <input type="text" name="commitmentHoursPerWeek"><br/>
 Who is allowed to participate? (check all that apply)<br/> 
-<input type="checkbox" name="audienceAll"> Anyone, including kids under 13<br/> 
-<input type="checkbox" name="audienceMinAge"> Anyone at least <input type="text" name="minimumAge" size="3"> years of age<br/> 
-<input type="checkbox" name="audienceTeens"> Teenagers only please<br/> 
-<input type="checkbox" name="audienceSeniors"> Seniors only please<br/> 
+<input type="radio" name="audienceAge" value="anyage"> Anyone, including kids under 13<br/> 
+<input type="radio" name="audienceAge" value="atleast"> Anyone at least <input type="text" name="minAge" size="3"> years of age<br/> 
+<input type="radio" name="audienceAge" value="teens"> Teenagers or adults<br/> 
+<input type="radio" name="audienceAge" value="seniors"> Seniors only please<br/> 
 <input type="checkbox" name="audienceSexRestricted"> <select name="sexRestrictedTo"><option value="Neither" selected>[Women/Men]</option><option value="Female">Women</option><option value="Male">Men</option></select> only please.<p/> 
 </div>
 
@@ -249,6 +252,7 @@ function validate_form() {
 
   return true;
 }
+
 </script>
 </body>
 {% endblock %}
