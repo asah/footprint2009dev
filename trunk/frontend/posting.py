@@ -5,9 +5,12 @@
 
 from datetime import datetime
 import logging
+import re
 import hashlib
+import geocode
 import utils
 from xml.dom import minidom
+from xml.sax.saxutils import escape
 from google.appengine.ext import db
 
 class Error(Exception):
@@ -36,31 +39,60 @@ class Posting(db.Model):
   # there's even bugs (http://aralbalkan.com/1355) in GeoPT, so the heck with it.
   #todo latlong = db.StringProperty(default="")
 
-  def showInModerator():
-      return (status.find("NEW") or status.find("EDITED"))
-  def showLive():
-      return (status.find("ACCEPTED"))
-  def reject(type="MANUAL"):
-      status = type+"_REJECTED"
+  def statusChar(self):
+    if self.status.find("ACCEPTED")>=0:
+      return "A"
+    if self.status.find("REJECTED")>=0:
+      return "R"
+    return ""
+  def showInModerator(self):
+      return (self.status.find("NEW")>=0 or self.status.find("EDITED")>=0)
+  def isLive(self):
+      return (self.status.find("ACCEPTED")>=0)
+  def reject(self, type="MANUAL"):
+      self.status = type+"_REJECTED"
       self.put()
-  def accept(type="MANUAL"):
-      status = type+"_ACCEPTED"
+  def accept(self, type="MANUAL"):
+      self.status = type+"_ACCEPTED"
       self.put()
-  def delete(type="MANUAL"):
-      status = type+"_DELETED"
+  def reset(self):
+      self.status = "NEW"
       self.put()
-  def markEdited():
-      if status == "NEW" or status == "VERIFIED":
-        status += "_EDITED"
+  def markEdited(self):
+      if self.status == "NEW" or self.status == "VERIFIED":
+        self.status += "_EDITED"
       else:
         # throw back on the queue-- undelete, etc.
-        status = "NEW_EDITED"
+        self.status = "NEW_EDITED"
   def computeQualityScore(self):
       # TODO: walk the object to look for missing/bad fields
-      quality_score = 1.0
+      self.quality_score = 1.0
       self.put()
 
-def query(num=25, start=1, quality_score=0.0, start_date="2009-01-01"):
+def process(args):
+  for arg in args:
+    if arg[0] != "v":
+      continue
+    keystr = arg[1:]
+    el = Posting.get(keystr)
+    if el == None:
+      # already deleted!
+      continue
+    # TODO: remove quality score hack-- this is how to rank in moderator UI
+    if args[arg] == "A":
+      el.quality_score = -1.0
+      el.accept()
+    elif args[arg] == "R":
+      el.quality_score = 0.0
+      el.reject()
+    elif args[arg] == "X":
+      logging.info("deleting: "+keystr+"  title="+el.title)
+      el.delete()
+    elif args[arg] == "":
+      el.quality_score = 0.5
+      el.reset()
+
+def query(num=25, start=1, quality_score=0.5, start_date="2009-01-01"):
   # TODO: GQL doesn't support string-CONTAINS, limiting keyword search
   # TODO: GQL doesn't let you do inequality comparison on multiple fields.
   if quality_score == 0.0:
@@ -72,20 +104,31 @@ def query(num=25, start=1, quality_score=0.0, start_date="2009-01-01"):
                     sd.date())
   else:
     q = db.GqlQuery("SELECT * FROM Posting " + 
-                    "WHERE quality_score >= :1 " +
-                    "ORDER BY start_date ASC " +
-                    "LIMIT %d OFFSET %d" % (int(num), int(start)),
-                    float(quality_score))
+                    "ORDER BY quality_score DESC " +
+                    "LIMIT %d OFFSET %d" % (int(num), int(start)))
   result_set = q.fetch(num)
   reslist = []
   for result in result_set:
+    result.key = str(result.key())
+    result.listing_fmtd = re.sub(r'><', '-qbr--', result.listing_xml);
+    result.listing_fmtd = re.sub(r'(<?/[a-zA-Z]+-qbr--)+', '-qbr--', result.listing_fmtd);
+    result.listing_fmtd = re.sub(r'>', ': ', result.listing_fmtd);
+    result.listing_fmtd = re.sub(r'-qbr--', '<br/>', result.listing_fmtd)
+    result.listing_fmtd = re.sub(r'(<br/>)+', '<br/>', result.listing_fmtd)
+    result.status_char = result.statusChar()
     reslist.append(result)
   return reslist
 
-def create(listing_xml):
-  posting = Posting(listing_xml=listing_xml)
-  dom = minidom.parseString(listing_xml)
+def create_from_xml(xml):
+  try:
+    dom = minidom.parseString(xml)
+  except:
+    return ""
+
+  posting = Posting(listing_xml=xml)
   posting.title = utils.GetXmlElementTextOrEmpty(dom, "title")
+  #logging.info("create_from_xml: xml="+xml)
+  logging.info("create_from_xml: title="+posting.title)
   posting.description = utils.GetXmlElementTextOrEmpty(dom, "description")
   try:
     start_date = datetime.strptime(utils.GetXmlElementTextOrEmpty(dom, "startDate"), "%Y-%m-%d")
@@ -93,14 +136,215 @@ def create(listing_xml):
   except:
     pass
     # ignore bad start date
-  posting.id = hashlib.md5(listing_xml+str(posting.creation_time)).hexdigest()
+  posting.id = hashlib.md5(xml+str(posting.creation_time)).hexdigest()
   posting.put()
   return posting.key()
 
+argnames = {
+  "title":1, "description":1, "skills":1, "virtual":1, "addr1":1, "addrname1":1, 
+  "sponsoringOrganizationsName":1, "openEnded":1, "startDate":1,
+  "startTime":1, "endTime":1, "endDate":1, "contactNoneNeeded":1,
+  "contactEmail":1, "contactPhone":1, "contactName":1, "detailURL":1,
+  "weeklySun":1, "weeklyMon":1, "weeklyTue":1, "weeklyWed":1, "weeklyThu":1,
+  "weeklyFri":1, "weeklySat":1, "biweeklySun":1, "biweeklyMon":1,
+  "biweeklyTue":1, "biweeklyWed":1, "biweeklyThu":1, "biweeklyFri":1,
+  "biweeklySat":1, "recurrence":1, "audienceAll":1, "audienceAge":1, 
+  "minAge":1, "audienceSexRestricted":1, "sexRestrictedTo":1,
+  "commitmentHoursPerWeek":1, "city":1, "region":1, "postalCode":1,
+  "country":1, "street1":1, "street2":1
+}
+
+# TODO: replace with a better parser-- after wasting hours, I gave up
+# on strptime().  Do not add to utils.py -- this is a bad hack
+def parseTimestamp(dateStr, timeStr):
+  dateStr = dateStr.strip()
+  grp = re.match(r'(\d?\d)[/-]?(\d?\d)[/-]?(\d\d\d\d)', dateStr)
+  if grp:
+    month = int(grp.group(1))
+    day = int(grp.group(2))
+    year = int(grp.group(3))
+  else:
+    grp = re.match(r'(\d?\d)[/-]?(\d?\d)[/-]?(\d\d)', dateStr)
+    if grp:
+      month = int(grp.group(1))
+      day = int(grp.group(2))
+      year = int(grp.group(3)) + 1900
+    else:
+      grp = re.match(r'(\d\d\d\d)[/-]?(\d\d)[/-]?(\d\d)', dateStr)
+      if grp:
+        year = int(grp.group(1))
+        month = int(grp.group(2))
+        day = int(grp.group(3))
+      else:
+        return None
+  hour = minute = 0
+  timeStr = timeStr.strip().upper()
+  grp = re.match(r'(\d?\d):(\d\d) *(AM|PM)?', timeStr)
+  if grp:
+    hour = int(grp.group(1))
+    minute = int(grp.group(2))
+    ampm = grp.group(3)
+    if ampm == "PM":
+      hour += 12
+  else:
+    return None
+  try:
+    return datetime(year, month, day, hour, minute, 0)
+  except:
+    return None
+
+def cleanup_args(vals):
+  # keep only known argnames
+  for key in vals:
+    if key in argnames:
+      vals[key] = escape(vals[key])
+      #vals[key] = re.sub(r'(<!\[CDATA\[\|\]\]>)', r'', vals[key])
+    else:
+      vals[key] = ""
+  for key in argnames:
+    if key not in vals:
+      vals[key] = ""
+
+  # blank-out incompatible fields
+  if vals["virtual"] != "No":
+    vals["virtual"] = "Yes"
+    vals["addr1"] = vals["addrname1"] = ""
+  if vals["openEnded"] != "No":
+    vals["openEnded"] = "Yes"
+    vals["startDate"] = vals["startTime"] = ""
+    vals["endDate"] = vals["endTime"] = ""
+
+  # footprint isn't very interesting when it comes to gender
+  if len(vals["sexRestrictedTo"]) < 1:
+    vals["sexRestrictedTo"] = ""
+  elif vals["sexRestrictedTo"][0].upper() == "M":
+    vals["sexRestrictedTo"] = "M"
+  elif vals["sexRestrictedTo"][0].upper() == "F":
+    vals["sexRestrictedTo"] = "F"
+  else:
+    vals["sexRestrictedTo"] = ""
+
+  # once, one-time or weekly, then blank-out biweekly
+  if (vals["recurrence"] == "Weekly" or
+      vals["recurrence"] == "No" or
+      vals["recurrence"] == "Daily"):
+    for arg in argnames:
+      if arg.find("biweekly") == 0:
+        vals[arg] == ""
+  # once, one-time or biweekly, then blank-out weekly
+  if (vals["recurrence"] == "BiWeekly" or
+      vals["recurrence"] == "No" or
+      vals["recurrence"] == "Daily"):
+    for arg in argnames:
+      if arg.find("weekly") == 0:
+        vals[arg] == ""
+
+def add_new_fields(vals, newvals):
+  if vals["country"] == "":
+    vals["country"] = "US"
+  addr = vals["street1"]
+  addr += " "+vals["street2"]
+  addr += " "+vals["city"]
+  addr += " "+vals["region"]
+  addr += " "+vals["country"]
+  newvals["complete_addr"] = addr
+  logging.info("post: geocoding "+addr)
+  latlong = geocode.geocode(addr)
+  logging.info("post: latlong="+latlong)
+  if latlong == "":
+    newvals["latitude"] = newvals["longitude"] = ""
+  else:
+    newvals["latitude"],newvals["longitude"] = latlong.split(",")
+
+  newvals["parsedStartDate"] = newvals["parsedStartTime"] = ""
+  newvals["parsedEndDate"] = newvals["parsedEndTime"] = ""
+  if vals["openEnded"] == "No":
+    startTs = parseTimestamp(vals["startDate"], vals["startTime"])
+    if startTs:
+      newvals["parsedStartDate"] = startTs.strftime("%Y-%m-%d")
+      newvals["parsedStartTime"] = startTs.strftime("%H:%M:%S")
+    endTs = parseTimestamp(vals["endDate"], vals["endTime"])
+    if endTs:
+      newvals["parsedEndDate"] = endTs.strftime("%Y-%m-%d")
+      newvals["parsedEndTime"] = endTs.strftime("%H:%M:%S")
+  newvals["minAge"] = 0
+  if vals["audienceAge"] == "seniors":
+    newvals["minAge"] = 60
+  elif vals["audienceAge"] == "teens":
+    newvals["minAge"] = 13
+  elif vals["audienceAge"] == "anyage":
+    newvals["minAge"] = 0
+  else:
+    try:
+      newvals["minAge"] = int(vals["minAge"])
+    except:
+      newvals["minAge"] = 0
+  try:
+    newvals["commitmentHoursPerWeek"] = int(vals["commitmentHoursPerWeek"])
+    if newvals["commitmentHoursPerWeek"] < 0:
+      newvals["commitmentHoursPerWeek"] = 0
+  except:
+    newvals["commitmentHoursPerWeek"] = 0
+
+
+def create_from_args(vals, computed_vals):
+  # note: don't need to worry (much) about hacked-forms because we're
+  # using CAPTCHA to avoid bot submissions.
+  cleanup_args(vals)
+  add_new_fields(vals, computed_vals)
+  if vals["virtual"] == 'No' and computed_vals["latitude"] == "":
+    return 402, "", "cannot find address: '"+computed_vals["complete_addr"]+"'"
+
+  xml = "<VolunteerOpportunity>"
+  if vals["recaptcha_response_field"] == "test":
+    # basic security measure
+    xml += "<isTest>Yes</isTest>"
+    vals["title"] = "T:" + vals["title"]
+    vals["description"] = "TEST DELETEME: " + vals["description"]
+  # TODO: organization
+  #xml += "<volunteerOpportunityID>%d</volunteerOpportunityID>" % (id)
+  #xml += "<sponsoringOrganizationIDs><sponsoringOrganizationID>%d</sponsoringOrganizationID></sponsoringOrganizationIDs>" % (id)
+  #xml += "<volunteerHubOrganizationIDs><volunteerHubOrganizationID>%s</volunteerHubOrganizationID></volunteerHubOrganizationIDs>" % ("")
+  xml += "<title>%s</title>" % (vals["title"])
+  xml += "<description>%s</description>" % (vals["description"])
+  xml += "<skills>%s</skills>" % (vals["skills"])
+  xml += "<minimumAge>%s</minimumAge>" % (str(computed_vals["minAge"]))
+  xml += "<detailURL>%s</detailURL>" % (vals["detailURL"])
+  xml += "<locations>"
+  xml += "<location>"
+  xml += "<name>%s</name>" % (vals["addrname1"])
+  xml += "<city>%s</city>" % (vals["city"])
+  xml += "<region>%s</region>" % (vals["region"])
+  xml += "<postalCode>%s</postalCode>" % (vals["postalCode"])
+  xml += "<country>%s</country>" % (vals["country"])
+  xml += "<latitude>%s</latitude>" % (computed_vals["latitude"])
+  xml += "<longitude>%s</longitude>" % (computed_vals["longitude"])
+  xml += "</location>"
+  xml += "</locations>"
+  # TODO: category tags
+  #xml += "<categoryTags>"
+  #xml += "<categoryTag>Community</categoryTag>"
+  #xml += "</categoryTags>"
+  xml += "<dateTimeDurations>"
+  xml += "<dateTimeDuration>"
+  xml += "<openEnded>%s</openEnded>" % (vals["openEnded"])
+  if vals["openEnded"] == "No":
+    xml += "<startDate>%s</startDate>" % (computed_vals["startDate"])
+    xml += "<startTime>%s</startTime>" % (computed_vals["startTime"])
+    xml += "<endDate>%s</endDate>" % (computed_vals["endDate"])
+    xml += "<endTime>%s</endTime>" % (computed_vals["endTime"])
+  xml += "<commitmentHoursPerWeek>%d</commitmentHoursPerWeek>" % (computed_vals["commitmentHoursPerWeek"])
+  xml += "</dateTimeDuration>"
+  xml += "</dateTimeDurations>"
+  xml += "</VolunteerOpportunity>"
+  #logging.info(re.sub(r'><', '>\n<', xml))
+  id = create_from_xml(xml)
+  return 200, id, xml
+
 def createTestDatabase():
-  id1 = create("<VolunteerOpportunity><volunteerOpportunityID>1001</volunteerOpportunityID><sponsoringOrganizationIDs><sponsoringOrganizationID>1</sponsoringOrganizationID></sponsoringOrganizationIDs><volunteerHubOrganizationIDs><volunteerHubOrganizationID>3011</volunteerHubOrganizationID></volunteerHubOrganizationIDs><title>Be a Business Mentor - Trenton, NJ &amp; Beyond</title><dateTimeDurations><dateTimeDuration><openEnded>Yes</openEnded><duration>P6M</duration><commitmentHoursPerWeek>4</commitmentHoursPerWeek></dateTimeDuration></dateTimeDurations><locations><location><city>Trenton</city><region>NJ</region><postalCode>08608</postalCode></location><location><city>Berkeley</city><region>CA</region><postalCode>94703</postalCode></location><location><city>Santa Cruz</city><region>CA</region><postalCode>95062</postalCode></location></locations><categoryTags><categoryTag>Community</categoryTag><categoryTag>Computers &amp; Technology</categoryTag><categoryTag>Employment</categoryTag></categoryTags><minimumAge>21</minimumAge><skills>In order to maintain the integrity of the MicroMentor program, we require that our Mentor volunteers have significant business experience and expertise, such as: 3 years of business ownership experience</skills><detailURL>http://www.volunteermatch.org/search/index.jsp?l=08540</detailURL><description>This is where you come in. Simply by sharing your business know-how, you can make a huge difference in the lives of entrepreneurs from low-income and marginalized communities, helping them navigate the opportunities and challenges of running a business and improving their economic well-being and creating new jobs where they are most needed.</description></VolunteerOpportunity>")
-  id2 = create("<VolunteerOpportunity><volunteerOpportunityID>2001</volunteerOpportunityID><sponsoringOrganizationIDs><sponsoringOrganizationID>2</sponsoringOrganizationID></sponsoringOrganizationIDs><title>DODGEBALL TO HELP AREA HUNGRY</title><dateTimeDurations><dateTimeDuration><openEnded>No</openEnded><startDate>2009-02-22</startDate><endDate>2009-02-22</endDate><startTime>18:45:00</startTime><endTime>21:00:00</endTime></dateTimeDuration><dateTimeDuration><openEnded>No</openEnded><startDate>2009-02-27</startDate><endDate>2009-02-27</endDate><startTime>18:45:00</startTime><endTime>21:00:00</endTime></dateTimeDuration></dateTimeDurations><locations><location><city>West Windsor</city><region>NJ</region><postalCode>08550</postalCode></location></locations><audienceTags><audienceTag>Teens</audienceTag><audienceTag>High School Students</audienceTag></audienceTags><categoryTags><categoryTag>Community</categoryTag><categoryTag>Homeless &amp; Hungry</categoryTag><categoryTag>Hunger</categoryTag></categoryTags><minimumAge>14</minimumAge><skills>Must be in High School</skills><detailURL>http://www.volunteermatch.org/search/opp451561.jsp</detailURL><description>The Mercer County Quixote Quest Teen Volunteer Club is hosting a FUN Dodgeball Tournament at Mercer County College on Sunday afternoon, February 22nd. The proceeds from the event will bebefit the Trenton Area Soup Kitchen. Teens are invited to enter a team of six...with at least three female players (3 guys and 3 girls or more girls). Each team playing will bring a $50 entry fee and a matching sponsor donation of $50. (Total of $100 from each team).</description><lastUpdated olsonTZ=\"America/Denver\">2009-02-02T19:02:01</lastUpdated></VolunteerOpportunity>")
-  id3 = create("<VolunteerOpportunity><volunteerOpportunityID>2002</volunteerOpportunityID><sponsoringOrganizationIDs><sponsoringOrganizationID>2</sponsoringOrganizationID></sponsoringOrganizationIDs><title>YOUNG ADULT TO HELP GUIDE MERCER COUNTY TEEN VOLUNTEER CLUB</title><volunteersNeeded>3</volunteersNeeded><dateTimeDurations><dateTimeDuration><openEnded>No</openEnded><startDate>2009-01-01</startDate><endDate>2009-05-31</endDate><iCalRecurrence>FREQ=WEEKLY;INTERVAL=2</iCalRecurrence><commitmentHoursPerWeek>2</commitmentHoursPerWeek></dateTimeDuration></dateTimeDurations><locations><location><city>Mercer County</city><region>NJ</region><postalCode>08610</postalCode></location></locations><audienceTags><audienceTag>Teens</audienceTag></audienceTags><categoryTags><categoryTag>Community</categoryTag><categoryTag>Children &amp; Youth</categoryTag></categoryTags><skills>Be interested in promoting youth volunteerism. Be available two Tuesday evenings per month.</skills><detailURL>http://www.volunteermatch.org/search/opp200517.jsp</detailURL><description>Quixote Quest is a volunteer club for teens who have a passion for community service. The teens each volunteer for their own specific cause. Twice monthly, the club meets. At the club meetings the teens from different high schools come together for two hours to talk about their volunteer experiences and spend some hang-out time together that helps them bond as fraternity...family. Quixote Quest is seeking young adults roughly between 20 and 30 years of age who would be interested in being a guide and advisor to the teens during these two evening meetings a month.</description><lastUpdated olsonTZ=\"America/Denver\">2008-12-02T19:02:01</lastUpdated></VolunteerOpportunity>")
+  id1 = create_from_xml("<VolunteerOpportunity><volunteerOpportunityID>1001</volunteerOpportunityID><sponsoringOrganizationIDs><sponsoringOrganizationID>1</sponsoringOrganizationID></sponsoringOrganizationIDs><volunteerHubOrganizationIDs><volunteerHubOrganizationID>3011</volunteerHubOrganizationID></volunteerHubOrganizationIDs><title>Be a Business Mentor - Trenton, NJ &amp; Beyond</title><dateTimeDurations><dateTimeDuration><openEnded>Yes</openEnded><duration>P6M</duration><commitmentHoursPerWeek>4</commitmentHoursPerWeek></dateTimeDuration></dateTimeDurations><locations><location><city>Trenton</city><region>NJ</region><postalCode>08608</postalCode></location><location><city>Berkeley</city><region>CA</region><postalCode>94703</postalCode></location><location><city>Santa Cruz</city><region>CA</region><postalCode>95062</postalCode></location></locations><categoryTags><categoryTag>Community</categoryTag><categoryTag>Computers &amp; Technology</categoryTag><categoryTag>Employment</categoryTag></categoryTags><minimumAge>21</minimumAge><skills>In order to maintain the integrity of the MicroMentor program, we require that our Mentor volunteers have significant business experience and expertise, such as: 3 years of business ownership experience</skills><detailURL>http://www.volunteermatch.org/search/index.jsp?l=08540</detailURL><description>This is where you come in. Simply by sharing your business know-how, you can make a huge difference in the lives of entrepreneurs from low-income and marginalized communities, helping them navigate the opportunities and challenges of running a business and improving their economic well-being and creating new jobs where they are most needed.</description></VolunteerOpportunity>")
+  id2 = create_from_xml("<VolunteerOpportunity><volunteerOpportunityID>2001</volunteerOpportunityID><sponsoringOrganizationIDs><sponsoringOrganizationID>2</sponsoringOrganizationID></sponsoringOrganizationIDs><title>DODGEBALL TO HELP AREA HUNGRY</title><dateTimeDurations><dateTimeDuration><openEnded>No</openEnded><startDate>2009-02-22</startDate><endDate>2009-02-22</endDate><startTime>18:45:00</startTime><endTime>21:00:00</endTime></dateTimeDuration><dateTimeDuration><openEnded>No</openEnded><startDate>2009-02-27</startDate><endDate>2009-02-27</endDate><startTime>18:45:00</startTime><endTime>21:00:00</endTime></dateTimeDuration></dateTimeDurations><locations><location><city>West Windsor</city><region>NJ</region><postalCode>08550</postalCode></location></locations><audienceTags><audienceTag>Teens</audienceTag><audienceTag>High School Students</audienceTag></audienceTags><categoryTags><categoryTag>Community</categoryTag><categoryTag>Homeless &amp; Hungry</categoryTag><categoryTag>Hunger</categoryTag></categoryTags><minimumAge>14</minimumAge><skills>Must be in High School</skills><detailURL>http://www.volunteermatch.org/search/opp451561.jsp</detailURL><description>The Mercer County Quixote Quest Teen Volunteer Club is hosting a FUN Dodgeball Tournament at Mercer County College on Sunday afternoon, February 22nd. The proceeds from the event will bebefit the Trenton Area Soup Kitchen. Teens are invited to enter a team of six...with at least three female players (3 guys and 3 girls or more girls). Each team playing will bring a $50 entry fee and a matching sponsor donation of $50. (Total of $100 from each team).</description><lastUpdated olsonTZ=\"America/Denver\">2009-02-02T19:02:01</lastUpdated></VolunteerOpportunity>")
+  id3 = create_from_xml("<VolunteerOpportunity><volunteerOpportunityID>2002</volunteerOpportunityID><sponsoringOrganizationIDs><sponsoringOrganizationID>2</sponsoringOrganizationID></sponsoringOrganizationIDs><title>YOUNG ADULT TO HELP GUIDE MERCER COUNTY TEEN VOLUNTEER CLUB</title><volunteersNeeded>3</volunteersNeeded><dateTimeDurations><dateTimeDuration><openEnded>No</openEnded><startDate>2009-01-01</startDate><endDate>2009-05-31</endDate><iCalRecurrence>FREQ=WEEKLY;INTERVAL=2</iCalRecurrence><commitmentHoursPerWeek>2</commitmentHoursPerWeek></dateTimeDuration></dateTimeDurations><locations><location><city>Mercer County</city><region>NJ</region><postalCode>08610</postalCode></location></locations><audienceTags><audienceTag>Teens</audienceTag></audienceTags><categoryTags><categoryTag>Community</categoryTag><categoryTag>Children &amp; Youth</categoryTag></categoryTags><skills>Be interested in promoting youth volunteerism. Be available two Tuesday evenings per month.</skills><detailURL>http://www.volunteermatch.org/search/opp200517.jsp</detailURL><description>Quixote Quest is a volunteer club for teens who have a passion for community service. The teens each volunteer for their own specific cause. Twice monthly, the club meets. At the club meetings the teens from different high schools come together for two hours to talk about their volunteer experiences and spend some hang-out time together that helps them bond as fraternity...family. Quixote Quest is seeking young adults roughly between 20 and 30 years of age who would be interested in being a guide and advisor to the teens during these two evening meetings a month.</description><lastUpdated olsonTZ=\"America/Denver\">2008-12-02T19:02:01</lastUpdated></VolunteerOpportunity>")
   return (id1,id2,id3)
 
 

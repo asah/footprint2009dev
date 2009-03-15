@@ -1,0 +1,89 @@
+{% extends "base_min.html" %}
+
+{% block title %}
+Posting results
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<body>
+
+<a href="{{ geturl }}">geturl</a>
+
+<p>
+
+<pre>
+{% ifequal respcode "200" %}
+post successful!
+{% comment %} looks like Django isn't 1.0 or just sucks at for..loops with dicts {% endcomment %} 
+
+title = {{ val_title }}
+description = {{ val_description }}
+skills = {{ val_skills }}
+virtual = {{ val_virtual }}
+addr1 = {{ val_addr1 }}
+addrname1 = {{ val_addrname1 }}
+sponsoringOrganizationsName = {{ val_sponsoringOrganizationsName }}
+openEnded = {{ val_openEnded }}
+startDate = {{ val_startDate }}
+startTime = {{ val_startTime }}
+endTime = {{ val_endTime }}
+endDate = {{ val_endDate }}
+contactNoneNeeded = {{ val_contactNoneNeeded }}
+contactEmail = {{ val_contactEmail }}
+contactPhone = {{ val_contactPhone }}
+contactName = {{ val_contactName }}
+detailURL = {{ val_detailURL }}
+weeklySun = {{ val_weeklySun }}
+weeklyMon = {{ val_weeklyMon }}
+weeklyTue = {{ val_weeklyTue }}
+weeklyWed = {{ val_weeklyWed }}
+weeklyThu = {{ val_weeklyThu }}
+weeklyFri = {{ val_weeklyFri }}
+weeklySat = {{ val_weeklySat }}
+biweeklySun = {{ val_biweeklySun }}
+biweeklyMon = {{ val_biweeklyMon }}
+biweeklyTue = {{ val_biweeklyTue }}
+biweeklyWed = {{ val_biweeklyWed }}
+biweeklyThu = {{ val_biweeklyThu }}
+biweeklyFri = {{ val_biweeklyFri }}
+biweeklySat = {{ val_biweeklySat }}
+recurrence = {{ val_recurrence }}
+audienceAll = {{ val_audienceAll }}
+audienceAge = {{ val_audienceAge }}
+minAge = {{ val_minAge }}
+audienceSexRestricted = {{ val_audienceSexRestricted }}
+sexRestrictedTo = {{ val_sexRestrictedTo }}
+commitmentHoursPerWeek = {{ val_commitmentHoursPerWeek }}
+test_submit = {{ val_test_submit }}
+city = {{ val_city }}
+region = {{ val_region }}
+postalCode = {{ val_postalCode }}
+country = {{ val_country }}
+street1 = {{ val_street1 }}
+street2 = {{ val_street2 }}
+recaptcha_response = {{ val_recaptcha_response }}
+
+parsedStartDate = {{ val_parsedStartDate }}
+parsedStartTime = {{ val_parsedStartTime }}
+parsedEndDate = {{ val_parsedEndDate }}
+parsedEndTime = {{ val_parsedEndTime }}
+latitude = {{ val_latitude }}
+longitude = {{ val_longitude }}
+
+{% else %}{% ifequal respcode ""  %}
+captcha failed
+
+{% else %}
+post failed:
+respcode = {{ respcode }}
+message = {{ content|escape }}
+
+{% endifequal %}{% endifequal %}
+</pre>
+
+
+</body>
+{% endblock %}
