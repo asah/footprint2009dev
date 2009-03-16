@@ -43,6 +43,23 @@ class SearchResultSet(object):
     self.query_url_encoded = escape(query_url_encoded)
     self.results = results
 
+  def apply_post_search_filters(self, args):
+    if "DoW" in args and len(args["DoW"]) > 0:
+      # we are going to filter by day of week
+      for i,res in enumerate(self.results):
+        dow = str(res.startdate.strftime("%w"))
+        if args["DoW"].find(dow) >= 0:
+          del self.results[i]
+
+    if "ampm" in args and (args["ampm"] == "am" or args["ampm"] == "pm"):
+      # we are going to filter by am|pm
+      for i,res in enumerate(self.results):
+        # assumes we have 24 hour data
+        hr = int(res.startdate.strftime("%H"))
+        if ((hr >= 12 and args["ampm"] == "pm") 
+             or (hr < 12 and args["ampm"] == "am")):
+          del self.results[i]
+
   def dedup(self):
     # we are going to make another list of results merged by title and snippet
     
@@ -106,9 +123,6 @@ class SearchResultSet(object):
       res.idx = i + 1
       if len(res.merged_list) > 1:
         res.merged_list.sort(cmp=compare_merged_dates)
-
-        # TODO: find out if we are really supposed to do this here,
-        # and if not here then where?
         location_was = res.location
         need_more = False
         res.less_list = []

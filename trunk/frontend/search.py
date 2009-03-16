@@ -83,6 +83,7 @@ def search(args):
 
   result_set = base_search.search(args)
   scoring.score_results_set(result_set, args)
+  result_set.apply_post_search_filters(args)
   result_set.dedup()
   
   result_set.is_first_page = (start_index == 1)
