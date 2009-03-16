@@ -72,7 +72,7 @@ def get_unique_args_from_request(request):
 
 def load_userinfo_into_dict(user, dict):
   if user:
-    dict["user_id"] = user.userid
+    dict["user_id"] = user.user_id
     dict["user_display_name"] = user.get_display_name()
     dict["user_type"] = user.account_type
   else:
