@@ -48,7 +48,7 @@ class SearchResultSet(object):
       # we are going to filter by day of week
       for i,res in enumerate(self.results):
         dow = str(res.startdate.strftime("%w"))
-        if args["DoW"].find(dow) >= 0:
+        if args["DoW"].find(dow) < 0:
           del self.results[i]
 
     if "ampm" in args and (args["ampm"] == "am" or args["ampm"] == "pm"):
@@ -56,8 +56,8 @@ class SearchResultSet(object):
       for i,res in enumerate(self.results):
         # assumes we have 24 hour data
         hr = int(res.startdate.strftime("%H"))
-        if ((hr >= 12 and args["ampm"] == "pm") 
-             or (hr < 12 and args["ampm"] == "am")):
+        if ((hr < 12 and args["ampm"] == "pm") 
+             or (hr >= 12 and args["ampm"] == "am")):
           del self.results[i]
 
   def dedup(self):
