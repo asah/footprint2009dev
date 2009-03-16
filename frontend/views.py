@@ -70,6 +70,16 @@ def get_unique_args_from_request(request):
   return unique_args
 
 
+def load_userinfo_into_dict(user, dict):
+  if user:
+    dict["user_id"] = user.userid
+    dict["user_display_name"] = user.get_display_name()
+    dict["user_type"] = user.account_type
+  else:
+    dict["user_id"] = ""
+    dict["user_display_name"] = ""
+    dict["user_type"] = ""
+
 def render_template(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
                       TEMPLATE_DIR + template_filename)
@@ -81,36 +91,22 @@ class test_page_views_view(webapp.RequestHandler):
     pagename = "testpage%s" % (self.request.get('pagename'))
     pc = pagecount.IncrPageCount(pagename, 1)
     template_values = pagecount.GetStats()
-    template_values['pagename'] = pagename
-    template_values['pageviews'] = pc
+    template_values["pagename"] = pagename
+    template_values["pageviews"] = pc
     self.response.out.write(render_template(TEST_PAGEVIEWS_TEMPLATE,
                                            template_values))
 
 
 class main_page_view(webapp.RequestHandler):
   def get(self):
-    result_set = {}
-
-    user_id = None
-    user_display_name = None
-    user_type = None
-
-    # Retrieve the user-specific information for the search result set.
-    user = userinfo.get_user(self.request)
-    if user:
-      user_id = user.user_id
-      user_display_name = user.get_display_name()
-      user_type = user.account_type
-
     template_values = {
-        'result_set': result_set,
-        'user_id' : user_id,
-        'user_display_name' : user_display_name,
-        'user_type' : user_type,
-
+        'result_set': {},
         'current_page' : 'SEARCH',
         'is_main_page' : True,
       }
+    # Retrieve the user-specific information for the search result set.
+    user = userinfo.get_user(self.request)
+    load_userinfo_into_dict(user, template_values)
     self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                             template_values))
 
@@ -245,8 +241,6 @@ class search_view(webapp.RequestHandler):
         # TODO: careful about escapification/XSS
         template = SEARCH_RESULTS_RSS_TEMPLATE
 
-    #logging.info('%s id:%s name:%s' % (template, user_id, user_display_name))
-
     latlng_string = ""
     if "lat" in result_set.args and "long" in result_set.args:
       latlng_string = "%s,%s" % (result_set.args["lat"], result_set.args["long"])
@@ -276,16 +270,11 @@ class search_view(webapp.RequestHandler):
 class my_events_view(webapp.RequestHandler):
   def get(self):
     user_info = userinfo.get_user(self.request)
-    user_id = ''
-    user_display_name = ''
     if not user_info:
       # TODO: Nice page with login flow!
       self.response.out.write('You are not logged in. Sorry.')
       return
 
-    user_id = user_info.user_id
-    user_display_name = user_info.get_display_name()
-    user_type = user_info.account_type
     thumbnail_url = user_info.get_thumbnail_url()
 
     days_since_joined = (datetime.datetime.now() -
@@ -302,10 +291,6 @@ class my_events_view(webapp.RequestHandler):
     template_values = {
         'current_page' : 'MY_EVENTS',
         'result_set': result_set,
-        'user_id' : user_id,
-        'user_display_name' : user_display_name,
-        'user_type' : user_type,
-
         'query_url_encoded': "MyEvents",
         'query_url_unencoded': "MyEvents",
 
@@ -317,6 +302,7 @@ class my_events_view(webapp.RequestHandler):
         'prev_page_url': '',
         'next_page_url': '',
         }
+    load_userinfo_into_dict(user_info, template_values)
 
     # Hack o rama: Use the search results page!
     self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
@@ -329,14 +315,6 @@ class post_view(webapp.RequestHandler):
   def get(self):
     global pk
     user_info = userinfo.get_user(self.request)
-    user_id = ''
-    user_display_name = ''
-    user_type = None
-    if user_info:
-      # logged in
-      user_id = user_info.user_id
-      user_type = user_info.account_type
-      user_display_name = user_info.get_display_name()
 
     # synthesize GET method url from either GET or POST submission
     geturl = self.request.path + "?"
@@ -345,10 +323,8 @@ class post_view(webapp.RequestHandler):
     template_values = {
       'current_page' : 'POST',
       'geturl' : geturl,
-      'user_id' : user_id,
-      'user_display_name' : user_display_name,
-      'user_type' : user_type,
       }
+    load_userinfo_into_dict(user_info, template_values)
 
     resp = None
     recaptcha_challenge_field = self.request.get('recaptcha_challenge_field')
@@ -356,17 +332,19 @@ class post_view(webapp.RequestHandler):
       self.response.out.write(render_template(POST_TEMPLATE, template_values))
       return
 
-    user_ipaddr = self.request.remote_addr
     recaptcha_response_field = self.request.get('recaptcha_response_field')
     resp = recaptcha.submit(recaptcha_challenge_field, recaptcha_response_field,
-                            PK, user_ipaddr)
+                            PK, self.request.remote_addr)
     vals = {}
     computed_vals = {}
     recaptcha_response = self.request.get('recaptcha_response_field')
     if (resp and resp.is_valid) or recaptcha_response == "test":
+      vals["user_ipaddr"] = self.request.remote_addr
+      load_userinfo_into_dict(user_info, vals)
       for arg in self.request.arguments():
         vals[arg] = self.request.get(arg)
       respcode, id, content = posting.create_from_args(vals, computed_vals)
+      # TODO: is there a way to reference a dict-value in appengine+django ?
       for key in computed_vals:
         template_values["val_"+str(key)] = str(computed_vals[key])
       template_values["respcode"] = str(respcode)
@@ -374,15 +352,18 @@ class post_view(webapp.RequestHandler):
       template_values["content"] = str(content)
     else:
       template_values["respcode"] = "401"
+      template_values["id"] = ""
       template_values["content"] = "captcha error, e.g. response didn't match"
 
-    # TODO: is there a way to reference a dict-value in appengine+django ?
-    template_values['vals'] = vals
+    template_values["vals"] = vals
     for key in vals:
       keystr = "val_"+str(key)
       if keystr in template_values:
-        # should never happen
-        logging.error("duplicate template key: "+keystr)
+        # should never happen-- throwing a 500 avoids silent failures
+        self.response.set_status(500)
+        self.response.out.write("internal error: duplicate template key")
+        logging.error("internal error: duplicate template key: "+keystr)
+        return
       template_values[keystr] = str(vals[key])
     self.response.out.write(render_template(POST_RESULT_TEMPLATE, template_values))
 
@@ -404,17 +385,7 @@ class admin_view(webapp.RequestHandler):
 
 class moderate_view(webapp.RequestHandler):
   def get(self):
-    user_info = userinfo.get_user(self.request)
-    user_id = ''
-    user_display_name = ''
-    user_type = None
-
-    if user_info:
-      #we are logged in
-      user_id = user_info.user_id
-      user_type = user_info.account_type
-      user_display_name = user_info.get_display_name()
-
+    # TODO: require admin access-- implement when we agree on mechanism
     action = self.request.get('action')
     if action == "test":
       posting.createTestDatabase()
@@ -448,10 +419,6 @@ class moderate_view(webapp.RequestHandler):
       'current_page' : 'MODERATE',
       'num' : str(num),
       'ts' : str(nowstr),
-      'user_id' : user_id,
-      'user_display_name' : user_display_name,
-      'user_type' : user_type,
       'result_set' : reslist,
     }
-
     self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))

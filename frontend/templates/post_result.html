@@ -17,7 +17,12 @@ Posting results
 <pre>
 {% ifequal respcode "200" %}
 post successful!
-{% comment %} looks like Django isn't 1.0 or just sucks at for..loops with dicts {% endcomment %} 
+{% comment %}
+  looks like Django isn't 1.0 or just sucks at for..loops with dicts
+  e.g. this doesn't work:
+  {% for key,value in vals.items %}{{ key }} = {{ value }}{% endfor %}
+{% endcomment %} 
+
 
 title = {{ val_title }}
 description = {{ val_description }}

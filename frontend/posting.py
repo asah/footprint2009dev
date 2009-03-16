@@ -16,11 +16,30 @@ from google.appengine.ext import db
 class Error(Exception):
   pass
 
+# status codes
+#  - string names to make them human-readable, i.e. easier debugging
+#  - leading number provides SQL/GQL sorting without an extra field
+#    (sorting is important for the moderator UI, to make sure most-
+#    likely-to-be-safe is ranked higher).  Note: edited comes before
+#    plain new
+#  - substrings (e.g. "NEW") provide groupings, e.g. is this a 'new'
+#    listing, so the moderator UI know what visual treatment to give it.
+
+NEW_EDITED_VERIFIED = "90.NEW_EDITED_VERIFIED"
+NEW_VERIFIED        = "80.NEW_VERIFIED"
+NEW_EDITED          = "70.NEW_EDITED"
+NEW                 = "50.NEW"
+NEW_DEFERRED        = "40.NEW_DEFERRED"
+ACCEPTED_MANUAL     = "10.ACCEPTED_MANUAL"
+ACCEPTED_AUTOMATIC  = "10.ACCEPTED_AUTOMATIC"
+REJECTED_MANUAL     = "10.REJECTED_MANUAL"
+REJECTED_AUTOMATIC  = "10.REJECTED_AUTOMATIC"
+
 class Posting(db.Model):
   """Postings going through the approval process."""
   # Key is assigned ID (not the stable ID)
   id = db.StringProperty(default="")
-  status = db.StringProperty(default="NEW")
+  status = db.StringProperty(default=NEW)
 
   # for queries, parse-out these fields - note that we don't care about datatypes
   quality_score = db.FloatProperty(default=1.0)
@@ -46,28 +65,39 @@ class Posting(db.Model):
       return "R"
     return ""
   def showInModerator(self):
-      return (self.status.find("NEW")>=0 or self.status.find("EDITED")>=0)
+    return (self.status.find("NEW")>=0)
   def isLive(self):
-      return (self.status.find("ACCEPTED")>=0)
-  def reject(self, type="MANUAL"):
-      self.status = type+"_REJECTED"
+    return (self.status.find("ACCEPTED")>=0)
+  def reset(self):
+    self.status = NEW
+    self.put()
+  def edit(self):
+    self.status = NEW_EDITED
+    self.put()
+  def verify(self):
+    if self.status == NEW:
+      self.status = NEW_VERIFIED
+      self.put()
+    elif self.status == NEW_EDITED:
+      # TODO: how do we know the edits didn't after the email was sent?
+      self.status = NEW_EDITED_VERIFIED
       self.put()
   def accept(self, type="MANUAL"):
-      self.status = type+"_ACCEPTED"
-      self.put()
-  def reset(self):
-      self.status = "NEW"
-      self.put()
-  def markEdited(self):
-      if self.status == "NEW" or self.status == "VERIFIED":
-        self.status += "_EDITED"
-      else:
-        # throw back on the queue-- undelete, etc.
-        self.status = "NEW_EDITED"
+    if type == "AUTOMATIC":
+      self.status = ACCEPTED_AUTOMATIC
+    else:
+      self.status = ACCEPTED_MANUAL
+    self.put()
+  def reject(self, type="MANUAL"):
+    if type == "AUTOMATIC":
+      self.status = REJECTED_AUTOMATIC
+    else:
+      self.status = REJECTED_MANUAL
+    self.put()
   def computeQualityScore(self):
-      # TODO: walk the object to look for missing/bad fields
-      self.quality_score = 1.0
-      self.put()
+    # TODO: walk the object to look for missing/bad fields
+    self.quality_score = 1.0
+    self.put()
 
 def process(args):
   for arg in args:
@@ -80,16 +110,15 @@ def process(args):
       continue
     # TODO: remove quality score hack-- this is how to rank in moderator UI
     if args[arg] == "A":
-      el.quality_score = -1.0
       el.accept()
     elif args[arg] == "R":
-      el.quality_score = 0.0
       el.reject()
+    elif args[arg] == "V":
+      el.verify()
     elif args[arg] == "X":
       logging.info("deleting: "+keystr+"  title="+el.title)
       el.delete()
     elif args[arg] == "":
-      el.quality_score = 0.5
       el.reset()
 
 def query(num=25, start=1, quality_score=0.5, start_date="2009-01-01"):
@@ -99,12 +128,12 @@ def query(num=25, start=1, quality_score=0.5, start_date="2009-01-01"):
     sd = datetime.strptime(start_date, "%Y-%m-%d")
     q = db.GqlQuery("SELECT * FROM Posting " + 
                     "WHERE start_date >= :1 " +
-                    "ORDER BY start_date ASC " +
+                    "ORDER BY status ASC, start_date ASC " +
                     "LIMIT %d OFFSET %d" % (int(num), int(start)),
                     sd.date())
   else:
     q = db.GqlQuery("SELECT * FROM Posting " + 
-                    "ORDER BY quality_score DESC " +
+                    "ORDER BY status ASC,quality_score DESC " +
                     "LIMIT %d OFFSET %d" % (int(num), int(start)))
   result_set = q.fetch(num)
   reslist = []
@@ -267,24 +296,24 @@ def add_new_fields(vals, newvals):
     if endTs:
       newvals["parsedEndDate"] = endTs.strftime("%Y-%m-%d")
       newvals["parsedEndTime"] = endTs.strftime("%H:%M:%S")
-  newvals["minAge"] = 0
+  newvals["computedMinAge"] = 0
   if vals["audienceAge"] == "seniors":
-    newvals["minAge"] = 60
+    newvals["computedMinAge"] = 60
   elif vals["audienceAge"] == "teens":
-    newvals["minAge"] = 13
+    newvals["computedMinAge"] = 13
   elif vals["audienceAge"] == "anyage":
-    newvals["minAge"] = 0
+    newvals["computedMinAge"] = 0
   else:
     try:
-      newvals["minAge"] = int(vals["minAge"])
+      newvals["computedMinAge"] = int(vals["minAge"])
     except:
-      newvals["minAge"] = 0
+      newvals["computedMinAge"] = 0
   try:
-    newvals["commitmentHoursPerWeek"] = int(vals["commitmentHoursPerWeek"])
-    if newvals["commitmentHoursPerWeek"] < 0:
-      newvals["commitmentHoursPerWeek"] = 0
+    newvals["computedCommitmentHoursPerWeek"] = int(vals["commitmentHoursPerWeek"])
+    if newvals["computedCommitmentHoursPerWeek"] < 0:
+      newvals["computedCommitmentHoursPerWeek"] = 0
   except:
-    newvals["commitmentHoursPerWeek"] = 0
+    newvals["computedCommitmentHoursPerWeek"] = 0
 
 
 def create_from_args(vals, computed_vals):
@@ -308,7 +337,7 @@ def create_from_args(vals, computed_vals):
   xml += "<title>%s</title>" % (vals["title"])
   xml += "<description>%s</description>" % (vals["description"])
   xml += "<skills>%s</skills>" % (vals["skills"])
-  xml += "<minimumAge>%s</minimumAge>" % (str(computed_vals["minAge"]))
+  xml += "<minimumAge>%s</minimumAge>" % (str(computed_vals["computedMinAge"]))
   xml += "<detailURL>%s</detailURL>" % (vals["detailURL"])
   xml += "<locations>"
   xml += "<location>"
@@ -333,7 +362,8 @@ def create_from_args(vals, computed_vals):
     xml += "<startTime>%s</startTime>" % (computed_vals["startTime"])
     xml += "<endDate>%s</endDate>" % (computed_vals["endDate"])
     xml += "<endTime>%s</endTime>" % (computed_vals["endTime"])
-  xml += "<commitmentHoursPerWeek>%d</commitmentHoursPerWeek>" % (computed_vals["commitmentHoursPerWeek"])
+  xml += "<commitmentHoursPerWeek>%d</commitmentHoursPerWeek>" % \
+      (computed_vals["computedCommitmentHoursPerWeek"])
   xml += "</dateTimeDuration>"
   xml += "</dateTimeDurations>"
   xml += "</VolunteerOpportunity>"
