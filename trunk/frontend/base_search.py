@@ -263,10 +263,11 @@ def get_from_ids(ids):
     temp_results = query(volunteer_opportunity_entity.base_url, args, True)
     if not temp_results.results:
       # The base URL may have changed from under us. Oh well.
-      logging.warning('Did not get results from base. id: %s base_url: %s '
-                      'Last update: %s Previous failure: %s' %
-                      (id, info.base_url, info.last_base_url_update,
-                       info.last_base_url_update_failure))
+      # TODO: "info" is not defined so this logging line breaks.
+      # logging.warning('Did not get results from base. id: %s base_url: %s '
+      #                 'Last update: %s Previous failure: %s' %
+      #                 (id, info.base_url, info.last_base_url_update,
+      #                  info.last_base_url_update_failure))
       volunteer_opportunity_entity.base_url_failure_count += 1
       volunteer_opportunity_entity.last_base_url_update_failure = \
           datetime.datetime.now()
@@ -281,4 +282,3 @@ def get_from_ids(ids):
     result_set.results.append(temp_results.results[0])
 
   return result_set
-
