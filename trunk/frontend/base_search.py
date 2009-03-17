@@ -73,7 +73,18 @@ def search(args):
                     + datetime.timedelta(days=1000))
 
   base_query += ' [event_date_range: %s..%s]' % (args["vol_startdate"], 
-  args["vol_stopdate"])
+     args["vol_stopdate"])
+  
+  if "vol_provider" in args:
+    if re.match(r'[a-zA-Z0-9_.]+', args["vol_provider"]):
+      base_query += ' [feed providername:' + args["vol_provider"] + ']'
+    else:
+      # illegal providername
+      # TODO: throw 500
+      #self.response.set_status(500)
+      #self.response.out.write("internal error: illegal providername")
+      logging.error("internal error: illegal providername: " 
+        + args["vol_provider"])
 
   # TODO: injection attack on sort
   if "sort" not in args:
