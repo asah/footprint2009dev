@@ -1,8 +1,17 @@
 body, html {
   font-family: arial;
-  margin: 0px;
+  position: relative;
+  font-size: 13px;
+  margin: 2px;
 }
 
+div {
+  font-size: 13px;
+}
+
+span {
+  font-size: 13px;
+}
 
 /** Header Styles **/
 
@@ -78,6 +87,8 @@ body, html {
   margin-left: 10px;
   margin-right: 10px;
   margin-top: 15px;
+  width: 960px;
+  overflow: hidden;
 }
 
 #content_left {
@@ -91,10 +102,12 @@ body, html {
 /** Row highlighting **/
 .row_plain {
   background-color: white;
+  padding-right: 10px;
 }
 
 .row_highlight {
   background-color: #ECF3F8;
+  padding-right: 10px;
 }
 
 
