@@ -28,10 +28,14 @@ span {
   height: 15px;
 }
 
-.header {
+#header {
   background: #2475B6;
   border-bottom: 1px solid #193b6b;
   height: 40px;
+}
+
+#header_left {
+  width: 60em;
 }
 
 .tab_active,
@@ -42,7 +46,7 @@ span {
   border-style: solid;
   border-width: 1px;
   height: 24px;
-  padding: 0px 10px;
+  padding: 0px 12px;
   margin-right: 8px;
 }
 
@@ -56,25 +60,17 @@ span {
   background: #669FCC;
 }
 
-.hello_name {
-  font-size: small;
-  float: right;
-  font-weight: bold;
-  margin-right: 10px;
-  color: white;
-}
-
-.hello_name a {
-  color: white;
-  text-decoration: none;
+#header_right {
+  overflow: hidden;
 }
 
 .sign_in {
   font-size: small;
-  float: right;
   font-weight: bold;
-  margin-right: 10px;
+  margin-right: 5px;
+  padding: 5px;
   color: white;
+  width: 14em;
 }
 
 .sign_in img {
