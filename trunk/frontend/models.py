@@ -108,6 +108,10 @@ class UserInfo(db.Model):
   # Key is accounttype:user_id.
   first_visit = db.DateTimeProperty(auto_now_add=True)
   last_edit = db.DateTimeProperty(auto_now=True)
+  moderator = db.BooleanProperty(default=False)
+  moderator_request_email = db.StringProperty()
+  moderator_request_desc = db.TextProperty()
+  moderator_request_admin_notes = db.StringProperty(multiline=True)
 
   def account_type(self):
     key_name = self.key().name()
