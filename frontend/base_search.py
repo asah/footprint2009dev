@@ -48,6 +48,12 @@ def make_base_orderby_arg(args):
     # "relevancy" is the Base default
     return "relevancy"
 
+def base_restrict_str(key,val=None):
+  res = '+[' + urllib.quote_plus(re.sub(r'_', r' ', key))
+  if val != None:
+    res += ':' + urllib.quote_plus(str(val))
+  return res + ']'
+
 # note: many of the XSS and injection-attack defenses are unnecessary
 # given that the callers are also protecting us, but I figure better
 # safe than sorry, and defense-in-depth.
@@ -55,36 +61,43 @@ def search(args):
   logging.info(args);
   base_query = ""
 
-  # TODO: injection attack on q
-  if "q" in args:
-    base_query += ' ' + args["q"]
+  if "q" in args and args["q"] != "":
+    base_query += urllib.quote_plus(args["q"])
 
-  # TODO: injection attack on vol_startdate
-  if "vol_startdate" not in args:
-    # note: default vol_startdate is "tomorrow"
-    # in base, event_date_range YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss
-    # appending "Z" to the datetime string would mean UTC
-    args["vol_startdate"] = (datetime.date.today() 
-                    + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+  if "vol_startdate" in args or "vol_enddate" in args:
+    startdate = None
+    if "vol_startdate" in args and args["vol_startdate"] != "":
+      try:
+        startdate = datetime.datetime.strptime(args["vol_startdate"].strip(), "%Y-%m-%d")
+      except:
+        logging.error("malformed vol_startdate: "+args["vol_startdate"])
+    if not startdate:
+      # note: default vol_startdate is "tomorrow"
+      # in base, event_date_range YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss
+      # appending "Z" to the datetime string would mean UTC
+      startdate = datetime.date.today() + datetime.timedelta(days=1)
+      args["vol_startdate"] = startdate.strftime("%Y-%m-%d")
 
-  if "vol_stopdate" not in args:
-    tt = time.strptime(args["vol_startdate"], "%Y-%m-%d")
-    args["vol_stopdate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) 
-                    + datetime.timedelta(days=1000))
-
-  base_query += ' [event_date_range: %s..%s]' % (args["vol_startdate"], 
-     args["vol_stopdate"])
+    enddate = None
+    if "vol_enddate" in args and args["vol_enddate"] != "":
+      try:
+        enddate = datetime.datetime.strptime(args["vol_enddate"].strip(), "%Y-%m-%d")
+      except:
+        logging.error("malformed vol_enddate: "+args["vol_enddate"])
+    if not enddate:
+      enddate = datetime.date(startdate.year, startdate.month, startdate.day)
+      enddate = enddate + datetime.timedelta(days=1000)
+      args["vol_enddate"] = enddate.strftime("%Y-%m-%d")
+    daterangestr = '%s..%s' % (args["vol_startdate"], args["vol_enddate"])
+    base_query += base_restrict_str("event_date_range", daterangestr)
   
   if "vol_provider" in args:
-    if re.match(r'[a-zA-Z0-9_.]+', args["vol_provider"]):
-      base_query += ' [feed providername:' + args["vol_provider"] + ']'
+    if re.match(r'[a-zA-Z0-9:/_. -]+', args["vol_provider"]):
+      base_query += base_restrict_str("feed_providername", args["vol_provider"])
     else:
       # illegal providername
       # TODO: throw 500
-      #self.response.set_status(500)
-      #self.response.out.write("internal error: illegal providername")
-      logging.error("internal error: illegal providername: " 
-        + args["vol_provider"])
+      logging.error("illegal providername: " + args["vol_provider"])
 
   # TODO: injection attack on sort
   if "sort" not in args:
@@ -94,8 +107,8 @@ def search(args):
   if args["vol_loc"] != "":
     args["vol_dist"] = int(str(args["vol_dist"]))
     # TODO: looks like the default is 25 mi, check for value as a min here?
-    base_query += ' [location: @"%s" + %dmi]' % (args["vol_loc"], 
-    args["vol_dist"])
+    base_query += base_restrict_str("location", '@"%s" + %dmi' % \
+                                      (args["vol_loc"], args["vol_dist"]))
 
   # Base URL for snippets search on Base.
   #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
@@ -103,32 +116,31 @@ def search(args):
   if "backend" not in args:
     args["backends"] = "http://www.google.com/base/feeds/snippets"
 
-  if make_base_arg("customer") not in args:
-    args[make_base_arg("customer")] = 5663714;
-  base_query += (' [customer id: '
-           + str(int(args[make_base_arg("customer")])) + ']')
+  cust_arg = make_base_arg("customer")
+  if cust_arg not in args:
+    args[cust_arg] = 5663714;
+  base_query += base_restrict_str("customer_id", int(args[cust_arg]))
 
-  base_query += ' [detailurl][event_date_range]'
-
-  if "num" not in args:
-    args["num"] = 10
+  #base_query += base_restrict_str("detailurl")
 
   if "start" not in args:
     args["start"] = 1
+
+  if "num" not in args:
+    args["num"] = 10
 
   if "base_num" not in args:
     args["base_num"] = 200
 
   #for k in args: logging.info("arg["+str(k)+"]="+str(args[k]))
   #url_params = urllib.urlencode({'max-results': args["num"],
-  url_params = urllib.urlencode({'max-results': args["base_num"],
-                                 'start-index': args["start"],
-                                 'bq': base_query,
-                                 'content': 'geocodes,attributes,meta',
-                                 'orderby': make_base_orderby_arg(args),
-                                 })
-  query_url = '%s?%s' % (args["backends"], url_params)
-
+  query_url = args["backends"]
+  query_url += "?max-results=" + str(args["base_num"])
+  query_url += "&start-index=" + str(args["start"])
+  query_url += "&orderby=" + make_base_orderby_arg(args)
+  query_url += "&content=" + "all"
+  query_url += "&bq=" + base_query
+  logging.info("calling Base: "+query_url)
   return query(query_url, args, False)
 
 def hash_md5(s):
@@ -184,7 +196,6 @@ def query(query_url, args, cache):
     res.latlong = ""
     #logging.info(re.sub(r'><', r'>\n<',entry.toxml()))
     latstr = utils.GetXmlElementTextOrEmpty(entry, 'g:latitude')
-    logging.info(latstr)
     longstr = utils.GetXmlElementTextOrEmpty(entry, 'g:longitude')
     if latstr and longstr and latstr != "" and longstr != "":
       res.latlong = latstr + "," + longstr
@@ -263,7 +274,7 @@ def get_from_ids(ids):
   args["vol_startdate"] = (datetime.date.today() + 
                        datetime.timedelta(days=1)).strftime("%Y-%m-%d")
   tt = time.strptime(args["vol_startdate"], "%Y-%m-%d")
-  args["vol_stopdate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
+  args["vol_enddate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
                       datetime.timedelta(days=60))
 
   # TODO(mblain): Figure out how to pull in multiple base entries in one call.
