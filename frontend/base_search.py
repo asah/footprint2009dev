@@ -59,21 +59,21 @@ def search(args):
   if "q" in args:
     base_query += ' ' + args["q"]
 
-  # TODO: injection attack on startDate
-  if "startDate" not in args:
-    # note: default startDate is "tomorrow"
+  # TODO: injection attack on vol_startdate
+  if "vol_startdate" not in args:
+    # note: default vol_startdate is "tomorrow"
     # in base, event_date_range YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss
     # appending "Z" to the datetime string would mean UTC
-    args["startDate"] = (datetime.date.today() 
+    args["vol_startdate"] = (datetime.date.today() 
                     + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
-  if "stopDate" not in args:
-    tt = time.strptime(args["startDate"], "%Y-%m-%d")
-    args["stopDate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) 
-                    + datetime.timedelta(days=60))
+  if "vol_stopdate" not in args:
+    tt = time.strptime(args["vol_startdate"], "%Y-%m-%d")
+    args["vol_stopdate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) 
+                    + datetime.timedelta(days=1000))
 
-  base_query += ' [event_date_range: %s..%s]' % (args["startDate"], 
-  args["stopDate"])
+  base_query += ' [event_date_range: %s..%s]' % (args["vol_startdate"], 
+  args["vol_stopdate"])
 
   # TODO: injection attack on sort
   if "sort" not in args:
@@ -249,10 +249,10 @@ def get_from_ids(ids):
 
   # Bogus args for search. TODO: Remove these, why are they needed above?
   args = {}
-  args["startDate"] = (datetime.date.today() + 
+  args["vol_startdate"] = (datetime.date.today() + 
                        datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-  tt = time.strptime(args["startDate"], "%Y-%m-%d")
-  args["stopDate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
+  tt = time.strptime(args["vol_startdate"], "%Y-%m-%d")
+  args["vol_stopdate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
                       datetime.timedelta(days=60))
 
   # TODO(mblain): Figure out how to pull in multiple base entries in one call.
