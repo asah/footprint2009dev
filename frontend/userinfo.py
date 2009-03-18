@@ -50,7 +50,7 @@ def get_user(request):
         try:
           user = cls(request)
           memcache.set(key, user, time = USERINFO_CACHE_TIME)
-        except logging.exception:
+        except:
           # This hides all errors from the Facebook client library
           # TODO(doll): Hand back an error message to the user
           return None
@@ -80,12 +80,16 @@ class User(object):
     return self.user_info
 
   def load_friends(self):
-    key = 'friends:' + self.account_type + ":" + self.user_id
-    friends = memcache.get(key)
-    if not friends:
-      friends = self.get_friends_by_url();
-      memcache.set(key, friends, time = USERINFO_CACHE_TIME)
-    return friends
+    key_suffix = self.account_type + ":" + self.user_id
+    key = 'friends:' + key_suffix
+    total_key = 'total_friends:' + key_suffix
+    self.friends = memcache.get(key)
+    self.total_friends = memcache.get(total_key)
+    if not self.friends:
+      self.friends = self.get_friends_by_url();
+      memcache.set(key, self.friends, time = USERINFO_CACHE_TIME)
+      memcache.set(total_key, self.total_friends, time = USERINFO_CACHE_TIME)
+    return self.friends
 
   def get_friends_by_url(self):
     raise NotImplementedError
