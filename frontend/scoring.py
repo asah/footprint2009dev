@@ -52,11 +52,11 @@ def score_results_set(result_set, args):
         delta_dist = 0.999
       res.geo_dist_multiplier = 1.0 - delta_dist
 
-    res.interest = -1
+    interest = -1
     if res.id in others_interests:
-      res.interest = others_interests[res.id]
+      interest = others_interests[res.id]
     elif "test_stars" in args:
-      res.interest = i % 6
+      interest = i % 6
 
     score_notes = ""
     res.score = res.score_by_base_rank
@@ -65,11 +65,11 @@ def score_results_set(result_set, args):
     res.score *= res.geo_dist_multiplier
     score_notes += "  geo multiplier=" + str(res.geo_dist_multiplier)
 
-    if res.interest >= 0:
+    if interest >= 0:
       # TODO: remove hocus-pocus math
-      interest_weight = (math.log(res.interest+1.0)/math.log(6.0))**3
+      interest_weight = (math.log(interest+1.0)/math.log(6.0))**3
       res.score *= interest_weight
-      score_notes += "  "+str(res.interest)+"-stars="+str(interest_weight)
+      score_notes += "  "+str(interest)+"-stars="+str(interest_weight)
 
     res.score *= res.date_dist_multiplier
     score_notes += "  startdate multiplier=" + str(res.date_dist_multiplier)
