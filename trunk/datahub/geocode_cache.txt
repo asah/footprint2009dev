@@ -11283,3 +11283,72 @@ kathmandu, pokhara, chitwan, bagmati, nepal|
 kathmandu, pokhara, chitwan, bagmati, 1286, nepal|
 kathmandu, bagmati, 1286, nepal|27.6525000,85.2897220
 tamale, ghana|9.3987000,-0.8410000
+virudhunagar, tamil nadu, 626001, india|9.5092285,78.0905977
+new york, new york, 1001, united states|40.7505670,-73.9681450
+los angeles, california, 900027, united states|33.9962730,-118.3310410
+forest knolls, california, 94933, united states|38.0083221,-122.6927228
+harts, west virginia, 25312, united states|37.6876980,-80.3637960
+columbus, ohio, 43212, united states|39.9826396,-83.0415078
+university of exeter, united kingdom|50.7344614,-3.5356679
+lancaster university, united kingdom|54.0102461,-2.7866524
+university of portsmouth, united kingdom|50.7953856,-1.0925808
+university of cumbria, united kingdom|54.6064800,-3.5318200
+aberystwyth university, united kingdom|52.4181782,-4.0634564
+swansea university, united kingdom|51.6097101,-3.9793463
+university of bath, united kingdom|51.3799149,-2.3317084
+bristol university, united kingdom|51.4575182,-2.6023459
+university of cambridge, united kingdom|52.2011672,0.1161815
+cardiff university, wales, united kingdom|51.4875787,-3.1786091
+queen mary's university, united kingdom|51.4841220,-0.6027250
+london universities, united kingdom|
+university of bedfordshire, united kingdom|52.0700100,-0.6312650
+huddersfield university, united kingdom|53.6438632,-1.7783714
+kings college london, united kingdom|51.5054940,-0.1124460
+nottingham university, united kingdom|52.9442900,-1.1915560
+university of york, united kingdom|53.9512810,-1.0593150
+university of kent, united kingdom|51.4593507,0.2257006
+new york, new york, 10011-4079, united states|40.7464969,-74.0094471
+kent, washington, 98030, united states|47.3666507,-122.1976120
+needham, massachusetts, united states|42.2801900,-71.2397800
+cleveland, ohio, 44104, united states|41.4809312,-81.6309078
+norwood, new jersey, 07648, united states|40.9924695,-73.9536163
+alexandria, virginia, 22311, united states|38.8363201,-77.1226288
+022, virtual (global|
+sussex university , united kingdom|50.8624405,-0.0803649
+university of newcastle, united kingdom|54.9812844,-1.6155884
+university of east anglia, united kingdom|52.6273076,1.2399566
+university of warwick, united kingdom|52.3824710,-1.5606750
+university of manchester, united kingdom|53.4656236,-2.2331934
+oxford university &amp; obu, united kingdom|
+university of birmingham, united kingdom|52.4503735,-1.9303823
+university of liverpool, united kingdom|53.4034484,-2.9641999
+in your university, united kingdom|53.9512810,-1.0593150
+barbados|13.1938870,-59.5431980
+houston, texas, 77019, united states|29.7538445,-95.4096633
+st. paul, minnesota, 55113, united states|45.0122826,-93.1640525
+tukwila, washington, 98108, united states|47.5405059,-122.3045438
+al karia, souk larbaa, morocco|
+new york city, new york, 10038, united states|40.7096219,-74.0021019
+setauket, 11733, united states|40.9351520,-73.1184800
+miami fl 33150|25.8573556,-80.2042436
+miami fl 33166|25.8235041,-80.3101684
+miami fl 33137|25.8183562,-80.1902963
+union city ga 30291|33.5754008,-84.5327038
+san diego ca 92122-5935|32.8536290,-117.2146970
+east orange nj 07018|40.7564795,-74.2208673
+asbury park nj 07712|40.2203730,-74.0118050
+red bank nj 07701|40.3467010,-74.0686340
+george pappas' park lanes 1700 montford dr. charlotte nc 28209|
+1700 montford dr. charlotte nc 28209|35.1704470,-80.8479420
+playa del rey ca 90296|33.9487000,-118.4449000
+4800 north state road 7 bldg, f, ste. 102a lauderdale lakes fl 33319|26.1844890,-80.2034966
+sunrise fl 33351|26.1778500,-80.2711588
+tarentum pa 15084|40.6033130,-79.7617430
+greenville sc 29615|34.8481613,-82.2691930
+chesapeake va 23324|36.8022774,-76.2768755
+norfolk va 23507|36.8601115,-76.2971463
+boston ma 02135|42.3463503,-71.1626756
+1st united methodist church 327 n. lumpkin street athens ga 30601|
+327 n. lumpkin street athens ga 30601|33.9592593,-83.3774266
+athens ga 30602|33.9459319,-83.3749322
+500 n. rainbow las vegas nv 89107|36.1779107,-115.2423671
