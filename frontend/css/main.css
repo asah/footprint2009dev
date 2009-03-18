@@ -214,6 +214,30 @@ span {
   background: #fff;
 }
 
+/** Work with others **/
+.friend {
+  padding-top: 10px;
+}
+
+.friend_picture {
+  float: left;
+  width: 45px;
+}
+
+.friend_details {
+  float: left;
+  padding-left: 5px;
+}
+
+.friend_name {
+  color: #2475B6;
+}
+
+.friend_stars {
+  color: #999999;
+}
+
+
 /** Generic Styles **/
 
 /* TODO(paul): unselectable in IE */

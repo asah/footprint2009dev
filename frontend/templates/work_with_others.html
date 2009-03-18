@@ -1,0 +1,46 @@
+{% extends "layout_two_column.html" %}
+
+{% block title %}
+Work with others
+{% endblock %}}
+
+{% block subheader %}
+{% endblock subheader %}
+
+{% block content_left %}
+
+{% if user_id  %}
+  <!-- What are we going to about about having too many friends here? Some sort of pagination? -->
+  You know {{total_friends}} {% ifequal total_friends 1 %}person{% else %}people{% endifequal %} on One For All <br />
+  They have starred {{total_stars}} event{% ifnotequal total_stars 1 %}s{% endifnotequal %}.
+
+  {% if user_thumbnail_url %}<img class='friend_picture' src='{{user_thumbnail_url}}'/>{% endif %}
+  <div class='friend_details'>
+    <span class='friend_name' style='font-weight:bold;'>You</span> <br/>
+    <span class='friend_stars'>9 events</span>       
+  </div>
+  
+  <div style='clear:both;'></div>
+
+  {% for friend in friends %}
+    <div class='friend'>
+      {% if friend.thumbnail_url %}<img class='friend_picture' src='{{friend.thumbnail_url}}'/>{% endif %}
+      <div class='friend_details'>
+        <span class='friend_name'>{{friend.display_name}}</span> <br/>
+        <span class='friend_stars'>9 events</span>       
+      </div>
+      <div style='clear:both;'></div>
+    </div>
+  {% endfor %}
+
+{% else %}
+  Log in to see what your friends are doing on One For All
+{% endif %}
+
+{% endblock content_left %}
+
+{% block content_right %}
+<div id='snippets_pane'>
+{% include 'snippets_list.html' %}
+</div>
+{% endblock content_right %}

@@ -6,6 +6,8 @@
          onclick="location.href = '/myevents'"><img src="images/Event-Selected-Star.png"/> 5</div>
     <div class='noselect pointer {% ifequal current_page "SEARCH" %} tab_active {% else %} tab_inactive {% endifequal %}'
          onclick="location.href = '/'">Find an event</div>
+    <div class='noselect pointer {% ifequal current_page "FRIENDS" %} tab_active {% else %} tab_inactive {% endifequal %}'
+         onclick="location.href = '/friends'">Work with others</div>
     <div class='noselect pointer {% ifequal current_page "POST" %} tab_active {% else %} tab_inactive {% endifequal %}'
          onclick="location.href = '/post'">Add an event</div>
   </div>
@@ -47,18 +49,14 @@
     {% else %}
     <div class='sign_in'>
       Sign in with <span id="signInProvider"></span> :
-      <img src="images/signin-yahoo.gif" onmouseover="setSignIn('Yahoo!');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
-      <img src="images/signin-google.gif" onmouseover="setSignIn('Google');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
-      <img src="images/signin-aol.gif" onmouseover="setSignIn('AOL');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
-      <img src="images/signin-facebook.gif" onmouseover="setSignIn('Facebook');" onmouseout="setSignIn();" onclick="requestFacebookSignIn()"/>
-      <!--img src="images/signin-myspace.gif" onmouseover="setSignIn('MySpace');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/-->
-      <img src="images/signin-openid.gif" onmouseover="setSignIn('OpenID');" onmouseout="setSignIn();" onclick="google.friendconnect.requestSignIn()"/>
+      <img src="images/signin-yahoo.gif" alt="Yahoo!" title="Yahoo!" onclick="google.friendconnect.requestSignIn()"/>
+      <img src="images/signin-google.gif" alt="Google" title="Google" onclick="google.friendconnect.requestSignIn()"/>
+      <img src="images/signin-aol.gif" alt="AOL" title="AOL" onclick="google.friendconnect.requestSignIn()"/>
+      <img src="images/signin-facebook.gif" alt="Facebook" title="Facebook" onclick="requestFacebookSignIn()"/>
+      <!--img src="images/signin-myspace.gif" alt="MySpace" title="MySpace" onclick="google.friendconnect.requestSignIn()"/-->
+      <img src="images/signin-openid.gif" alt="OpenID" title="OpenID" onclick="google.friendconnect.requestSignIn()"/>
 
       <script type="text/javascript">
-        function setSignIn(value) {
-          document.getElementById('signInProvider').innerHTML = value || '';
-        }
-
         function requestFacebookSignIn() {
           FB.Connect.requireSession();
           FB.Facebook.get_sessionState().waitUntilReady(function() {

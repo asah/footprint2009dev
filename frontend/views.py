@@ -33,6 +33,7 @@ SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 MY_EVENTS_TEMPLATE = 'my_events.html'
+FRIENDS_TEMPLATE = 'work_with_others.html'
 POST_TEMPLATE = 'post.html'
 POST_RESULT_TEMPLATE = 'post_result.html'
 ADMIN_TEMPLATE = 'admin.html'
@@ -73,12 +74,13 @@ def get_unique_args_from_request(request):
 def load_userinfo_into_dict(user, dict):
   if user:
     dict["user_id"] = user.user_id
-    dict["user_display_name"] = user.get_display_name()
+    dict["user_display_name"] = user.display_name
     dict["user_type"] = user.account_type
+    dict["user_thumbnail_url"] = user.thumbnail_url
+    dict["user_days_since_joined"] = (datetime.datetime.now()
+                                      - user.get_user_info().first_visit).days
   else:
     dict["user_id"] = ""
-    dict["user_display_name"] = ""
-    dict["user_type"] = ""
 
 def render_template(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
@@ -275,10 +277,6 @@ class my_events_view(webapp.RequestHandler):
       self.response.out.write('You are not logged in. Sorry.')
       return
 
-    thumbnail_url = user_info.get_thumbnail_url()
-
-    days_since_joined = (datetime.datetime.now() -
-                         user_info.get_user_info().first_visit).days
 
     user_interests = get_user_interests(user_info, True)
     result_set = base_search.get_from_ids(user_interests)
@@ -308,6 +306,45 @@ class my_events_view(webapp.RequestHandler):
     self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
                                             template_values))
 
+# TODO(doll): Merge this class with the my_events_view
+class friends_view(webapp.RequestHandler):
+  def get(self):
+    user_info = userinfo.get_user(self.request)
+
+    if not user_info:
+      template_values = {
+        'current_page' : 'FRIENDS',
+        'user_id' : None
+      }
+      self.response.out.write(render_template(FRIENDS_TEMPLATE, template_values))
+      return
+
+    user_interests = get_user_interests(user_info, True)
+    friend_interests = {}
+
+    friends = user_info.load_friends()
+    for friend in friends:
+      friend_interests[friend.user_id] = get_user_interests(friend, True)
+
+    # TODO: add in friend interests to this...
+    result_set = base_search.get_from_ids(user_interests)
+
+    # This should be merged with the annotation code above.
+    annotate_results(user_interests, None, result_set)
+
+    # What to do about interests where we couldn't get the info from base?
+
+    template_values = {
+        'current_page' : 'FRIENDS',
+        'result_set': result_set,
+        'friends' : friends,
+        'total_friends' : user_info.total_friends,
+        'friend_interests' : friend_interests
+    }
+    load_userinfo_into_dict(user_info, template_values)
+
+    self.response.out.write(render_template(FRIENDS_TEMPLATE,
+                                            template_values))
 
 class post_view(webapp.RequestHandler):
   def post(self):
