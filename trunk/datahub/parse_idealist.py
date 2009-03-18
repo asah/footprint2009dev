@@ -95,8 +95,7 @@ def ParseHelper(instr, maxrecs, progress):
   for i,oppstr in enumerate(entries):
     if (maxrecs>0 and i>maxrecs):
       break
-    if progress and i>0 and i%100==0:
-      print datetime.now(),": ",i," opps processed of ",maxrecs
+    xml_helpers.printProgress("opps", progress, i, maxrecs)
     opp = xml_helpers.simpleParser(oppstr, known_elnames, False)
     # unmapped: db:rsvp  (seems to be same as link, but with #rsvp at end of url?)
     # unmapped: db:host  (no equivalent?)

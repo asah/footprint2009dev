@@ -10908,3 +10908,378 @@ athens ga 30622|33.9049405,-83.5176820
 athend ga 30606|33.9448436,-83.4323375
 leominster ma 01453|42.5196900,-71.7741103
 las vegas nv 89107|36.1714831,-115.2067011
+cph downtown downtown location 1550 north miami avenue miami fl 33136|
+downtown location 1550 north miami avenue miami fl 33136|
+1550 north miami avenue miami fl 33136|25.7899300,-80.1952020
+miami fl 33143|25.6993807,-80.2934522
+450 nw 14th st miami fl 33136-2636|25.7880303,-80.2019269
+2971 olympic industrial drive se smyrna ga 30080|33.8313870,-84.4679170
+san francisco ca 94105|37.7881481,-122.3943387
+sunnyvale ca 94087|37.3492097,-122.0326019
+san diego ca 92101-2602|32.7217420,-117.1647094
+valley center ca 92082|33.2052220,-117.0128860
+san diego ca 92191|32.7154000,-117.1565000
+encinitas ca 92023|33.0368000,-117.2914000
+san diego ca 92124|32.8250787,-117.0911760
+san diego ca 92136|32.6804422,-117.1176510
+san diego ca 94960|51.0939880,-113.9306320
+san diego ca 92108-1718|32.7742488,-117.1411815
+phoenix az 85021|33.5634420,-112.0893682
+phoenix az 85035|33.4732778,-112.1728283
+phoenix az 85022|33.6233419,-112.0535987
+phoenix az 85042-5522|33.3718565,-112.0595603
+phoenix az 85009-4287|33.4438042,-112.1310986
+phoenix az 85041|33.3800787,-112.1012912
+avondale az 85323|33.3653556,-112.3218553
+phoenix az 85042-7600|33.3718565,-112.0595603
+phoenix az 85040|33.4040693,-112.0297520
+antioch tn 37013|36.0207224,-86.6409554
+7108 swans run road charlotte nc 28226|35.1095030,-80.7915840
+charlotte nc 28269|35.3352529,-80.7990185
+los angeles ca 90033|34.0502898,-118.2117257
+oregon city or 97045|45.3519840,-122.5966960
+pittsburgh pa 15228|40.3727711,-80.0479039
+mars pa 16046|40.6993600,-80.0122160
+south beaver pa 16115|40.7428951,-80.4326521
+elizabeth twp. pa 15018|40.5435378,-79.8086688
+pittsburgh pa 15243|40.3747044,-80.0702555
+pittsburgh pa 15207|40.4043977,-79.9472502
+seattle wa 98144-2808|47.5888393,-122.2901035
+seattle wa 98146|47.5035704,-122.3523061
+seattle wa 98102|47.6391842,-122.3303290
+issaquah wa 98029|47.5301480,-122.0365270
+bellevue wa 98004|47.6264794,-122.2051487
+shoreline wa 98133|47.7393027,-122.3435336
+north seattle wa 00000|47.6943420,-122.3875330
+2021 9th ave seattle wa 98121-2737|47.6165580,-122.3360353
+3333 third ave sacramento ca 95817|38.5524750,-121.4703150
+sacramento ca 95827|38.5510101,-121.3370074
+auburn ca 95603|38.8929910,-121.0764180
+roseville ca 95678|38.7667414,-121.2969674
+norfolk va 23523|36.8339739,-76.2768755
+pensacola fl 32534|30.5285629,-87.2866995
+p.o. box 2068 stillwater mn 55082|45.0579684,-92.8470124
+3700 foss rd ne minneapolis mn 55421|45.0357578,-93.2105828
+2315 chicago ave s minneapolis mn 55404|44.9594650,-93.2621220
+anywhere--volunteer from home twin cities mn 55000|
+twin cities mn 55000|44.9637890,-93.3440190
+the gibbs museum 2097 w. larpenteur ave. falcon heights mn 55113|
+2097 w. larpenteur ave. falcon heights mn 55113|44.9917408,-93.1886206
+2xx emerson avenue east west st. paul mn 55118|
+west st. paul mn 55118|44.9015170,-93.0806070
+roslindale ma 02131|42.2832142,-71.1270268
+dorchester ma 02124|42.2826027,-71.0676050
+stoneham ma 02180|42.4766331,-71.0913748
+boston ma 02130|42.3097365,-71.1151431
+milford ma 01757|42.1464500,-71.5196500
+boston ma 02111|42.3514653,-71.0601767
+plymouth ma 02360|41.9527510,-70.6699600
+allston ma 02134|42.3574303,-71.1299976
+hyannis ma 02601|41.6548700,-70.2792700
+brookline ma 02445|42.3328027,-71.1389101
+waltham ma 02452|42.3944416,-71.2220832
+metairie la 70003|30.0085623,-90.2150873
+2404 hubbard st jacksonville fl 32206|30.3522680,-81.6526960
+jacksonville fl 32217|30.2430280,-81.6309078
+1100 stockton st. jacksonville fl 32204|30.3125750,-81.6891770
+maggie valley nc 28751|35.5196000,-83.1060200
+baton rouge la 70806|30.4482550,-91.1209121
+bessemer al 35020|33.4122806,-86.9523954
+north charleston sc 29406|32.9221152,-80.0367259
+n. charleston sc 29410|32.9082650,-80.0031833
+1823 columbus rd, rear cleveland oh 44113|
+worcester ma 01607|42.2225731,-71.7919027
+worcester ma 01606|42.3142089,-71.7978333
+harvard ma 01451|42.5073686,-71.5842643
+las vegas nv 89108|36.2030945,-115.2244853
+boulder city nv 89005|35.8374650,-114.9351650
+bridgeport, connecticut, 06708, united states|41.1808990,-73.1641160
+san diego, california, 92, united states|32.5398344,-117.0274948
+huancayo, peru|-12.0746000,-75.2110600
+taos, new mexico, 87556, united states|36.7497152,-105.4536718
+elko, minnesota, 55020, united states|44.5656590,-93.3253170
+brooklyn park, minnesota, 55443, united states|45.1240311,-93.3438516
+lakefield, minnesota, 56150, united states|43.6745760,-95.1746220
+grand rapids, michigan, united states|42.9704710,-85.6686480
+new york, new york, 11362, united states|40.7612957,-73.7330753
+bafoussam, cameroon, 237, cameroon|
+waltham, massachusetts, 02451, united states|42.3947146,-71.2517835
+denver, colorado, 80239, united states|39.7842225,-104.8279512
+palatine, illinois, 60067, united states|42.1112958,-88.0607565
+freetown, western area, 1234, sierra leone|8.3943000,-13.1290000
+morganton, north carolina, 28655, united states|35.7394410,-81.6965790
+mukilteo, washington, 98275, united states|47.9020340,-122.3072458
+new york city, united states|40.7560540,-73.9869510
+philadelphia, pennsylvania, 19139, united states|39.9607740,-75.2333210
+nyc, new york, 11203, united states|40.6515882,-73.9330429
+new york, new york, 11203, united states|40.6515882,-73.9330429
+any, michigan, any, united states|
+chavagnes en paillers, vendee, 85250, france|46.8938434,-1.2505609
+wallingford, connecticut, 06492, united states|41.4566710,-72.8240320
+georgetown, district of columbia, 20007, united states|38.9047150,-77.0627720
+mpoma, mukono, mukono district, uganda|
+tallman, new york, 10982, united states|41.1111000,-74.1003000
+portland, oregon, 97113, united states|45.5376706,-122.9480959
+leadville, colorado, united states|39.2473150,-106.2913960
+cuba, new mexico, united states|36.0208640,-106.9495280
+breckenridge, colorado, united states|39.4981850,-106.0462250
+chama, new mexico, united states|36.8926700,-106.5824540
+silverton, colorado, united states|37.8107670,-107.6651510
+santa fe, new mexico, 80470, united states|35.6843460,-105.9398100
+salida, colorado, united states|38.5369120,-105.9928390
+arlington heights, illinois, 60005, united states|42.0556473,-87.9873724
+grand lake, colorado, united states|40.2530960,-105.8349850
+silver city, new mexico, 80470, united states|32.3990100,-107.8764550
+leadville, colorado, 80470, united states|39.2738150,-106.2889440
+grand lake, colorado, 80470, united states|40.0516250,-105.8909800
+vancouver, british columbia, canada|49.2635880,-123.1385650
+brooklyn, new york, 11213, united states|40.6722134,-73.9389213
+portage, indiana, 46368, united states|41.5765028,-87.1722037
+daytona beach, florida, 32114, united states|29.1987957,-81.0423429
+new york, new york, 10022, virtual (global|
+rochester, new york, 14604, united states|43.1557339,-77.6063541
+karakol, ysyk-kol, 722200, kyrgyzstan|
+belo, boyo division, north west province , cameroon|
+dar es salaam, kinondoni, box 35425, tanzania|
+dar es salaam, tanzania, box 35425, tanzania|
+boston area-can work from home, massachusetts, 02108, united states|
+horseheads, new york, 14845, united states|42.1680210,-76.8322110
+new york city, new york, 10014, united states|40.7316717,-74.0094471
+lithia springs, georgia, 30122, united states|33.7971920,-84.6536230
+houston, texas, 77043, united states|29.8050424,-95.5669786
+boston, massachusetts, 02112-1002, united states|42.3586000,-71.0605000
+pittsburgh, pennsylvania, 15282, united states|40.4367267,-79.9888538
+san rafael, california, 94903, united states|38.0270044,-122.5485873
+irkutsk, lake baikal, siberia, 664023, russia|
+san jose, california, 95191, united states|37.3353000,-121.8938000
+athens, georgia, 30605, united states|33.9052071,-83.3148018
+san jose, california, 95126, united states|37.3290122,-121.9160211
+newton, massachusetts, 02459, united states|42.3123393,-71.1864397
+newton and surrounding towns, massachusetts, 02459, united states|
+boston, somerville, brookline, massachusetts, 02108, united states|42.3094288,-71.0854325
+miami , florida, 33130, united states|25.7664127,-80.2014543
+zug, zug, 6340, switzerland|47.2003879,8.5267528
+bethlehem, palestinian authority|
+adum-kumasi, ghana|
+vanceburg, kentucky, 41179, united states|38.5939050,-83.3219250
+renton, washington, 98057-0621, united states|47.4822124,-122.2117677
+san antonio, texas, 78249, united states|29.5676137,-98.6050736
+churchill, manitoba, r0b 0e0, canada|58.7606360,-94.1291090
+longnan, gansu, 730050, china|
+kampala, 256, uganda|1.0264801,32.4689770
+san diego, california, 92106, united states|32.7228439,-117.2382163
+new york, new york, 10026, united states|40.8023490,-73.9506774
+baiyin, gansu, 730050, china|
+lanzhou, gansu, 730050, china|36.0197740,103.7403345
+san francisco, california, 94143, united states|37.7753000,-122.4186000
+durham, nc (and chapel hill, n, north carolina, 27708, united states|35.9106680,-78.9345600
+los angeles, california, 90048-0750, united states|34.0741548,-118.3724915
+east rutherford, new jersey, 07073, united states|40.8136765,-74.0828839
+sunnyvale, california, 94086, united states|37.3718590,-122.0212337
+freeport, illinois, 61032, united states|42.2874100,-89.6317460
+hull, massachusetts, 02045, united states|42.2619814,-70.8506436
+aurora, illinois, united states|41.7605700,-88.3202090
+manchester, connecticut, 06040, united states|41.7599267,-72.5323139
+liberia, monrovia, 231, leeward islands|
+perquin, morazan, el salvador|13.9500000,-88.1666670
+westminster and fort collins, colorado, 80209, united states|
+tamale, northern, gh, ghana|9.3987000,-0.8410000
+nothville, new york, 12134, united states|43.2234690,-74.1707230
+boston, massachusetts, 02121, united states|42.3065441,-71.0824613
+across vermont, vermont, multiple, united states|
+malakal town, sudan|9.5317000,31.6601000
+mang'ula, morogoro, tanzania|
+rio de janeiro, rio de janeiro, 22270-050, brazil|-22.9527902,-43.1850073
+iganga district, iganga, +256, uganda|0.7500000,33.5833330
+portland, oregon, 97214-5241, united states|45.5113506,-122.6456739
+frankfort, illinois, 60423, united states|41.4944480,-87.8415080
+saltburn, cleveland, ts12 1en, united kingdom|54.5835100,-0.9740200
+gary, indiana, 46407, united states|41.5751928,-87.3264588
+volunteer from home, virtual (global|
+throughout new york state, new york, 10016, united states|
+montreal, quebec, h2l 2y4, canada|45.5247920,-73.5632740
+mcontreal, quebec, h2l 2y4, canada|45.5247920,-73.5632740
+marlborough, massachusetts, 01752, united states|42.3473720,-71.5367860
+newport news, virginia, 23606, united states|37.0672839,-76.5141380
+concord, california, 94520, united states|37.9899071,-122.0496521
+glen ellyn, illinois, 60137, united states|41.8675290,-88.0607260
+new york city, new york, 10036, united states|40.7598450,-73.9903489
+camp hale, colorado, 80401, united states|
+near copper mtn, colorado, 80401, united states|39.6356000,-106.1023500
+halfmoon creek, colorado, 80401, united states|
+manhattan, new york, 10003, united states|40.7322535,-73.9874105
+rolling pass near silverton, colorado, 80401, united states|
+boone, iowa, 50036, united states|42.0565750,-93.8799630
+brooklyn, new york, 11207, united states|40.6684027,-73.8948295
+raspberry gulch, colorado, 80401, united states|
+cataract ridge, colorado, 80401, united states|
+clear creek, colorado, 80401, united states|39.7730425,-105.1460065
+lost creek wilderness, colorado, 80401, united states|
+tufnell park, london, n7 0nd, united kingdom|51.5577835,-0.1278868
+dallas, texas, 75240, united states|32.9312190,-96.7895574
+calgary, alberta, t2p 3s9, canada|51.0474660,-114.0655530
+raleigh, north carolina, 27609, united states|35.8409242,-78.6228504
+magnolia, texas, 77354, united states|30.2072800,-95.7469920
+kenosha pass, colorado, 80401, united states|37.6890390,-106.5791430
+austin, texas, 78757, united states|30.3507705,-97.7362384
+atlanta, georgia, 30087, united states|33.8023029,-84.1329595
+bronx, new york, 10454, united states|40.8071941,-73.9154069
+south bronx, new york, 10454, united states|40.8071941,-73.9154069
+ramsey, minnesota, 55107, united states|44.9309348,-93.0676373
+forest lake, minnesota, 55025, united states|45.2793260,-92.9929030
+big lake, minnesota, 55309, united states|45.3385310,-93.7420130
+st louis, missouri, 63103, united states|38.6291850,-90.2174318
+livingston, izabal, guatemala|15.8269225,-88.7506024
+near denver, colorado, 80401, united states|39.7405100,-105.1675850
+hermosa beach, california, 90254, united states|33.8633644,-118.3958630
+washington (all are welcome), district of columbia, 20036, united states|
+los angeles, california, 90068, united states|34.1235157,-118.3286614
+thongphapum, kanchanaburi, thailand|
+pittsburgh, pennsylvania, 15241, united states|40.3205701,-80.0870155
+dobbs ferry, new york, 10522, united states|41.0102232,-73.8713099
+seattle, washington, 98133, united states|47.7393027,-122.3435336
+ontario, oregon, 97914, united states|44.0248040,-116.9757030
+lake hughes, california, 93532, united states|34.6761960,-118.4441220
+miami, florida, 33162, united states|25.9260794,-80.1819268
+harrisburg, pennsylvania, 17102, united states|40.2698222,-76.8980371
+la esperanza, amazonas, peru|-11.8701559,-77.0750774
+kamuli, 158, uganda|1.0833330,33.2500000
+256, uganda|14.4832697,121.0213995
+nizampatnam, andhra pradesh, 522314, india|15.9000000,80.6666670
+el pauji , bolivar, venezuela|6.2666670,-61.3166670
+seattle, washington, 98122-3934, united states|47.6087583,-122.2964235
+arcadia, california, 91006, united states|34.1172361,-118.0244639
+anywhere, california, 94610, united states|
+columbia, maryland, 21045, united states|39.2013840,-76.8374995
+manhattan, kansas, 66502, united states|39.1929080,-96.5983930
+north charleston, south carolina, 29405, united states|32.8428238,-79.9528451
+charleston, south carolina, 29403, united states|32.7921216,-79.9472502
+plano, texas, 75074, united states|33.0243206,-96.6745042
+huancayo, 00000, peru|-11.8702742,-77.0901944
+10000, vietnam|18.4732136,-69.9841064
+lima, lima, peru|-12.0930840,-77.0464910
+kampala, kampala, 30054, uganda|0.3861747,32.5537541
+eureka, california, 95501, united states|40.7928217,-124.1511916
+bay village, ohio, 44140, united states|41.4829963,-81.9371138
+buenos aires, buenos aires, 0000, argentina|-34.7564659,-58.1869698
+stokesdale, north carolina, united states|36.2354180,-79.9811580
+westerly, rhode island, 02891, united states|41.3729810,-71.8046530
+kpando, volta region, 233, ghana|
+solentiname, rio san juan, nicaragua|11.3166670,-84.7000000
+jefferson, maryland, 21755, united states|39.3620410,-77.5319830
+00100, kenya|-36.7399904,-73.0023884
+san jose, california, 94704, united states|37.8723970,-122.2662300
+minneapolis, minnesota, 55423, united states|44.8735964,-93.2835137
+indianapolis, indiana, 46260, united states|39.8878841,-86.1853474
+baraboo, wisconsin, 53913, united states|43.4690150,-89.7443510
+chapel hill, north carolina, 27514, united states|35.9296810,-79.0341650
+philadelphia, pennsylvania, 19151, united states|39.9788750,-75.2566564
+togo|8.6195430,0.8247820
+trenton, new jersey, united states|40.2201700,-74.7641790
+frankfort, kentucky, united states|38.1894080,-84.8714690
+albany, new york, united states|42.6517250,-73.7550930
+dillon, montana, united states|45.2196940,-112.6349790
+havre, montana, united states|48.5437790,-109.6770340
+glendive, montana, united states|47.1104210,-104.7076310
+billings, montana, united states|45.7827030,-108.5044710
+helena, montana, united states|46.5910700,-112.0204580
+kalispell, montana, united states|48.2021310,-114.3151050
+great falls, montana, united states|47.5064530,-111.3060190
+butte, montana, united states|46.0039170,-112.5344460
+chiri, ethiopia|
+moreno valley, california, 92553, united states|33.9246580,-117.2499749
+greater los angeles, california, 91105, united states|34.1336538,-118.1649291
+greater los angeles area, california, united states|33.5812790,-117.8511910
+online, n/a, united states|40.4729550,-80.0781770
+bogot, colombia|4.6473016,-74.0962677
+bhaktapur, nepal|27.6730310,85.4278560
+knoxville, tennessee, united states|35.9665720,-83.9243770
+edmonton, alberta, t5j 1a1, canada|53.5415840,-113.4990800
+worldwide, united kingdom|53.6082370,-0.1688800
+bothell, washington, 98011, united states|47.7590380,-122.2021071
+stanford, california, 94301, united states|37.4402210,-122.1632990
+ottawa, ontario, k1r6s4, canada|45.4088430,-75.7094270
+sangklaburi, kanchanaburi, thailand|
+san , california, 94105, united states|37.8043507,-121.8107079
+pasadena, california, united states|34.1458920,-118.1323510
+bozeman, montana, united states|45.6792940,-111.0462310
+san diego, california, 92114, united states|32.7040143,-117.0499859
+missoula, montana, united states|46.8744950,-114.0018530
+denver, colorado, 80002, united states|39.7907566,-105.0849687
+huancayo, chiclayo, jungle., junin, 00000, peru|
+sarasota, florida, 34231, united states|27.2729657,-82.5131717
+lawrenceville, new jersey, 08648, united states|40.2979810,-74.7293500
+atlanta, georgia, 30363, united states|33.7929288,-84.3955967
+anywhere, cyberspace, new hampshire, united states|
+monrovia, montserrado, 00231, liberia|6.2338890,-10.3622220
+ewing, new jersey, 08638, united states|40.2518754,-74.7629661
+monterrey, nuevo leon, 64460, mexico|25.6890724,-100.3470575
+nyanza,western,north eastern,e, nairobi area, kenya|
+nyanza,western,north eastern, nairobi area, kenya|
+masaka area , 256, uganda|
+toronto, ontario, m5s1a1, canada|43.6609810,-79.3957720
+toronto, ontario, m5s 2t9, canada|43.6654430,-79.4031630
+st alyre d arlanc, puy de dome, 63220, france|45.3682026,3.6382774
+quito, imbabura, ecuador|-0.2175611,-78.5151118
+zaire (congo|-2.4257770,25.7752703
+ivory coast|7.5399890,-5.5470800
+tema, greater accra, 233, ghana|
+milpitas, california, 95035, united states|37.4346010,-121.8886540
+san francisco, california, 94117-1898, united states|37.7717185,-122.4438929
+new york, new york, 10577, united states|41.0356491,-73.7065940
+albuquerque, new mexico, 87131, united states|35.0843966,-106.6217623
+el progreso, honduras|15.4048026,-87.7989505
+tacoma, washington, united states|47.2445420,-122.4425630
+louisville, kentucky, 40218, united states|38.1891095,-85.6588999
+west orange, new jersey, 07052, united states|40.8029914,-74.2531465
+cochranville, pennsylvania, 19330, united states|39.8926390,-75.9201080
+ho, volta region, hp 119,ho. g, ghana|
+austin, houston, san antonio, texas, 78752, united states|29.4962690,-98.4283540
+pettenasco, novarra, 28028, italy|45.8187345,8.4049042
+garfield heights, ohio, 44105, united states|41.4170770,-81.6060690
+concepcion, masaya, nicaragua|11.9361500,-86.1922000
+edison , new jersey, 08817, united states|40.5253429,-74.3939339
+hoedspruit, mpumalanga, south africa|-24.3486173,31.0449768
+pokhara, 0977, nepal|28.4000000,84.6500000
+nongkhai, 43000, thailand|17.8780811,102.7412942
+saint paul, minnesota, 55075, united states|44.8759802,-93.0275802
+columbus, ohio, 43210, united states|40.0048171,-83.0280816
+arequipa, peru|-16.3975390,-71.5227430
+montgomery county, maryland, 20910, united states|39.0041504,-77.0391754
+kampala, uganda, 30054 , uganda|1.0264801,32.4689770
+santa ana heights, california, 92707, united states|33.6525970,-117.8959390
+silver spring , maryland, 20910, united states|39.0041504,-77.0391754
+san ramon, chanchamayo, 00000, peru|
+boston, massachusetts, 02139, united states|42.3094288,-71.0854325
+san diego ca 92103-5127|32.7497890,-117.1676501
+phoenix az 85024|33.6700987,-112.0595603
+phoenix az 85018|33.4962205,-111.9641728
+phoenix az 85020|33.5636878,-112.0595603
+ft. lauderdale fl 33316|26.1008816,-80.1289010
+232 east main street norfolk va 23510|36.8458823,-76.2911366
+new hope mn 55427|45.0376620,-93.3904140
+2015 north van dyke maplewood mn 55109|44.9994045,-93.0219811
+minneapolis mn 55417|44.9030440,-93.2332244
+2200 hendon ave. st. paul mn 55108|44.9856250,-93.1931290
+westborough ma 01581|42.2667000,-71.6161300
+savannah ga 31415|32.0843685,-81.1251235
+watkinsville ga 30677|33.8609870,-83.4074880
+sutton ma 01590|42.1421373,-71.7385225
+weston, missouri, 64098, united states|39.4176840,-94.8912360
+ulan ude, lake baikal, siberia, 664023, russia|
+vancouver, british columbia, v6b 1h7, canada|49.2825830,-123.1094800
+alexandria, virginia, 22301, united states|38.8189466,-77.0593246
+falcon heights, minnesota, 55113, united states|44.9917670,-93.1769430
+eden prairie, minnesota, 55344, united states|44.8598173,-93.4346913
+charleston, west virginia, 25312, united states|38.3532980,-81.6353750
+penn valley, california, 95946, united states|39.2012510,-121.1918550
+gh, ghana|7.9465270,-1.0231940
+eldoret, rift valley, 30100, kenya|0.5199766,35.2698630
+union county/surrounding areas, new jersey, united states|
+davis, california, 95616, united states|38.5527820,-121.7347790
+poughkeepsie, new york, 12601, united states|41.6945250,-73.9220490
+volunteer from home, united states|
+kathmandu, pokhara, chitwan, bagmati, nepal|
+kathmandu, pokhara, chitwan, bagmati, 1286, nepal|
+kathmandu, bagmati, 1286, nepal|27.6525000,85.2897220
+tamale, ghana|9.3987000,-0.8410000

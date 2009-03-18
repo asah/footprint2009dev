@@ -48,8 +48,7 @@ def Parse(instr, maxrecs, progress):
   for i,line in enumerate(instr.splitlines()):
     if (maxrecs>0 and i>maxrecs):
       break
-    if progress and i>0 and i%100==0:
-      print datetime.now(),": ",i,"opps processed of",maxrecs
+    xml_helpers.printProgress("opps", progress, i, maxrecs)
     item = xml_helpers.simpleParser(line, known_elnames, progress=False)
 
     # unmapped: db_rsvp  (seems to be same as link, but with #rsvp at end of url?)

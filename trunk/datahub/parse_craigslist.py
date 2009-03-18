@@ -98,8 +98,9 @@ def Parse(instr, maxrecs, progress):
 
     if (maxrecs>0 and i>maxrecs):
       break
+    xml_helpers.printProgress("opps", progress, i, maxrecs)
     if progress and i>0 and i%250==0:
-      print datetime.now(),": ",i," listings processed; skipped",
+      print datetime.now(),": skipped",
       print skipped_listings["title"]+skipped_listings["body"],"listings (",
       print skipped_listings["title"],"for no-title and",
       print skipped_listings["body"],"for short body)"

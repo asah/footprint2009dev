@@ -35,8 +35,22 @@ def getChildrenByTagName(elem, name):
   for child in elem.childNodes:
     if child.nodeType == child.ELEMENT_NODE and child.nodeName == name:
       temp.append(child)
-      
   return temp
+
+progress_start_ts = datetime.now()
+def printProgress(noun, progress, recno, maxrecs):
+  maxrecs_str = ""
+  if maxrecs > 0:
+    maxrecs_str = " of " + str(maxrecs)
+  if progress and recno > 0 and recno % 250 == 0:
+    now = datetime.now()
+    print now,": ",recno, noun, "processed" + maxrecs_str,
+    secs_since_start = now - progress_start_ts
+    secs_elapsed = 3600*24.0*secs_since_start.days + \
+        1.0*secs_since_start.seconds + \
+        secs_since_start.microseconds / 1000000.0
+    rps = recno / secs_elapsed
+    print "("+str(rps)+" recs/sec)"
 
 def getTagValue(entity, tag):
   #print "----------------------------------------"
