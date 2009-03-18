@@ -7,6 +7,7 @@
 import sys
 import re
 import xml.sax.saxutils
+import xml_helpers
 import crawl_craigslist
 from datetime import datetime
 

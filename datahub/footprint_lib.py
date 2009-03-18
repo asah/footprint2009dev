@@ -377,8 +377,8 @@ def outputOpportunity(opp, feedinfo, known_orgs, totrecs):
         if latlong != "":
           lat,lng = latlong.split(",")
         locFields = FIELDSEP + outputField("location", "")
-        locFields += FIELDSEP + outputField("latitude", lat)
-        locFields += FIELDSEP + outputField("longitude", lng)
+        locFields += FIELDSEP + outputField("latitude", str(float(lat)+1000.0))
+        locFields += FIELDSEP + outputField("longitude", str(float(lng)+1000.0))
         locFields += FIELDSEP + outputField("location_string", geocoded_loc)
         locFields += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
       #if locstr != geocoded_loc:
@@ -762,10 +762,11 @@ if __name__ == "__main__":
     print convertToFootprintXML(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
     sys.exit(0)
 
-  if options.outputfmt == "basetsv":
+  if options.outputfmt == "basetsv" or options.ftpinfo:
     outstr = convertToGoogleBaseEventsType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
-  elif options.outputfmt == "volbasetsv":
-    outstr = convertToGoogleBaseVolunteerType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
+  #coming soon... footprint vertical for Base...
+  #elif options.outputfmt == "fpbasetsv":
+  #  outstr = convertToGoogleBaseVolunteerType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
   else:
     print datetime.now(),"--outputfmt not implemented: try 'basetsv', 'fpbasetsv' or 'fpxml'"
     sys.exit(1)
