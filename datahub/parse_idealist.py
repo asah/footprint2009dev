@@ -37,6 +37,9 @@ def addCdataToContent(s, progress):
     print datetime.now(),"done: ",len(s)," bytes"
   return s
 
+def removeContentWrapperDiv(s):
+  return re.sub(r'(.*?&lt;div.*?&gt;|&lt;/div&gt;)', '', s).strip()
+
 # frees memory for main parse
 def ParseHelper(instr, maxrecs, progress):
   # TODO: progress
@@ -115,7 +118,8 @@ def ParseHelper(instr, maxrecs, progress):
     # lazy: id is the same as the link field...
     s += '<detailURL>%s</detailURL>' % (id_link)
     # lazy: idealist stuffs a div in the content...
-    s += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "div"))
+    entry_content = xml_helpers.getTagValue(opp, 'content')
+    s += '<description>%s</description>' % removeContentWrapperDiv(entry_content)
     s += '<abstract>%s</abstract>' % (xml_helpers.getTagValue(opp, "summary"))
     pubdate = xml_helpers.getTagValue(opp, "published")
     ts = dateutil.parser.parse(pubdate)
