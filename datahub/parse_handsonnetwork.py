@@ -55,7 +55,13 @@
 from xml.dom import minidom
 import xml_helpers
 import re
+import parse_footprint
 from datetime import datetime
+
+#def ParseFPXML(instr, maxrecs, progress):
+#  instr = re.sub(r'<providerName>.+?</providerName>', r'<providerName>handsonnetwork</providerName>', instr)
+#  instr = re.sub(r'<providerID>.+?</providerID>', r'<providerID>102</providerID>', instr)
+#  return parse_footprint.Parse(instr, maxrecs, progress)
 
 def Parse(instr, maxrecs, progress):
   if progress:
@@ -125,8 +131,7 @@ def Parse(instr, maxrecs, progress):
   for i,oppstr in enumerate(opps):
     if (maxrecs>0 and i>maxrecs):
       break
-    if progress and i>0 and i%100==0:
-      print datetime.now(),": ",i,"opps processed of",maxrecs
+    xml_helpers.printProgress("opps", progress, i, maxrecs)
     opp = xml_helpers.simpleParser(oppstr, known_elnames, False)
     orgs = opp.getElementsByTagName("SponsoringOrganization")
     name = xml_helpers.getTagValue(orgs[0], "Name")

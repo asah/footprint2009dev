@@ -24,7 +24,8 @@ crawlers = 0
 crawlers_lock = thread.allocate_lock()
 cachefile_lock = thread.allocate_lock()
 
-MAX_CRAWLERS = 10
+# set to a lower number if you have problems
+MAX_CRAWLERS = 20
 
 def read_metros():
   global metros
@@ -204,11 +205,13 @@ def load_cache():
 
 def print_status():
   global pages, num_cached_pages, crawlers
-  crawled_pages = len(pages) - num_cached_pages
-  pages_per_sec = int(crawled_pages/secs_since_progstart())
-  print str(secs_since_progstart())+": main thread: waiting for",crawlers,"crawlers.",
-  print crawled_pages,"pages crawled so far ("+str(pages_per_sec)+" pages/sec). ",
-  print len(pages),"total pages."
+  while True:
+    crawled_pages = len(pages) - num_cached_pages
+    pages_per_sec = int(crawled_pages/secs_since_progstart())
+    print str(secs_since_progstart())+": main thread: waiting for",crawlers,"crawlers.",
+    print crawled_pages,"pages crawled so far ("+str(pages_per_sec)+" pages/sec). ",
+    print len(pages),"total pages."
+    time.sleep(2)
 
 from optparse import OptionParser
 if __name__ == "__main__":
@@ -227,7 +230,5 @@ if __name__ == "__main__":
   for url in metros:
     thread.start_new_thread(crawl_metro_page, (url+"vol/", ""))
 
-  while True:
-    print_status()
-    time.sleep(2)
+  print_status()
   sys.exit(0)

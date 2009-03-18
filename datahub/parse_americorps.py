@@ -44,8 +44,8 @@ def Parse(instr, maxrecs, progress):
   for i,oppstr in enumerate(opps):
     if (maxrecs>0 and i>maxrecs):
       break
-    if progress and i>0 and i%100==0:
-      print datetime.now(),": ",i,"opps processed of",maxrecs
+    xml_helpers.printProgress("opps", progress, i, maxrecs)
+
     item = xml_helpers.simpleParser(oppstr, known_elnames, progress=False)
 
     # SponsoringOrganization/Name -- fortunately, no conflicts

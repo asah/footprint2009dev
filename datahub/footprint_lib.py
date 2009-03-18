@@ -39,7 +39,8 @@ printhead = False
 fieldtypes = {
   "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "image_link":"builtin","event_date_range":"builtin","id":"builtin","location":"builtin",
   "paid":"boolean","openended":"boolean",
-  'volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer',"commitmentHoursPerWeek":'integer',
+  'volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer',
+  'latitude':'float','longitude':'float',
   'providerURL':'URL','detailURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL','feed_providerURL':'URL',
   'lastUpdated':'dateTime','expires':'dateTime','feed_createdDateTime':'dateTime',
   # note: type 'location' isn't safe because the Base geocoder can fail, causing the record to be rejected
@@ -61,6 +62,8 @@ def cvtDateTimeToGoogleBase(datestr, timestr, tz):
   ts = ts.replace(tzinfo=tzinfo)
   pst = dateutil.tz.tzstr("PST8PDT")
   ts = ts.astimezone(pst)
+  if ts.year < 1900:
+    ts = ts.replace(year=ts.year+1900)
   res = ts.strftime("%Y-%m-%dT%H:%M:%S")
   res = re.sub(r'Z$', '', res)
   return res
@@ -363,12 +366,19 @@ def outputOpportunity(opp, feedinfo, known_orgs, totrecs):
         print datetime.now(),": ",totrecs," records generated."
       if opploc == None:
         locstr,latlong,geocoded_loc = ("","","")
-        locFields = FIELDSEP + outputField("location", "")
+        locFields = FIELDSEP + outputField("location", "0.0")
+        locFields += FIELDSEP + outputField("latitude", "0.0")
+        locFields += FIELDSEP + outputField("longitude", "0.0")
         locFields += FIELDSEP + outputField("location_string", "")
         locFields += FIELDSEP + outputField("venue_name", "")
       else:
         locstr,latlong,geocoded_loc = lookupLocationFields(opploc)
-        locFields = FIELDSEP + outputField("location", latlong)
+        lat = lng = "0.0"
+        if latlong != "":
+          lat,lng = latlong.split(",")
+        locFields = FIELDSEP + outputField("location", "")
+        locFields += FIELDSEP + outputField("latitude", lat)
+        locFields += FIELDSEP + outputField("longitude", lng)
         locFields += FIELDSEP + outputField("location_string", geocoded_loc)
         locFields += FIELDSEP + outputField("venue_name", xml_helpers.getTagValue(opploc, "name"))
       #if locstr != geocoded_loc:
@@ -403,6 +413,8 @@ def outputHeader(feedinfo, opp, org):
   s += FIELDSEP + outputField("event_date_range", "")
   # locFields
   s += FIELDSEP + outputField("location", "")
+  s += FIELDSEP + outputField("latitude", "")
+  s += FIELDSEP + outputField("longitude", "")
   s += FIELDSEP + outputField("location_string", "")
   s += FIELDSEP + outputField("venue_name", "")
   s += RECORDSEP
@@ -537,7 +549,7 @@ def ftpToBase(f, ftpinfo, s):
   fn = "footprint1.txt"
   if re.search("usa-?service", f):
     fn = "usaservice1.gz"
-  elif re.search("handson", f):
+  elif re.search("(handson|hot.footprint)", f):
     fn = "handsonnetwork1.gz"
   elif re.search("idealist", f):
     fn = "idealist1.gz"
@@ -563,7 +575,7 @@ def ftpToBase(f, ftpinfo, s):
   ftp = ftplib.FTP(host)
   print datetime.now(),"FTP server says:",ftp.getwelcome()
   ftp.login(user, passwd)
-  print datetime.now(),"uploading",len(s),"bytes under filename",fn
+  print datetime.now(),"uploading filename",fn
   ftp.storbinary("STOR " + fn, fh, 8192)
   print datetime.now(),"done."
   ftp.quit()
@@ -634,10 +646,14 @@ if __name__ == "__main__":
          re.search("americorps", f))):
     parsefunc = parse_americorps.Parse
   elif (options.inputfmt == "handson" or
-        options.inputfmt == "handsonnetwork" or
-        (options.inputfmt == None and
-         re.search("handson", f))):
+        options.inputfmt == "handsonnetwork"):
     parsefunc = parse_handsonnetwork.Parse
+  elif (options.inputfmt == None and
+         re.search("(handson|hot.footprint)", f)):
+    # now using FPXML
+    #parsefunc = parse_handsonnetwork.ParseFPXML
+    parsefunc = parse_footprint.Parse
+    options.inputfmt = "fpxml"
   elif (options.inputfmt == "idealist" or
         (options.inputfmt == None and
          re.search("idealist", f))):
@@ -745,11 +761,15 @@ if __name__ == "__main__":
     # TODO: pretty printing option
     print convertToFootprintXML(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
     sys.exit(0)
-  elif (options.outputfmt != "basetsv" and not options.ftpinfo):
-    print datetime.now(),"--outputfmt not implemented: try 'basetsv' or 'fpxml'"
+
+  if options.outputfmt == "basetsv":
+    outstr = convertToGoogleBaseEventsType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
+  elif options.outputfmt == "volbasetsv":
+    outstr = convertToGoogleBaseVolunteerType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
+  else:
+    print datetime.now(),"--outputfmt not implemented: try 'basetsv', 'fpbasetsv' or 'fpxml'"
     sys.exit(1)
 
-  outstr = convertToGoogleBaseEventsType(footprint_xmlstr, do_fastparse, int(options.maxrecs), progress)
   #only need this if Base quoted fields it enabled
   #outstr = re.sub(r'"', r'&quot;', outstr)
   if (options.ftpinfo):
