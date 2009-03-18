@@ -9,28 +9,23 @@ My Events
 {% endblock subheader %}
 
 {% block content_left %}
-Your events.
-<br />
-{% endblock content_left %}
+{% if user %}
+  Your events. <br/>
+{% else %}
+  Log in to see your starred events.
+{% endif %}
 
-{% block width_left %}320{% endblock %}
+{% endblock content_left %}
 
 {% block content_right %}
 <div id='snippets_pane'>
-{% include 'snippets_list.html' %}
+  {% include 'snippets_list.html' %}
 </div>
 {% endblock content_right %}
 
-
-{% block width_right %}{% endblock %}
 
 {% block prefooter %}
 <center>
   {%include 'paginator.html' %}
 </center>
-
-<script>
-document.userDisplayName = "{{user_display_name}}";
-</script>
-
 {% endblock prefooter %}

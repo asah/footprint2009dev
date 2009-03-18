@@ -73,14 +73,11 @@ def get_unique_args_from_request(request):
 
 def load_userinfo_into_dict(user, dict):
   if user:
-    dict["user_id"] = user.user_id
-    dict["user_display_name"] = user.display_name
-    dict["user_type"] = user.account_type
-    dict["user_thumbnail_url"] = user.thumbnail_url
+    dict["user"] = user
     dict["user_days_since_joined"] = (datetime.datetime.now()
                                       - user.get_user_info().first_visit).days
   else:
-    dict["user_id"] = ""
+    dict["user"] = None
 
 def render_template(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
@@ -273,8 +270,9 @@ class my_events_view(webapp.RequestHandler):
   def get(self):
     user_info = userinfo.get_user(self.request)
     if not user_info:
-      # TODO: Nice page with login flow!
-      self.response.out.write('You are not logged in. Sorry.')
+      template_values = {'current_page' : 'MY_EVENTS'}
+      self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
+          template_values))
       return
 
 
@@ -313,8 +311,7 @@ class friends_view(webapp.RequestHandler):
 
     if not user_info:
       template_values = {
-        'current_page' : 'FRIENDS',
-        'user_id' : None
+        'current_page' : 'FRIENDS'
       }
       self.response.out.write(render_template(FRIENDS_TEMPLATE, template_values))
       return

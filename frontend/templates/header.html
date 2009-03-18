@@ -14,9 +14,9 @@
 
   <script src='http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' type='text/javascript'></script>
   <script type="text/javascript">
-    document.userId = "{{user_id}}";
-    document.userType = "{{user_type}}";
-    document.userDisplayName = "{{user_display_name}}";
+    document.userId = "{{user.user_id}}";
+    document.userType = "{{user.account_type}}";
+    document.userDisplayName = "{{user.display_name}}";
 
     var FC_SITE_ID = '02962301966004179520';
     var FB_SITE_ID = 'df68a40a4a90d4495ed03f920f16c333';
@@ -26,22 +26,22 @@
     google.load('friendconnect', '0.8');
     google.setOnLoadCallback(function() {
       google.friendconnect.container.loadOpenSocialApi({site: FC_SITE_ID, onload: function() {
-        {% if not user_id %} checkForViewer(); {% endif %}
+        {% if not user %} checkForViewer(); {% endif %}
       }});
     });
   </script>
 
   <div id='header_right' align='right' width='100%'>
    <nobr>
-    {% if user_id %}
+    {% if user %}
     <div class='sign_in'>
-      Hello, {{ user_display_name }} |
+      Hello, {{ user.display_name }} |
 
-      {% ifequal user_type "friendconnect"%}
+      {% ifequal user.account_type "friendconnect"%}
         <a href="#" onclick="google.friendconnect.requestSettings()">Settings</a> |
         <a href="#" onclick="google.friendconnect.requestInvite()">Invite</a> |
         <a href="#" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
-      {% else %} {% ifequal user_type "facebook" %}
+      {% else %} {% ifequal user.account_type "facebook" %}
         <a href="#" onclick="FB.Connect.logout(function() {window.location.reload();});">Sign Out</a>
       {% endifequal %}{% endifequal %}
     </div>
