@@ -48,7 +48,7 @@ class RunTests(webapp.RequestHandler):
     self.response.out.write('p {font-family: Arial, sans-serif; font-size: 10pt; margin: 0;}')
     self.response.out.write('p.error {color: #880000;}')
     self.response.out.write('.test {font-size: 12pt; font-weight: bold; margin-top: 12px;}')
-    self.response.out.write('.uri {font-size: 10pt; font-weight: normal; color: gray; margin-left: 8px;}')
+    self.response.out.write('.uri {font-size: 10pt; font-weight: normal; color: gray; margin-left: 0px;}')
     self.response.out.write('.result {font-size: 11pt; font-weight: normal; margin-left: 8px; margin-bottom: 4px;}')
     self.response.out.write('.fail {color: #880000;}')
     self.response.out.write('.success {color: #008800;}')
