@@ -53,6 +53,7 @@ def get_user(request):
         except:
           # This hides all errors from the Facebook client library
           # TODO(doll): Hand back an error message to the user
+          logging.exception("Facebook or Friend Connect client exception.")
           return None
       return user
 
