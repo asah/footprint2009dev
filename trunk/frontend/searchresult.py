@@ -14,7 +14,9 @@
 
 import re
 import urlparse
+import datetime
 import time
+import math
 
 from google.appengine.api import memcache
 from xml.sax.saxutils import escape
@@ -33,7 +35,8 @@ class SearchResult(object):
     self.js_escaped_title = self.js_escape(title)
     self.js_escaped_snippet = self.js_escape(snippet)
     
-    self.xml_url = escape(url)
+    # TODO: find out why this is not unique
+    self.xml_url = escape(url) + "#" + self.id # hack to avoid guid duplicates
 
     parsed_url = urlparse.urlparse(url)
     self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
@@ -42,6 +45,22 @@ class SearchResult(object):
     self.interest = None
     # stats from other users.
     self.interest_count = 0
+
+    # TODO: real quality score
+    self.quality_score = 0.1
+
+    # TODO: real pageviews
+    self.pageviews = 0
+
+    # GAE server localtime appears to be UTC and timezone %Z 
+    # is an empty string so to satisfy RFC date format 
+    # requirements in output=rss we append the offset in hours
+    # from UTC for our local time (now, UTC) i.e. +0000 hours
+    # ref: http://feedvalidator.org/docs/error/InvalidRFC2822Date.html
+    # ref: http://www.feedvalidator.org to check feed validity
+    # eg, Tue, 10 Feb 2009 17:04:28 PST
+    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S", 
+      time.gmtime()) + " +0000"
     
   def js_escape(self, string):
     # TODO: This escape method is overly agressive and is messing some snippets
@@ -54,21 +73,16 @@ class SearchResultSet(object):
     self.query_url_encoded = escape(query_url_encoded)
     self.results = results
 
+    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S", 
+      time.gmtime()) + " +0000"
+    self.lastBuildDate = self.pubDate
+
   def apply_post_search_filters(self, args):
-    if "DoW" in args and len(args["DoW"]) > 0:
+    if "vol_startdayofweek" in args and args["vol_startdayofweek"] != "":
       # we are going to filter by day of week
       for i,res in enumerate(self.results):
         dow = str(res.startdate.strftime("%w"))
-        if args["DoW"].find(dow) < 0:
-          del self.results[i]
-
-    if "ampm" in args and (args["ampm"] == "am" or args["ampm"] == "pm"):
-      # we are going to filter by am|pm
-      for i,res in enumerate(self.results):
-        # assumes we have 24 hour data
-        hr = int(res.startdate.strftime("%H"))
-        if ((hr < 12 and args["ampm"] == "pm") 
-             or (hr >= 12 and args["ampm"] == "am")):
+        if args["vol_startdayofweek"].find(dow) < 0:
           del self.results[i]
 
   def dedup(self):

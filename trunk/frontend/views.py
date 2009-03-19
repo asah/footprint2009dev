@@ -214,6 +214,8 @@ class search_view(webapp.RequestHandler):
     # Perform the search.
     result_set = search.search(unique_args)
 
+    result_set.request_url = self.request.url
+
     output = None
     if "output" in unique_args:
       output = unique_args["output"]
@@ -222,6 +224,7 @@ class search_view(webapp.RequestHandler):
     is_api_call = parsed_url.path.startswith('/api/')
     if is_api_call:
       if not output or output == "rss":
+        self.response.headers["Content-Type"] = "application/rss+xml"
         template = SEARCH_RESULTS_RSS_TEMPLATE
       elif output == "csv":
         # TODO: implement SEARCH_RESULTS_CSV_TEMPLATE

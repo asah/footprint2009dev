@@ -181,7 +181,7 @@ def create_from_xml(xml):
 
 argnames = {
   "title":1, "description":1, "skills":1, "virtual":1, "addr1":1, "addrname1":1, 
-  "sponsoringOrganizationsName":1, "openEnded":1, "startDate":1,
+  "sponsoringOrganizationName":1, "openEnded":1, "startDate":1,
   "startTime":1, "endTime":1, "endDate":1, "contactNoneNeeded":1,
   "contactEmail":1, "contactPhone":1, "contactName":1, "detailURL":1,
   "weeklySun":1, "weeklyMon":1, "weeklyTue":1, "weeklyWed":1, "weeklyThu":1,
