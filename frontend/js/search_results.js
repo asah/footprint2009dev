@@ -104,82 +104,80 @@ asyncLoadManager.addCallback('bodyload', runCurrentSearch);
  * @param {bool} updateMap Move the map to the new location?
  */
 function doInlineSearch(keywords, location, dateRange, updateMap) {
-  asyncLoadManager.addCallback('map', function() {
-    // This code is dependent on MapsAPI being loaded, for GXmlHttp and
-    // for setting the map position post-search.
+  var url = '/api/search?output=snippets_list&';
+  var query = '';
 
-    var xmlHttp = GXmlHttp.create();
-
-    var url = '/api/search?output=snippets_list&';
-    var query = '';
-
-    function addQueryParam(name, value) {
-      if (query.length > 0) {
-        query += '&';
-      }
-      query += name + '=' + escape(value);
+  function addQueryParam(name, value) {
+    if (query.length > 0) {
+      query += '&';
     }
+    query += name + '=' + escape(value);
+  }
 
-    if (keywords && keywords.length > 0) {
-      addQueryParam('q', keywords);
-    }
-    if (location && location.length > 0) {
-      addQueryParam('vol_loc', location);
-    }
-    
-    if (dateRange && dateRange.length == 2) {
-      addQueryParam('startDate', vol.Calendar.dateAsString(dateRange[0]));
-      addQueryParam('stopDate', vol.Calendar.dateAsString(dateRange[1]));
-    }
+  if (keywords && keywords.length > 0) {
+    addQueryParam('q', keywords);
+  }
+  if (location && location.length > 0) {
+    addQueryParam('vol_loc', location);
+  }
+  
+  if (dateRange && dateRange.length == 2) {
+    addQueryParam('vol_startdate', vol.Calendar.dateAsString(dateRange[0]));
+    addQueryParam('vol_enddate', vol.Calendar.dateAsString(dateRange[1]));
+  }
 
-    var callback = function(text) {
-      if (updateMap) {
+  var callback = function(text) {
+    if (updateMap) {
+      asyncLoadManager.addCallback('map', function() {
         map.setCenterGeocode(location);
-      }
-      el('snippets_pane').innerHTML = text;
-
-      // Set the URL hash, but only if the query string is not empty.
-      // Setting hash to an empty string causes a page reload.
-      if (query.length > 0) {
-        window.location.hash = query;
-      }
-
-      // Inline scripts inside the html won't be invoked
-      // when .innerHTML is set.  Here we iterate through each inline
-      // <script> node and execute it directly (by creating a new
-      // script node and replacing the old one).
-      var scripts = el('snippets_pane').getElementsByTagName('script');
-      forEach (scripts, function(script, index) {
-          if (index >= 30) {
-            // TODO: remove this once we retrieve geocoded search results, and
-            // the too-many-search-results bug is fixed.
-            
-            // Force rendering of the calendar, since the last <script> won't be
-            // executed.
-            calendar.render();
-            return;
-          }
-          var newScript = document.createElement('script');
-          var scriptText = script.innerHTML;
-          if (newScript.text) {
-            newScript.text = scriptText;
-            script.parentNode.replaceChild(newScript, script);
-          } else {
-            var textNode = document.createTextNode(scriptText);
-            newScript.appendChild(textNode);
-            script.parentNode.replaceChild(newScript, script);
-          }
       });
     }
+    el('snippets_pane').innerHTML = text;
 
-    xmlHttp.open('GET', url + query, true);
-    xmlHttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        callback(this.responseText);
-      }
+    // Set the URL hash, but only if the query string is not empty.
+    // Setting hash to an empty string causes a page reload.
+    if (query.length > 0) {
+      window.location.hash = query;
     }
-    xmlHttp.send(null);
-  });
+
+    // Inline scripts inside the html won't be invoked
+    // when .innerHTML is set.  Here we iterate through each inline
+    // <script> node and execute it directly (by creating a new
+    // script node and replacing the old one).
+    var scripts = el('snippets_pane').getElementsByTagName('script');
+    forEach (scripts, function(script, index) {
+        if (index >= 30) {
+          // TODO: remove this once we retrieve geocoded search results, and
+          // the too-many-search-results bug is fixed.
+          
+          // Force rendering of the calendar, since the last <script> won't be
+          // executed.
+          calendar.render();
+          return;
+        }
+        var newScript = document.createElement('script');
+        var scriptText = script.innerHTML;
+        if (newScript.text) {
+          newScript.text = scriptText;
+          script.parentNode.replaceChild(newScript, script);
+        } else {
+          var textNode = document.createTextNode(scriptText);
+          newScript.appendChild(textNode);
+          script.parentNode.replaceChild(newScript, script);
+        }
+    });
+  }
+
+  var xmlHttp = window.ActiveXObject ?
+      window.ActiveXObject('Microsoft.XMLHTTP') :
+      new XMLHttpRequest();
+  xmlHttp.open('GET', url + query, true);
+  xmlHttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      callback(this.responseText);
+    }
+  };
+  xmlHttp.send(null);
 }
 
 /** Called from the "Refine" button's onclick, and the main form onsubmit.
