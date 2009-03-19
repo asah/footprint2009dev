@@ -42,9 +42,28 @@
         <a href="#" onclick="google.friendconnect.requestInvite()">Invite</a> |
         <a href="#" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
       {% else %} {% ifequal user.account_type "facebook" %}
+        <a href="#" onclick="inviteFacebookFriends();">Invite</a> |
         <a href="#" onclick="FB.Connect.logout(function() {window.location.reload();});">Sign Out</a>
       {% endifequal %}{% endifequal %}
     </div>
+
+    <script type="text/javascript">
+        function inviteFacebookFriends() {
+          var url = location.protocol + "//" + location.host;
+
+          var dialog = new FB.UI.FBMLPopupDialog('Invite your friends to join One For All', '');
+          var fbml = '<fb:fbml><fb:request-form action="' + url 
+              + '" method="POST" invite="true" type="One For All" content="Visit ' + url 
+              + ' to find volunteer opportunities near you! ' 
+              + '<fb:req-choice url=\'' + url  + '\' label=\'Yes, I want to get invovled\' />">' 
+              + '<fb:multi-friend-selector rows="2" showborder="false" actiontext="Invite your friends"/>' 
+              + '</fb:request-form></fb:fbml>';
+          dialog.setFBMLContent(fbml);
+          dialog.setContentWidth(600); 
+          dialog.setContentHeight(400);
+          dialog.show();
+        }
+    </script>
 
     {% else %}
     <div class='sign_in'>
@@ -58,7 +77,7 @@
 
       <script type="text/javascript">
         function requestFacebookSignIn() {
-          FB.Connect.requireSession();
+          FB.Connect.requireSession(null, true);
           FB.Facebook.get_sessionState().waitUntilReady(function() {
             window.location.reload();
           });
