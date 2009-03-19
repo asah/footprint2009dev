@@ -85,6 +85,10 @@ class SearchResultSet(object):
         if args["vol_startdayofweek"].find(dow) < 0:
           del self.results[i]
 
+  def limit_to(self, limit_num):
+    if (len(self.results) > limit_num):
+      self.results = self.results[0:limit_num]
+
   def dedup(self):
     # we are going to make another list of results merged by title and snippet
     
