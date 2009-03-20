@@ -28,6 +28,7 @@ from google.appengine.ext import db
 
 import recaptcha
 
+import api
 import base_search
 import geocode
 import models
@@ -217,8 +218,8 @@ class search_view(webapp.RequestHandler):
     result_set.request_url = self.request.url
 
     output = None
-    if "output" in unique_args:
-      output = unique_args["output"]
+    if api.PARAM_OUTPUT in unique_args:
+      output = unique_args[api.PARAM_OUTPUT]
 
     # Determine whether this is an API call, and pick the output template.
     is_api_call = parsed_url.path.startswith('/api/')
@@ -258,19 +259,20 @@ class search_view(webapp.RequestHandler):
     if "lat" in result_set.args and "long" in result_set.args:
       latlng_string = "%s,%s" % (result_set.args["lat"], result_set.args["long"])
 
-    #logging.info("geocode("+result_set.args["vol_loc"]+")="+result_set.args["lat"]+","+result_set.args["long"])
+    #logging.info("geocode("+result_set.args[api.PARAM_VOL_LOC]+") = "+result_set.args["lat"]+","+result_set.args["long"])
     template_values = {
         'result_set': result_set,
         'current_page' : 'SEARCH',
 
+        'view_url': self.request.url,
         'query_url_encoded': result_set.query_url_encoded,
         'query_url_unencoded': result_set.query_url_unencoded,
 
         # TODO: remove this stuff...
         'latlong': latlng_string,
-        'keywords': result_set.args["q"],
-        'location': result_set.args["vol_loc"],
-        'max_distance': result_set.args["vol_dist"],
+        'keywords': result_set.args[api.PARAM_Q],
+        'location': result_set.args[api.PARAM_VOL_LOC],
+        'max_distance': result_set.args[api.PARAM_VOL_DIST],
         'is_first_page': result_set.is_first_page,
         'is_last_page': result_set.is_last_page,
         'prev_page_url': result_set.prev_page_url,
