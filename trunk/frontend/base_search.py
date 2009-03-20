@@ -36,6 +36,7 @@ from xml.dom import minidom
 ## Use urlfetch instead of httplib
 #gdata.service.http_request_handler = gdata.urlfetch
 
+import api
 import geocode
 import models
 import searchresult
@@ -53,7 +54,7 @@ def make_base_arg(x):
 def make_base_orderby_arg(args):
   # TODO: implement other scenarios for orderby
   return "relevancy"
-  if args["sort"] == "r":
+  if args[api.PARAM_SORT] == "r":
     # newest
     return "modification_time"
   else:
@@ -69,58 +70,67 @@ def base_restrict_str(key,val=None):
 # note: many of the XSS and injection-attack defenses are unnecessary
 # given that the callers are also protecting us, but I figure better
 # safe than sorry, and defense-in-depth.
-def search(args):
+def search(args, num_overfetch=200):
+  """
+  Params:
+      num_overfetch: Number of records to fetch, which is different (larger)
+        than the 'num' field in the search args.  The caller will fetch more
+        records than the user requests, in order to perform de-duping here in
+        the app.
+  """
+
   logging.info(args);
   base_query = ""
 
-  if "q" in args and args["q"] != "":
-    base_query += urllib.quote_plus(args["q"])
+  if api.PARAM_Q in args and args[api.PARAM_Q] != "":
+    base_query += urllib.quote_plus(args[api.PARAM_Q])
 
-  if "vol_startdate" in args or "vol_enddate" in args:
+  if api.PARAM_VOL_STARTDATE in args or api.PARAM_VOL_ENDDATE in args:
     startdate = None
-    if "vol_startdate" in args and args["vol_startdate"] != "":
+    if api.PARAM_VOL_STARTDATE in args and args[api.PARAM_VOL_STARTDATE] != "":
       try:
-        startdate = datetime.datetime.strptime(args["vol_startdate"].strip(), "%Y-%m-%d")
+        startdate = datetime.datetime.strptime(args[api.PARAM_VOL_STARTDATE].strip(), "%Y-%m-%d")
       except:
-        logging.error("malformed vol_startdate: "+args["vol_startdate"])
+        logging.error("malformed start date: %s" % args[api.PARAM_VOL_STARTDATE])
     if not startdate:
       # note: default vol_startdate is "tomorrow"
       # in base, event_date_range YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss
       # appending "Z" to the datetime string would mean UTC
       startdate = datetime.date.today() + datetime.timedelta(days=1)
-      args["vol_startdate"] = startdate.strftime("%Y-%m-%d")
+      args[api.PARAM_VOL_STARTDATE] = startdate.strftime("%Y-%m-%d")
 
     enddate = None
-    if "vol_enddate" in args and args["vol_enddate"] != "":
+    if api.PARAM_VOL_ENDDATE in args and args[api.PARAM_VOL_ENDDATE] != "":
       try:
-        enddate = datetime.datetime.strptime(args["vol_enddate"].strip(), "%Y-%m-%d")
+        enddate = datetime.datetime.strptime(args[api.PARAM_VOL_ENDDATE].strip(), "%Y-%m-%d")
       except:
-        logging.error("malformed vol_enddate: "+args["vol_enddate"])
+        logging.error("malformed end date: %s" % args[api.PARAM_VOL_ENDDATE])
     if not enddate:
       enddate = datetime.date(startdate.year, startdate.month, startdate.day)
       enddate = enddate + datetime.timedelta(days=1000)
-      args["vol_enddate"] = enddate.strftime("%Y-%m-%d")
-    daterangestr = '%s..%s' % (args["vol_startdate"], args["vol_enddate"])
+      args[api.PARAM_VOL_ENDDATE] = enddate.strftime("%Y-%m-%d")
+    daterangestr = '%s..%s' % (args[api.PARAM_VOL_STARTDATE], args[api.PARAM_VOL_ENDDATE])
     base_query += base_restrict_str("event_date_range", daterangestr)
 
-  if "vol_provider" in args and args["vol_provider"] != "":
-    if re.match(r'[a-zA-Z0-9:/_. -]+', args["vol_provider"]):
-      base_query += base_restrict_str("feed_providername", args["vol_provider"])
+  if api.PARAM_VOL_PROVIDER in args and args[api.PARAM_VOL_PROVIDER] != "":
+    if re.match(r'[a-zA-Z0-9:/_. -]+', args[api.PARAM_VOL_PROVIDER]):
+      base_query += base_restrict_str("feed_providername", args[api.PARAM_VOL_PROVIDER])
     else:
       # illegal providername
       # TODO: throw 500
-      logging.error("illegal providername: " + args["vol_provider"])
+      logging.error("illegal providername: " + args[api.PARAM_VOL_PROVIDER])
 
   # TODO: injection attack on sort
-  if "sort" not in args:
-    args["sort"] = "r"
+  if api.PARAM_SORT not in args:
+    args[api.PARAM_SORT] = "r"
 
   # TODO: injection attacks in vol_loc
-  if args["vol_loc"] != "":
-    args["vol_dist"] = int(str(args["vol_dist"]))
+  if args[api.PARAM_VOL_LOC] != "":
+    args[api.PARAM_VOL_DIST] = int(str(args[api.PARAM_VOL_DIST]))
     # TODO: looks like the default is 25 mi, check for value as a min here?
-    base_query += base_restrict_str("location", '@"%s" + %dmi' % \
-                                      (args["vol_loc"], args["vol_dist"]))
+    base_query += base_restrict_str("location", '@"%s" + %dmi' %
+                                      (args[api.PARAM_VOL_LOC],
+                                       args[api.PARAM_VOL_DIST]))
 
   # Base URL for snippets search on Base.
   #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
@@ -135,30 +145,27 @@ def search(args):
 
   #base_query += base_restrict_str("detailurl")
 
-  if "start" not in args:
-    args["start"] = 1
-
-  if "num" not in args:
-    args["num"] = 10
-
-  if "base_num" not in args:
-    args["base_num"] = 200
+  if api.PARAM_START not in args:
+    args[api.PARAM_START] = 1
 
   #for k in args: logging.info("arg["+str(k)+"]="+str(args[k]))
-  #url_params = urllib.urlencode({'max-results': args["num"],
+
   query_url = args["backends"]
-  query_url += "?max-results=" + str(args["base_num"])
-  query_url += "&start-index=" + str(args["start"])
+  query_url += "?max-results=" + str(num_overfetch)
+  query_url += "&start-index=" + str(args[api.PARAM_START])
   query_url += "&orderby=" + make_base_orderby_arg(args)
   query_url += "&content=" + "all"
   query_url += "&bq=" + base_query
+
   logging.info("calling Base: "+query_url)
   return query(query_url, args, False)
+
 
 def hash_md5(s):
   it = md5.new()
   it.update(s)
   return it.digest()
+
 
 def query(query_url, args, cache):
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
@@ -287,10 +294,10 @@ def get_from_ids(ids):
 
   # Bogus args for search. TODO: Remove these, why are they needed above?
   args = {}
-  args["vol_startdate"] = (datetime.date.today() + 
+  args[api.PARAM_VOL_STARTDATE] = (datetime.date.today() +
                        datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-  tt = time.strptime(args["vol_startdate"], "%Y-%m-%d")
-  args["vol_enddate"] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
+  tt = time.strptime(args[api.PARAM_VOL_STARTDATE], "%Y-%m-%d")
+  args[api.PARAM_VOL_ENDDATE] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
                       datetime.timedelta(days=60))
 
   # TODO(mblain): Figure out how to pull in multiple base entries in one call.

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import api
 import base_search
 import views
 import logging
@@ -25,39 +26,39 @@ import scoring
 # by convention, repeated args are ignored, LAST ONE wins.
 def search(args):
   num = 10
-  if "num" in args:
-    num = int(args["num"])
+  if api.PARAM_NUM in args:
+    num = int(args[api.PARAM_NUM])
     if num < 1: num = 1
     if num > 999: num = 999
-  args["num"] = num
+  args[api.PARAM_NUM] = num
 
   start_index = 1
-  if "start" in args:
-    start_index = int(args["start"])
+  if api.PARAM_START in args:
+    start_index = int(args[api.PARAM_START])
     if start_index < 1: start_index = 1
     if start_index > 1000-num: start_index = 1000-num
-  args["start"] = start_index
+  args[api.PARAM_START] = start_index
 
-  if "q" not in args:
-    args["q"] = ""
+  if api.PARAM_Q not in args:
+    args[api.PARAM_Q] = ""
 
-  if "output" in args:
-    if args["output"] in ['html','tsv','csv','json','rss','rssdesc','xml',
+  if api.PARAM_OUTPUT in args:
+    if args[api.PARAM_OUTPUT] in ['html','tsv','csv','json','rss','rssdesc','xml',
                           'snippets_list']:
-      output = args["output"]
+      output = args[api.PARAM_OUTPUT]
     else:
-      searchParamError(args, "output")
+      searchParamError(args, api.PARAM_OUTPUT)
   else:
-    args["output"] = "html"
+    args[api.PARAM_OUTPUT] = "html"
 
-  if "fields" in args:
+  if api.PARAM_FIELDS in args:
     # TODO: csv list of fields
-    if args["fields"] in ['all','rss']:
-      fields = args["fields"]
+    if args[api.PARAM_FIELDS] in ['all','rss']:
+      fields = args[api.PARAM_FIELDS]
     else:
-      searchParamError(args, "fields")
+      searchParamError(args, api.PARAM_FIELDS)
   else:
-    args["fields"] = "all"
+    args[api.PARAM_FIELDS] = "all"
 
   # TODO: process dbg -- currently, anything goes...
 
@@ -66,38 +67,21 @@ def search(args):
   # RESERVED: type
 
   args["lat"] = args["long"] = ""
-  if "vol_loc" in args:
-    res = geocode.geocode(args["vol_loc"])
+  if api.PARAM_VOL_LOC in args:
+    res = geocode.geocode(args[api.PARAM_VOL_LOC])
     if res != "":
       args["lat"],args["long"] = res.split(",")
-    if "vol_dist" not in args:
-      args["vol_dist"] = 25
+    if api.PARAM_VOL_DIST not in args:
+      args[api.PARAM_VOL_DIST] = 25
   else:
-    args["vol_loc"] = args["vol_dist"] = ""
-
-  vol_start = ""
-  if "vol_start" in args:
-    vol_start = args["vol_start"]
-  vol_end = ""
-  if "vol_end" in args:
-    vol_end = args["vol_end"]
-  vol_tz = ""
-  if "vol_tz" in args:
-    vol_tz = args["vol_tz"]
-  vol_duration = ""
-  if "vol_duration" in args:
-    vol_duration = args["vol_duration"]
-
-  id = ""
-  if "id" in args:
-    id = args["id"]
+    args[api.PARAM_VOL_LOC] = args[api.PARAM_VOL_DIST] = ""
 
   result_set = base_search.search(args)
   scoring.score_results_set(result_set, args)
   result_set.apply_post_search_filters(args)
   result_set.dedup()
-  result_set.limit_to(args["num"])
-  
+  result_set.limit_to(args[api.PARAM_NUM])
+
   result_set.is_first_page = (start_index == 1)
   # TODO: detect last page
   result_set.is_last_page = True
