@@ -12,6 +12,7 @@
 <fp:xml_url>{{ result.xml_url|escape  }}</fp:xml_url>
 <fp:url_short>{{ result.url_short|escape  }}</fp:url_short>
 <fp:latlong>{{ result.latlong|escape  }}</fp:latlong>
+<fp:location_name>{{ result.location_string|escape  }}</fp:location_name>
 <fp:interest>{{ result.interest|escape  }}</fp:interest>
 <fp:interest_count>{{ result.interest_count|escape  }}</fp:interest_count>
 <fp:pageviews>{{ result.pageviews|escape  }}</fp:pageviews>

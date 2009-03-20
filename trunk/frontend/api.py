@@ -29,3 +29,6 @@ PARAM_VOL_ENDDATE = 'vol_enddate'
 PARAM_VOL_DURATION = 'vol_duration'
 PARAM_VOL_TZ = 'vol_tz'
 PARAM_VOL_PROVIDER = 'vol_provider'
+
+PARAM_LAT = 'lat'
+PARAM_LNG = 'long'
