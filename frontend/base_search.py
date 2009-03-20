@@ -85,7 +85,7 @@ def search(args, num_overfetch=200):
     if api.PARAM_VOL_STARTDATE in args and args[api.PARAM_VOL_STARTDATE] != "":
       try:
         startdate = datetime.datetime.strptime(
-                       args[api.PARAM_VOL_STARTDATE].strip(), "%Y-%m-%d")
+                       args[api.PARAM_VOL_STARTDATE][:10], "%Y-%m-%d")
       except:
         logging.error("malformed start date: %s" % 
            args[api.PARAM_VOL_STARTDATE])
@@ -100,7 +100,7 @@ def search(args, num_overfetch=200):
     if api.PARAM_VOL_ENDDATE in args and args[api.PARAM_VOL_ENDDATE] != "":
       try:
         enddate = datetime.datetime.strptime(
-                       args[api.PARAM_VOL_ENDDATE].strip(), "%Y-%m-%d")
+                       args[api.PARAM_VOL_ENDDATE][:10], "%Y-%m-%d")
       except:
         logging.error("malformed end date: %s" % args[api.PARAM_VOL_ENDDATE])
     if not enddate:
@@ -133,9 +133,9 @@ def search(args, num_overfetch=200):
                                       (args[api.PARAM_VOL_LOC],
                                        args[api.PARAM_VOL_DIST]))
     """
-  if (args[api.PARAM_LAT] != "" and args[api.PARAM_LNG] != "" 
+  if (args["lat"] != "" and args["long"] != "" 
        and args[api.PARAM_VOL_DIST] != ""):
-    lat, lng = float(args[api.PARAM_LAT]), float(args[api.PARAM_LNG])
+    lat, lng = float(args["lat"]), float(args["long"])
     dist = float(args[api.PARAM_VOL_DIST])
     base_query += "[latitude%%3E%%3D%.2f]" % (lat+1000 - dist/69.1)
     base_query += "[latitude%%3C%%3D%.2f]" % (lat+1000 + dist/69.1)
