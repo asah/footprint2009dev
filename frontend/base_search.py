@@ -22,8 +22,6 @@ import logging
 import md5
 import posting
 
-# TODO: remove me
-
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 from google.appengine.api import memcache
@@ -32,9 +30,6 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 from xml.dom import minidom
-
-## Use urlfetch instead of httplib
-#gdata.service.http_request_handler = gdata.urlfetch
 
 import api
 import geocode
@@ -89,9 +84,11 @@ def search(args, num_overfetch=200):
     startdate = None
     if api.PARAM_VOL_STARTDATE in args and args[api.PARAM_VOL_STARTDATE] != "":
       try:
-        startdate = datetime.datetime.strptime(args[api.PARAM_VOL_STARTDATE].strip(), "%Y-%m-%d")
+        startdate = datetime.datetime.strptime(
+                       args[api.PARAM_VOL_STARTDATE].strip(), "%Y-%m-%d")
       except:
-        logging.error("malformed start date: %s" % args[api.PARAM_VOL_STARTDATE])
+        logging.error("malformed start date: %s" % 
+           args[api.PARAM_VOL_STARTDATE])
     if not startdate:
       # note: default vol_startdate is "tomorrow"
       # in base, event_date_range YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss
@@ -102,19 +99,22 @@ def search(args, num_overfetch=200):
     enddate = None
     if api.PARAM_VOL_ENDDATE in args and args[api.PARAM_VOL_ENDDATE] != "":
       try:
-        enddate = datetime.datetime.strptime(args[api.PARAM_VOL_ENDDATE].strip(), "%Y-%m-%d")
+        enddate = datetime.datetime.strptime(
+                       args[api.PARAM_VOL_ENDDATE].strip(), "%Y-%m-%d")
       except:
         logging.error("malformed end date: %s" % args[api.PARAM_VOL_ENDDATE])
     if not enddate:
       enddate = datetime.date(startdate.year, startdate.month, startdate.day)
       enddate = enddate + datetime.timedelta(days=1000)
       args[api.PARAM_VOL_ENDDATE] = enddate.strftime("%Y-%m-%d")
-    daterangestr = '%s..%s' % (args[api.PARAM_VOL_STARTDATE], args[api.PARAM_VOL_ENDDATE])
+    daterangestr = '%s..%s' % (args[api.PARAM_VOL_STARTDATE], 
+                       args[api.PARAM_VOL_ENDDATE])
     base_query += base_restrict_str("event_date_range", daterangestr)
 
   if api.PARAM_VOL_PROVIDER in args and args[api.PARAM_VOL_PROVIDER] != "":
     if re.match(r'[a-zA-Z0-9:/_. -]+', args[api.PARAM_VOL_PROVIDER]):
-      base_query += base_restrict_str("feed_providername", args[api.PARAM_VOL_PROVIDER])
+      base_query += base_restrict_str("feed_providername", 
+                       args[api.PARAM_VOL_PROVIDER])
     else:
       # illegal providername
       # TODO: throw 500
@@ -128,9 +128,19 @@ def search(args, num_overfetch=200):
   if args[api.PARAM_VOL_LOC] != "":
     args[api.PARAM_VOL_DIST] = int(str(args[api.PARAM_VOL_DIST]))
     # TODO: looks like the default is 25 mi, check for value as a min here?
-    base_query += base_restrict_str("location", '@"%s" + %dmi' %
+    """
+    base_query += base_restrict_str("location", '@"%s" + %dmi' % \
                                       (args[api.PARAM_VOL_LOC],
                                        args[api.PARAM_VOL_DIST]))
+    """
+  if (args[api.PARAM_LAT] != "" and args[api.PARAM_LNG] != "" 
+       and args[api.PARAM_VOL_DIST] != ""):
+    lat, lng = float(args[api.PARAM_LAT]), float(args[api.PARAM_LNG])
+    dist = float(args[api.PARAM_VOL_DIST])
+    base_query += "[latitude%%3E%%3D%.2f]" % (lat+1000 - dist/69.1)
+    base_query += "[latitude%%3C%%3D%.2f]" % (lat+1000 + dist/69.1)
+    base_query += "[longitude%%3E%%3D%.2f]" % (lng+1000 - dist/50)
+    base_query += "[longitude%%3C%%3D%.2f]" % (lng+1000 + dist/50)
 
   # Base URL for snippets search on Base.
   #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
@@ -148,8 +158,6 @@ def search(args, num_overfetch=200):
   if api.PARAM_START not in args:
     args[api.PARAM_START] = 1
 
-  #for k in args: logging.info("arg["+str(k)+"]="+str(args[k]))
-
   query_url = args["backends"]
   query_url += "?max-results=" + str(num_overfetch)
   query_url += "&start-index=" + str(args[api.PARAM_START])
@@ -159,7 +167,6 @@ def search(args, num_overfetch=200):
 
   logging.info("calling Base: "+query_url)
   return query(query_url, args, False)
-
 
 def hash_md5(s):
   it = md5.new()
@@ -297,8 +304,8 @@ def get_from_ids(ids):
   args[api.PARAM_VOL_STARTDATE] = (datetime.date.today() +
                        datetime.timedelta(days=1)).strftime("%Y-%m-%d")
   tt = time.strptime(args[api.PARAM_VOL_STARTDATE], "%Y-%m-%d")
-  args[api.PARAM_VOL_ENDDATE] = (datetime.date(tt.tm_year, tt.tm_mon, tt.tm_mday) +
-                      datetime.timedelta(days=60))
+  args[api.PARAM_VOL_ENDDATE] = (datetime.date(tt.tm_year, 
+          tt.tm_mon, tt.tm_mday) + datetime.timedelta(days=60))
 
   # TODO(mblain): Figure out how to pull in multiple base entries in one call.
   for (id, volunteer_opportunity_entity) in datastore_results.iteritems():
