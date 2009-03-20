@@ -85,7 +85,7 @@ def search(args, num_overfetch=200):
     if api.PARAM_VOL_STARTDATE in args and args[api.PARAM_VOL_STARTDATE] != "":
       try:
         startdate = datetime.datetime.strptime(
-                       args[api.PARAM_VOL_STARTDATE][:10], "%Y-%m-%d")
+                       args[api.PARAM_VOL_STARTDATE].strip(), "%Y-%m-%d")
       except:
         logging.error("malformed start date: %s" % 
            args[api.PARAM_VOL_STARTDATE])
@@ -100,7 +100,7 @@ def search(args, num_overfetch=200):
     if api.PARAM_VOL_ENDDATE in args and args[api.PARAM_VOL_ENDDATE] != "":
       try:
         enddate = datetime.datetime.strptime(
-                       args[api.PARAM_VOL_ENDDATE][:10], "%Y-%m-%d")
+                       args[api.PARAM_VOL_ENDDATE].strip(), "%Y-%m-%d")
       except:
         logging.error("malformed end date: %s" % args[api.PARAM_VOL_ENDDATE])
     if not enddate:
