@@ -155,6 +155,10 @@ def TestNumResults(webApp, result_set, expected_count):
   result = True
   
   webApp.response.out.write('<p class="test">TestNumResults running...</p>')
+  if result_set == False:
+    webApp.response.out.write('<p class="result fail">Fail. The result set is empty.</p>')
+    return False
+  
   if (len(result_set) == expected_count):
     webApp.response.out.write('<p class="result success">Passed</p>')
   else:
@@ -167,6 +171,10 @@ def TestQueryTerm(webApp, result_set, term):
   result = True
 
   webApp.response.out.write('<p class="test">TestQueryTerm running...</p>')
+  if result_set == False:
+    webApp.response.out.write('<p class="result fail">Fail. The result set is empty.</p>')
+    return False
+  
   for opp in result_set:
     if re.search(term, opp.title, re.I) == None and re.search(term, opp.description, re.I) == None:
       webApp.response.out.write('<p class="result amplification">Did not find search term <strong>' + term + '</strong> in item ' + opp.title + ': ' + opp.description + '</p>')
@@ -184,6 +192,10 @@ def TestProvider(webApp, result_set, provider):
   result = True
 
   webApp.response.out.write('<p class="test">TestProvider running...</p>')
+  if result_set == False:
+    webApp.response.out.write('<p class="result fail">Fail. The result set is empty.</p>')
+    return False
+
   for opp in result_set:
     if re.search(provider, opp.provider, re.I) == None:
       webApp.response.out.write('<p class="result amplification">Wrong provider <strong>' + opp.provider + '</strong> found in item <em>' + opp.title + '</em></p>')
@@ -213,6 +225,10 @@ def TestStart(webApp, result_set1, result_set2, start1, start2, num_items):
   logging.info(result_set2)
 
   webApp.response.out.write('<p class="test">TestStart running...</p>')
+  if result_set1 == False or result_set2 == False:
+    webApp.response.out.write('<p class="result fail">Fail. The result set is empty.</p>')
+    return False
+
   for i in range(start2, num_items):
     opp1 = result_set1[i]
     opp2 = result_set2[start1 + (i - start2 - 1)]
