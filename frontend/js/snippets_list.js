@@ -30,26 +30,29 @@ function shareEvent(div, eventUrl, eventTitle, eventSnippet) {
       + eventTitle + " " + eventUrl);
 }
 
-function addToCalendar(div, type, eventUrl, eventTitle, eventSnippet,
-                       eventDate, eventLocation) {
+function addToCalendar(div, type, searchResult) {
   // TODO: Handle ical and outlook
   var url;
 
+  // We use only the start date.
+
   if (type == 'GOOGLE') {
     url = "http://www.google.com/calendar/event?action=TEMPLATE"
-        + "&text=" + eventTitle
-        + "&dates=" + (eventDate + "/" + eventDate)
-        + "&details=" + eventSnippet + "+" + eventUrl
-        + "&location=" + eventLocation;
+        + "&text=" + searchResult.title
+//        + "&dates=" + (searchResult.startdate + "/" + searchResult.startdate)
+        + "&dates=" + ("20090331" + "/" + "20090331")
+        + "&details=" + searchResult.snippet + "+" + searchResult.url
+        + "&location=" + searchResult.location;
 
   } else if (type == 'YAHOO') {
     url = "http://calendar.yahoo.com?v=60"
-        + "&ST=" + eventDate
-        + "&TITLE=" + eventTitle
+//        + "&ST=" + searchResult.startdate
+        + "&ST=" + "20090331"
+        + "&TITLE=" + searchResult.title
       //+ "&DUR=" + eventDuration TODO: Support duration once we have real dates
         + "&VIEW=d"
-        + "&DESC=" + eventSnippet
-        + "&in_loc=" + eventLocation;
+        + "&DESC=" + searchResult.snippet
+        + "&in_loc=" + searchResult.location;
   }
 
   window.open(url, 'calendar');

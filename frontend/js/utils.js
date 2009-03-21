@@ -195,6 +195,13 @@ AsyncLoadManager.prototype.doneLoading = function(eventName) {
   }
 }
 
+AsyncLoadManager.prototype.isLoaded = function(eventName) {
+  if (eventName in this.loadStatus_  && this.loadStatus_[eventName] == true) {
+    return true;
+  }
+  return false;
+}
+
 // Globals
 var queryParams = GetQueryParams();
 var hashParams = GetHashParams();

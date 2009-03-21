@@ -234,3 +234,14 @@ function showLessDuplicates(id) {
     it.style.display = 'inline';
   }
 }
+
+/** A single search result */
+function SearchResult(url, title, location, snippet, startdate, enddate) {
+  var me = this;
+  me.url = url;
+  me.title = title;
+  me.location = location;
+  me.snippet = snippet;
+  me.startdate = startdate;
+  me.enddate = enddate;
+}

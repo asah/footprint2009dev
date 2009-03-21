@@ -8,18 +8,14 @@
     var vol = {};  // Namespace
   </script>
   <script src='http://www.google.com/jsapi?key=ABQIAAAAHtEBbyenR4BaYGl54_p0fRTpeCj-9ism2i6Mt7fLlVoN6HsfDBS56p13NY7E4BKFD32PG4jrxn4P1g' type='text/javascript'></script>
+  <script type='text/javascript' src='/js/jquery-1.3.2.min.js'></script>
   <script type='text/javascript' src='/js/utils.js'></script>
   <script type='text/javascript'>
     // These components load asynchronously.  We use AsyncLoadManager to
     // queue up function callbacks until each component is loaded.
     var asyncLoadManager = new AsyncLoadManager(
-        [ 'map', 'jquery', 'bodyload', 'friendconnect' ]
+        [ 'map', 'addthis', 'bodyload', 'friendconnect' ]
     );
-
-    // google.load('jquery', '1',
-    //     { 'callback' : function() {
-    //                      asyncLoadManager.doneLoading('jquery');
-    //                    }});
 
     // ...and one to queue JS callbacks on body unload event.
     var onUnloadWorkQueue = new WorkQueue();
