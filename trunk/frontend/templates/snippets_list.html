@@ -1,3 +1,10 @@
+<script type='text/javascript'>
+  var searchResults = [];
+{% for result in result_set.merged_results %}
+  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', '{{ result.startdate|date:"r" }}', '{{ result.enddate|date:"r" }}'));
+{% endfor %}
+</script>
+
 {% for result in result_set.merged_results %}
   <div class='snippet {% cycle row_highlight,row_plain %}'>
     <table>
@@ -11,26 +18,18 @@
 
       <!-- TODO(doll): Add to calendar functions need dates in the right format -->
       <div class='snippet_button'
-           onclick='addToCalendar(this, "YAHOO", "{{result.url|escape}}",
-                                  "{{result.js_escaped_title|escape}}",
-                                  "{{result.js_escaped_snippet|escape}}",
-                                  "20090214", "{{result.location}}")'>
+           onclick='addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
         <img src='images/Event-AddToCalendar.png' height="16px" alt='Yahoo! Calendar'/>
       </div>
       <div class='snippet_button'
-           onclick='addToCalendar(this, "GOOGLE", "{{result.url|escape}}",
-                                  "{{result.js_escaped_title|escape}}",
-                                  "{{result.js_escaped_snippet|escape}}",
-                                  "20090214", "{{result.location}}")'>
+           onclick='addToCalendar(this, "GOOGLE", searchResults[{{ forloop.counter0 }}])'>
         <img src='images/Event-AddToCalendar.png' height="16px" alt='Google Calendar'/>
       </div>
       <div class='snippet_button' id='addthis{{ forloop.counter0 }}'>
-        <a _orig_addthis_href="http://www.addthis.com/bookmark.php?v=20"
-           href="javascript:addthis_open(this, '', '{{result.url|escape}}', '{{result.js_escaped_title|escape}}');void(0);"
-           onmouseover="return addthis_open(this, '', '{{result.url|escape}}', '{{result.js_escaped_title|escape}}')"
-           onmouseout="addthis_close()"
-           _orig_addthis__onclick="return addthis_sendto()"
-           onclick="return addthis_open(this, '', '{{result.url|escape}}', '{{result.js_escaped_title|escape}}')" >
+        <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
+           onmouseout="hideShareWidget()"
+           onmouseover="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])"
+           onclick="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])" >
           <img src="/images/Event-Share.png" width="16" height="16" alt="Bookmark and Share" style="border:0"/>
         </a>
       </div>
