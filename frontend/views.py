@@ -210,6 +210,11 @@ def annotate_results(user_interests, others_interests, result_set):
 
   return result_set
 
+class legacy_search_view(webapp.RequestHandler):
+  def get(self):
+    self.response.out.write("<!DOCTYPE html><html><body>sorry!  " +
+                            "this API has changed-- try /api/volopps" +
+                            "</body></html>");
 
 class search_view(webapp.RequestHandler):
   def get(self):
