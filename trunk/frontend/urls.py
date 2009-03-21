@@ -13,7 +13,8 @@
 # limitations under the License.
 
 URL_HOME = '/'
-URL_API_SEARCH = '/api/search'
+URL_API_SEARCH = '/api/volopps'
+URL_LEGACY_API_SEARCH = '/api/search'
 URL_MY_EVENTS = '/myevents'
 URL_FRIENDS = '/friends'
 URL_POST = '/post'
