@@ -66,15 +66,4 @@
 
 <script type='text/javascript' src='/js/snippets_list.js'></script>
 
-<script type='text/javascript'>
-  google.load('maps', '2',
-              { 'callback' : function() {
-                                 // Maps API is now loaded.  First initialize
-                                 // the map object, then execute any
-                                 // map-dependent functions that are queued up.
-                                 mapApiLoadComplete();
-                                 asyncLoadManager.doneLoading('map');
-                             }});
-
-</script>
 {% endblock prefooter %}

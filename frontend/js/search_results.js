@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-
+var isMapsApiInited = false;
 var map;
 var calendar;
 var clientLocationString;
@@ -319,6 +319,20 @@ function renderPaginator(div, totalNum) {
   }
 
   div.innerHTML = html;
+}
+
+function initMap() {
+  if (!isMapsApiInited) {
+    google.load('maps', '2',
+        { 'callback' : function() {
+            // Maps API is now loaded.  First initialize
+            // the map object, then execute any
+            // map-dependent functions that are queued up.
+            mapApiLoadComplete();
+            asyncLoadManager.doneLoading('map');
+         }});
+    isMapsApiInited = true;
+  }
 }
 
 /** A single search result */
