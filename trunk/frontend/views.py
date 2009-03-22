@@ -64,6 +64,7 @@ DEFAULT_NUM_RESULTS = 10
 # code search tools.
 PK = "6Le2dgUAAAAAABp1P_NF8wIUSlt8huUC97owQ883"
 
+
 def get_unique_args_from_request(request):
   """ Gets unique args from a request.arguments() list.
   If a URL search string contains a param more than once, only
@@ -218,10 +219,8 @@ class legacy_search_view(webapp.RequestHandler):
 
 class search_view(webapp.RequestHandler):
   def get(self):
-    parsed_url = urlparse.urlparse(self.request.url)
-    unique_args = get_unique_args_from_request(self.request)
-
     # Perform the search.
+    unique_args = get_unique_args_from_request(self.request)
     result_set = search.search(unique_args)
 
     result_set.request_url = self.request.url
@@ -230,39 +229,29 @@ class search_view(webapp.RequestHandler):
     if api.PARAM_OUTPUT in unique_args:
       output = unique_args[api.PARAM_OUTPUT]
 
-    # Determine whether this is an API call, and pick the output template.
-    is_api_call = parsed_url.path.startswith('/api/')
-    if is_api_call:
-      if not output or output == "rss":
-        self.response.headers["Content-Type"] = "application/rss+xml"
-        template = SEARCH_RESULTS_RSS_TEMPLATE
-      elif output == "csv":
-        # TODO: implement SEARCH_RESULTS_CSV_TEMPLATE
-        template = SEARCH_RESULTS_RSS_TEMPLATE
-      elif output == "tsv":
-        # TODO: implement SEARCH_RESULTS_TSV_TEMPLATE
-        template = SEARCH_RESULTS_RSS_TEMPLATE
-      elif output == "xml":
-        # TODO: implement SEARCH_RESULTS_XML_TEMPLATE
-        template = SEARCH_RESULTS_XML_TEMPLATE
-      elif output == "rssdesc":
-        # TODO: implement SEARCH_RESULTS_RSSDESC_TEMPLATE
-        template = SEARCH_RESULTS_RSS_TEMPLATE
-      elif output == "html":
-        if "geocode_responses" not in unique_args:
-          unique_args["geocode_responses"] = 1
-        template = SEARCH_RESULTS_DEBUG_TEMPLATE
-      elif output == "snippets_list":
-        # Return just the snippets list HTML.
-        template = SNIPPETS_LIST_TEMPLATE
-        # Retrieve the user-specific information for the search result set.
-        user = userinfo.get_user(self.request)
-        if user:
-          result_set = get_annotated_results(user, result_set)
-      else:
-        # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
-        # TODO: careful about escapification/XSS
-        template = SEARCH_RESULTS_RSS_TEMPLATE
+    if not output or output == "html":
+      if "geocode_responses" not in unique_args:
+        unique_args["geocode_responses"] = 1
+      template = SEARCH_RESULTS_DEBUG_TEMPLATE
+    elif output == "rss":
+      self.response.headers["Content-Type"] = "application/rss+xml"
+      template = SEARCH_RESULTS_RSS_TEMPLATE
+    elif output == "csv":
+      # TODO: implement SEARCH_RESULTS_CSV_TEMPLATE
+      template = SEARCH_RESULTS_RSS_TEMPLATE
+    elif output == "tsv":
+      # TODO: implement SEARCH_RESULTS_TSV_TEMPLATE
+      template = SEARCH_RESULTS_RSS_TEMPLATE
+    elif output == "xml":
+      # TODO: implement SEARCH_RESULTS_XML_TEMPLATE
+      template = SEARCH_RESULTS_XML_TEMPLATE
+    elif output == "rssdesc":
+      # TODO: implement SEARCH_RESULTS_RSSDESC_TEMPLATE
+      template = SEARCH_RESULTS_RSS_TEMPLATE
+    else:
+      # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
+      # TODO: careful about escapification/XSS
+      template = SEARCH_RESULTS_DEBUG_TEMPLATE
 
     latlng_string = ""
     if "lat" in result_set.args and "long" in result_set.args:
@@ -274,8 +263,6 @@ class search_view(webapp.RequestHandler):
         'current_page' : 'SEARCH',
 
         'view_url': self.request.url,
-        'query_url_encoded': result_set.query_url_encoded,
-        'query_url_unencoded': result_set.query_url_unencoded,
 
         # TODO: remove this stuff...
         'latlong': latlng_string,
@@ -287,8 +274,32 @@ class search_view(webapp.RequestHandler):
         'prev_page_url': result_set.prev_page_url,
         'next_page_url': result_set.next_page_url,
       }
-
     self.response.out.write(render_template(template, template_values))
+
+
+class ui_snippets_view(webapp.RequestHandler):
+  def get(self):
+    # Perform the search.
+    unique_args = get_unique_args_from_request(self.request)
+    result_set = search.search(unique_args)
+
+    result_set.request_url = self.request.url
+
+    # Retrieve the user-specific information for the search result set.
+    user = userinfo.get_user(self.request)
+    if user:
+      result_set = get_annotated_results(user, result_set)
+
+    template_values = {
+        'result_set': result_set,
+        'current_page' : 'SEARCH',
+        'view_url': self.request.url,
+        'is_first_page': result_set.is_first_page,
+        'is_last_page': result_set.is_last_page,
+        'prev_page_url': result_set.prev_page_url,
+        'next_page_url': result_set.next_page_url,
+      }
+    self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE, template_values))
 
 
 class my_events_view(webapp.RequestHandler):
@@ -312,8 +323,6 @@ class my_events_view(webapp.RequestHandler):
     template_values = {
         'current_page' : 'MY_EVENTS',
         'result_set': result_set,
-        'query_url_encoded': "MyEvents",
-        'query_url_unencoded': "MyEvents",
 
         # TODO: remove this stuff...
         'keywords': '',
@@ -372,7 +381,6 @@ class post_view(webapp.RequestHandler):
   def post(self):
     return self.get()
   def get(self):
-    global pk
     user_info = userinfo.get_user(self.request)
 
     # synthesize GET method url from either GET or POST submission
