@@ -104,7 +104,10 @@ asyncLoadManager.addCallback('bodyload', runCurrentSearch);
  * @param {bool} updateMap Move the map to the new location?
  */
 function doInlineSearch(keywords, location, dateRange, updateMap) {
-  var url = '/api/search?output=snippets_list&';
+  /* UI snippets URL.  We don't use '/api/search?' because the UI output
+     contains application-specific formatting and inline JS, and has
+     user-specific info. */
+  var url = '/ui_snippets?';
   var query = '';
 
   function addQueryParam(name, value) {
