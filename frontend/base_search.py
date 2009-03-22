@@ -160,7 +160,12 @@ def search(args, num_overfetch=200):
 
   query_url = args["backends"]
   query_url += "?max-results=" + str(num_overfetch)
-  query_url += "&start-index=" + str(args[api.PARAM_START])
+
+  # We don't set "&start-index=" because that will interfere with
+  # deduping + pagination.  Since we merge the results here in the
+  # app, we must perform de-duping starting at index zero every time
+  # in order to get reliable pagination.
+
   query_url += "&orderby=" + make_base_orderby_arg(args)
   query_url += "&content=" + "all"
   query_url += "&bq=" + base_query

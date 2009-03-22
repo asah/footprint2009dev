@@ -80,7 +80,7 @@ def search(args):
   scoring.score_results_set(result_set, args)
   result_set.apply_post_search_filters(args)
   result_set.dedup()
-  result_set.limit_merged_results_length(args[api.PARAM_NUM])
+  result_set.clip_merged_results(args[api.PARAM_START], args[api.PARAM_NUM])
 
   result_set.is_first_page = (start_index == 1)
   # TODO: detect last page

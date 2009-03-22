@@ -34,7 +34,7 @@ class SearchResult(object):
     # so we have to do it our selves for now
     self.js_escaped_title = self.js_escape(title)
     self.js_escaped_snippet = self.js_escape(snippet)
-    
+
     # TODO: find out why this is not unique
     self.xml_url = escape(url) + "#" + self.id # hack to avoid guid duplicates
 
@@ -52,28 +52,44 @@ class SearchResult(object):
     # TODO: real pageviews
     self.pageviews = 0
 
-    # GAE server localtime appears to be UTC and timezone %Z 
-    # is an empty string so to satisfy RFC date format 
+    # GAE server localtime appears to be UTC and timezone %Z
+    # is an empty string so to satisfy RFC date format
     # requirements in output=rss we append the offset in hours
     # from UTC for our local time (now, UTC) i.e. +0000 hours
     # ref: http://feedvalidator.org/docs/error/InvalidRFC2822Date.html
     # ref: http://www.feedvalidator.org to check feed validity
     # eg, Tue, 10 Feb 2009 17:04:28 PST
-    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S", 
+    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S",
       time.gmtime()) + " +0000"
-    
+
   def js_escape(self, string):
     # TODO: This escape method is overly agressive and is messing some snippets
     # up.  We only need to escape single and double quotes.
     return re.escape(string)
 
 class SearchResultSet(object):
+  """Contains a list of SearchResult objects.
+
+  Attributes:
+    results: List of SearchResults.  Required during initialization.
+    merged_results: This is populated after a call to dedup().  It will
+      contain the original results, after merging of duplicate entries.
+    clipped_results: This is populated after a call to clip_merged_results.
+      It will contain the merged_results, clamped to a start-index and
+      max-length (the 'start' and 'num' query parameters).
+    query_url_encoded: URL query used to retrieve data from backend.
+      For debugging.
+    query_url_unencoded: urllib.unquote'd version of the above.
+    total_merged_results: Number of merged results after a dedup()
+      operation.
+  """
   def __init__(self, query_url_unencoded, query_url_encoded, results):
     self.query_url_unencoded = query_url_unencoded
     self.query_url_encoded = escape(query_url_encoded)
     self.results = results
+    self.total_merged_results = 0
 
-    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S", 
+    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S",
       time.gmtime()) + " +0000"
     self.lastBuildDate = self.pubDate
 
@@ -85,9 +101,12 @@ class SearchResultSet(object):
         if args["vol_startdayofweek"].find(dow) < 0:
           del self.results[i]
 
-  def limit_merged_results_length(self, limit_num):
-    if (len(self.merged_results) > limit_num):
-      self.merged_results = self.merged_results[0:limit_num]
+  def clip_merged_results(self, start, num):
+    """Extract just the slice of merged results from start to start+num.
+    No need for bounds-checking -- python list slicing does that
+    automatically."""
+    self.clipped_results = self.merged_results[start:start+num]
+
 
   def dedup(self):
     # we are going to make another list of results merged by title and snippet
@@ -125,7 +144,7 @@ class SearchResultSet(object):
           listed = False
           for n, merged_result in enumerate(set[i].merged_list):
             # do we already have this date + url?
-            if (merged_result.t_startdate==set[i].t_startdate 
+            if (merged_result.t_startdate==set[i].t_startdate
                  and merged_result.url==set[i].url):
               listed = True
               break
@@ -179,17 +198,18 @@ class SearchResultSet(object):
           entry = ""
           if merged_result.location != location_was:
             location_was = merged_result.location
-            entry += ('<br/>' 
-             + make_linkable(merged_result.location, merged_result, res) 
+            entry += ('<br/>'
+             + make_linkable(merged_result.location, merged_result, res)
              + ' on ')
           elif more > 0:
             entry += ', '
-  
+
           entry += make_linkable(merged_result.month_day, merged_result, res)
           if more < 3:
             res.less_list.append(entry)
           else:
             res.more_list.append(entry)
-         
+
           more += 1
-  
+    self.total_merged_results = len(self.merged_results)
+
