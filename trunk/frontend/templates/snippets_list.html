@@ -1,11 +1,11 @@
 <script type='text/javascript'>
   var searchResults = [];
-{% for result in result_set.merged_results %}
+{% for result in result_set.clipped_results %}
   searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', '{{ result.startdate|date:"r" }}', '{{ result.enddate|date:"r" }}'));
 {% endfor %}
 </script>
 
-{% for result in result_set.merged_results %}
+{% for result in result_set.clipped_results %}
   <div class='snippet {% cycle row_highlight,row_plain %}'>
     <table>
     <tr>
@@ -98,10 +98,13 @@
     </table>
   </div>
 {% endfor %}
+<div id='paginator'>
+</div>
 <script>
   asyncLoadManager.addCallback('bodyload', function() {
     calendar.render();
   });
+  renderPaginator(el('paginator'), {{result_set.total_merged_results}});
 </script>
 
 <div style='margin-top:100px; color: #999; font-size: small;'>

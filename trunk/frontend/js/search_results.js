@@ -17,6 +17,8 @@ limitations under the License.
 var map;
 var calendar;
 var clientLocationString;
+var NUM_PER_PAGE = 10;
+var lastSearchQuery;
 
 function initCalendar() {
   var element = el('calendar');
@@ -79,9 +81,65 @@ function readClientLocation() {
   }
 }
 
+/** Query params for backend search, based on frontend parameters.
+ *
+ * @constructor
+ * @param {string} keywords Search keywords.
+ * @param {string|GLatLng} location Location in either string form (address) or
+ *      a GLatLng object.
+ * @param {number} start The start index for results.  Must be integer.
+ * @param {Array.<Date>} dateRange The date range for the search, as a two
+ *     element array of dates.
+ */
+function Query(keywords, location, pageNum, dateRange) {
+  var me = this;
+
+  me.keywords_ = keywords;
+  me.location_ = location;
+  me.pageNum_ = pageNum;
+  me.dateRange_ = dateRange;
+
+  me.setPageNum = function(pageNum) {
+    me.pageNum_ = pageNum;
+  }
+
+  me.getPageNum = function() {
+    return me.pageNum_;
+  }
+
+  me.getUrlQuery = function() {
+    urlQuery = '';
+    function addQueryParam(name, value) {
+      if (urlQuery.length > 0) {
+        urlQuery += '&';
+      }
+      urlQuery += name + '=' + escape(value);
+    }
+
+    if (me.keywords_ && me.keywords_.length > 0) {
+      addQueryParam('q', me.keywords_);
+    }
+
+    addQueryParam('num', NUM_PER_PAGE)
+    addQueryParam('start', (me.pageNum_ * NUM_PER_PAGE));
+
+    if (me.location_ && me.location_.length > 0) {
+      addQueryParam('vol_loc', me.location_);
+    }
+
+    if (me.dateRange_ && me.dateRange_.length == 2) {
+      addQueryParam('vol_startdate',
+                     vol.Calendar.dateAsString(me.dateRange_[0]));
+      addQueryParam('vol_enddate',
+                    vol.Calendar.dateAsString(me.dateRange_[1]));
+    }
+    return urlQuery;
+  }
+}
+
 /** Perform a search using the current URL parameters and IP geolocation.
  */
-function runCurrentSearch() {
+function onLoadSearch() {
   readClientLocation();
 
   var q = getHashOrQueryParam('q');
@@ -91,43 +149,27 @@ function runCurrentSearch() {
     location = clientLocationString;
   }
 
-  doInlineSearch(q, location, calendar.getDateRange(), true);
+  var query = new Query(q, location, 0, calendar.getDateRange());
+  doInlineSearch(query, true);
 }
-asyncLoadManager.addCallback('bodyload', runCurrentSearch);
+asyncLoadManager.addCallback('bodyload', onLoadSearch);
 
 /** Perform an inline search, meaning avoid round trip html fetch.
- * @param {string} keywords Search keywords.
- * @param {string|GLatLng} location Location in either string form (address) or
- *      a GLatLng object.
- * @param {Array.<Date>} dateRange The date range for the search, as a two
- *     element array of dates.
+ * @param {Query} query Query parameters.
  * @param {bool} updateMap Move the map to the new location?
  */
-function doInlineSearch(keywords, location, dateRange, updateMap) {
+function doInlineSearch(query, updateMap) {
+  el('snippets_pane').innerHTML =
+      '<br><br><br><div id="loading">Loading...</div>';
+
   /* UI snippets URL.  We don't use '/api/search?' because the UI output
      contains application-specific formatting and inline JS, and has
      user-specific info. */
   var url = '/ui_snippets?';
-  var query = '';
 
-  function addQueryParam(name, value) {
-    if (query.length > 0) {
-      query += '&';
-    }
-    query += name + '=' + escape(value);
-  }
+  lastSearchQuery = query;
 
-  if (keywords && keywords.length > 0) {
-    addQueryParam('q', keywords);
-  }
-  if (location && location.length > 0) {
-    addQueryParam('vol_loc', location);
-  }
-  
-  if (dateRange && dateRange.length == 2) {
-    addQueryParam('vol_startdate', vol.Calendar.dateAsString(dateRange[0]));
-    addQueryParam('vol_enddate', vol.Calendar.dateAsString(dateRange[1]));
-  }
+  var urlQueryString = query.getUrlQuery();
 
   var callback = function(text) {
     if (updateMap) {
@@ -139,8 +181,8 @@ function doInlineSearch(keywords, location, dateRange, updateMap) {
 
     // Set the URL hash, but only if the query string is not empty.
     // Setting hash to an empty string causes a page reload.
-    if (query.length > 0) {
-      window.location.hash = query;
+    if (urlQueryString.length > 0) {
+      window.location.hash = urlQueryString;
     }
 
     // Inline scripts inside the html won't be invoked
@@ -152,7 +194,7 @@ function doInlineSearch(keywords, location, dateRange, updateMap) {
         if (index >= 30) {
           // TODO: remove this once we retrieve geocoded search results, and
           // the too-many-search-results bug is fixed.
-          
+
           // Force rendering of the calendar, since the last <script> won't be
           // executed.
           calendar.render();
@@ -174,7 +216,7 @@ function doInlineSearch(keywords, location, dateRange, updateMap) {
   var xmlHttp = window.ActiveXObject ?
       window.ActiveXObject('Microsoft.XMLHTTP') :
       new XMLHttpRequest();
-  xmlHttp.open('GET', url + query, true);
+  xmlHttp.open('GET', url + urlQueryString, true);
   xmlHttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       callback(this.responseText);
@@ -199,17 +241,17 @@ function submitForm(fromWhere) {
   }
 
   var updateMap = (fromWhere == "map");
-  el('snippets_pane').innerHTML = 'Loading...';
   calendar.clearMarks();
   calendar.render();
-  doInlineSearch(keywords, location, calendar.getDateRange(), updateMap);
+  var query = new Query(keywords, location, 0, calendar.getDateRange());
+  doInlineSearch(query, updateMap);
 }
 
 
 /** Called from the onclick in the "more" prompt of a snippet
  *
  * @param {string} id the element id of the "more", "less" div's
- *     
+ *
  */
 function showMoreDuplicates(id) {
   var it = document.getElementById(id);
@@ -225,7 +267,7 @@ function showMoreDuplicates(id) {
 /** Called from the onclick in the "less" prompt of a snippet
  *
  * @param {string} id the element id of the "more", "less" div's
- *     
+ *
  */
 function showLessDuplicates(id) {
   var it = document.getElementById(id);
@@ -236,6 +278,47 @@ function showLessDuplicates(id) {
   if (it) {
     it.style.display = 'inline';
   }
+}
+
+function goToPage(pageNum) {
+  if (pageNum < 0) {
+    return;
+  }
+  if (lastSearchQuery) {
+    // Change page number, and re-do the last search.
+    lastSearchQuery.setPageNum(pageNum);
+    doInlineSearch(lastSearchQuery, false);
+  }
+}
+
+function renderPaginator(div, totalNum) {
+  if (!lastSearchQuery) {
+    return;
+  }
+  var html = '';
+
+  function renderLink(pageNum, text) {
+    return '<a href="javascript:goToPage(' + pageNum + ');void(0);">' +
+        text + '</a> ';
+  }
+
+  var currentPageNum = lastSearchQuery.getPageNum();
+  if (currentPageNum > 0) {
+    html += renderLink(currentPageNum - 1, 'Previous');
+  }
+  var numPages = parseInt(Math.ceil(totalNum / NUM_PER_PAGE));
+  for (var i = 0; i < numPages; i++) {
+    if (i == currentPageNum) {
+      html += (i+1) + ' ';
+    } else {
+      html += renderLink(i, i+1);
+    }
+  }
+  if (currentPageNum != numPages - 1) {
+    html += renderLink(currentPageNum + 1, 'Next');
+  }
+
+  div.innerHTML = html;
 }
 
 /** A single search result */

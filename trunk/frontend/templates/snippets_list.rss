@@ -1,4 +1,4 @@
-{% for result in result_set.results %}<item>
+{% for result in result_set.clipped_results %}<item>
 <title>{{ result.title|escape }}</title>
 <link>{{ result.xml_url|escape }}</link>
 <description>{{ result.snippet|escape }}</description>
