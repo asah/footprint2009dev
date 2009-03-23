@@ -20,7 +20,7 @@ function SimpleMap(div) {
   this.defaultZoom_ = 10;
 
   if (GBrowserIsCompatible()) {
-    this.map_ = new GMap2(div);
+    this.map = new GMap2(div);
 
     var lat = 40, lon = -100, zoom = 3;
     try {
@@ -29,10 +29,10 @@ function SimpleMap(div) {
       zoom = this.defaultZoom_;
     } catch (err) {}
 
-    this.map_.setCenter(new GLatLng(lat, lon), zoom);
-    this.map_.enableContinuousZoom();
+    this.map.setCenter(new GLatLng(lat, lon), zoom);
+    this.map.enableContinuousZoom();
     this.geocoder_ = new GClientGeocoder();
-    this.map_.addControl(new GSmallZoomControl());
+    this.map.addControl(new GSmallZoomControl());
 
     if (false) {
       this.icon_ = new GIcon(G_DEFAULT_ICON, "/images/markers/red.png");
@@ -48,7 +48,7 @@ function SimpleMap(div) {
 }
 
 SimpleMap.prototype.setCenter = function(latLng) {
-  this.map_.setCenter(latLng, this.defaultZoom_);
+  this.map.setCenter(latLng, this.defaultZoom_);
 }
 
 SimpleMap.prototype.setCenterGeocode = function(locationString) {
@@ -62,7 +62,7 @@ SimpleMap.prototype.setCenterGeocode = function(locationString) {
 
 SimpleMap.prototype.addMarker = function(lat, lng) {
   var latLng = new GLatLng(lat, lng);
-  this.map_.addOverlay(new GMarker(latLng, this.icon_));
+  this.map.addOverlay(new GMarker(latLng, this.icon_));
 }
 
 SimpleMap.prototype.addMarkerGeocode = function(locationString) {

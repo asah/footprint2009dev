@@ -34,6 +34,14 @@ span {
   height: 40px;
 }
 
+.footer {
+  width: 80%;
+  border-top: 1px solid silver;
+  font-size: small;
+  color: silver;
+  margin-top: 20px;
+}
+
 #header_left {
   width: 60em;
 }
@@ -64,6 +72,30 @@ span {
   overflow: hidden;
 }
 
+.add_to_calendar_floating {
+  top: 21px;  /* Show popup below button */
+  position: absolute;
+  z-index: 10;
+  width: 12em;
+  border: 1px solid silver;
+  padding: 6px 6px 6px 12px;
+  font-size: 12px;  /* To match AddThis widget */
+  color: rgb(102, 102, 102);  /* To match AddThis widget */
+  background: white;
+  visibility: hidden;
+}
+
+.popup_text A {
+  color: #2475B6;
+  text-decoration: none;
+}
+
+.add_to_calendar_header {
+  background: #2475B6;
+  color: white;
+  padding: 3px 5px;
+}
+
 .sign_in {
   font-size: small;
   font-weight: bold;
@@ -92,7 +124,6 @@ span {
 #content_right {
   padding-left: 10px;
 }
-
 
 /** Row highlighting **/
 .row_plain {
