@@ -1,4 +1,7 @@
 <script type='text/javascript'>
+  asyncLoadManager.addCallback('map', function(){
+      map.map.clearOverlays();
+  });
   var searchResults = [];
 {% for result in result_set.clipped_results %}
   searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', '{{ result.startdate|date:"r" }}', '{{ result.enddate|date:"r" }}'));
@@ -11,20 +14,30 @@
     <tr>
     <td valign='top'>
     <div class='snippet_buttons'>
-      <div class='snippet_button {% if result.interest %} starred {% else %} unstarred {% endif %}'
+      <div class='snippet_button pointer {{result.interest|yesno:"starred,unstarred"}}'
            onmousedown='toggleInterest(this, "{{result.id|escape}}",
                                        "{{result.base_url|escape}}")'>
       </div>
 
       <!-- TODO(doll): Add to calendar functions need dates in the right format -->
-      <div class='snippet_button'
-           onclick='addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
-        <img src='images/Event-AddToCalendar.png' height="16px" alt='Yahoo! Calendar'/>
+      <div class='snippet_button' style='position: relative;'
+           onclick='popupModalElement("add_to_calendar{{ forloop.counter0 }}");return false;'>
+        <div id='add_to_calendar{{ forloop.counter0 }}'
+             class='add_to_calendar_floating'>
+          <div class='pointer popup_text'
+               onclick='addToCalendar(this, "GOOGLE", searchResults[{{ forloop.counter0 }}])'>
+            <!--img src='images/google.png' height="16px" alt='Google Calendar'/ -->
+            <a href='javascript:void(0)'>Add to Google Calendar</a>
+          </div>
+          <div class='pointer popup_text'
+               onclick=''addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
+            <!-- img src='images/yahoo.gif' height="16px" alt='Google Calendar'/ -->
+            <a href='javascript:void(0)'>Add to Yahoo Calendar</a>
+          </div>
+        </div>
+        <img class='pointer' src='images/Event-AddToCalendar.png' height="16px" alt='Add to calendar'/>
       </div>
-      <div class='snippet_button'
-           onclick='addToCalendar(this, "GOOGLE", searchResults[{{ forloop.counter0 }}])'>
-        <img src='images/Event-AddToCalendar.png' height="16px" alt='Google Calendar'/>
-      </div>
+
       <div class='snippet_button' id='addthis{{ forloop.counter0 }}'>
         <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
            onmouseout="hideShareWidget()"

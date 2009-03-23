@@ -17,6 +17,61 @@ function el(node) {
   return document.getElementById(node);
 }
 
+function popupModalElement(node) {
+  var hider = document.createElement('div');
+  var style = hider.style;
+  style.position = 'absolute';
+  style.zIndex = '5';
+  style.left = '0px';
+  style.top = '0px';
+  style.height = '100%';
+  style.width = '100%';
+  document.body.appendChild(hider);
+
+  var hide = function() {
+    node.style.visibility = 'hidden';
+    document.body.removeChild(hider);
+  }
+
+  if (typeof node == 'string') {
+    node = el(node);
+  }
+  node.style.visibility = 'visible';
+
+  var clickCallback;
+  clickCallback = function(event) {
+    hide();
+    setTimeout(function(){
+          removeListener(document.body, 'click', clickCallback);
+        }, 10);
+    return true;
+  };
+  setTimeout(function() {
+        addListener(document.body, 'click', clickCallback);
+      }, 10);
+
+  addListener(node, 'move', function(event) {
+    if (window.event) {
+      event = window.event;
+    }
+    if (event.target == node) {
+      if ('cancelBubble' in event) {
+        event.cancelBubble = true;
+      } else if ('stopPropagation' in event) {
+        event.stopPropagation();
+      }
+    }
+
+    hide();
+  });
+}
+
+function hideEl(divOrDivName) {
+  if (typeof divOrDivName == 'string')
+    divOrDivName = el(divOrDivName);
+  divOrDivName.style.display = 'none';
+}
+
 function explode(obj) {
   var s = '';
   for (i in obj) {
@@ -58,7 +113,9 @@ function addListener(element, type, callback) {
   if (element.addEventListener) {
     element.addEventListener(type, callback, false);
   } else if (element.attachEvent) {
-    element.attachEvent('on' + type, callback);
+    element.attachEvent('on' + type, function() {
+        callback(window.event);
+    });
   } else {
     element['on' + type] = callback;
   }
@@ -213,14 +270,16 @@ try {
   console.visible_ = false;
   console.div_ = null;
   console.log = function(text) {
-    if (!console.visible_ && getHashOrQueryParam('debugjs') != null) {
-      console.visible_ = true;
-      console.div_ = document.createElement('div');
-      console.div_.style.border = '1px solid silver';
-      console.div_.style.padding = '4px';
-      document.body.appendChild(console.div_);
+    if (getHashOrQueryParam('debugjs') != null) {
+      if (!console.visible_) {
+        console.visible_ = true;
+        console.div_ = document.createElement('div');
+        console.div_.style.border = '1px solid silver';
+        console.div_.style.padding = '4px';
+        document.body.appendChild(console.div_);
+      }
+      console.text_ += text + '<br>';
+      console.div_.innerHTML = console.text_;
     }
-    console.text_ += text + '<br>';
-    console.div_.innerHTML = console.text_;
   }
 } catch(err) {}
