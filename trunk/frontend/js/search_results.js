@@ -107,6 +107,10 @@ function Query(keywords, location, pageNum, dateRange) {
     return me.pageNum_;
   }
 
+  me.getKeywords = function() {
+    return me.keywords_;
+  }
+
   me.getUrlQuery = function() {
     urlQuery = '';
     function addQueryParam(name, value) {
@@ -159,6 +163,8 @@ asyncLoadManager.addCallback('bodyload', onLoadSearch);
  * @param {bool} updateMap Move the map to the new location?
  */
 function doInlineSearch(query, updateMap) {
+  el('keywords').value = query.getKeywords();
+
   el('snippets_pane').innerHTML =
       '<br><br><br><div id="loading">Loading...</div>';
 
@@ -292,11 +298,16 @@ function goToPage(pageNum) {
 }
 
 function renderPaginator(div, totalNum) {
-  if (!lastSearchQuery) {
+  if (!lastSearchQuery || searchResults.length == 0 || totalNum == 0) {
     return;
   }
-  var html = '';
 
+  var numPages = parseInt(Math.ceil(totalNum / NUM_PER_PAGE));
+  if (numPages == 1) {
+    return;
+  }
+
+  var html = '';
   function renderLink(pageNum, text) {
     return '<a href="javascript:goToPage(' + pageNum + ');void(0);">' +
         text + '</a> ';
@@ -306,7 +317,6 @@ function renderPaginator(div, totalNum) {
   if (currentPageNum > 0) {
     html += renderLink(currentPageNum - 1, 'Previous');
   }
-  var numPages = parseInt(Math.ceil(totalNum / NUM_PER_PAGE));
   for (var i = 0; i < numPages; i++) {
     if (i == currentPageNum) {
       html += (i+1) + ' ';
