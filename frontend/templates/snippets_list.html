@@ -6,8 +6,6 @@
 {% else %}
 
 <script type='text/javascript'>
-  el('no_results_message').style.display = 'none';
-
   asyncLoadManager.addCallback('map', function(){
       map.map.clearOverlays();
   });
