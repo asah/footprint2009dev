@@ -98,48 +98,50 @@ function Query(keywords, location, pageNum, dateRange) {
   me.location_ = location;
   me.pageNum_ = pageNum;
   me.dateRange_ = dateRange;
-
-  me.setPageNum = function(pageNum) {
-    me.pageNum_ = pageNum;
-  }
-
-  me.getPageNum = function() {
-    return me.pageNum_;
-  }
-
-  me.getKeywords = function() {
-    return me.keywords_;
-  }
-
-  me.getUrlQuery = function() {
-    urlQuery = '';
-    function addQueryParam(name, value) {
-      if (urlQuery.length > 0) {
-        urlQuery += '&';
-      }
-      urlQuery += name + '=' + escape(value);
-    }
-
-    if (me.keywords_ && me.keywords_.length > 0) {
-      addQueryParam('q', me.keywords_);
-    }
-
-    addQueryParam('num', NUM_PER_PAGE)
-    addQueryParam('start', (me.pageNum_ * NUM_PER_PAGE));
-
-    if (me.location_ && me.location_.length > 0) {
-      addQueryParam('vol_loc', me.location_);
-    }
-
-    if (me.dateRange_ && me.dateRange_.length == 2) {
-      addQueryParam('vol_startdate',
-                     vol.Calendar.dateAsString(me.dateRange_[0]));
-      addQueryParam('vol_enddate',
-                    vol.Calendar.dateAsString(me.dateRange_[1]));
-    }
-    return urlQuery;
-  }
 }
+
+Query.prototype.setPageNum = function(pageNum) {
+  this.pageNum_ = pageNum;
+}
+
+Query.prototype.getPageNum = function() {
+  return this.pageNum_;
+}
+
+Query.prototype.getKeywords = function() {
+  return this.keywords_;
+}
+
+Query.prototype.getUrlQuery = function() {
+  var me = this;
+  urlQuery = '';
+  function addQueryParam(name, value) {
+    if (urlQuery.length > 0) {
+      urlQuery += '&';
+    }
+    urlQuery += name + '=' + escape(value);
+  }
+
+  if (me.keywords_ && me.keywords_.length > 0) {
+    addQueryParam('q', me.keywords_);
+  }
+
+  addQueryParam('num', NUM_PER_PAGE)
+  addQueryParam('start', (me.pageNum_ * NUM_PER_PAGE));
+
+  if (me.location_ && me.location_.length > 0) {
+    addQueryParam('vol_loc', me.location_);
+  }
+
+  if (me.dateRange_ && me.dateRange_.length == 2) {
+    addQueryParam('vol_startdate',
+                  vol.Calendar.dateAsString(me.dateRange_[0]));
+    addQueryParam('vol_enddate',
+                  vol.Calendar.dateAsString(me.dateRange_[1]));
+  }
+  return urlQuery;
+}
+
 
 /** Perform a search using the current URL parameters and IP geolocation.
  */
@@ -165,8 +167,8 @@ asyncLoadManager.addCallback('bodyload', onLoadSearch);
 function doInlineSearch(query, updateMap) {
   el('keywords').value = query.getKeywords();
 
-  el('snippets_pane').innerHTML =
-      '<br><br><br><div id="loading">Loading...</div>';
+  el('no_results_message').style.display = 'none';
+  el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
 
   /* UI snippets URL.  We don't use '/api/search?' because the UI output
      contains application-specific formatting and inline JS, and has
@@ -307,28 +309,29 @@ function renderPaginator(div, totalNum) {
     return;
   }
 
-  var html = '';
+  var html = [];
+
   function renderLink(pageNum, text) {
-    return '<a href="javascript:goToPage(' + pageNum + ');void(0);">' +
-        text + '</a> ';
+    html.push('<a href="javascript:goToPage(', pageNum, ');void(0);">',
+        text, '</a> ');
   }
 
   var currentPageNum = lastSearchQuery.getPageNum();
   if (currentPageNum > 0) {
-    html += renderLink(currentPageNum - 1, 'Previous');
+    renderLink(currentPageNum - 1, 'Previous');
   }
   for (var i = 0; i < numPages; i++) {
     if (i == currentPageNum) {
-      html += (i+1) + ' ';
+      html.push('' + (i+1) + ' ');
     } else {
-      html += renderLink(i, i+1);
+      renderLink(i, i+1);
     }
   }
   if (currentPageNum != numPages - 1) {
-    html += renderLink(currentPageNum + 1, 'Next');
+    renderLink(currentPageNum + 1, 'Next');
   }
 
-  div.innerHTML = html;
+  div.innerHTML = html.join('');
 }
 
 function initMap() {
