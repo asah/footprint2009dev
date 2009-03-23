@@ -93,12 +93,10 @@ def load_userinfo_into_dict(user, dict):
   else:
     dict["user"] = None
 
-def render_template(template_filename, template_values, minimize=False):
+def render_template(template_filename, template_values):
   path = os.path.join(os.path.dirname(__file__),
                       TEMPLATE_DIR + template_filename)
   rendered = template.render(path, template_values)
-  if minimize:
-    rendered = re.sub('\s+', ' ', rendered)
   return rendered
 
 
