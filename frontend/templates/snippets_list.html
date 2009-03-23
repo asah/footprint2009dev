@@ -1,4 +1,13 @@
+{% if not has_results %}
 <script type='text/javascript'>
+  el('no_results_message').style.display = '';
+  initMap();  // In case it hasn't been inited.
+</script>
+{% else %}
+
+<script type='text/javascript'>
+  el('no_results_message').style.display = 'none';
+
   asyncLoadManager.addCallback('map', function(){
       map.map.clearOverlays();
   });
@@ -127,3 +136,5 @@ DEBUG INFO:<br>
  FP query=<a href='{{ view_url }}'>{{ view_url }}</a><br>
  Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded }}</a><br>
 </div>
+
+{% endif %}

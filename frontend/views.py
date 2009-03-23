@@ -293,13 +293,15 @@ class ui_snippets_view(webapp.RequestHandler):
     template_values = {
         'result_set': result_set,
         'current_page' : 'SEARCH',
+        'has_results' : (result_set.total_merged_results > 0),  # For django.
         'view_url': self.request.url,
         'is_first_page': result_set.is_first_page,
         'is_last_page': result_set.is_last_page,
         'prev_page_url': result_set.prev_page_url,
         'next_page_url': result_set.next_page_url,
       }
-    self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE, template_values))
+    self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
+                                            template_values))
 
 
 class my_events_view(webapp.RequestHandler):
