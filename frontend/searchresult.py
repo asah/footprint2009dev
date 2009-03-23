@@ -21,6 +21,20 @@ import math
 from google.appengine.api import memcache
 from xml.sax.saxutils import escape
 
+import api
+
+def getRFCdatetime(when = None):
+  # GAE server localtime appears to be UTC and timezone %Z
+  # is an empty string so to satisfy RFC date format
+  # requirements in output=rss we append the offset in hours
+  # from UTC for our local time (now, UTC) i.e. +0000 hours
+  # ref: http://feedvalidator.org/docs/error/InvalidRFC2822Date.html
+  # ref: http://www.feedvalidator.org to check feed validity
+  # eg, Tue, 10 Feb 2009 17:04:28 +0000
+  if not when:
+     when = time.gmtime();
+  return time.strftime("%a, %d %b %Y %H:%M:%S", when) + " +0000"
+
 class SearchResult(object):
   def __init__(self, url, title, snippet, location, id, base_url):
     # TODO: Consider using kwargs or something to make this more generic.
@@ -52,15 +66,7 @@ class SearchResult(object):
     # TODO: real pageviews
     self.pageviews = 0
 
-    # GAE server localtime appears to be UTC and timezone %Z
-    # is an empty string so to satisfy RFC date format
-    # requirements in output=rss we append the offset in hours
-    # from UTC for our local time (now, UTC) i.e. +0000 hours
-    # ref: http://feedvalidator.org/docs/error/InvalidRFC2822Date.html
-    # ref: http://www.feedvalidator.org to check feed validity
-    # eg, Tue, 10 Feb 2009 17:04:28 PST
-    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S",
-      time.gmtime()) + " +0000"
+    self.pubDate = getRFCdatetime()
 
   def js_escape(self, string):
     # TODO: This escape method is overly agressive and is messing some snippets
@@ -89,16 +95,16 @@ class SearchResultSet(object):
     self.results = results
     self.total_merged_results = 0
 
-    self.pubDate = time.strftime("%a, %d %b %Y %H:%M:%S",
-      time.gmtime()) + " +0000"
+    self.pubDate = getRFCdatetime()
     self.lastBuildDate = self.pubDate
 
   def apply_post_search_filters(self, args):
-    if "vol_startdayofweek" in args and args["vol_startdayofweek"] != "":
+    if (api.PARAM_VOL_STARTDAYOFWEEK in args 
+         and args[api.PARAM_VOL_STARTDAYOFWEEK] != ""):
       # we are going to filter by day of week
       for i,res in enumerate(self.results):
         dow = str(res.startdate.strftime("%w"))
-        if args["vol_startdayofweek"].find(dow) < 0:
+        if args[api.PARAM_VOL_STARTDAYOFWEEK].find(dow) < 0:
           del self.results[i]
 
   def clip_merged_results(self, start, num):
