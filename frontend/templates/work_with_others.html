@@ -11,7 +11,7 @@ Work with others
 
 {% if user %}
   <!-- What are we going to about about having too many friends here? Some sort of pagination? -->
-  You know {{total_friends}} {% ifequal total_friends 1 %}person{% else %}people{% endifequal %} on One For All <br />
+  You know {{total_friends}} {% ifequal total_friends 1 %}person{% else %}people{% endifequal %} on Footprint <br />
   They have starred {{total_stars}} event{% ifnotequal total_stars 1 %}s{% endifnotequal %}.
 
   {% if user.thumbnail_url %}<img class='friend_picture' src='{{user.thumbnail_url}}'/>{% endif %}
@@ -33,13 +33,15 @@ Work with others
     </div>
   {% endfor %}
 
-{% else %}
-  Log in to see what your friends are doing on One For All
 {% endif %}
 
 {% endblock content_left %}
 
 {% block content_right %}
+{% if not user %}
+  <br><br><b>Log in to see what your friends are doing on Footprint</b>
+{% endif %}
+
 <div id='snippets_pane'>
 {% include 'snippets_list.html' %}
 </div>
