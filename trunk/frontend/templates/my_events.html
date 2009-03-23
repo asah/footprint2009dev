@@ -11,13 +11,15 @@ My Events
 {% block content_left %}
 {% if user %}
   Your events. <br/>
-{% else %}
-  Log in to see your starred events.
 {% endif %}
 
 {% endblock content_left %}
 
 {% block content_right %}
+{% if not user %}
+  <br><br><b>Log in to see your starred events</b>
+{% endif %}
+
 <div id='snippets_pane'>
   {% include 'snippets_list.html' %}
 </div>
