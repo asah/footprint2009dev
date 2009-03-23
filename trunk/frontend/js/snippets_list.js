@@ -60,9 +60,8 @@ function addToCalendar(div, type, searchResult) {
 
 function toggleInterest(div, eventUrl, baseUrl) {
   // TODO: First need to check if the user is logged in
-
   var interest;
-  if (div.className == 'snippet_button unstarred') {
+  if (div.className.indexOf('unstarred') >= 0) {
     div.className = 'snippet_button starred';
     interest = 1;
   } else {

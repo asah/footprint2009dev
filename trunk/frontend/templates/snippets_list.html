@@ -12,8 +12,8 @@
     <td valign='top'>
     <div class='snippet_buttons'>
       <div class='snippet_button {% if result.interest %} starred {% else %} unstarred {% endif %}'
-           onclick='toggleInterest(this, "{{result.id|escape}}",
-                                          "{{result.base_url|escape}}")'>
+           onmousedown='toggleInterest(this, "{{result.id|escape}}",
+                                       "{{result.base_url|escape}}")'>
       </div>
 
       <!-- TODO(doll): Add to calendar functions need dates in the right format -->
