@@ -77,7 +77,7 @@
       {% endif %}
 
       <div class='snippet_title'>
-        <a href='{{ result.url }}'>{{ result.title }}</a>
+        <a href='/url?q={{ result.url|urlencode }}'>{{ result.title }}</a>
       </div>
       {% if result.location or result.startdate or result.interest_count %}
         <div class='snippet_sub_text'>
@@ -110,7 +110,7 @@
         {{ result.snippet }}
       </div>
       <div class='snippet_url'>
-        <a href='{{ result.url }}'>{{ result.url_short }}</a>
+        <a href='/url?q={{ result.url|urlencode }}'>{{ result.url_short }}</a>
       </div>
     </div>
     </td>
