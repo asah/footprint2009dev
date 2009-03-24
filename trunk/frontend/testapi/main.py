@@ -33,10 +33,15 @@ class DumpSampleData(webapp.RequestHandler):
 
 class RunTests(webapp.RequestHandler):
   def get(self):
-    testType = self.request.get('test_type') or 'default'
+    testType = self.request.get('test_type') or 'all'
     responseTypes = self.request.get('response_types') or testapi.helpers.DEFAULT_RESPONSE_TYPES
     remoteUrl = self.request.get('url') or ''
+    specialOutput = self.request.get('output') or ''
     errors = ''
+    
+    if specialOutput == 'test_types':
+      self.response.out.write(testapi.helpers.ALL_TEST_TYPES)
+      return
 
     if remoteUrl == '':
       errors = 'No remote url given in request, using default url'
@@ -61,7 +66,8 @@ class RunTests(webapp.RequestHandler):
     
     responseTypes = responseTypes.split(',')
     for responseType in responseTypes:
-      testapi.helpers.RunTests(self, testType, apiUrl, responseType)
+      api_testing = testapi.helpers.ApiTesting(self)
+      api_testing.RunTests(testType, apiUrl, responseType)
     
 
 application = webapp.WSGIApplication([('/testapi/run', RunTests),
