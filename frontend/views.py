@@ -54,6 +54,10 @@ MODERATE_TEMPLATE = 'moderate.html'
 
 DEFAULT_NUM_RESULTS = 10
 
+# Register custom Django templates
+template.register_template_library('templatetags.comparisonfilters')
+
+
 # TODO: not safe vs. spammers to checkin... but in our design,
 # the worst that happens is a bit more spam in our moderation
 # queue, i.e. no real badness, just slightly longer review 
@@ -142,6 +146,7 @@ def get_user_interests(user, remove_no_interest):
     for interest in user.get_user_info().interests:
       if (not remove_no_interest or
           interest.expressed_interest != models.InterestTypeProperty.UNKNOWN):
+        # TODO: Eliminate "3:" as a hardcoded range -- bug-prone.
         user_interests[interest.key().name()[3:]] = interest.expressed_interest
     #logging.info('Found interests: %s' % user_interests)
   return user_interests
@@ -289,6 +294,7 @@ class ui_snippets_view(webapp.RequestHandler):
       result_set = get_annotated_results(user, result_set)
 
     template_values = {
+        'user' : user,
         'result_set': result_set,
         'current_page' : 'SEARCH',
         'has_results' : (result_set.total_merged_results > 0),  # For django.
@@ -489,3 +495,58 @@ class moderate_view(webapp.RequestHandler):
       'result_set' : reslist,
     }
     self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))
+
+
+class action_view(webapp.RequestHandler):
+  def get(self):
+    if self.request.get('type') != 'star':
+      self.error(400)  # Bad request
+      return
+
+    user = userinfo.get_user(self.request)
+    opp_id = self.request.get('oid')
+    base_url = self.request.get('base_url')
+    if self.request.get('i') and self.request.get('i') != '0':
+      expressed_interest = models.InterestTypeProperty.INTERESTED
+      delta = 1
+    else:
+      # OK, we probably should add a new 'not interested' value to the enum.
+      expressed_interest = models.InterestTypeProperty.UNKNOWN
+      delta = -1
+
+    if not user:
+      logging.warning('No user.')
+      self.error(401)  # Unauthorized
+      return
+
+    if not opp_id:
+      self.error(400)  # Bad request
+      return
+
+
+    # Note: this is inscure and should use some simple xsrf protection like
+    # a token in a cookie.
+    user_entity = user.get_user_info()
+    opportunity = models.UserInterest.get_or_insert(
+        models.UserInterest.DATASTORE_PREFIX + opp_id,
+        user=user_entity)
+
+    if opportunity.expressed_interest != expressed_interest:
+      opportunity.expressed_interest = expressed_interest
+      opportunity.put()
+      models.VolunteerOpportunityStats.increment(opp_id,
+                                                 interested_count=delta)
+      key = models.UserInterest.DATASTORE_PREFIX + opp_id
+      info = models.VolunteerOpportunity.get_or_insert(key)
+      if info.base_url != base_url:
+        info.base_url = base_url
+        info.last_base_url_update = datetime.datetime.now()
+        info.base_url_failure_count = 0
+        info.put()
+      logging.info('User %s has changed interest (%s) in %s' %
+                 (user_entity.key().name(), expressed_interest, opp_id))
+    else:
+      logging.info('User %s has not changed interest (%s) in %s' %
+                 (user_entity.key().name(), expressed_interest, opp_id))
+
+    self.response.out.write('ok')

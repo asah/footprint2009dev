@@ -21,3 +21,4 @@ URL_POST = '/post'
 URL_ADMIN = '/admin'
 URL_MODERATE = '/moderate'
 URL_UI_SNIPPETS = '/ui_snippets'
+URL_ACTION = '/action'  # User actions like starring

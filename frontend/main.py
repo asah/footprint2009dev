@@ -29,6 +29,7 @@ application = webapp.WSGIApplication(
      (urls.URL_UI_SNIPPETS, views.ui_snippets_view),
      (urls.URL_MY_EVENTS, views.my_events_view),
      (urls.URL_FRIENDS, views.friends_view),
+     (urls.URL_ACTION, views.action_view),
      (urls.URL_ADMIN, views.admin_view),
      (urls.URL_POST, views.post_view),
      (urls.URL_MODERATE, views.moderate_view),
