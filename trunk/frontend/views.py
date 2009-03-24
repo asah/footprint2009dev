@@ -272,10 +272,6 @@ class search_view(webapp.RequestHandler):
         'keywords': result_set.args[api.PARAM_Q],
         'location': result_set.args[api.PARAM_VOL_LOC],
         'max_distance': result_set.args[api.PARAM_VOL_DIST],
-        'is_first_page': result_set.is_first_page,
-        'is_last_page': result_set.is_last_page,
-        'prev_page_url': result_set.prev_page_url,
-        'next_page_url': result_set.next_page_url,
       }
     self.response.out.write(render_template(template, template_values))
 
@@ -299,10 +295,6 @@ class ui_snippets_view(webapp.RequestHandler):
         'current_page' : 'SEARCH',
         'has_results' : (result_set.total_merged_results > 0),  # For django.
         'view_url': self.request.url,
-        'is_first_page': result_set.is_first_page,
-        'is_last_page': result_set.is_last_page,
-        'prev_page_url': result_set.prev_page_url,
-        'next_page_url': result_set.next_page_url,
       }
     self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
                                             template_values))
@@ -333,10 +325,6 @@ class my_events_view(webapp.RequestHandler):
         # TODO: remove this stuff...
         'keywords': '',
         'location': '',
-        'is_first_page': True,
-        'is_last_page': True,
-        'prev_page_url': '',
-        'next_page_url': '',
         }
     load_userinfo_into_dict(user_info, template_values)
 

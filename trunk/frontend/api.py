@@ -21,6 +21,7 @@ PARAM_OUTPUT = 'output'
 PARAM_Q = 'q'
 PARAM_SORT = 'sort'
 PARAM_START = 'start'
+PARAM_CACHE = 'cache'
 
 PARAM_VOL_LOC = 'vol_loc'
 PARAM_VOL_DIST = 'vol_dist'
