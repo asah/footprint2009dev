@@ -32,6 +32,7 @@ application = webapp.WSGIApplication(
      (urls.URL_ACTION, views.action_view),
      (urls.URL_ADMIN, views.admin_view),
      (urls.URL_POST, views.post_view),
+     (urls.URL_REDIRECT, views.redirect_view),
      (urls.URL_MODERATE, views.moderate_view),
     ],
     debug=True)

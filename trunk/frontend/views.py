@@ -456,6 +456,15 @@ class admin_view(webapp.RequestHandler):
       self.response.out.write(html % (users.create_login_url(self.request.url)))
 
 
+class redirect_view(webapp.RequestHandler):
+  def get(self):
+    url = self.request.get('q')
+    if url:
+      self.redirect(url)
+    else:
+      self.error(400)
+
+
 class moderate_view(webapp.RequestHandler):
   def get(self):
     # TODO: require admin access-- implement when we agree on mechanism
