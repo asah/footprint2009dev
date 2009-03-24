@@ -20,7 +20,7 @@ import re
 import sys
 import logging
 
-DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/search'
+DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/volopps'
 DEFAULT_RESPONSE_TYPES = 'rss'
 LOCAL_STATIC_URL = 'http://localhost:8080/test/sampleData.xml'
 CURRENT_STATIC_XML = 'sampleData0.1.xml'
@@ -221,9 +221,6 @@ def TestStart(webApp, result_set1, result_set2, start1, start2, num_items):
   """
   result = True
   
-  logging.info(result_set1)
-  logging.info(result_set2)
-
   webApp.response.out.write('<p class="test">TestStart running...</p>')
   if result_set1 == False or result_set2 == False:
     webApp.response.out.write('<p class="result fail">Fail. The result set is empty.</p>')
@@ -231,7 +228,7 @@ def TestStart(webApp, result_set1, result_set2, start1, start2, num_items):
 
   for i in range(start2, num_items):
     opp1 = result_set1[i]
-    opp2 = result_set2[start1 + (i - start2 - 1)]
+    opp2 = result_set2[start1 + (i - start2)]
     if (opp1.title != opp2.title):
       webApp.response.out.write('<p class="result amplification">List items different, <em>' + opp1.title + '</em> != <em>' + opp2.title + '</em></p>')
       result = False
