@@ -197,60 +197,10 @@ class AdminModerator(webapp.RequestHandler):
                             datetime.datetime.now().microsecond)
 
 
-
-class ExpressInterest(webapp.RequestHandler):
-  def get(self):
-    user = userinfo.get_user(self.request)
-    opp_id = self.request.get('oid')
-    base_url = self.request.get('base_url')
-    if self.request.get('i') and self.request.get('i') != '0':
-      expressed_interest = models.InterestTypeProperty.INTERESTED
-      delta = 1
-    else:
-      # OK, we probably should add a new 'not interested' value to the enum.
-      expressed_interest = models.InterestTypeProperty.UNKNOWN
-      delta = -1
-
-    if not user or not opp_id:
-      logging.warning('No user or no opp_id.')
-      # todo: set responsecode=400
-      return
-
-    # Note: this is inscure and should use some simple xsrf protection like
-    # a token in a cookie.
-    user_entity = user.get_user_info()
-    opportunity = models.UserInterest.get_or_insert(
-        models.UserInterest.DATASTORE_PREFIX + opp_id,
-        user=user_entity)
-
-    if opportunity.expressed_interest != expressed_interest:
-      opportunity.expressed_interest = expressed_interest
-      opportunity.put()
-      models.VolunteerOpportunityStats.increment(opp_id,
-                                                 interested_count=delta)
-      key = models.UserInterest.DATASTORE_PREFIX + opp_id
-      info = models.VolunteerOpportunity.get_or_insert(key)
-      if info.base_url != base_url:
-        info.base_url = base_url
-        info.last_base_url_update = datetime.datetime.now()
-        info.base_url_failure_count = 0
-        info.put()
-      logging.info('User %s has changed interest (%s) in %s' %
-                 (user_entity.key().name(), expressed_interest, opp_id))
-    else:
-      logging.info('User %s has not changed interest (%s) in %s' %
-                 (user_entity.key().name(), expressed_interest, opp_id))
-
-    # TODO: Write something useful to the http output
-
-
-
-
 application = webapp.WSGIApplication(
                                      [('/test/login', TestLogin),
                                       ('/test/moderator', TestModerator),
                                       ('/test/adminmoderator', AdminModerator),
-                                      ('/test/interest', ExpressInterest),
                                       ],
                                      debug=True)
 
