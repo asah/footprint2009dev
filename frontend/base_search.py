@@ -19,16 +19,9 @@ import os
 import re
 import urllib
 import logging
-import md5
 import posting
 
-from google.appengine.api import users
 from google.appengine.api import urlfetch
-from google.appengine.api import memcache
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
-from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.ext import db
 from xml.dom import minidom
 
 import api
@@ -146,7 +139,7 @@ def search(args, num_overfetch=200):
   #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
   # TODO: injection attack on backend
   if "backend" not in args:
-    args["backends"] = "http://www.google.com/base/feeds/snippets"
+    args["backend"] = "http://www.google.com/base/feeds/snippets"
 
   cust_arg = make_base_arg("customer")
   if cust_arg not in args:
@@ -158,7 +151,7 @@ def search(args, num_overfetch=200):
   if api.PARAM_START not in args:
     args[api.PARAM_START] = 1
 
-  query_url = args["backends"]
+  query_url = args["backend"]
   query_url += "?max-results=" + str(num_overfetch)
 
   # We don't set "&start-index=" because that will interfere with
@@ -173,11 +166,6 @@ def search(args, num_overfetch=200):
   logging.info("calling Base: "+query_url)
   return query(query_url, args, False)
 
-def hash_md5(s):
-  it = md5.new()
-  it.update(s)
-  return it.digest()
-
 
 def query(query_url, args, cache):
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
@@ -186,19 +174,10 @@ def query(query_url, args, cache):
   result_set.query_url = query_url
   result_set.args = args
 
-  # TODO: consider moving this to search.py, i.e. not Base specific.
-  # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
-  # I (mblain) suggest using "zx", which is used at Google for most services.
-  # note: key cannot exceed 250 bytes
-  memcache_key = hash_md5('query:' + query_url)
-  result_content = memcache.get(memcache_key)
-  if not result_content:
-    fetch_result = urlfetch.fetch(query_url)
-    if fetch_result.status_code != 200:
-      return result_set
-    result_content = fetch_result.content
-    if cache:
-      memcache.set(memcache_key, result_content, time=RESULT_CACHE_TIME)
+  fetch_result = urlfetch.fetch(query_url)
+  if fetch_result.status_code != 200:
+    return result_set
+  result_content = fetch_result.content
 
   dom = minidom.parseString(result_content)
 
@@ -216,7 +195,7 @@ def query(query_url, args, cache):
     snippet = utils.GetXmlElementTextOrEmpty(entry, 'content')
     title = utils.GetXmlElementTextOrEmpty(entry, 'title')
     location = utils.GetXmlElementTextOrEmpty(entry, 'g:location_string')
-    res = searchresult.SearchResult(url, title, snippet, 
+    res = searchresult.SearchResult(url, title, snippet,
                                     location, id, base_url)
     # TODO: escape?
     res.provider = utils.GetXmlElementTextOrEmpty(entry, 'g:feed_providername')
@@ -229,13 +208,13 @@ def query(query_url, args, cache):
 
     # TODO: remove-- working around a DB bug where all latlongs are the same
     if "geocode_responses" in args:
-      res.latlong = geocode.geocode(location, 
+      res.latlong = geocode.geocode(location,
             args["geocode_responses"]!="nocache" )
 
     # res.event_date_range follows one of these two formats:
     #     <start_date>T<start_time> <end_date>T<end_time>
     #     <date>T<time>
-    res.event_date_range = utils.GetXmlElementTextOrEmpty(entry, 
+    res.event_date_range = utils.GetXmlElementTextOrEmpty(entry,
             'g:event_date_range')
     m = DATE_FORMAT_PATTERN.findall(res.event_date_range)
     if not m:
@@ -246,7 +225,7 @@ def query(query_url, args, cache):
       res.startdate = datetime.datetime.strptime(m[0], '%Y-%m-%dT%H:%M:%S')
       # last match is either end date/time or start/date time
       res.enddate = datetime.datetime.strptime(m[-1], '%Y-%m-%dT%H:%M:%S')
-       
+
     # posting.py currently has an authoritative list of fields in "argnames"
     # that are available to submitted events which may later appear in GBase
     # so with a few exceptions we want those same fields to become
@@ -293,7 +272,7 @@ def get_from_ids(ids):
     if not id in results:
       missing_ids.append(id)
 
-  datastore_results = models.get_by_ids(models.VolunteerOpportunity, 
+  datastore_results = models.get_by_ids(models.VolunteerOpportunity,
       missing_ids)
 
   datastore_missing_ids = []
@@ -309,7 +288,7 @@ def get_from_ids(ids):
   args[api.PARAM_VOL_STARTDATE] = (datetime.date.today() +
                        datetime.timedelta(days=1)).strftime("%Y-%m-%d")
   tt = time.strptime(args[api.PARAM_VOL_STARTDATE], "%Y-%m-%d")
-  args[api.PARAM_VOL_ENDDATE] = (datetime.date(tt.tm_year, 
+  args[api.PARAM_VOL_ENDDATE] = (datetime.date(tt.tm_year,
           tt.tm_mon, tt.tm_mday) + datetime.timedelta(days=60))
 
   # TODO(mblain): Figure out how to pull in multiple base entries in one call.
