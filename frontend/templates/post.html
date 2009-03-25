@@ -33,11 +33,11 @@ Post a listing
   </style>
 {% endblock %}
 
-{% block content %}
-<body>
-
+{% block subheader %}
 <h1>Post a volunteer listing</h1>
+{% endblock subheader %}
 
+{% block content %}
 <i>
 Instructions go here: warn that illegal postings may be reported.<br/>
 explain privacy and offer login/logout?  "logged-in users postings tend to get approved faster" <br/>
@@ -253,5 +253,4 @@ function validate_form() {
 }
 
 </script>
-</body>
 {% endblock %}
