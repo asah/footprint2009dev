@@ -387,6 +387,8 @@ class post_view(webapp.RequestHandler):
       }
     load_userinfo_into_dict(user_info, template_values)
 
+    # TODO: remove this workaround once all Facebook/FriendConnect JS
+    #    loading issues are fixed.
     if self.request.get('no_login'):
       template_values['no_login'] = True
 
