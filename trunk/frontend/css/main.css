@@ -5,6 +5,12 @@ body, html {
   margin: 2px;
 }
 
+h1 {
+  color: #2475B6;
+  margin: 10px 0px 5px 10px;
+  font-size: 24px;
+}
+
 div {
   font-size: 13px;
 }
@@ -140,6 +146,7 @@ span {
 /** Search results page **/
 .top_search {
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .snippet {
@@ -208,7 +215,7 @@ span {
 
 /** Search results - calendar **/
 #calendar {
-  margin-bottom: 10px;
+  margin-top: 20px;
   width: 230px;
   font-size: small;
 }
@@ -298,3 +305,6 @@ span {
   font-size: 14px;
 }
 
+#keywords_bar {
+  width: 50em;
+}
