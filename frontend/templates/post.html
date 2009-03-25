@@ -1,11 +1,10 @@
-{% extends "base_min.html" %}
+{% extends "layout_full.html" %}
 
 {% block title %}
 Post a listing
 {% endblock %}
 
-{% block head %}
-  <link href='css/main.css' rel='stylesheet'/>
+{% block css_files %}
   <style>
   table {
     padding: 0;
@@ -34,7 +33,7 @@ Post a listing
   </style>
 {% endblock %}
 
-{% block body %}
+{% block content %}
 <body>
 
 <h1>Post a volunteer listing</h1>

@@ -12,6 +12,7 @@
          onclick="location.href = '/post'">Add an event</div>
   </div>
 
+  {% if not no_login %}
   <script src='http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' type='text/javascript'></script>
   <script type="text/javascript">
     document.userId = "{{user.user_id}}";
@@ -30,7 +31,6 @@
       }});
     });
   </script>
-
   <div id='header_right' align='right' width='100%'>
    <nobr>
     {% if user %}
@@ -95,6 +95,7 @@
       </script>
     </div>
     {% endif %}
+    {% endif %}{# no_login #}
    </nobr>
   </div>
 

@@ -387,6 +387,9 @@ class post_view(webapp.RequestHandler):
       }
     load_userinfo_into_dict(user_info, template_values)
 
+    if self.request.get('no_login'):
+      template_values['no_login'] = True
+
     resp = None
     recaptcha_challenge_field = self.request.get('recaptcha_challenge_field')
     if not recaptcha_challenge_field:
