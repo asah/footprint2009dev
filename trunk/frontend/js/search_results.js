@@ -112,6 +112,10 @@ Query.prototype.getKeywords = function() {
   return this.keywords_;
 }
 
+Query.prototype.getLocation = function() {
+  return this.location_;
+}
+
 Query.prototype.getUrlQuery = function() {
   var me = this;
   urlQuery = '';
@@ -182,7 +186,7 @@ function doInlineSearch(query, updateMap) {
   var callback = function(text) {
     if (updateMap) {
       asyncLoadManager.addCallback('map', function() {
-        map.setCenterGeocode(location);
+        map.setCenterGeocode(query.getLocation());
       });
     }
     el('snippets_pane').innerHTML = text;
