@@ -30,26 +30,94 @@ function shareEvent(div, eventUrl, eventTitle, eventSnippet) {
       + eventTitle + " " + eventUrl);
 }
 
+/**
+ * Formats a number as two digits. This function performs no range checking on
+ * its input.
+ * @param {number} n an integer between 0 and 99.
+ * @returns {string} a two character long string.
+ */
+function formatAsTwoDigits(n) {
+  return ((n < 10) ? '0' : '') + n;
+}
+
+/**
+ * Formats a date object into YYYYMMDDTHHmmssZ.
+ * @param {Date} date the date to be formatted.
+ * @return {string} the formatted date.
+ */
+function formatDateAsUtc(date) {
+  var buffer = [];
+  buffer.push(date.getUTCFullYear());
+  buffer.push(formatAsTwoDigits(date.getUTCMonth() + 1));
+  buffer.push(formatAsTwoDigits(date.getUTCDate()));
+  buffer.push('T');
+  buffer.push(formatAsTwoDigits(date.getUTCHours()));
+  buffer.push(formatAsTwoDigits(date.getUTCMinutes()));
+  buffer.push(formatAsTwoDigits(date.getUTCSeconds()));
+  buffer.push('Z');
+  return buffer.join('');
+};
+
+/**
+ * Formats a duration for use in the DUR parameter of the Yahoo! Calendar API.
+ * @param {number} duration duration in ms.
+ * @return {string} the duration, formatted as 'HHmm', for the Yahoo! Calendar
+ *     API.
+ */
+function durationForYahooCalendar(duration) {
+  /** Performs an integral division. */
+  function div(numerator, denumerator) {
+    return numerator / denumerator - numerator % denumerator / denumerator;
+  }
+  var durationInMinutes = div(duration, 1000*60);
+  var durationInHours = div(durationInMinutes, 60);
+  if (durationInHours >= 12) {
+    // Yahoo! Calendar has issues displaying events longer than 12h.
+    // note: this branch won't be executed unless the cap on duration is removed
+    //     from addToCalendar.
+    return '0030';
+  } else {
+    return formatAsTwoDigits(durationInHours) +
+        formatAsTwoDigits(durationInMinutes % 60);
+  }
+}
+
+
+/**
+ * Formats a date and duration for use in the dates parameter of the Google
+ * Calendar API.
+ * @param {Date} startdate the start date of the calendar entry.
+ * @param {number} duration the duration of the calendar entry in milliseconds.
+ * @return {string} a string ready to be used by the Google Calendar API.
+ */
+function datesForGoogleCalendar(startdate, duration) {
+  var enddate = new Date(startdate.getTime() + duration);
+  return formatDateAsUtc(startdate) + "/" + formatDateAsUtc(enddate);
+}
+
 function addToCalendar(div, type, searchResult) {
   // TODO: Handle ical and outlook
+  var duration = searchResult.enddate.getTime() -
+      searchResult.startdate.getTime();
+  if (duration > 12*60*60*1000) {
+    // For events lasting longer than 12h, we are only interested in the start
+    // date. Their length is trimmed to 30 minutes to ensure they remain visible
+    // on all calendars. 
+    duration = 30*60*1000;
+  }
   var url;
-
-  // We use only the start date.
-
   if (type == 'GOOGLE') {
     url = "http://www.google.com/calendar/event?action=TEMPLATE"
         + "&text=" + searchResult.title
-//        + "&dates=" + (searchResult.startdate + "/" + searchResult.startdate)
-        + "&dates=" + ("20090331" + "/" + "20090331")
+        + "&dates=" + datesForGoogleCalendar(searchResult.startdate, duration)
         + "&details=" + searchResult.snippet + "+" + searchResult.url
         + "&location=" + searchResult.location;
 
   } else if (type == 'YAHOO') {
     url = "http://calendar.yahoo.com?v=60"
-//        + "&ST=" + searchResult.startdate
-        + "&ST=" + "20090331"
+        + "&ST=" + formatDateAsUtc(searchResult.startdate)
         + "&TITLE=" + searchResult.title
-      //+ "&DUR=" + eventDuration TODO: Support duration once we have real dates
+        + "&DUR=" + durationForYahooCalendar(duration)
         + "&VIEW=d"
         + "&DESC=" + searchResult.snippet
         + "&in_loc=" + searchResult.location;

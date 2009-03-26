@@ -11,7 +11,7 @@
   });
   var searchResults = [];
 {% for result in result_set.clipped_results %}
-  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', '{{ result.startdate|date:"r" }}', '{{ result.enddate|date:"r" }}'));
+  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}')));
 {% endfor %}
 </script>
 
@@ -37,7 +37,7 @@
             <a href='javascript:void(0)'>Add to Google Calendar</a>
           </div>
           <div class='pointer popup_text'
-               onclick=''addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
+               onclick='addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
             <!-- img src='images/yahoo.gif' height="16px" alt='Google Calendar'/ -->
             <a href='javascript:void(0)'>Add to Yahoo Calendar</a>
           </div>
