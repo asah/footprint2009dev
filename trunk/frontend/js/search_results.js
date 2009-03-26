@@ -352,13 +352,21 @@ function initMap() {
   }
 }
 
-/** A single search result */
+/**
+ * A single search result.
+ * @constructor
+ * @param {string} url a url.
+ * @param {string} title a title.
+ * @param {string} location a location.
+ * @param {string} snippet a snippet.
+ * @param {Date} startdate a start date.
+ * @param {Date} enddate an end date.
+ */
 function SearchResult(url, title, location, snippet, startdate, enddate) {
-  var me = this;
-  me.url = url;
-  me.title = title;
-  me.location = location;
-  me.snippet = snippet;
-  me.startdate = startdate;
-  me.enddate = enddate;
+  this.url = url;
+  this.title = title;
+  this.location = location;
+  this.snippet = snippet;
+  this.startdate = startdate;
+  this.enddate = enddate;
 }
