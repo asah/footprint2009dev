@@ -38,6 +38,9 @@ handlers:
   script: main.py
   login: admin
 
+- url: /export/.*
+  script: export/main.py
+
 # Keep this last
 - url: /.*
   script: main.py
