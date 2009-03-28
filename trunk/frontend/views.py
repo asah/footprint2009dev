@@ -36,6 +36,7 @@ import posting
 import search
 import urls
 import userinfo
+import view_helper
 
 TEMPLATE_DIR = 'templates/'
 MAIN_PAGE_TEMPLATE = 'main_page.html'
@@ -128,92 +129,6 @@ class main_page_view(webapp.RequestHandler):
     self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                             template_values))
 
-
-def get_user_interests(user, remove_no_interest):
-  """Get the opportunities a user has expressed interest in.
-
-  Args:
-    user: userinfo.User of a user
-    remove_no_interest: Filter out items with expressed_interest = UNKNOWN.
-  Returns:
-    Dictionary of volunteer opportunity id: expressed_interest.
-  """
-  user_interests = {}
-  if user:
-    # Note that if a user has a lot (particularly > 1000) of
-    # UserInterest entires, we'll have to do a more clever
-    # query than the magic reverse reference query.
-    for interest in user.get_user_info().interests:
-      if (not remove_no_interest or
-          interest.expressed_interest != models.InterestTypeProperty.UNKNOWN):
-        # TODO: Eliminate "3:" as a hardcoded range -- bug-prone.
-        user_interests[interest.key().name()[3:]] = interest.expressed_interest
-    #logging.info('Found interests: %s' % user_interests)
-  return user_interests
-
-
-def get_interest_for_opportunities(opp_ids):
-  """Get the interest statistics for a set of volunteer opportunities.
-
-  Args:
-    opp_ids: list of volunteer opportunity ids.
-
-  Returns:
-    Dictionary of volunteer opportunity id: interested_count.
-  """
-  others_interests = {}
-
-  interests = models.get_by_ids(models.VolunteerOpportunityStats, opp_ids)
-  for (id, interest) in interests.iteritems():
-    if interest:
-      others_interests[id] = interest.interested_count
-  return others_interests
-
-
-def get_annotated_results(user, result_set):
-  """Get results annotated with the interests of this user and all users.
-
-  Args:
-    user: User object returned by userinfo.get_user()
-    result_set: A search.SearchResultSet.
-  Returns:
-    The incoming result set, annotated with user-specific info.
-  """
-
-  # Get all the ids of items we've found
-  opp_ids = [result.id for result in result_set.results];
-
-  # mark the items the user is interested in
-  user_interests = get_user_interests(user, True)
-
-  # note the interest of others
-  others_interests = get_interest_for_opportunities(opp_ids)
-
-  return annotate_results(user_interests, others_interests, result_set)
-
-def annotate_results(user_interests, others_interests, result_set):
-  """Annotates results with the provided interests.
-
-  Args:
-    user_interests: User interests from get_user_interests. Can be None.
-    others_interests: Others interests from get_interest_for_opportunities.
-                      Can be None.
-    result_set: A search.SearchResultSet.
-  Returns:
-    The incoming result set, annotated with user-specific info.
-  """
-
-  # Mark up the results
-  for result in result_set.results:
-    if user_interests and result.id in user_interests:
-      result.interest = user_interests[result.id]
-    if others_interests and result.id in others_interests:
-      #logging.info("others interest in %s = %s " % (result.id, others_interests[result.id]))
-      # TODO: Consider updating the base url here if it's changed.
-      result.interest_count = others_interests[result.id]
-
-  return result_set
-
 class legacy_search_view(webapp.RequestHandler):
   def get(self):
     self.response.out.write("<!DOCTYPE html><html><body>sorry!  " +
@@ -287,7 +202,7 @@ class ui_snippets_view(webapp.RequestHandler):
     # Retrieve the user-specific information for the search result set.
     user = userinfo.get_user(self.request)
     if user:
-      result_set = get_annotated_results(user, result_set)
+      result_set = view_helper.get_annotated_results(user, result_set)
 
     template_values = {
         'user' : user,
@@ -300,6 +215,7 @@ class ui_snippets_view(webapp.RequestHandler):
                                             template_values))
 
 
+#TODO: implement and merge with friends_view
 class my_events_view(webapp.RequestHandler):
   def get(self):
     user_info = userinfo.get_user(self.request)
@@ -309,30 +225,15 @@ class my_events_view(webapp.RequestHandler):
           template_values))
       return
 
-
-    user_interests = get_user_interests(user_info, True)
-    result_set = base_search.get_from_ids(user_interests)
-
-    # This should be merged with the annotation code above.
-    annotate_results(user_interests, None, result_set)
-
-    # What to do about interests where we couldn't get the info from base?
-
     template_values = {
         'current_page' : 'MY_EVENTS',
-        'result_set': result_set,
-
-        # TODO: remove this stuff...
-        'keywords': '',
-        'location': '',
-        }
+    }
     load_userinfo_into_dict(user_info, template_values)
 
-    # Hack o rama: Use the search results page!
     self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
                                             template_values))
 
-# TODO(doll): Merge this class with the my_events_view
+# TODO: Merge this class with the my_events_view
 class friends_view(webapp.RequestHandler):
   def get(self):
     user_info = userinfo.get_user(self.request)
@@ -344,27 +245,17 @@ class friends_view(webapp.RequestHandler):
       self.response.out.write(render_template(FRIENDS_TEMPLATE, template_values))
       return
 
-    user_interests = get_user_interests(user_info, True)
-    friend_interests = {}
-
-    friends = user_info.load_friends()
-    for friend in friends:
-      friend_interests[friend.user_id] = get_user_interests(friend, True)
-
-    # TODO: add in friend interests to this...
-    result_set = base_search.get_from_ids(user_interests)
-
-    # This should be merged with the annotation code above.
-    annotate_results(user_interests, None, result_set)
-
-    # What to do about interests where we couldn't get the info from base?
-
+    is_debug = self.request.get('debug')
+    view_data = view_helper.get_data_for_friends_view(user_info, is_debug)
+    logging.info(repr(view_data))
     template_values = {
         'current_page' : 'FRIENDS',
-        'result_set': result_set,
-        'friends' : friends,
+        'current_user_opps_result_set': view_data['current_user_opps_result_set'],
+        'has_results' : view_data['has_results'],
+        'friends' : view_data['friends'],
         'total_friends' : user_info.total_friends,
-        'friend_interests' : friend_interests
+        'friend_total_opp_count': view_data['friend_total_opp_count'],
+        'friend_interests_by_oid_js': view_data['friend_interests_by_oid_js'],
     }
     load_userinfo_into_dict(user_info, template_values)
 

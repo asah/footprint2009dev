@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import views
+import datetime
 import logging
 import math
 import time
-import datetime
+
+import view_helper
+
 
 def compare_scores(x,y):
   diff = y.score - x.score
@@ -27,7 +29,7 @@ def compare_scores(x,y):
 def score_results_set(result_set, args):
   # handle rescoring on interest weights
   idlist = map(lambda x: x.id, result_set.results)
-  others_interests = views.get_interest_for_opportunities(idlist)
+  others_interests = view_helper.get_interest_for_opportunities(idlist)
   total_results = float(len(result_set.results))
   for i,res in enumerate(result_set.results):
     res.score_by_base_rank = (total_results - i)/total_results

@@ -4,6 +4,13 @@
 Work with others
 {% endblock %}}
 
+{% block js_files %}
+  <script type='text/javascript' src='/js/snippets_list.js'></script>
+<!--
+  <script type='text/javascript' src='/js/search_results.js'></script>
+-->
+{% endblock %}
+
 {% block subheader %}
 <h1>See where your friends are volunteering</h1>
 {% endblock subheader %}
@@ -11,24 +18,21 @@ Work with others
 {% block content_left %}
 
 {% if user %}
-  <!-- What are we going to about about having too many friends here? Some sort of pagination? -->
   You know {{total_friends}} {% ifequal total_friends 1 %}person{% else %}people{% endifequal %} on Footprint <br />
-  They have starred {{total_stars}} event{% ifnotequal total_stars 1 %}s{% endifnotequal %}.
+  They have starred {{friend_total_opp_count}} {{friend_total_opp_count|pluralize:"event,events"}}.
 
-  {% if user.thumbnail_url %}<img class='friend_picture' src='{{user.thumbnail_url}}'/>{% endif %}
-  <div class='friend_details'>
-    <span class='friend_name' style='font-weight:bold;'>You</span> <br/>
-    <span class='friend_stars'>9 events</span>       
-  </div>
-  
   <div style='clear:both;'></div>
 
   {% for friend in friends %}
-    <div class='friend'>
+    <div class='friend' id="friend_{{friend.user_id}}">
       {% if friend.thumbnail_url %}<img class='friend_picture' src='{{friend.thumbnail_url}}'/>{% endif %}
       <div class='friend_details'>
         <span class='friend_name'>{{friend.display_name}}</span> <br/>
-        <span class='friend_stars'>9 events</span>       
+        <span class='friend_stars'>
+        <img src="images/Event-StarredByOthers.png" alt="Starred"/> 
+        {{friend.interest_count}}
+        {{friend.interest_count|pluralize:"event,events"}}
+        </span>       
       </div>
       <div style='clear:both;'></div>
     </div>
@@ -43,7 +47,10 @@ Work with others
   <br><br><b>Log in to see what your friends are doing on Footprint</b>
 {% endif %}
 
+<div id='no_results_message' style='display:none;'>
+  <br><br><b>No results found.</b>
+</div>
 <div id='snippets_pane'>
-{% include 'snippets_list.html' %}
+{% include 'my_snippets_list.html' %}
 </div>
 {% endblock content_right %}
