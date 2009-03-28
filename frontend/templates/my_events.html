@@ -1,6 +1,5 @@
 {% extends "layout_two_column.html" %}
 
-
 {% block title %}
 My Events
 {% endblock %}}
@@ -21,6 +20,9 @@ My Events
   <br><br><b>Log in to see your starred events</b>
 {% endif %}
 
+<div id='no_results_message' style='display:none;'>
+  <br><br><b>No results found.</b>
+</div>
 <div id='snippets_pane'>
   {% include 'snippets_list.html' %}
 </div>
