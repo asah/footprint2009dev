@@ -25,175 +25,157 @@ from google.appengine.ext.db import Key
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+import utils 
 import models 
 import posting 
-import utils 
 
-QT = ("ec813d6d0c96f3a562c70d78b7ac98d7ec2cfcaaf44cbd7"
-        + "ac897ca3481e27a777398da97d0b93bbe0f5633f6203ff3"
-        + "b77ea55f62cf002ad7e4b5ec3f89d18954")
+QT = "%s%s%s" % ("ec813d6d0c96f3a562c70d78b7ac98d7ec2cfcaaf44cbd7",
+                 "ac897ca3481e27a777398da97d0b93bbe0f5633f6203ff3",
+                 "b77ea55f62cf002ad7e4b5ec3f89d18954")
 
-USAGE = ("<pre>/export/UserInfo.csv\n" 
-       + "/export/UserStats.csv\n"
-       + "/export/UserInterest.csv\n"
-       + "/export/VolunteerOpportunity.csv\n"
-       + "/export/VolunteerOpportunityStats.csv\n</pre>")
+USAGE = """
+<pre>/export/UserInfo.tsv
+/export/UserStats.tsv
+/export/Posting.tsv
+/export/UserInterest.tsv
+/export/VolunteerOpportunity.tsv
+/export/VolunteerOpportunityStats.tsv
+</pre>
+"""
 
-def getFields(table_object):
-  fields = ["key"]
-  for i,field in enumerate(table_object.properties()):
-    fields.append(field)
+class Fail(Exception):
+  def __init__(self, message):
+    logging.error("see /export/ for usage")
+    logging.error(message)
 
-  return fields
+def export_table_as_tsv(table, min_key, limit):
+  """ 
+  get rows from this table as TSV
+  """
 
-def getMinKey(table, min_key = ""):
-  # get the next key in our sequence
-  # or get the lowest key value in the table
+  delim, recsep = ("\t", "\n")
+
+  def get_min_key(table, min_key = ""):
+    # get the next key in our sequence
+    # or get the lowest key value in the table
+    if min_key == "":
+      query = table.gql("ORDER BY __key__ LIMIT 1")
+      row = query.get()
+    else:
+      row = table(key_name = min_key)
+
+    if not row:
+      if min_key == "":
+        raise Fail("no data in %s" % table)
+      else:
+        return None
+
+    return row.key()
+
+  def get_fields(table_object):
+    # get a list of field names prepended with "key"
+    fields = ["key"]
+    for i,field in enumerate(table_object.properties()):
+      fields.append(field)
+    return fields
+
+  def field_to_str(value):
+    # get our field value as a string
+    if not value:
+      field_value = ""
+    else:
+      try:
+        # could be a Key object
+        field_value = str(value.key().id_or_name())
+      except:
+        field_value = str(value)
+    return field_value
+
+  def get_header(fields, delim):
+    # get a delimited list of the field names
+    header = delim.join(fields)
+    return header
+
+  def esc_value(value, delim, recsep):
+    # make sure our delimiter and record separator are not in the data
+    return field_to_str(value).replace(delim, "\\t").replace(recsep, "\\n")
+
+  fields = get_fields(table)
+
+  output = []
   if min_key == "":
-    query = table.gql("ORDER BY __key__ LIMIT 1")
-    row = query.get()
-  else:
-    row = table(key_name = min_key)
-
-  return row.key()
-
-def getCSV(table, min_key, limit):
-  # get up to limit csv rows from this table
-  def csv_esc(value):
-     try:
-       use = str(value.key().id_or_name())
-     except:
-       use = str(value)
-
-     return str(use).replace("'", "\\'").replace("\n", "\\n")
-
-  if limit < 1:
-    return
-
-  fields = getFields(table)
-
-  csv = ""
-  if min_key == "":
-    csv = '"' + '","'.join(fields) + '"\n'
+    # this is the first record we output so add the header
+    output.append(get_header(fields, delim))
     cmp = ">="
   else:
     cmp = ">"
 
   query = table.gql(("WHERE __key__ %s :1 ORDER BY __key__" % cmp), 
-     getMinKey(table, min_key))
+          get_min_key(table, min_key))
 
   rsp = query.fetch(limit)
   for row in rsp:
     line = []
     for field in fields:
       if field == "key":
-        value = csv_esc(row.key().id_or_name())
+        value = row.key().id_or_name()
       else:
-        value = csv_esc(getattr(row, field, ""))
-      line.append('"' + value + '"')
- 
-    csv += ",".join(line) + "\n"
+        value = getattr(row, field, "")
+      line.append(esc_value(value, delim, recsep))
+    output.append(delim.join(line))
 
-  return csv
+  return "%s%s" % (recsep.join(output), recsep)
 
-def checkQT(digsig):
-  """
-  require that callers pass a special param &digsig=[string]
-  hash this string, and compare it to a known value
-  """
-  if QT == hashlib.sha512(digsig).hexdigest():
-    return True
-  else:
-    return False
+class exportTableTSV(webapp.RequestHandler):
+  # export a table
+  def get(self, table):
 
-def get_limits_from_args(request):
-  # get our arguments and check for digsig
-  min_key = ""
-  limit = 1000
-  args = request.arguments()
-  unique_args = {}
-  try:
-    # This allows callers to tack-on args for overriding, which can be
-    # marginally easier than pre-pending.
-    for arg in args:
-      allvals = request.get_all(arg)
-      if arg == "min_key":
-        min_key = allvals[len(allvals)-1]
-      elif arg == "limit":
-        limit = allvals[len(allvals)-1]
-      elif arg == "digsig":
-        digsig = allvals[len(allvals)-1]
+    digsig = utils.get_last_arg(self.request, "digsig", "")
+    if hashlib.sha512(digsig).hexdigest() != QT:
+      # require callers pass param &digsig=[string] such that
+      # the hash of the string they pass to us equals QT
+      raise Fail("no &digsig")
 
-    if not checkQT(digsig):
-       logging.info("missing &digsig. aborting.");
-       raise Exception('digsig')
+    try:
+      limit = int(utils.get_last_arg(self.request, "limit", "1000"))
+    except:
+      raise Fail("non integer &limit")
 
     if limit < 1:
-      limit = 1
+      # 1000 is the max records that can be fetched ever
+      limit = 1000
 
-    return min_key, int(limit)
+    min_key = utils.get_last_arg(self.request, "min_key", "")
 
-  except:
-    return None, 0
-
-class exportUserInfo(webapp.RequestHandler):
-  # setup the parameters we need for exporting UserInfo
-  def get(self):
-    min_key, limit = get_limits_from_args(self.request)
-    self.response.out.write(getCSV(models.UserInfo, min_key, limit))
-
-class exportPosting(webapp.RequestHandler):
-  # setup the parameters we need for exporting UserStats
-  def get(self):
-    min_key, limit = get_limits_from_args(self.request)
-    # TODO add Posting to models.py
-    self.response.out.write(getCSV(posting.Posting, min_key, limit))
-
-class exportUserStats(webapp.RequestHandler):
-  # setup the parameters we need for exporting UserStats
-  def get(self):
-    min_key, limit = get_limits_from_args(self.request)
-    self.response.out.write(getCSV(models.UserStats, min_key, limit))
-
-class exportUserInterest(webapp.RequestHandler):
-  # setup the parameters we need for exporting UserInterest
-  def get(self):
-    min_key, limit = get_limits_from_args(self.request)
-    self.response.out.write(getCSV(models.UserInterest, min_key, limit))
-
-class exportVolunteerOpportunityStats(webapp.RequestHandler):
-  # setup the parameters we need for exporting VolunteerOpportunityStats
-  def get(self):
-    min_key, limit = get_limits_from_args(self.request)
-    self.response.out.write(getCSV(models.VolunteerOpportunityStats, min_key, 
-     limit))
-
-class exportVolunteerOpportunity(webapp.RequestHandler):
-  # setup the parameters we need for exporting VolunteerOpportunity
-  def get(self):
-    min_key, limit = get_limits_from_args(self.request)
-    self.response.out.write(getCSV(models.VolunteerOpportunity, min_key, limit))
+    if table == "UserInfo":
+      self.response.out.write(export_table_as_tsv(
+        models.UserInfo, min_key, limit))
+    elif table == "UserStats":
+      self.response.out.write(export_table_as_tsv(
+        models.UserStats, min_key, limit))
+    elif table == "UserInterest":
+      self.response.out.write(export_table_as_tsv(
+        models.UserInterest, min_key, limit))
+    elif table == "VolunteerOpportunityStats":
+      self.response.out.write(export_table_as_tsv(
+        models.VolunteerOpportunityStats, min_key, limit))
+    elif table == "VolunteerOpportunity":
+      self.response.out.write(export_table_as_tsv(
+        models.VolunteerOpportunity, min_key, limit))
+    elif table == "Posting":
+      # TODO add Posting to models.py
+      self.response.out.write(export_table_as_tsv(
+        posting.Posting, min_key, limit))
+    else:
+      raise Fail("not programmed to handle '%s'" % table)
 
 class showUsage(webapp.RequestHandler):
   # show a list of the Models we can export
   def get(self):
-    min_key, limit = get_limits_from_args(self.request)
-    if limit > 0:
-      self.response.out.write(USAGE)
+    self.response.out.write(USAGE)
 
-""" 
-TODO
-make the table name dynamic, i.e.  ("/export", exportTable)
-and then a single function class exportTable(webapp.RequestHandler)
-"""
 application = webapp.WSGIApplication(
-    [ ("/export/UserInfo.csv", exportUserInfo),
-      ("/export/UserStats.csv", exportUserStats),
-      ("/export/UserInterest.csv", exportUserInterest),
-      ("/export/Posting.csv", exportPosting),
-      ("/export/VolunteerOpportunity.csv", exportVolunteerOpportunity),
-      ("/export/VolunteerOpportunityStats.csv", 
-                             exportVolunteerOpportunityStats),
+    [ ("/export/(.*)\.tsv", exportTableTSV),
       ("/export/", showUsage)
     ], debug=True)
 

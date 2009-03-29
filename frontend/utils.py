@@ -52,3 +52,10 @@ def StringToInt(string):
     return int(string)
   except ValueError:
     return None
+
+def get_last_arg(request, argname, default):
+  values = request.get(argname, allow_multiple=True)
+  if values:
+    return values[len(values) - 1]
+
+  return default
