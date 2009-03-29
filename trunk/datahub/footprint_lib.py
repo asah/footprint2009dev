@@ -28,6 +28,7 @@ import parse_handsonnetwork
 import parse_idealist
 import parse_craigslist
 import parse_americorps
+import parse_userpostings
 import parse_volunteermatch
 import os
 import subprocess
@@ -43,23 +44,85 @@ import dateutil.parser
 FIELDSEP = "\t"
 RECORDSEP = "\n"
 
+MAX_ABSTRACT_LEN = 120
+
 debug = False
 progress = False
 printhead = False
 
 fieldtypes = {
-  "title":"builtin", "description":"builtin", "link":"builtin", "event_type":"builtin", "quantity":"builtin", "image_link":"builtin","event_date_range":"builtin","id":"builtin","location":"builtin",
-  "paid":"boolean","openended":"boolean",
-  'volunteersSlots':'integer','volunteersFilled':'integer','volunteersNeeded':'integer','minimumAge':'integer',
-  'latitude':'float','longitude':'float',
-  'providerURL':'URL','detailURL':'URL','org_organizationURL':'URL','org_logoURL':'URL','org_providerURL':'URL','feed_providerURL':'URL',
-  'lastUpdated':'dateTime','expires':'dateTime','feed_createdDateTime':'dateTime',
-  # note: type 'location' isn't safe because the Base geocoder can fail, causing the record to be rejected
-  "duration":"string","abstract":"string","sexRestrictedTo":"string","skills":"string","contactName":"string","contactPhone":"string","contactEmail":"string","language":"string",'org_name':"string",'org_missionStatement':"string",'org_description':"string",'org_phone':"string",'org_fax':"string",'org_email':"string",'categories':"string",'audiences':"string","commitmentHoursPerWeek":"string","employer":"string","feed_providerName":"string","feed_description":"string",'providerID':'string','feed_providerID':'string','feedID':'string','opportunityID':'string','organizationID':'string','sponsoringOrganizationID':'strng','volunteerHubOrganizationID':'string','org_nationalEIN':'string','org_guidestarID':'string','venue_name':'string',"location_string":"string","orgLocation":"string",
+  "title":"builtin",
+  "description":"builtin",
+  "link":"builtin",
+  "event_type":"builtin",
+  "quantity":"builtin",
+  "image_link":"builtin",
+  "event_date_range":"builtin",
+  "id":"builtin",
+  "location":"builtin",
+
+  "paid":"boolean",
+  "openended":"boolean",
+
+  "volunteersSlots":"integer",
+  "volunteersFilled":"integer",
+  "volunteersNeeded":"integer",
+  "minimumAge":"integer",
+
+  "latitude":"float",
+  "longitude":"float",
+
+  "providerURL":"URL",
+  "detailURL":"URL",
+  "org_organizationURL":"URL",
+  "org_logoURL":"URL",
+  "org_providerURL":"URL",
+  "feed_providerURL":"URL",
+
+  "lastUpdated":"dateTime",
+  "expires":"dateTime",
+  "feed_createdDateTime":"dateTime",
+
+  # note: type "location" isn"t safe because the Base geocoder can fail,
+  # causing the record to be rejected
+  "duration":"string",
+  "abstract":"string",
+  "sexRestrictedTo":"string",
+  "skills":"string",
+  "contactName":"string",
+  "contactPhone":"string",
+  "contactEmail":"string",
+  "language":"string",
+  "org_name":"string",
+  "org_missionStatement":"string",
+  "org_description":"string",
+  "org_phone":"string",
+  "org_fax":"string",
+  "org_email":"string",
+  "categories":"string",
+  "audiences":"string",
+  "commitmentHoursPerWeek":"string",
+  "employer":"string",
+  "feed_providerName":"string",
+  "feed_description":"string",
+  "providerID":"string",
+  "feed_providerID":"string",
+  "feedID":"string",
+  "opportunityID":"string",
+  "organizationID":"string",
+  "sponsoringOrganizationID":"strng",
+  "volunteerHubOrganizationID":"string",
+  "org_nationalEIN":"string",
+  "org_guidestarID":"string",
+  "venue_name":"string",
+  "location_string":"string",
+  "orgLocation":"string",
+
+  "hidden_details":"string",
 }
 
 # Google Base uses ISO8601... in PST -- I kid you not:
-# http://base.google.com/support/bin/answer.py?answer=78170&hl=en#Events%20and%20Activities
+# http://base.google.com/support/bin/answer.py?answer=78170&hl=en#Events%20and%20Activities    # pylint: disable-msg=C0301
 # and worse, you have to change an env var in python...
 def cvtDateTimeToGoogleBase(datestr, timestr, tz):
   # datestr = YYYY-MM-DD
@@ -80,7 +143,7 @@ def cvtDateTimeToGoogleBase(datestr, timestr, tz):
   return res
 
 csv_repeated_fields = ['categories','audiences',]
-direct_map_fields = ['opportunityID','organizationID','abstract','volunteersSlots','volunteersFilled','volunteersNeeded','minimumAge','sexRestrictedTo','skills','contactName','contactPhone','contactEmail','providerURL','language','lastUpdated','expires','detailURL']
+direct_map_fields = ['opportunityID','organizationID','volunteersSlots','volunteersFilled','volunteersNeeded','minimumAge','sexRestrictedTo','skills','contactName','contactPhone','contactEmail','providerURL','language','lastUpdated','expires','detailURL']
 organization_fields = ['nationalEIN','guidestarID','name','missionStatement','description','phone','fax','email','organizationURL','logoURL','providerURL',]
 def value(n):
   if (n.firstChild != None):
@@ -104,7 +167,7 @@ def outputField(name, value):
       return "c:"+name+":"+fieldtypes[name]
   if debug:
     if (len(value) > 70):
-      value = value[0:67] + "..."
+      value = value[0:67] + "... (" + str(len(value)) + " bytes)"
     return name.rjust(22) + " : " + value
   if (fieldtypes[name] == "dateTime"):
     return cvtDateTimeToGoogleBase(value, "", "UTC")
@@ -203,6 +266,7 @@ def computeStableId(opp, org, locstr, openended, duration,
   return hashlib.md5(eid + loc + timestr).hexdigest()
 
 def getDirectMappedField(opp, org):
+  global MAX_ABSTRACT_LEN
   s = ""
   paid = xml_helpers.getTagValue(opp, "paid")
   if (paid == "" or paid.lower()[0] != "y"):
@@ -221,13 +285,32 @@ def getDirectMappedField(opp, org):
     if (l.length > 0):
       val = flattenFieldToCSV(l[0])
     s += outputField(field, val)
+
+  # process abstract-- shorten, strip newlines and formatting
+  abstract = xml_helpers.getTagValue(opp, "abstract")
+  if abstract == "":
+    abstract = xml_helpers.getTagValue(opp, "description")
+  abstract = re.sub(r'(\\n)+', ' ', abstract)
+  abstract = re.sub(r'&([a-z]+|#[0-9]+);', '', abstract)
+  abstract = abstract[:MAX_ABSTRACT_LEN]
+  s += FIELDSEP
+  s += outputField("abstract", abstract)
+
   # orgLocation
   s += FIELDSEP
-  l = opp.getElementsByTagName(field)
+  l = opp.getElementsByTagName("orgLocation")
   if (l.length > 0):
     s += outputLocationField(l[0], "orgLocation")
   else:
     s += outputField("orgLocation", "")
+
+  # hidden_details
+  s += FIELDSEP
+  l = opp.getElementsByTagName("hiddenDetails")
+  if (l.length > 0):
+    s += outputField(l[0], "hidden_details")
+  else:
+    s += outputField("hidden_details", "some hidden text. asdfghjkl.")
 
   return s
 
@@ -247,7 +330,7 @@ def getBaseEventRequiredFields(opp, org):
   s += FIELDSEP + outputTagValue(opp, "description")
   s += FIELDSEP + outputField("link", "http://change.gov/")
   s += FIELDSEP + outputField("image_link", xml_helpers.getTagValue(org, "logoURL"))
-  s += FIELDSEP + outputField("event_type", "volunteering")
+  #s += FIELDSEP + outputField("event_type", "volunteering")
   return s
 
 def getFeedFields(feedinfo):
@@ -562,8 +645,12 @@ def ftpToBase(f, ftpinfo, s):
     fn = "usaservice1.gz"
   elif re.search("(handson|hot.footprint)", f):
     fn = "handsonnetwork1.gz"
+  elif re.search("(volunteer[.]gov)", f):
+    fn = "volunteergov1.gz"
   elif re.search("idealist", f):
     fn = "idealist1.gz"
+  elif re.search("(userpostings|/export/Posting)", f):
+    fn = "footprint_userpostings1.gz"
   elif re.search("craigslist", f):
     fn = "craigslist1.gz"
   elif re.search("americorps", f):
@@ -665,10 +752,18 @@ if __name__ == "__main__":
     #parsefunc = parse_handsonnetwork.ParseFPXML
     parsefunc = parse_footprint.Parse
     options.inputfmt = "fpxml"
+  elif (options.inputfmt == None and
+         re.search("(volunteer[.]gov)", f)):
+    parsefunc = parse_footprint.Parse
+    options.inputfmt = "fpxml"
   elif (options.inputfmt == "idealist" or
         (options.inputfmt == None and
          re.search("idealist", f))):
     parsefunc = parse_idealist.Parse
+  elif (options.inputfmt == "fp_userpostings" or
+        (options.inputfmt == None and
+         re.search("(userpostings|/export/Posting)", f))):
+    parsefunc = parse_userpostings.Parse
   elif (options.inputfmt == "volunteermatch" or
         options.inputfmt == "vm" or
         (options.inputfmt == None and
