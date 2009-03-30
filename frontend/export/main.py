@@ -34,12 +34,7 @@ QT = "%s%s%s" % ("ec813d6d0c96f3a562c70d78b7ac98d7ec2cfcaaf44cbd7",
                  "b77ea55f62cf002ad7e4b5ec3f89d18954")
 
 USAGE = """
-<pre>/export/UserInfo.tsv
-/export/UserStats.tsv
-/export/Posting.tsv
-/export/UserInterest.tsv
-/export/VolunteerOpportunity.tsv
-/export/VolunteerOpportunityStats.tsv
+<pre>/export/TABLENAME.tsv, eg. UserStats.tsv
 </pre>
 """
 
