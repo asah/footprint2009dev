@@ -129,6 +129,7 @@ function addToCalendar(div, type, searchResult) {
 function toggleInterest(div, eventUrl, baseUrl) {
   // TODO: First need to check if the user is logged in
   var newInterest;
+  var oldClassName = div.className;
   if (div.className.indexOf('unstarred') >= 0) {
     div.className = 'snippet_button starred';
     newInterest = 1;
@@ -146,25 +147,24 @@ function toggleInterest(div, eventUrl, baseUrl) {
                         '&zx=' + Math.random();
 
   var success = function(data, textStatus) {
-  }
+  };
 
   var error = function(xhr, textStatus, errorThrown) {
-    div.className = 'snippet_button unstarred';
+    if (newInterest == 1)
+    div.className = oldClassName;
     if (xhr.status == 401) {
       // Unauthorized
       alert("Please log in first");
     } else if (xhr.status == 400) {
     }
-  }
+  };
 
   jQuery.ajax({
+    type: 'POST',
     url: path,
     async: true,
     dataType: 'text',
     error: error,
     success: success
   });
-  var xmlHttp = GXmlHttp.create();
-  xmlHttp.open('GET', path, true);
-  xmlHttp.send(null);
 }
