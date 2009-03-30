@@ -45,6 +45,7 @@ def Pull(filename, url, min_key, delim):
   # get content from url and write to filename
   try:
     connection = urllib2.urlopen(url);
+    # TODO: read 100 lines incrementally and show progress
     content = connection.read()
     connection.close()
   except urllib2.URLError, e:
@@ -52,13 +53,13 @@ def Pull(filename, url, min_key, delim):
     sys.exit(2)
 
   try:
-    csv_file = file(filename, 'a')
+    tsv_file = file(filename, 'a')
   except IOError:
     logging.error("I/O error({0}): {1}".format(errno, os.strerror(errno)))
     sys.exit(3)
 
-  csv_file.write(content)
-  csv_file.close()
+  tsv_file.write(content)
+  tsv_file.close()
 
   # count the number of lines
   list = content.splitlines()
