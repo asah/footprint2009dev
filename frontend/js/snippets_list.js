@@ -150,7 +150,6 @@ function toggleInterest(div, eventUrl, baseUrl) {
   };
 
   var error = function(xhr, textStatus, errorThrown) {
-    if (newInterest == 1)
     div.className = oldClassName;
     if (xhr.status == 401) {
       // Unauthorized
