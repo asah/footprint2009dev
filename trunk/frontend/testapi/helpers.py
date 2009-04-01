@@ -36,7 +36,6 @@ class ApiResult(object):
     self.url = url
     self.provider = provider
     self.latlong = latlong
-    logging.info(latlong)
 
 def get_node_data(entity):
   if (entity.firstChild == None):
@@ -152,7 +151,7 @@ class ApiTesting(object):
       if fetch_result.status_code != 200:
         return None
       result_content = fetch_result.content
-      memcache.set(memcache_key, result_content, time=300)
+      # memcache.set(memcache_key, result_content, time=300)
 
     return result_content
     
