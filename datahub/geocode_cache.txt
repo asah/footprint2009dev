@@ -12004,3 +12004,30 @@ thurmont md 21788|39.6237330,-77.4115890
 diamond mo 64840-8314|36.9950110,-94.3159920
 santee ca 92108|43.5985170,-79.6073240
 manassas va 20110|38.7509110,-77.4799970
+salem, massachusetts, united states|42.5111700,-70.9094200
+addis ababa, ethiopia|9.0115700,38.7593300
+yama, walewale, 10020, ghana|
+new castle, pennsylvania, 16101, united states|40.9956910,-80.3470280
+long beach, california, 90802, united states|33.7686843,-118.1883290
+washington, district of columbia, 20056, united states|38.8950000,-77.0367000
+arona,, tenerife, spain|28.1004729,-16.6806579
+jacksonville, florida, 32210, united states|30.2775931,-81.7239979
+wellington, 6241, new zealand|-41.3119640,174.7923210
+lilongwe and salima district, malawi|
+nyeri area, central province, kenya|-1.2812045,36.7811666
+springfield (and northampton), massachusetts, 01103, united states|42.3594350,-72.6400000
+new orleans, louisiana, 70123, united states|29.9565557,-90.2010233
+seattle, washington, 98168, united states|47.4826332,-122.2973219
+any city, district of columbia, 00000, united states|
+el cajon, california, 92021, united states|32.7949570,-116.9623590
+mankato, minnesota, 56001, united states|44.1669550,-93.9937240
+clarendon, parish, jamaica|42.3599390,-71.1223310
+yonkers, new york, 10701, united states|40.9413523,-73.8713099
+tanzania|-6.3690280,34.8888220
+new york, 12986, united states|44.1883021,-74.4112950
+nakuru, riftvalley, 12393, kenya|0.9956655,35.9696674
+denu, ghana, 10020, ghana|
+kathmandu, solukhumbu, 977, nepal|
+accra, 10020, ghana|5.5515310,-0.1917670
+accra, ghana, 10020, ghana|5.5515310,-0.1917670
+g.p.o box 89, nepal|28.3948570,84.1240080

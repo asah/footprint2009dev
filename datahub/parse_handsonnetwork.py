@@ -64,21 +64,30 @@
 # </VolunteerOpportunity>
 
 from xml.dom import minidom
-import xml_helpers
+import xml_helpers as xmlh
 import re
 import parse_footprint
 from datetime import datetime
 
 #def ParseFPXML(instr, maxrecs, progress):
-#  instr = re.sub(r'<providerName>.+?</providerName>', r'<providerName>handsonnetwork</providerName>', instr)
-#  instr = re.sub(r'<providerID>.+?</providerID>', r'<providerID>102</providerID>', instr)
+#  instr = re.sub(r'<providerName>.+?</providerName>',
+#                 r'<providerName>handsonnetwork</providerName>', instr)
+#  instr = re.sub(r'<providerID>.+?</providerID>', 
+#                 r'<providerID>102</providerID>', instr)
 #  return parse_footprint.Parse(instr, maxrecs, progress)
 
 def Parse(instr, maxrecs, progress):
   if progress:
     print datetime.now(),"parse_handsonnetwork.Parse: starting parse..."
-  known_elnames = [ 'Address1', 'Address2', 'AffiliateID', 'Categories', 'Category', 'City', 'Country', 'DateListed', 'Description', 'DetailURL', 'EndDate', 'EndTime', 'Extension', 'LocalID', 'Location', 'LocationClassifications', 'Locations', 'LogoURL', 'Name', 'OpportunityDate', 'OpportunityDates', 'OpportunityType', 'OrgLocalID', 'Phone', 'SponsoringOrganization', 'SponsoringOrganizations', 'StartDate', 'StartTime', 'StateOrProvince', 'Title', 'VolunteerOpportunity', 'ZipOrPostalCode', ]
-  #xmldoc = xml_helpers.simpleParser(instr, known_elnames, progress)
+  known_elnames = [
+    'Address1', 'Address2', 'AffiliateID', 'Categories', 'Category', 'City',
+    'Country', 'DateListed', 'Description', 'DetailURL', 'EndDate', 'EndTime',
+    'Extension', 'LocalID', 'Location', 'LocationClassifications',
+    'Locations', 'LogoURL', 'Name', 'OpportunityDate', 'OpportunityDates',
+    'OpportunityType', 'OrgLocalID', 'Phone', 'SponsoringOrganization',
+    'SponsoringOrganizations', 'StartDate', 'StartTime', 'StateOrProvince',
+    'Title', 'VolunteerOpportunity', 'ZipOrPostalCode'
+    ]
 
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
@@ -88,7 +97,8 @@ def Parse(instr, maxrecs, progress):
   s += '<providerID>102</providerID>'
   s += '<providerName>handsonnetwork.org</providerName>'
   s += '<feedID>handsonnetwork.org</feedID>'
-  s += '<createdDateTime>2008-12-30T14:30:10.5</createdDateTime>' # TODO: get/create real feed date
+  # TODO: get/create real feed date
+  s += '<createdDateTime>2008-12-30T14:30:10.5</createdDateTime>'
   s += '<providerURL>http://www.handsonnetwork.org/</providerURL>'
   s += '<description></description>'
   # TODO: capture ts -- use now?!
@@ -97,31 +107,35 @@ def Parse(instr, maxrecs, progress):
   # hardcoded: Organization
   s += '<Organizations>'
   sponsor_ids = {}
-  sponsorstrs = re.findall(r'<SponsoringOrganization>.+?</SponsoringOrganization>', instr, re.DOTALL)
+  sponsorstrs = re.findall(
+    r'<SponsoringOrganization>.+?</SponsoringOrganization>', instr, re.DOTALL)
   for i,orgstr in enumerate(sponsorstrs):
     if progress and i>0 and i%250==0:
       print datetime.now(),": ",i," orgs processed."
-    org = xml_helpers.simpleParser(orgstr, known_elnames, False)
+    org = xmlh.simpleParser(orgstr, known_elnames, False)
     #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
     #for i,org in enumerate(sponsors):
     s += '<Organization>'
-    name = xml_helpers.getTagValue(org, "Name")
-    desc = xml_helpers.getTagValue(org, "Description")
+    name = xmlh.getTagValue(org, "Name")
+    desc = xmlh.getTagValue(org, "Description")
     s += '<organizationID>%d</organizationID>' % (i+1)
     s += '<nationalEIN></nationalEIN>'
-    s += '<name>%s</name>' % (xml_helpers.getTagValue(org, "Name"))
+    s += '<name>%s</name>' % (xmlh.getTagValue(org, "Name"))
     s += '<missionStatement></missionStatement>'
-    s += '<description>%s</description>' % (xml_helpers.getTagValue(org, "Description"))
+    s += '<description>%s</description>' % \
+        (xmlh.getTagValue(org, "Description"))
     # unmapped: Email
     # unmapped: Phone
     # unmapped: Extension
     s += '<location>'
-    #s += '<city>%s</city>' % (xml_helpers.getTagValue(org, "City"))
-    #s += '<region>%s</region>' % (xml_helpers.getTagValue(org, "State"))
-    #s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(org, "PostalCode"))
-    s += '<country>%s</country>' % (xml_helpers.getTagValue(org, "Country"))
+    #s += '<city>%s</city>' % (xmlh.getTagValue(org, "City"))
+    #s += '<region>%s</region>' % (xmlh.getTagValue(org, "State"))
+    #s += '<postalCode>%s</postalCode>' % \
+    #   (xmlh.getTagValue(org, "PostalCode"))
+    s += '<country>%s</country>' % (xmlh.getTagValue(org, "Country"))
     s += '</location>'
-    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.getTagValue(org, "URL"))
+    s += '<organizationURL>%s</organizationURL>' % \
+        (xmlh.getTagValue(org, "URL"))
     s += '<donateURL></donateURL>'
     s += '<logoURL></logoURL>'
     s += '<detailURL></detailURL>'
@@ -137,16 +151,17 @@ def Parse(instr, maxrecs, progress):
   #for item in items[0:maxrecs-1]:
   if progress:
     print datetime.now(),"finding VolunteerOpportunities..."
-  opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>', instr, re.DOTALL)
+  opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>',
+                    instr, re.DOTALL)
   totrecs = 0
   for i,oppstr in enumerate(opps):
     if (maxrecs>0 and i>maxrecs):
       break
-    xml_helpers.printProgress("opps", progress, i, maxrecs)
-    opp = xml_helpers.simpleParser(oppstr, known_elnames, False)
+    xmlh.printProgress("opps", progress, i, maxrecs)
+    opp = xmlh.simpleParser(oppstr, known_elnames, False)
     orgs = opp.getElementsByTagName("SponsoringOrganization")
-    name = xml_helpers.getTagValue(orgs[0], "Name")
-    desc = xml_helpers.getTagValue(orgs[0], "Description")
+    name = xmlh.getTagValue(orgs[0], "Name")
+    desc = xmlh.getTagValue(orgs[0], "Description")
     sponsor_id = sponsor_ids[name+desc]
     oppdates = opp.getElementsByTagName("OpportunityDate")
     if (oppdates == None or oppdates.count == 0):
@@ -155,38 +170,39 @@ def Parse(instr, maxrecs, progress):
       # unmapped: LogoURL
       # unmapped: OpportunityTypeID   (categoryTag?)
       # unmapped: LocationClassificationID (flatten)
-      outstr_for_all_dates_pre = '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(opp, "LocalID"))
-      outstr_for_all_dates_pre += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (sponsor_id)
-        # unmapped: OrgLocalID
-      outstr_for_all_dates_pre += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>%s</volunteerHubOrganizationID></volunteerHubOrganizationIDs>' % (xml_helpers.getTagValue(opp, "AffiliateID"))
-      outstr_for_all_dates_pre += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "Title"))
-      outstr_for_all_dates_pre += '<abstract></abstract>'
-      outstr_for_all_dates_pre += '<volunteersNeeded>-8888</volunteersNeeded>'
+      datestr_pre = xmlh.outputVal('volunteerOpportunityID', opp, "LocalID")
+      datestr_pre = xmlh.outputPlural('sponsoringOpportunityID', sponsor_id)
+      # unmapped: OrgLocalID
+      datestr_pre = xmlh.outputPluralNode('volunteerHubOrganizationID', opp,
+                                         "AffiliateID")
+      datestr_pre = xmlh.outputNode('title', opp, "Title")
+      datestr_pre += '<abstract></abstract>'
+      datestr_pre += '<volunteersNeeded>-8888</volunteersNeeded>'
       
-  
       locations = opp.getElementsByTagName("Location")
       if (locations.length != 1):
         print datetime.now(),"parse_handsonnetwork: only 1 location supported."
         return None
       loc = locations[0]
-      outstr_for_all_dates_post = '<locations><location>'
-        # yuck, uses address1 for venue name... sometimes... no way to detect: presence of numbers?
-      outstr_for_all_dates_post += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(loc, "Address1"))
-      outstr_for_all_dates_post += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.getTagValue(loc, "Address2"))
-      outstr_for_all_dates_post += '<city>%s</city>' % (xml_helpers.getTagValue(loc, "City"))
-      outstr_for_all_dates_post += '<region>%s</region>' % (xml_helpers.getTagValue(loc, "State"))
-      outstr_for_all_dates_post += '<country>%s</country>' % (xml_helpers.getTagValue(loc, "Country"))
-      outstr_for_all_dates_post += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(loc, "ZipOrPostalCode"))
-        # no equivalent: latitude, longitude
-      outstr_for_all_dates_post += '</location></locations>'
+      datestr_post = '<locations><location>'
+      # yuck, uses address1 for venue name... sometimes...
+      #no way to detect: presence of numbers?
+      datestr_post += xmlh.outputNode('streetAddress1', loc, "Address1")
+      datestr_post += xmlh.outputNode('streetAddress2', loc, "Address2")
+      datestr_post += xmlh.outputNode('city', loc, "City")
+      datestr_post += xmlh.outputNode('region', loc, "State")
+      datestr_post += xmlh.outputNode('country', loc, "Country")
+      datestr_post += xmlh.outputNode('postalCode', loc, "ZipOrPostalCode")
+      # no equivalent: latitude, longitude
+      datestr_post += '</location></locations>'
       
-      outstr_for_all_dates_post += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(opp, "DetailURL"))
-      outstr_for_all_dates_post += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "Description"))
-      outstr_for_all_dates_post += '<lastUpdated>%sT00:00:00</lastUpdated>' % (xml_helpers.getTagValue(opp, "DateListed"))
-  
+      datestr_post += xmlh.outputNode('detailURL', opp, "DetailURL")
+      datestr_post += xmlh.outputNode('description', opp, "Description")
+      datestr_post += xmlh.outputVal('lastUpdated', opp,
+                 '%sT00:00:00' % (xmlh.getTagValue(opp, "DateListed")))
        
       oppcount = 0
-      dtds = ''
+      datetimedur = ''
       for oppdate in oppdates:
         oppcount = oppcount + 1
         if progress:
@@ -194,29 +210,30 @@ def Parse(instr, maxrecs, progress):
           if totrecs%250==0:
             print datetime.now(),": ",totrecs," records generated."
   
-        dtds += '<dateTimeDuration>'
+        datetimedur += '<dateTimeDuration>'
         if oppdate == None:
-          dtds += '<openEnded>Yes</openEnded>'
+          datetimedur += '<openEnded>Yes</openEnded>'
         else:
-          dtds += '<openEnded>No</openEnded>'
+          datetimedur += '<openEnded>No</openEnded>'
           # hardcoded: commitmentHoursPerWeek
-          dtds += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
+          datetimedur += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
           # TODO: timezone
-          dtds += '<startDate>%s</startDate>' % (xml_helpers.getTagValue(oppdate, "StartDate"))
-          dtds += '<endDate>%s</endDate>' % (xml_helpers.getTagValue(oppdate, "EndDate"))
-          dtds += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(oppdate, "StartTime"))
-          dtds += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(oppdate, "EndTime"))
-        dtds += '</dateTimeDuration>'
+          datetimedur += '<startDate>%s</startDate>' % (xmlh.getTagValue(oppdate, "StartDate"))
+          datetimedur += '<endDate>%s</endDate>' % (xmlh.getTagValue(oppdate, "EndDate"))
+          datetimedur += '<startTime>%s</startTime>' % (xmlh.getTagValue(oppdate, "StartTime"))
+          datetimedur += '<endTime>%s</endTime>' % (xmlh.getTagValue(oppdate, "EndTime"))
+        datetimedur += '</dateTimeDuration>'
         
       if oppcount == 0: # insert an open ended datetimeduration
-        dtds = '<dateTimeDuration><openEnded>Yes</openEnded></dateTimeDuration>'
+        datetimedur = '<dateTimeDuration><openEnded>'
+        datetimedur += 'Yes</openEnded></dateTimeDuration>'
         
       s += '<VolunteerOpportunity>'
-      s += outstr_for_all_dates_pre
+      s += datestr_pre
       s += '<dateTimeDurations>';
-      s += dtds
+      s += datetimedur
       s += '</dateTimeDurations>';
-      s += outstr_for_all_dates_post
+      s += datestr_post
       s += '</VolunteerOpportunity>'
     
   if progress:
