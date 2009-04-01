@@ -55,7 +55,7 @@ def get_children_by_tagname(elem, name):
   return temp
   
 
-def get_tag_value(self, entity, tag):
+def get_tag_value( entity, tag):
   #print "----------------------------------------"
   nodes = entity.getElementsByTagName(tag)
   #print "nodes: "
