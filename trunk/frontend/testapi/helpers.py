@@ -18,7 +18,6 @@ from google.appengine.api import memcache
 from xml.dom import minidom
 import xml.sax.saxutils
 import re
-import sys
 import logging
 import md5
 from urllib import urlencode
@@ -30,8 +29,8 @@ CURRENT_STATIC_XML = 'sampleData0.1.xml'
 ALL_TEST_TYPES = 'num, query, provider, start' #'query, num, start, provider'
 
 class ApiResult(object):
-  def __init__(self, id, title, description, url, provider, latlong):
-    self.id = id
+  def __init__(self, item_id, title, description, url, provider, latlong):
+    self.id = item_id
     self.title = title
     self.description = description
     self.url = url
@@ -39,95 +38,104 @@ class ApiResult(object):
     self.latlong = latlong
     logging.info(latlong)
 
+def get_node_data(entity):
+  if (entity.firstChild == None):
+    return ""
+  if (entity.firstChild.data == None):
+    return ""
+  nodestr = entity.firstChild.data
+  nodestr = xml.sax.saxutils.escape(nodestr).encode('UTF-8')
+  nodestr = re.sub(r'\n', r'\\n', nodestr)
+  return nodestr
+    
+def get_children_by_tagname(elem, name):
+  temp = []
+  for child in elem.childNodes:
+    if child.nodeType == child.ELEMENT_NODE and child.nodeName == name:
+      temp.append(child)
+  return temp
+  
+
+def get_tag_value(self, entity, tag):
+  #print "----------------------------------------"
+  nodes = entity.getElementsByTagName(tag)
+  #print "nodes: "
+  #print nodes
+  if (nodes.length == 0):
+    return ""
+  #print nodes[0]
+  if (nodes[0] == None):
+    return ""
+  if (nodes[0].firstChild == None):
+    return ""
+  if (nodes[0].firstChild.data == None):
+    return ""
+  #print nodes[0].firstChild.data
+  s = nodes[0].firstChild.data
+  s = xml.sax.saxutils.escape(s).encode('UTF-8')
+  s = re.sub(r'\n', r'\\n', s)
+  return s
+
 class ApiTesting(object):
   def __init__(self, wsfi_app):
     self.web_app = wsfi_app
     self.num_failures = 0
+    self.api_url = None
+    self.response_type = None
     
-  def Output(self, html):
+  def fail(self):
+    self.web_app.response.set_status(500)
+    
+  def output(self, html):
     self.web_app.response.out.write(html)
     
-  def getNodeData(entity):
-    if (entity.firstChild == None):
-      return ""
-    if (entity.firstChild.data == None):
-      return ""
-    
-    s = entity.firstChild.data
-    s = xml.sax.saxutils.escape(s).encode('UTF-8')
-    s = re.sub(r'\n', r'\\n', s)
-    return s
-    
-  def getChildrenByTagName(elem, name):
-    temp = []
-    for child in elem.childNodes:
-      if child.nodeType == child.ELEMENT_NODE and child.nodeName == name:
-        temp.append(child)
-        
-    return temp
-  
-  def getTagValue(self, entity, tag):
-    #print "----------------------------------------"
-    nodes = entity.getElementsByTagName(tag)
-    #print "nodes: "
-    #print nodes
-    if (nodes.length == 0):
-      return ""
-    #print nodes[0]
-    if (nodes[0] == None):
-      return ""
-    if (nodes[0].firstChild == None):
-      return ""
-    if (nodes[0].firstChild.data == None):
-      return ""
-    #print nodes[0].firstChild.data
-    s = nodes[0].firstChild.data
-    s = xml.sax.saxutils.escape(s).encode('UTF-8')
-    s = re.sub(r'\n', r'\\n', s)
-    return s
-  
-  def SafeGet(handler, name, default):
+  def safe_get(handler, name, default):
     value = handler.request.get(name) or default
     return value
   
-  def MakeUri(self, options):
-    result = self.api_url + '?output=' + self.response_type
-    result = result + '&' + urlencode(options)
-      
+  def make_uri(self, options):
+    result = self.api_url + '?output=' + self.response_type + '&'
+    result += urlencode(options)
     return result
   
-  def AssertValidResultSet(self, result_set):
+  def assert_valid_results(self, result_set):
     if result_set is None or result_set == False:
       self.num_failures = self.num_failures + 1
+      self.fail()
     else:
       if len(result_set) == 0:
         self.num_failures = self.num_failures + 1
+        self.fail()
       else:
         return True
 
-    self.Output('<p class="result fail">Fail. The result set is empty.</p>')      
+    self.output('<p class="result fail">Fail. The result set is empty.</p>')
+    self.fail()
     return False
   
-  def RunTest(self, test_type):
-    self.Output('<p class="test">Running test <em>' + test_type + '</em> for response type <em>' + self.response_type + '</em></p>')
-    test_func = getattr(self, 'Test_' + test_type.strip(), None)
+  def run_test(self, test_type):
+    self.output('<p class="test">Running test <em>' + test_type +
+                '</em> for response type <em>' + self.response_type +
+                '</em></p>')
+    test_func = getattr(self, 'test_' + test_type.strip(), None)
     if callable(test_func):
       test_func()
     else:
-      self.Output('<p class="result fail">No such test <strong>' + test_type + '</strong> in suite.')
+      self.output('<p class="result fail">No such test <strong>' +
+                  test_type + '</strong> in suite.')
       
     return True
   
-  def RunTests(self, testType, apiUrl, responseType):
-    self.api_url = apiUrl
-    self.response_type = responseType
+  def run_tests(self, test_type, api_url, response_type):
+    self.api_url = api_url
+    self.response_type = response_type
     
-    if testType == 'all':
-      testType = ALL_TEST_TYPES
+    if test_type == 'all':
+      test_type = ALL_TEST_TYPES
     
-    test_types = testType.split(',')
+    test_types = test_type.split(',')
     for test_type in test_types:
-      self.RunTest(test_type)
+      self.run_test(test_type)
 
     return True
   
@@ -136,7 +144,7 @@ class ApiTesting(object):
     it.update(s)
     return it.digest()
 
-  def RetrieveRawData(self, fullUri):
+  def retrieve_raw_data(self, fullUri):
     memcache_key = self.hash_md5('api_test_data:' + fullUri)
     result_content = memcache.get(memcache_key)
     if not result_content:
@@ -148,110 +156,131 @@ class ApiTesting(object):
 
     return result_content
     
-  def ParseRSS(self, data):
+  def parse_rss(self, data):
     result = []
     
     xmldoc = minidom.parseString(data)
     items = xmldoc.getElementsByTagName('item')
     for item in items:
-      api_result = (ApiResult(self.getTagValue(item, 'fp:id'), self.getTagValue(item, 'title'),
-                              self.getTagValue(item, 'description'), self.getTagValue(item, 'link'),
-                              self.getTagValue(item, 'fp:provider'), self.getTagValue(item, 'fp:latlong')))
+      api_result = (ApiResult(
+          get_tag_value(item, 'fp:id'),
+          get_tag_value(item, 'title'),
+          get_tag_value(item, 'description'), 
+          get_tag_value(item, 'link'),
+          get_tag_value(item, 'fp:provider'),
+          get_tag_value(item, 'fp:latlong')))
       result.append(api_result)
       
     return result
     
-  def ParseXML(data):
+  def parse_xml(data):
     return []
   
-  def ParseRawData(self, data):
+  def parse_raw_data(self, data):
+    """wrapper for parse_TYPE()."""
     if self.response_type == 'rss':
-      return self.ParseRSS(data)
+      return self.parse_rss(data)
     elif self.response_type == 'xml':
-      return self.ParseXML(data)
+      return self.parse_xml(data)
       
     return []
   
-  def GetResultSet(self, arg_list):
-    full_uri = self.MakeUri(arg_list)
-    self.Output('<p class="uri">Fetching result set for following tests</p>')
-    self.Output('<p class="uri">URI: ' + full_uri + '</p>')
+  def get_result_set(self, arg_list):
+    """macro for forming and making a request and parsing the results."""
+    full_uri = self.make_uri(arg_list)
+    self.output('<p class="uri">Fetching result set for following tests</p>')
+    self.output('<p class="uri">URI: ' + full_uri + '</p>')
     
     #try:
-    data = self.RetrieveRawData(full_uri)
+    data = self.retrieve_raw_data(full_uri)
     #except:
-      #self.Output('<p class="result fail">RetrieveRawData failed.</p>')
+      #self.output('<p class="result fail">retrieve_raw_data failed.</p>')
       #return False
     
     try:
-      opps = self.ParseRawData(data)
+      opps = self.parse_raw_data(data)
       return opps
     except:
-      self.Output('<p class="result fail">ParseRawData failed. Unable to parse response.</p>')
+      self.output('<p class="result fail">parse_raw_data failed. ' +
+                  'Unable to parse response.</p>')
     
     return None
     
-  def Test_num(self):
+  def test_num(self):
+    """test whether the result set has a given number of results."""
     result = True
     expected_count = 7
     
-    result_set = self.GetResultSet({'num':expected_count})
-    if not self.AssertValidResultSet(result_set):
+    result_set = self.get_result_set({'num':expected_count})
+    if not self.assert_valid_results(result_set):
       return False
     
     if (len(result_set) == expected_count):
-      self.Output('<p class="result success">Passed</p>')
+      self.output('<p class="result success">Passed</p>')
     else:
-      self.Output('<p class="result fail">Fail. <span>Requested ' + str(expected_count) + ', received ' + str(len(result_set)) + '</span></p>')
+      self.output('<p class="result fail">Fail. <span>Requested ' +
+                  str(expected_count) + ', received ' + str(len(result_set))+
+                  '</span></p>')
       result = False
     
     return result
   
-  def Test_query(self):
+  def test_query(self):
+    """run a hardcoded test query (q=)."""
     result = True
     term = "hospital"
     provider = "HandsOn Network"
   
-    result_set = self.GetResultSet({'q':term, 'provider':provider})
-    if not self.AssertValidResultSet(result_set):
+    result_set = self.get_result_set({'q':term, 'provider':provider})
+    if not self.assert_valid_results(result_set):
       return False
 
     for opp in result_set:
-      if re.search(term, opp.title, re.I) == None and re.search(term, opp.description, re.I) == None:
-        self.Output('<p class="result amplification">Did not find search term <strong>' + term + '</strong> in item ' + opp.title + ': ' + opp.description + '</p>')
+      if (not re.search(term, opp.title, re.I) and
+          not re.search(term, opp.description, re.I)):
+        self.output('<p class="result amplification">Did not find search term'+
+                    '<strong>' + term + '</strong> in item ' + opp.title +
+                    ': ' + opp.description + '</p>')
         result = False
       
     if result:
-      self.Output('<p class="result success">Passed</p>')
+      self.output('<p class="result success">Passed</p>')
     else:
-      self.Output('<p class="result fail">Fail. <span>One or more items did not match search term <strong>' + term + '</strong></span></p>')
+      self.output('<p class="result fail">Fail. <span>One or more items did '+
+                  'not match search term <strong>' + term +
+                  '</strong></span></p>')
       result = False
     
     return result
   
-  def Test_provider(self):
+  def test_provider(self):
+    """run a hardcoded test query (&provider=)."""
     result = True
     term = "hospital"
     provider = "HandsOn Network"
   
-    result_set = self.GetResultSet({'q':term, 'provider':provider})
-    if not self.AssertValidResultSet(result_set):
+    result_set = self.get_result_set({'q':term, 'provider':provider})
+    if not self.assert_valid_results(result_set):
       return False
 
     for opp in result_set:
       if re.search(provider, opp.provider, re.I) == None:
-        self.Output('<p class="result amplification">Wrong provider <strong>' + opp.provider + '</strong> found in item <em>' + opp.title + '</em></p>')
+        self.output('<p class="result amplification">Wrong provider '+
+                    '<strong>' + opp.provider + '</strong> found in item '+
+                    '<em>' + opp.title + '</em></p>')
         result = False
       
     if result:
-      self.Output('<p class="result success">Passed</p>')
+      self.output('<p class="result success">Passed</p>')
     else:
-      self.Output('<p class="result fail">Fail. <span>One or more items did not match provider <strong>' + provider + '</strong></span></p>')
+      self.output('<p class="result fail">Fail. <span>One or more items '+
+                  'did not match provider <strong>' + provider + '</strong>'+
+                  '</span></p>')
       result = False
     
     return result
   
-  def Test_start(self):
+  def test_start(self):
     """
       Tests two result sets to ensure that the API 'start' parameter is
       valid. Assumes:
@@ -266,22 +295,26 @@ class ApiTesting(object):
     start2 = 5
     num_items = 10
     
-    result_set1 = self.GetResultSet({'num': num_items, 'start': start1})
-    result_set2 = self.GetResultSet({'num': num_items, 'start': start2})
-    if not self.AssertValidResultSet(result_set1) or not self.AssertValidResultSet(result_set2):
+    result_set1 = self.get_result_set({'num': num_items, 'start': start1})
+    result_set2 = self.get_result_set({'num': num_items, 'start': start2})
+    if (not self.assert_valid_results(result_set1) or
+        not self.assert_valid_results(result_set2)):
       return False
 
     for i in range(start2, num_items):
       opp1 = result_set1[i]
       opp2 = result_set2[start1 + (i - start2)]
       if (opp1.title != opp2.title):
-        self.Output('<p class="result amplification">List items different, <em>' + opp1.title + '</em> != <em>' + opp2.title + '</em></p>')
+        self.output('<p class="result amplification">List items different, '+
+                    '<em>' + opp1.title + '</em> != <em>' + opp2.title +
+                    '</em></p>')
         result = False
       
     if result:
-      self.Output('<p class="result success">Passed</p>')
+      self.output('<p class="result success">Passed</p>')
     else:
-      self.Output('<p class="result fail">Fail. <span>Start param returned non-overlapping results</p>')
+      self.output('<p class="result fail">Fail. <span>Start param returned '+
+                  'non-overlapping results</p>')
       result = False
     
     return result

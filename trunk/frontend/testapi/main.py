@@ -34,7 +34,8 @@ class DumpSampleData(webapp.RequestHandler):
 class RunTests(webapp.RequestHandler):
   def get(self):
     testType = self.request.get('test_type') or 'all'
-    responseTypes = self.request.get('response_types') or testapi.helpers.DEFAULT_RESPONSE_TYPES
+    responseTypes = self.request.get('response_types') or \
+        testapi.helpers.DEFAULT_RESPONSE_TYPES
     remoteUrl = self.request.get('url') or ''
     specialOutput = self.request.get('output') or ''
     errors = ''
@@ -49,30 +50,35 @@ class RunTests(webapp.RequestHandler):
     else:
       apiUrl = remoteUrl
         
-    self.response.out.write('<style>')
-    self.response.out.write('p {font-family: Arial, sans-serif; font-size: 10pt; margin: 0;}')
-    self.response.out.write('p.error {color: #880000;}')
-    self.response.out.write('.test {font-size: 12pt; font-weight: bold; margin-top: 12px;}')
-    self.response.out.write('.uri {font-size: 10pt; font-weight: normal; color: gray; margin-left: 0px;}')
-    self.response.out.write('.result {font-size: 11pt; font-weight: normal; margin-left: 8px; margin-bottom: 4px;}')
-    self.response.out.write('.fail {color: #880000;}')
-    self.response.out.write('.success {color: #008800;}')
-    self.response.out.write('.amplification {color: gray; margin-left: 16px;}')
-    self.response.out.write('</style>')
-    self.response.out.write('<h1>Running test: ' + testType + '</h1>')
-    self.response.out.write('<p class="error">' + errors + '</p>')
-    self.response.out.write('<p>Response types: ' + responseTypes + '</p>')
-    self.response.out.write('<p>API url: ' + apiUrl + '</p>')
-    
+    outstr = ""
+    outstr += '<style>'
+    outstr += 'p {font-family: Arial, sans-serif; font-size: 10pt; margin: 0;}'
+    outstr += 'p.error {color: #880000;}'
+    outstr += '.test {font-size: 12pt; font-weight: bold; margin-top: 12px;}'
+    outstr += '.uri {font-size: 10pt; font-weight: normal; color: gray;'
+    outstr += '      margin-left: 0px;}'
+    outstr += '.result {font-size: 11pt; font-weight: normal; '
+    outstr += '      margin-left: 8px; margin-bottom: 4px;}'
+    outstr += '.fail {color: #880000;}'
+    outstr += '.success {color: #008800;}'
+    outstr += '.amplification {color: gray; margin-left: 16px;}'
+    outstr += '</style>'
+    outstr += '<h1>Running test: ' + testType + '</h1>'
+    outstr += '<p class="error">' + errors + '</p>'
+    outstr += '<p>Response types: ' + responseTypes + '</p>'
+    outstr += '<p>API url: ' + apiUrl + '</p>'
+    self.response.out.write(outstr)
+
     responseTypes = responseTypes.split(',')
     for responseType in responseTypes:
       api_testing = testapi.helpers.ApiTesting(self)
-      api_testing.RunTests(testType, apiUrl, responseType)
+      api_testing.run_tests(testType, apiUrl, responseType)
     
 
-application = webapp.WSGIApplication([('/testapi/run', RunTests),
-                                      ('/testapi/sampleData.xml', DumpSampleData)],
-                                     debug=True)
+application = webapp.WSGIApplication(
+  [('/testapi/run', RunTests),
+   ('/testapi/sampleData.xml', DumpSampleData)],
+  debug=True)
 
 def main():
   run_wsgi_app(application)
