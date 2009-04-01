@@ -165,7 +165,9 @@ def search(args, num_overfetch=200):
   query_url += "&bq=" + base_query
 
   logging.info("calling Base: "+query_url)
-  return query(query_url, args, False)
+  res = query(query_url, args, False)
+  logging.info("Base call done.")
+  return res
 
 
 def query(query_url, args, cache):
@@ -205,7 +207,11 @@ def query(query_url, args, cache):
     latstr = utils.GetXmlElementTextOrEmpty(entry, 'g:latitude')
     longstr = utils.GetXmlElementTextOrEmpty(entry, 'g:longitude')
     if latstr and longstr and latstr != "" and longstr != "":
-      res.latlong = latstr + "," + longstr
+      latval = float(latstr)
+      longval = float(longstr)
+      if latval > 500: latval -= 1000
+      if longval > 500: longval -= 1000
+      res.latlong = str(latval) + "," + str(longval)
 
     # TODO: remove-- working around a DB bug where all latlongs are the same
     if "geocode_responses" in args:
