@@ -133,3 +133,12 @@ def prettyxml(doc, strip_header = False):
   s = re.sub(r'><', r'>\n<', s)
   # toprettyxml wasn't that pretty...
   return s
+
+def outputVal(name, val):
+  return "<" + name + ">" + val + "</" + name + ">"
+def outputNode(name, node, nodename):
+  return outputVal(xml_helpers.getTagValue(node, nodename))
+def outputPlural(name, val):
+  return "<" + name + "s>" + outputVal(name, val) + "</" + name + "s>"
+def outputPluralNode(name, node, nodename):
+  return "<" + name + "s>" + outputNode(name, node, val) + "</" + name + "s>"
