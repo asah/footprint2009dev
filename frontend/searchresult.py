@@ -17,6 +17,7 @@ import urlparse
 import datetime
 import time
 import math
+import hashlib
 
 from google.appengine.api import memcache
 from xml.sax.saxutils import escape
@@ -133,8 +134,9 @@ class SearchResultSet(object):
     def assign_merge_keys():
       """private helper function for dedup()"""
       for i,res in enumerate(self.results):
-        res.merge_key = (safe_str(res.title) + safe_str(res.snippet) +
-                         safe_str(res.location))
+        res.merge_key = hashlib.md5(safe_str(res.title) +
+                                    safe_str(res.snippet) +
+                                    safe_str(res.location)).hexdigest()
         # we will be sorting & de-duping the merged results
         # by start date so we need an epoch time
         res.t_startdate = res.startdate.timetuple()
