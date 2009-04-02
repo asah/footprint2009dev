@@ -94,7 +94,7 @@ class SearchResultSet(object):
     self.query_url_encoded = escape(query_url_encoded)
     self.results = results
     self.total_merged_results = 0
-
+    self.merged_results = []
     self.pubDate = getRFCdatetime()
     self.lastBuildDate = self.pubDate
 
@@ -113,11 +113,11 @@ class SearchResultSet(object):
     automatically."""
     self.clipped_results = self.merged_results[start:start+num]
 
-
   def dedup(self):
-    # we are going to make another list of results merged by title and snippet
+    """modify in place, merged by title and snippet."""
 
     def safe_str(s):
+      """private helper function for dedup()"""
       return_val = ""
       try:
         return_val = str(s)
@@ -130,92 +130,98 @@ class SearchResultSet(object):
             continue # discard
       return return_val
 
-    self.merged_results = []
-    for i,res in enumerate(self.results):
-      # first we assign all our results a merge_key
-      res.merge_key = (safe_str(res.title)
-          + safe_str(res.snippet) + safe_str(res.location))
-      # we will be sorting & de-duping the merged results
-      # by start date so we need an epoch time
-      res.t_startdate = res.startdate.timetuple()
-      # this is for the list of any results merged with this one
-      res.merged_list = []
-      res.merged_debug = []
-
-    def merge_result(set, res):
-      merged = False
-      for i, primary_result in enumerate(set):
-        if primary_result.merge_key == res.merge_key:
-          merged = True
-          listed = False
-          for n, merged_result in enumerate(set[i].merged_list):
-            # do we already have this date + url?
-            if (merged_result.t_startdate==set[i].t_startdate
-                 and merged_result.url==set[i].url):
-              listed = True
-              break
-
-          if not listed:
-            set[i].merged_list.append(res)
-            set[i].merged_debug.append(
-                res.location + ":" + res.startdate.strftime("%Y-%m-%d"))
-          break
-      if not merged:
-        set.append(res)
-
-    for i,res in enumerate(self.results):
-      res.month_day = (time.strftime("%B", res.t_startdate)
-         + " " + str(int(time.strftime("%d", res.t_startdate))))
-      merge_result(self.merged_results, res)
+    def assign_merge_keys():
+      """private helper function for dedup()"""
+      for i,res in enumerate(self.results):
+        res.merge_key = (safe_str(res.title) + safe_str(res.snippet) +
+                         safe_str(res.location))
+        # we will be sorting & de-duping the merged results
+        # by start date so we need an epoch time
+        res.t_startdate = res.startdate.timetuple()
+        # month_day used by django
+        res.month_day = (time.strftime("%B", res.t_startdate) + " " +
+                         str(int(time.strftime("%d", res.t_startdate))))
+        # this is for the list of any results merged with this one
+        res.merged_list = []
+        res.merged_debug = []
 
     def compare_merged_dates(a, b):
+      """private helper function for dedup()"""
       if (a.t_startdate > b.t_startdate): return 1
       elif (a.t_startdate < b.t_startdate): return -1
       else: return 0
 
-    for i,res in enumerate(self.merged_results):
-      res.idx = i + 1
-      if len(res.merged_list) > 1:
-        res.merged_list.sort(cmp=compare_merged_dates)
-        location_was = res.location
-        need_more = False
-        res.less_list = []
-        if len(res.merged_list) > 2:
-          need_more = True
-          more_id = "more_" + str(res.idx)
-          res.more_id = more_id
-          res.more_list = []
+    def merge_result(res):
+      """private helper function for dedup()"""
+      merged = False
+      for i, primary_result in enumerate(self.merged_results):
+        if primary_result.merge_key == res.merge_key:
+          # merge it
+          listed = False
+          for n, merged_result in enumerate(self.merged_results[i].merged_list):
+            # do we already have this date + url?
+            if (merged_result.t_startdate == self.merged_results[i].t_startdate
+                and merged_result.url == self.merged_results[i].url):
+              listed = True
+              break
+          if not listed:
+            self.merged_results[i].merged_list.append(res)
+            self.merged_results[i].merged_debug.append(res.location + ":" +
+                res.startdate.strftime("%Y-%m-%d"))
+          merged = True
+          break
+      if not merged:
+        self.merged_results.append(res)
 
-        more = 0
-        res.have_more = True
-        for n,merged_result in enumerate(res.merged_list):
-          # now we are making something for the django template to display
-          # for the merged list we only show the unique locations and dates
-          # but we also use the url if it is unique too
-          # for more than 2 extras we will offer "more" and "less"
-          # we will be showing the unique dates as "Month Date"
+    def compute_more_less():
+      """Now we are making something for the django template to display
+      for the merged list we only show the unique locations and dates
+      but we also use the url if it is unique too
+      for more than 2 extras we will offer "more" and "less"
+      we will be showing the unique dates as "Month Date"."""
+      for i,res in enumerate(self.merged_results):
+        res.idx = i + 1
+        if len(res.merged_list) > 1:
+          res.merged_list.sort(cmp=compare_merged_dates)
+          location_was = res.location
+          need_more = False
+          res.less_list = []
+          if len(res.merged_list) > 2:
+            need_more = True
+            more_id = "more_" + str(res.idx)
+            res.more_id = more_id
+            res.more_list = []
 
-          def make_linkable(text, merged_result, res):
-            if merged_result.url != res.url:
-              return '<a href="' + merged_result.url + '">' + text + '</a>'
+          more = 0
+          res.have_more = True
+          for n,merged_result in enumerate(res.merged_list):
+            def make_linkable(text, merged_result, res):
+              if merged_result.url != res.url:
+                return '<a href="' + merged_result.url + '">' + text + '</a>'
+              else:
+                return text
+  
+            entry = ""
+            if merged_result.location != location_was:
+              location_was = merged_result.location
+              entry += ('<br/>'
+               + make_linkable(merged_result.location, merged_result, res)
+               + ' on ')
+            elif more > 0:
+              entry += ', '
+  
+            entry += make_linkable(merged_result.month_day, merged_result, res)
+            if more < 3:
+              res.less_list.append(entry)
             else:
-              return text
+              res.more_list.append(entry)
+  
+            more += 1
 
-          entry = ""
-          if merged_result.location != location_was:
-            location_was = merged_result.location
-            entry += ('<br/>'
-             + make_linkable(merged_result.location, merged_result, res)
-             + ' on ')
-          elif more > 0:
-            entry += ', '
-
-          entry += make_linkable(merged_result.month_day, merged_result, res)
-          if more < 3:
-            res.less_list.append(entry)
-          else:
-            res.more_list.append(entry)
-
-          more += 1
+    # dedup() main code
+    assign_merge_keys()
+    for i,res in enumerate(self.results):
+      merge_result(res)
+    compute_more_less()
     self.total_merged_results = len(self.merged_results)
 
