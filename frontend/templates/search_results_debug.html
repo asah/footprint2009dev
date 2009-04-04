@@ -13,12 +13,13 @@ location center (vol_loc)={{location}} / {{latlong}}   (center point)
 max distance from center (vol_dist)={{max_distance}}  (max distance)
 
 <hr/>
-{% for result in result_set.merged_results %}
+{% for result in result_set.clipped_results %}
 {{result.idx}}. {{result.title}} @ {{result.location}} ({{result.latlong}})
 link: <a href="{{result.url|escape}}">{{result.url}}</a>
 desc: {{result.snippet}}
 id: {{result.id}}     date range: {{result.startdate}}    provider: {{result.provider}} 
 score: {{result.scorestr}} (orig result #{{result.orig_idx}}){{result.score_notes}}
+views: {{result.merged_pageviews}} merged / {{result.pageviews}} for this one
 start: {{result.starttime}} stop: {{result.endtime}}
 {% if result.merged_list %}
 merged: {% for it in result.merged_debug %}{{it}} {% endfor %}

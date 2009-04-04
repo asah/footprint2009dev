@@ -1,0 +1,22 @@
+<html>
+<body>
+<div>
+<pre>
+page '{{ pagename }}' has been seen {{ pageviews }} times.
+(use &amp;pagename=NAME to set the pagename)
+
+memcache stats:
+ - hits: {{ hits }}
+ - misses: {{ misses }}
+ - byte_hits: {{ byte_hits }}
+ - items: {{ items }}
+ - bytes: {{ bytes }}
+ - oldest_item_age: {{ oldest_item_age }}
+pageview counter stats:
+ - pc_loads: {{ pc_loads }}
+ - pc_writebacks: {{ pc_writebacks }}
+</pre>
+</div>
+
+</body>
+</html>
