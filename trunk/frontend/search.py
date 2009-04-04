@@ -82,6 +82,7 @@ def search(args):
     memcache.set(memcache_key, result_set, time=CACHE_TIME)
 
   result_set.clip_merged_results(args[api.PARAM_START], args[api.PARAM_NUM])
+  result_set.track_views()
   return result_set
 
 

@@ -18,11 +18,13 @@ import datetime
 import time
 import math
 import hashlib
+import logging
 
 from google.appengine.api import memcache
 from xml.sax.saxutils import escape
 
 import api
+from fastpageviews import pagecount
 
 def getRFCdatetime(when = None):
   # GAE server localtime appears to be UTC and timezone %Z
@@ -113,6 +115,16 @@ class SearchResultSet(object):
     No need for bounds-checking -- python list slicing does that
     automatically."""
     self.clipped_results = self.merged_results[start:start+num]
+
+  def track_views(self):
+    logging.info(str(datetime.datetime.now())+" track_views: start")
+    for i, primary_res in enumerate(self.clipped_results):
+      primary_res.merged_pageviews = pagecount.IncrPageCount(
+        primary_res.merge_key, 1)
+      primary_res.pageviews = pagecount.IncrPageCount(primary_res.id, 1)
+      for j, res in enumerate(primary_res.merged_list):
+        res.pageviews = pagecount.IncrPageCount(res.id, 1)
+    logging.info(str(datetime.datetime.now())+" track_views: end")
 
   def dedup(self):
     """modify in place, merged by title and snippet."""
