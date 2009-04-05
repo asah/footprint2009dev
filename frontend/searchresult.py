@@ -66,8 +66,7 @@ class SearchResult(object):
     # TODO: real quality score
     self.quality_score = 0.1
 
-    # TODO: real pageviews
-    self.pageviews = 0
+    self.impressions = 0
 
     self.pubDate = getRFCdatetime()
 
@@ -119,11 +118,12 @@ class SearchResultSet(object):
   def track_views(self):
     logging.info(str(datetime.datetime.now())+" track_views: start")
     for i, primary_res in enumerate(self.clipped_results):
-      primary_res.merged_pageviews = pagecount.IncrPageCount(
+      logging.info("track_views: key="+primary_res.merge_key)
+      primary_res.merged_impressions = pagecount.IncrPageCount(
         primary_res.merge_key, 1)
-      primary_res.pageviews = pagecount.IncrPageCount(primary_res.id, 1)
+      primary_res.impressions = pagecount.IncrPageCount(primary_res.id, 1)
       for j, res in enumerate(primary_res.merged_list):
-        res.pageviews = pagecount.IncrPageCount(res.id, 1)
+        res.impressions = pagecount.IncrPageCount(res.id, 1)
     logging.info(str(datetime.datetime.now())+" track_views: end")
 
   def dedup(self):

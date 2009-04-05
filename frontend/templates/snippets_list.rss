@@ -15,7 +15,7 @@
 <fp:location_name>{{ result.location_string|escape  }}</fp:location_name>
 <fp:interest>{{ result.interest|escape  }}</fp:interest>
 <fp:interest_count>{{ result.interest_count|escape  }}</fp:interest_count>
-<fp:pageviews>{{ result.pageviews|escape  }}</fp:pageviews>
+<fp:impressions>{{ result.impressions|escape  }}</fp:impressions>
 <fp:quality_score>{{ result.quality_score|escape  }}</fp:quality_score>
 <fp:skills>{{ result.skills|escape  }}</fp:skills>
 <fp:virtual>{{ result.virtual|escape  }}</fp:virtual>

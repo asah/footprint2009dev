@@ -20,6 +20,7 @@ import urlparse
 import logging
 import re
 
+from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -114,7 +115,6 @@ class test_page_views_view(webapp.RequestHandler):
     template_values["pageviews"] = pc
     self.response.out.write(render_template(TEST_PAGEVIEWS_TEMPLATE,
                                            template_values))
-
 
 class main_page_view(webapp.RequestHandler):
   def get(self):
@@ -332,13 +332,16 @@ class admin_view(webapp.RequestHandler):
     }
 
     user = users.get_current_user()
-    if user and users.is_current_user_admin():
-      self.response.out.write(render_template(ADMIN_TEMPLATE,
-                                              template_values))
-    else:
+    if not user or not users.is_current_user_admin():
       html = "<html><body><a href=\'%s\'>Sign in</a></body></html>"
       self.response.out.write(html % (users.create_login_url(self.request.url)))
+      return
 
+    action = self.request.get('action')
+    if action == "flush_memcache":
+      memcache.flush_all()
+      logging.info("memcache flushed.")
+    self.response.out.write(render_template(ADMIN_TEMPLATE, template_values))
 
 class redirect_view(webapp.RequestHandler):
   def get(self):
