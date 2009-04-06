@@ -31,7 +31,7 @@ def Parse(instr, maxrecs, progress):
   s += '<providerID>101</providerID>'
   s += '<providerName>usaservice.org</providerName>'
   s += '<feedID>usaservice.org</feedID>'
-  s += '<createdDateTime>2008-12-30T14:30:10.5</createdDateTime>' # TODO: get/create real feed date
+  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.curTimeString()
   s += '<providerURL>http://www.usaservice.org/</providerURL>'
   s += '<description>Syndicated events</description>'
   # TODO: capture ts -- use now?!

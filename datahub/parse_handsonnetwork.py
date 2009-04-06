@@ -98,7 +98,7 @@ def Parse(instr, maxrecs, progress):
   s += '<providerName>handsonnetwork.org</providerName>'
   s += '<feedID>handsonnetwork.org</feedID>'
   # TODO: get/create real feed date
-  s += '<createdDateTime>2008-12-30T14:30:10.5</createdDateTime>'
+  s += '<createdDateTime>%s</createdDateTime>' % xmlh.curTimeString()
   s += '<providerURL>http://www.handsonnetwork.org/</providerURL>'
   s += '<description></description>'
   # TODO: capture ts -- use now?!

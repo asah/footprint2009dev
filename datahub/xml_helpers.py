@@ -22,6 +22,7 @@ import xml.parsers.expat
 import re
 import unicodedata
 import sys
+import time
 
 # asah: I give up, allowing UTF-8 is just too hard without incurring
 # crazy performance penalties
@@ -142,3 +143,10 @@ def outputPlural(name, val):
   return "<" + name + "s>" + outputVal(name, val) + "</" + name + "s>"
 def outputPluralNode(name, node, nodename):
   return "<" + name + "s>" + outputNode(name, node, val) + "</" + name + "s>"
+  
+def curTimeString():
+  """
+    Return a formatted (2008-12-30T14:30:10.5) time string for the
+    current time
+  """
+  return time.strftime("%Y-%m-%dT%H:%M:%S")
