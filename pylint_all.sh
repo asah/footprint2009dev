@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FILES=`find . -mindepth 2 -name "*.py" \! -name "__*"`
+FILES=`find . -mindepth 2 -name "*.py" \! -name "__*" \! -wholename "./datahub/dateutil/*" \! -wholename "./frontend/recaptcha.py" \! -wholename "./frontend/fastpageviews/*"`
 
 {
 for f in $FILES; do
