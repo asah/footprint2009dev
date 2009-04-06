@@ -66,7 +66,7 @@ def Parse(instr, maxrecs, progress):
   s += '<providerID>105</providerID>'
   s += '<providerName>craigslist.org</providerName>'
   s += '<providerURL>http://www.craigslist.org/</providerURL>'
-  s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
+  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.curTimeString()
   s += '</FeedInfo>'
 
   # no "organization" in craigslist postings

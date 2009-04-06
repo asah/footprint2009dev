@@ -70,8 +70,7 @@ def ParseHelper(instr, maxrecs, progress):
   match = re.search(r'<title>(.+?)</title>', instr, re.DOTALL)
   if match:
     s += '<description>%s</description>' % (match.group(1))
-  # TODO: capture ts -- use now?!
-  s += '<createdDateTime>2009-01-01T11:11:11</createdDateTime>'
+  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.curTimeString()
   s += '</FeedInfo>'
 
   # hardcoded: Organization

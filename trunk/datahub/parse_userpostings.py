@@ -38,7 +38,7 @@ def Parse(instr, maxrecs, progress):
   s += '<providerID>108</providerID>'
   s += '<providerName>footprint</providerName>'
   s += '<feedID>footprint</feedID>'
-  s += '<createdDateTime>2008-12-30T14:30:10.5</createdDateTime>' # TODO: get/create real feed date
+  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.curTimeString()
   s += '<providerURL>http://sites.google.com/site/footprintorg/</providerURL>'
   s += '<description></description>'
   # TODO: capture ts -- use now?!
