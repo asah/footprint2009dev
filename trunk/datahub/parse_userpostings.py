@@ -23,12 +23,14 @@ from datetime import datetime
 
 known_elnames = [ 'FeedInfo', 'FootprintFeed', 'Organization', 'Organizations', 'VolunteerOpportunities', 'VolunteerOpportunity', 'abstract', 'audienceTag', 'audienceTags', 'categoryTag', 'categoryTags', 'city', 'commitmentHoursPerWeek', 'contactEmail', 'contactName', 'contactPhone', 'country', 'createdDateTime', 'dateTimeDuration', 'dateTimeDurationType', 'dateTimeDurations', 'description', 'detailURL', 'directions', 'donateURL', 'duration', 'email', 'endDate', 'endTime', 'expires', 'fax', 'feedID', 'guidestarID', 'iCalRecurrence', 'language', 'latitude', 'lastUpdated', 'location', 'locationType', 'locations', 'logoURL', 'longitude', 'minimumAge', 'missionStatement', 'name', 'nationalEIN', 'openEnded', 'organizationID', 'organizationURL', 'paid', 'phone', 'postalCode', 'providerID', 'providerName', 'providerURL', 'region', 'schemaVersion', 'sexRestrictedEnum', 'sexRestritedTo', 'skills', 'sponsoringOrganizationID', 'startDate', 'startTime', 'streetAddress1', 'streetAddress2', 'streetAddress3', 'title', 'tzOlsonPath', 'virtual', 'volunteerHubOrganizationID', 'volunteerOpportunityID', 'volunteersFilled', 'volunteersSlots', 'volunteersNeeded', 'yesNoEnum', ]
 
-def Parse(instr, maxrecs, progress):
+# pylint: disable-msg=R0915
+def parse(instr, maxrecs, progress):
+  """return FPXML given FP user postings data"""
   # ignore unapproved opportunities
   instr = re.sub(r'^.+REJECTED\t.+$', r'', instr)
 
   if progress:
-    print datetime.now(),"parse_userpostings.Parse: starting parse..."
+    print datetime.now(), "parse_userpostings.Parse: starting parse..."
 
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
@@ -49,8 +51,8 @@ def Parse(instr, maxrecs, progress):
   sponsor_ids = {}
   sponsorstrs = re.findall(r'<SponsoringOrganization>.+?</SponsoringOrganization>', instr, re.DOTALL)
   for i,orgstr in enumerate(sponsorstrs):
-    if progress and i>0 and i%250==0:
-      print datetime.now(),": ",i," orgs processed."
+    if progress and i > 0 and i % 250 == 0:
+      print datetime.now(), ": ", i, " orgs processed."
     org = xml_helpers.simpleParser(orgstr, known_elnames, False)
     #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
     #for i,org in enumerate(sponsors):
@@ -81,7 +83,7 @@ def Parse(instr, maxrecs, progress):
     
   s += '<VolunteerOpportunities>'
   if progress:
-    print datetime.now(),"finding VolunteerOpportunities..."
+    print datetime.now(), "finding VolunteerOpportunities..."
   opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>', instr, re.DOTALL)
   totrecs = 0
   for i,oppstr in enumerate(opps):
@@ -115,7 +117,7 @@ def Parse(instr, maxrecs, progress):
       
       locations = opp.getElementsByTagName("location")
       if (locations.length != 1):
-        print datetime.now(),"parse_userpostings: only 1 location supported."
+        print datetime.now(), "parse_userpostings: only 1 location supported."
         return None
       loc = locations[0]
       outstr_for_all_dates_post = '<locations><location>'
@@ -141,8 +143,8 @@ def Parse(instr, maxrecs, progress):
         oppcount = oppcount + 1
         if progress:
           totrecs = totrecs + 1
-          if totrecs%250==0:
-            print datetime.now(),": ",totrecs," records generated."
+          if totrecs % 250 == 0:
+            print datetime.now(), ": ", totrecs, " records generated."
   
         dtds += '<dateTimeDuration>'
         if oppdate == None:
@@ -170,13 +172,13 @@ def Parse(instr, maxrecs, progress):
       s += '</VolunteerOpportunity>'
     
   if progress:
-    print datetime.now(),"done with VolunteerOpportunities..."
+    print datetime.now(), "done with VolunteerOpportunities..."
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
   s = re.sub(r'><([^/])', r'>\n<\1', s)
   print s
   if progress:
-    print datetime.now(),"parse_userpostings.Parse: done."
+    print datetime.now(), "parse_userpostings.Parse: done."
   return s
 
 if __name__ == "__main__":

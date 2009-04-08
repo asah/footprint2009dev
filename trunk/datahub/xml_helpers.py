@@ -59,7 +59,7 @@ def printProgress(noun, progress, recno, maxrecs):
     maxrecs_str = " of " + str(maxrecs)
   if progress and recno > 0 and recno % 250 == 0:
     now = datetime.now()
-    print now,": ",recno, noun, "processed" + maxrecs_str,
+    print now, ": ", recno, noun, "processed" + maxrecs_str,
     secs_since_start = now - progress_start_ts
     secs_elapsed = 3600*24.0*secs_since_start.days + \
         1.0*secs_since_start.seconds + \
@@ -103,18 +103,18 @@ def simpleParser(s, known_elnames_list, progress):
       for item in known_elnames_list:
         known_elnames_dict[item] = True
     if progress:
-      print datetime.now(),"parsing XML"
+      print datetime.now(), "parsing XML"
     xmldoc = minidom.parseString(s)
     # this stuff is in a try-block to avoid use-before-def on xmldoc
     if progress:
-      print datetime.now(),"validating XML..."
+      print datetime.now(), "validating XML..."
     if known_elnames_list:
       validateXML(xmldoc, known_elnames_dict)
     if progress:
-      print datetime.now(),"done."
+      print datetime.now(), "done."
     return xmldoc
   except xml.parsers.expat.ExpatError, ee:
-    print datetime.now(),"XML parsing error on line ", ee.lineno,
+    print datetime.now(), "XML parsing error on line ", ee.lineno,
     print ":", xml.parsers.expat.ErrorString(ee.code),
     print " (column ", ee.offset, ")"
     lines = s.split("\n")
@@ -122,7 +122,7 @@ def simpleParser(s, known_elnames_list, progress):
       if i >= 0 and i < len(lines):
         print "%6d %s" % (i+1, lines[i])
     print "writing string to xmlerror.out..."
-    outfh = open("xmlerror.out","w+")
+    outfh = open("xmlerror.out", "w+")
     outfh.write(s)
     outfh.close()
     sys.exit(0)
@@ -145,8 +145,6 @@ def outputPluralNode(name, node, nodename):
   return "<" + name + "s>" + outputNode(name, node, val) + "</" + name + "s>"
   
 def curTimeString():
-  """
-    Return a formatted (2008-12-30T14:30:10.5) time string for the
-    current time
-  """
+  """Return a formatted time string for the current time, e.g.
+  2008-12-30T14:30:10.5"""
   return time.strftime("%Y-%m-%dT%H:%M:%S")

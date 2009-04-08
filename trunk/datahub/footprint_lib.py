@@ -41,7 +41,7 @@ import dateutil.parser
 FIELDSEP = "\t"
 RECORDSEP = "\n"
 
-MAX_ABSTRACT_LEN = 120
+MAX_ABSTRACT_LEN = 250
 
 DEBUG = False
 PROGRESS = False
@@ -163,7 +163,7 @@ def output_field(name, value):
   #global PRINTHEAD, DEBUG
   if PRINTHEAD:
     if (name not in FIELDTYPES):
-      print datetime.now(),"no type for field: " + name + FIELDTYPES[name]
+      print datetime.now(), "no type for field: " + name + FIELDTYPES[name]
       sys.exit(1)
     elif (FIELDTYPES[name] == "builtin"):
       return name
@@ -304,7 +304,9 @@ def get_direct_mapped_field(opp, org):
   abstract = xml_helpers.getTagValue(opp, "abstract")
   if abstract == "":
     abstract = xml_helpers.getTagValue(opp, "description")
-  abstract = re.sub(r'(\\n)+', ' ', abstract)
+  # strip \n and \b
+  abstract = re.sub(r'(\\[bn])+', ' ', abstract)
+  # strip XML escaped chars
   abstract = re.sub(r'&([a-z]+|#[0-9]+);', '', abstract)
   abstract = abstract[:MAX_ABSTRACT_LEN]
   outstr += FIELDSEP
@@ -344,7 +346,6 @@ def get_event_reqd_fields(opp, org):
   outstr += FIELDSEP + output_tag_value(opp, "description")
   outstr += FIELDSEP + output_field("link", "http://change.gov/")
   outstr += FIELDSEP + output_field("image_link", xml_helpers.getTagValue(org, "logoURL"))
-  #s += FIELDSEP + output_field("event_type", "volunteering")
   return outstr
 
 def get_feed_fields(feedinfo):
@@ -563,7 +564,7 @@ def convert_to_footprint_xml(instr, do_fastparse, maxrecs, progress):
     return parse_footprint.ParseFast(instr, maxrecs, progress)
   else:
     # slow parse
-    xmldoc = parse_footprint.Parse(instr, maxrecs, progress)
+    xmldoc = parse_footprint.parse(instr, maxrecs, progress)
     # TODO: maxrecs
     return xml_helpers.prettyxml(xmldoc)
 
@@ -589,7 +590,7 @@ def convert_to_gbase_events_type(instr, do_fastparse, maxrecs, progress):
         feedinfo = xml_helpers.simpleParser(chunk, known_elnames, False)
         continue
       if re.search("<Organization>", chunk):
-        if progress and len(known_orgs)%250==0:
+        if progress and len(known_orgs) % 250 == 0:
           print datetime.now(), ": ", len(known_orgs), " organizations seen."
         org = xml_helpers.simpleParser(chunk, known_elnames, False)
         org_id = xml_helpers.getTagValue(org, "organizationID")
@@ -631,7 +632,7 @@ def convert_to_gbase_events_type(instr, do_fastparse, maxrecs, progress):
     #      outstr += spiece
   else:
     # not do_fastparse
-    footprint_xml = parse_footprint.Parse(instr, maxrecs, progress)
+    footprint_xml = parse_footprint.parse(instr, maxrecs, progress)
     
     feedinfos = footprint_xml.getElementsByTagName("FeedInfo")
     if (feedinfos.length != 1):
@@ -704,47 +705,47 @@ def ftp_to_base(filename, ftpinfo, instr):
 def guess_parse_func(inputfmt, filename):
   """from the filename and the --inputfmt,guess the input type and parse func"""
   if inputfmt == "fpxml":
-    parsefunc = parse_footprint.Parse
+    parsefunc = parse_footprint.parse
   elif (inputfmt == "usaservice" or
         inputfmt == "usasvc" or
         (inputfmt == None and
          re.search("usa-?service", filename))):
-    parsefunc = parse_usaservice.Parse
+    parsefunc = parse_usaservice.parse
   elif (inputfmt == "craigslist" or
         inputfmt == "cl" or
         (inputfmt == None and
          re.search("craigslist", filename))):
-    parsefunc = parse_craigslist.Parse
+    parsefunc = parse_craigslist.parse
   elif (inputfmt == "americorps" or
         (inputfmt == None and
          re.search("americorps", filename))):
-    parsefunc = parse_americorps.Parse
+    parsefunc = parse_americorps.parse
   elif (inputfmt == "handson" or
         inputfmt == "handsonnetwork"):
-    parsefunc = parse_handsonnetwork.Parse
+    parsefunc = parse_handsonnetwork.parse
   elif (inputfmt == None and
          re.search("(handson|hot.footprint)", filename)):
     # now using FPXML
     #parsefunc = parse_handsonnetwork.ParseFPXML
-    parsefunc = parse_footprint.Parse
+    parsefunc = parse_footprint.parse
     inputfmt = "fpxml"
   elif (inputfmt == None and
          re.search("(volunteer[.]gov)", filename)):
-    parsefunc = parse_footprint.Parse
+    parsefunc = parse_footprint.parse
     inputfmt = "fpxml"
   elif (inputfmt == "idealist" or
         (inputfmt == None and
          re.search("idealist", filename))):
-    parsefunc = parse_idealist.Parse
+    parsefunc = parse_idealist.parse
   elif (inputfmt == "fp_userpostings" or
         (inputfmt == None and
          re.search("(userpostings|/export/Posting)", filename))):
-    parsefunc = parse_userpostings.Parse
+    parsefunc = parse_userpostings.parse
   elif (inputfmt == "volunteermatch" or
         inputfmt == "vm" or
         (inputfmt == None and
          re.search("volunteermatch", filename))):
-    parsefunc = parse_volunteermatch.Parse
+    parsefunc = parse_volunteermatch.parse
   else:
     print datetime.now(), "unknown input format-- try --inputfmt"
     sys.exit(1)
