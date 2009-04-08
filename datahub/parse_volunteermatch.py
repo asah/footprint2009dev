@@ -19,7 +19,9 @@ from datetime import datetime
 
 import dateutil.parser
 
-def Parse(s, maxrecs, progress):
+# pylint: disable-msg=R0915
+def parse(s, maxrecs, progress):
+  """return FPXML given volunteermatch data"""
   # TODO: progress
   known_elnames = ['feed', 'title', 'subtitle', 'div', 'span', 'updated', 'id', 'link', 'icon', 'logo', 'author', 'name', 'uri', 'email', 'rights', 'entry', 'published', 'g:publish_date', 'g:expiration_date', 'g:event_date_range', 'g:start', 'g:end', 'updated', 'category', 'summary', 'content', 'awb:city', 'awb:country', 'awb:state', 'awb:postalcode', 'g:location', 'g:age_range', 'g:employer', 'g:job_type', 'g:job_industry', 'awb:paid', ]
   xmldoc = xml_helpers.simpleParser(s, known_elnames, progress)
@@ -64,7 +66,7 @@ def Parse(s, maxrecs, progress):
       s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(org, "detailURL"))
       s += '</Organization>'
     else:
-      print datetime.now(),"parse_volunteermatch: listing does not have an organization"
+      print datetime.now(), "parse_volunteermatch: listing does not have an organization"
       return None
 
   s += '</Organizations>'
@@ -81,7 +83,7 @@ def Parse(s, maxrecs, progress):
       s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (xml_helpers.getTagValue(org, "key"))
     else:
       s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>0</sponsoringOrganizationID></sponsoringOrganizationIDs>'
-      print datetime.now(),"parse_volunteermatch: listing does not have an organization"
+      print datetime.now(), "parse_volunteermatch: listing does not have an organization"
       
     s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
 
@@ -103,7 +105,7 @@ def Parse(s, maxrecs, progress):
         s += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(listingTime, "startTime"))
         s += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(listingTime, "endTime"))
     else:
-      print datetime.now(),"parse_volunteermatch: number of durations in item != 1"
+      print datetime.now(), "parse_volunteermatch: number of durations in item != 1"
       return None
         
     commitments = item.getElementsByTagName("commitment")
@@ -126,13 +128,13 @@ def Parse(s, maxrecs, progress):
         # TODO: ignore for now, later compute the endTime if not already provided
         pass
       else:
-        print datetime.now(),"parse_volunteermatch: commitment given in units != hours/week: ", l_duration, "per", l_period
+        print datetime.now(), "parse_volunteermatch: commitment given in units != hours/week: ", l_duration, "per", l_period
         
     s += '</dateTimeDuration></dateTimeDurations>'
 
     dbaddresses = item.getElementsByTagName("location")
     if (dbaddresses.length != 1):
-      print datetime.now(),"parse_volunteermatch: only 1 location supported."
+      print datetime.now(), "parse_volunteermatch: only 1 location supported."
       return None
     dbaddress = dbaddresses[0]
     s += '<locations><location>'

@@ -76,11 +76,11 @@ def crawl_metros():
       links = re.findall(r'<a href="/(.+?)".+?title="(.+?)".+?</a>', topbanstr, re.DOTALL)
       if len(links) > 0:
         for link in links:
-          print domain+link[0],":",link[1]
+          print domain+link[0], ":", link[1]
           outfh.write(domain+link[0]+"|"+link[1]+"\n")
       else:
         names = re.findall(r'<h2>(.+?)</h2>', domain_homepage, re.DOTALL)
-        print domain,":",names[0]
+        print domain, ":", names[0]
         outfh.write(domain+"|"+names[0]+"\n")
   outfh.close()
 
@@ -112,7 +112,7 @@ def crawl(url, ignore):
       except:
           page = ""   # in case close() threw exception
           attempts = attempts + 1
-          print "open failed, retry after",attempts,"attempts"
+          print "open failed, retry after", attempts, "attempts"
           time.sleep(1)
 
   if re.search(r'This IP has been automatically blocked', page, re.DOTALL):
@@ -127,7 +127,7 @@ def crawl(url, ignore):
   if re.search(r'<TITLE>302 Moved</TITLE>"',page, re.DOTALL):
       newlocstr = re.findall(r'The document has moved <A HREF="(.+?)"',page)          
       print "being redirected to",newlocstr[0]
-      crawl(newlocstr[0],"foo")
+      crawl(newlocstr[0], "foo")
       return
 
   if attempts >= 3:
@@ -208,9 +208,9 @@ def load_cache():
       instr = fh.read()
       print "closing cache file", CACHE_FN
       fh.close()
-      print "parsing cache data",len(instr),"bytes"
+      print "parsing cache data", len(instr), "bytes"
       parse_cache_file(instr, False)
-      print "loaded",len(pages),"pages."
+      print "loaded", len(pages), "pages."
   except:
       # ignore errors if file doesn't exist
       pass
@@ -220,9 +220,10 @@ def print_status():
   while True:
     crawled_pages = len(pages) - num_cached_pages
     pages_per_sec = int(crawled_pages/secs_since_progstart())
-    print str(secs_since_progstart())+": main thread: waiting for",crawlers,"crawlers.",
-    print crawled_pages,"pages crawled so far ("+str(pages_per_sec)+" pages/sec). ",
-    print len(pages),"total pages."
+    print str(secs_since_progstart())+": main thread: waiting for", \
+        crawlers, "crawlers.",
+    print crawled_pages, "pages crawled so far ("+str(pages_per_sec)+ \
+        " pages/sec). ", len(pages), "total pages."
     time.sleep(2)
 
 from optparse import OptionParser

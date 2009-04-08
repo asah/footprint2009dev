@@ -59,16 +59,16 @@ def crawl_state(state, ignore):
 
     items = re.findall(r'<item>.+?</item>', rss, re.DOTALL)
     if len(items) > 0:
-      print datetime.now(),"found",len(items),"items for state",state
-      s = ""
+      print datetime.now(), "found", len(items), "items for state", state
+      outstr = ""
       for item in items:
-        item = re.sub(r'(?:\r?\n|\r)',' ',item)
+        item = re.sub(r'(?:\r?\n|\r)',' ', item)
         if re.search(r'Find Money For Next 12 Months', item):
           continue
-        s += item + "\n"
+        outstr += item + "\n"
       file_lock.acquire()
       outfh = open(OUTPUT_FN, "a")
-      outfh.write(s)
+      outfh.write(outstr)
       outfh.close()
       file_lock.release()
   except:
@@ -91,7 +91,7 @@ if __name__ == "__main__":
   time.sleep(1)
 
   while (crawlers > 0):
-    print datetime.now(),"waiting for",crawlers,"crawlers to finish."
+    print datetime.now(), "waiting for", crawlers, "crawlers to finish."
     time.sleep(1)
 
   sys.exit(0)

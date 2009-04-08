@@ -35,26 +35,27 @@ def ParseFast(instr, maxrecs, progress):
       
     if (maxrecs > 0 and totrecs > maxrecs):
       break
-    if progress and totrecs%250==0:
-      print datetime.now(),": ",totrecs," records generated."
+    if progress and totrecs % 250 == 0:
+      print datetime.now(), ": ", totrecs, " records generated."
       
     node = xml_helpers.simpleParser(chunk, known_elnames, False)
     s = xml_helpers.prettyxml(node, True)
     outstr += s
   outstr += '</FootprintFeed>'
   if progress:
-    print datetime.now(),totrecs,"opportunities found."
+    print datetime.now(), totrecs, "opportunities found."
   return outstr
 
-def Parse(s, maxrecs, progress):
+def parse(s, maxrecs, progress):
+  """return python DOM object given FPXML"""
   # parsing footprint format is the identity operation
   # TODO: maxrecs
   # TODO: progress
   if progress:
-    print datetime.now(),"parse_footprint: parsing ",len(s)," bytes."
+    print datetime.now(), "parse_footprint: parsing ", len(s), " bytes."
   xmldoc = xml_helpers.simpleParser(s, known_elnames, progress)
   if progress:
-    print datetime.now(),"parse_footprint: done parsing."
+    print datetime.now(), "parse_footprint: done parsing."
   return xmldoc
 
 if __name__ == "__main__":

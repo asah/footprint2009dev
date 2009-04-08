@@ -25,27 +25,27 @@ import dateutil.parser
 # the code below
 def remove_g_namespace(s, progress):
   if progress:
-    print datetime.now(),"removing g: namespace..."
+    print datetime.now(), "removing g: namespace..."
   s = re.sub(r'<(/?)g:', r'<\1gg_', s)
   if progress:
-    print datetime.now(),"removing awb: namespace..."
+    print datetime.now(), "removing awb: namespace..."
   s = re.sub(r'<(/?)awb:', r'<\1awb_', s)
   return s
 
 def addCdataToContent(s, progress):
   # what if CDATA is already used?!
   if progress:
-    print datetime.now(),"adding CDATA to <content>..."
+    print datetime.now(), "adding CDATA to <content>..."
   ## yuck: this caused a RAM explosion...
   #rx = re.compile(r'<content( *?[^>]*?)>(.+?)</content>', re.DOTALL)
   #s = re.sub(rx, r'<content\1><![CDATA[\2]]></content>', s)
 
   s = re.sub(r'<content([^>]+)>', r'<content\1><![CDATA[', s)
   if progress:
-    print datetime.now(),"adding ]]> to </content>..."
+    print datetime.now(), "adding ]]> to </content>..."
   s = re.sub(r'</content>', r']]></content>', s)
   if progress:
-    print datetime.now(),"done: ",len(s)," bytes"
+    print datetime.now(), "done: ", len(s), " bytes"
   return s
 
 def removeContentWrapperDiv(s):
@@ -78,9 +78,9 @@ def ParseHelper(instr, maxrecs, progress):
   #authors = xmldoc.getElementsByTagName("author")
   organizations = {}
   authors = re.findall(r'<author>.+?</author>', instr, re.DOTALL)
-  for i,orgstr in enumerate(authors):
-    if progress and i>0 and i%250==0:
-      print datetime.now(),": ",i," orgs processed."
+  for i, orgstr in enumerate(authors):
+    if progress and i > 0 and i % 250 == 0:
+      print datetime.now(), ": ", i, " orgs processed."
     org = xml_helpers.simpleParser(orgstr, known_elnames, False)
     s += '<Organization>'
     s += '<organizationID>%d</organizationID>' % (i+1)
@@ -138,7 +138,7 @@ def ParseHelper(instr, maxrecs, progress):
     s += '<expires>%sT23:59:59</expires>' % (xml_helpers.getTagValue(opp, "gg_expiration_date"))
     dbevents = opp.getElementsByTagName("gg_event_date_range")
     if (dbevents.length != 1):
-      print datetime.now(),"parse_idealist: only 1 db:event supported."
+      print datetime.now(), "parse_idealist: only 1 db:event supported."
       return None
     s += '<locations><location>'
     # yucko: idealist is stored in Google Base, which only has 'location'
@@ -148,7 +148,7 @@ def ParseHelper(instr, maxrecs, progress):
     s += '</location></locations>'
     dbscheduledTimes = opp.getElementsByTagName("gg_event_date_range")
     if (dbscheduledTimes.length != 1):
-      print datetime.now(),"parse_usaservice: only 1 gg_event_date_range supported."
+      print datetime.now(), "parse_usaservice: only 1 gg_event_date_range supported."
       return None
     dbscheduledTime = dbscheduledTimes[0]
     s += '<dateTimeDurations><dateTimeDuration>'
@@ -188,12 +188,14 @@ def ParseHelper(instr, maxrecs, progress):
   s += '</FootprintFeed>'
 
   if progress:
-    print datetime.now(),"done generating footprint XML-- adding newlines..."
+    print datetime.now(), "done generating footprint XML-- adding newlines..."
   s = re.sub(r'><([^/])', r'>\n<\1', s)
   #print s
   return s
 
-def Parse(s, maxrecs, progress):
+# pylint: disable-msg=R0915
+def parse(s, maxrecs, progress):
+  """return FPXML given idealist data"""
   s = addCdataToContent(s, progress)
   s = remove_g_namespace(s, progress)
   s = ParseHelper(s, maxrecs, progress)

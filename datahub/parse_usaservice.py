@@ -19,7 +19,9 @@ from datetime import datetime
 
 import dateutil.parser
 
-def Parse(instr, maxrecs, progress):
+# pylint: disable-msg=R0915
+def parse(instr, maxrecs, progress):
+  """return FPXML given usaservice data"""
   # TODO: progress
   known_elnames = [ 'channel', 'db:abstract', 'db:address', 'db:attendee_count', 'db:categories', 'db:city', 'db:country', 'db:county', 'db:dateTime', 'db:event', 'db:eventType', 'db:guest_total', 'db:host', 'db:latitude', 'db:length', 'db:longitude', 'db:rsvp', 'db:scheduledTime', 'db:state', 'db:street', 'db:title', 'db:venue_name', 'db:zipcode', 'description', 'docs', 'guid', 'item', 'language', 'link', 'pubDate', 'rss', 'title', ]
 
@@ -80,7 +82,7 @@ def Parse(instr, maxrecs, progress):
 
     dbscheduledTimes = item.getElementsByTagName("db_scheduledTime")
     if (dbscheduledTimes.length != 1):
-      print datetime.now(),"parse_usaservice: only 1 db_scheduledTime supported."
+      print datetime.now(), "parse_usaservice: only 1 db_scheduledTime supported."
       return None
     dbscheduledTime = dbscheduledTimes[0]
     s += '<dateTimeDurations><dateTimeDuration>'
@@ -98,7 +100,7 @@ def Parse(instr, maxrecs, progress):
 
     dbaddresses = item.getElementsByTagName("db_address")
     if (dbaddresses.length != 1):
-      print datetime.now(),"parse_usaservice: only 1 db_address supported."
+      print datetime.now(), "parse_usaservice: only 1 db_address supported."
       return None
     dbaddress = dbaddresses[0]
     s += '<locations><location>'
