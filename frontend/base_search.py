@@ -59,15 +59,8 @@ def base_restrict_str(key,val=None):
 # note: many of the XSS and injection-attack defenses are unnecessary
 # given that the callers are also protecting us, but I figure better
 # safe than sorry, and defense-in-depth.
-def search(args, num_overfetch=200):
-  """
-  Params:
-      num_overfetch: Number of records to fetch, which is different (larger)
-        than the 'num' field in the search args.  The caller will fetch more
-        records than the user requests, in order to perform de-duping here in
-        the app.
-  """
-
+def search(args):
+  """run a Google Base search."""
   logging.info(args);
   base_query = ""
 
@@ -153,7 +146,7 @@ def search(args, num_overfetch=200):
     args[api.PARAM_START] = 1
 
   query_url = args["backend"]
-  query_url += "?max-results=" + str(num_overfetch)
+  query_url += "?max-results=" + str(int(args[api.PARAM_NUM])*2)
 
   # We don't set "&start-index=" because that will interfere with
   # deduping + pagination.  Since we merge the results here in the
@@ -177,13 +170,16 @@ def query(query_url, args, cache):
   result_set.query_url = query_url
   result_set.args = args
 
+  fetch_start = time.time()
   fetch_result = urlfetch.fetch(query_url)
+  fetch_end = time.time()
+  result_set.fetch_time = fetch_end - fetch_start
   if fetch_result.status_code != 200:
     return result_set
   result_content = fetch_result.content
 
+  parse_start = time.time()
   dom = minidom.parseString(result_content)
-
   elems = dom.getElementsByTagName('entry')
   for i,entry in enumerate(elems):
     # Note: using entry.getElementsByTagName('link')[0] isn't very stable;
@@ -195,7 +191,7 @@ def query(query_url, args, cache):
     id = utils.GetXmlElementTextOrEmpty(entry, 'g:id')
     # Base URL is the url of the item in base, expressed with the Atom id tag.
     base_url = utils.GetXmlElementTextOrEmpty(entry, 'id')
-    snippet = utils.GetXmlElementTextOrEmpty(entry, 'content')
+    snippet = utils.GetXmlElementTextOrEmpty(entry, 'g:abstract')
     title = utils.GetXmlElementTextOrEmpty(entry, 'title')
     location = utils.GetXmlElementTextOrEmpty(entry, 'g:location_string')
     res = searchresult.SearchResult(url, title, snippet,
@@ -249,6 +245,8 @@ def query(query_url, args, cache):
       key = RESULT_CACHE_KEY + res.id
       memcache.set(key, res, time=RESULT_CACHE_TIME)
 
+  parse_end = time.time()
+  result_set.parse_time = parse_end - parse_start
   return result_set
 
 def get_from_ids(ids):
