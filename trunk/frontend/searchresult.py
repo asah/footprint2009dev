@@ -88,15 +88,20 @@ class SearchResultSet(object):
     query_url_encoded: URL query used to retrieve data from backend.
       For debugging.
     query_url_unencoded: urllib.unquote'd version of the above.
-    total_merged_results: Number of merged results after a dedup()
-      operation.
+    num_merged_results: Number of merged results after a dedup()
+      operation.  Used by Django.
+    estimated_merged_results: estimated number of total results accounting
+      for merging, given result_set.estimated_backend_results
   """
   def __init__(self, query_url_unencoded, query_url_encoded, results):
     self.query_url_unencoded = query_url_unencoded
     self.query_url_encoded = escape(query_url_encoded)
     self.results = results
-    self.total_merged_results = 0
+    self.num_results = 0
+    self.estimated_results = 0
+    self.num_merged_results = 0
     self.merged_results = []
+    self.estimated_merged_results = 0
     self.pubDate = getRFCdatetime()
     self.lastBuildDate = self.pubDate
 
@@ -237,5 +242,8 @@ class SearchResultSet(object):
     for i,res in enumerate(self.results):
       merge_result(res)
     compute_more_less()
-    self.total_merged_results = len(self.merged_results)
+    self.num_merged_results = len(self.merged_results)
+    self.estimated_merged_results = int(self.estimated_results * \
+      self.num_merged_results / len(self.results))
+      
 

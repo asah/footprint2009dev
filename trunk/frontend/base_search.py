@@ -34,8 +34,16 @@ import utils
 RESULT_CACHE_TIME = 900 # seconds
 RESULT_CACHE_KEY = 'searchresult:'
 
+# google base has a bug where negative numbers aren't indexed correctly,
+# so we load the data with only positive numbers for lat/long.
+# this should be a big number and of course must be sync'd with the
+# value in datahub/*
+GBASE_LATLONG_FIXUP = 1000
+
 # Date format pattern used in date ranges.
 DATE_FORMAT_PATTERN = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')
+
+BASE_MAX_RESULTS = 1000
 
 def make_base_arg(x):
   return "base_" + x
@@ -124,10 +132,10 @@ def search(args):
        and args[api.PARAM_VOL_DIST] != ""):
     lat, lng = float(args["lat"]), float(args["long"])
     dist = float(args[api.PARAM_VOL_DIST])
-    base_query += "[latitude%%3E%%3D%.2f]" % (lat+1000 - dist/69.1)
-    base_query += "[latitude%%3C%%3D%.2f]" % (lat+1000 + dist/69.1)
-    base_query += "[longitude%%3E%%3D%.2f]" % (lng+1000 - dist/50)
-    base_query += "[longitude%%3C%%3D%.2f]" % (lng+1000 + dist/50)
+    base_query += "[latitude%%3E%%3D%.2f]" % (lat+GBASE_LATLONG_FIXUP - dist/69.1)
+    base_query += "[latitude%%3C%%3D%.2f]" % (lat+GBASE_LATLONG_FIXUP + dist/69.1)
+    base_query += "[longitude%%3E%%3D%.2f]" % (lng+GBASE_LATLONG_FIXUP - dist/50)
+    base_query += "[longitude%%3C%%3D%.2f]" % (lng+GBASE_LATLONG_FIXUP + dist/50)
 
   # Base URL for snippets search on Base.
   #   Docs: http://code.google.com/apis/base/docs/2.0/attrs-queries.html
@@ -146,7 +154,10 @@ def search(args):
     args[api.PARAM_START] = 1
 
   query_url = args["backend"]
-  query_url += "?max-results=" + str(int(args[api.PARAM_NUM])*2)
+  num_to_fetch = int(args[api.PARAM_NUM] * args[api.PARAM_OVERFETCH_RATIO])
+  if num_to_fetch > BASE_MAX_RESULTS:
+    num_to_fetch = BASE_MAX_RESULTS
+  query_url += "?max-results=" + str(num_to_fetch)
 
   # We don't set "&start-index=" because that will interfere with
   # deduping + pagination.  Since we merge the results here in the
@@ -205,8 +216,8 @@ def query(query_url, args, cache):
     if latstr and longstr and latstr != "" and longstr != "":
       latval = float(latstr)
       longval = float(longstr)
-      if latval > 500: latval -= 1000
-      if longval > 500: longval -= 1000
+      if latval > GBASE_LATLONG_FIXUP/2: latval -= GBASE_LATLONG_FIXUP
+      if longval > GBASE_LATLONG_FIXUP/2: longval -= GBASE_LATLONG_FIXUP
       res.latlong = str(latval) + "," + str(longval)
 
     # TODO: remove-- working around a DB bug where all latlongs are the same
@@ -245,6 +256,9 @@ def query(query_url, args, cache):
       key = RESULT_CACHE_KEY + res.id
       memcache.set(key, res, time=RESULT_CACHE_TIME)
 
+  result_set.num_results = len(result_set.results)
+  result_set.estimated_results = int(utils.GetXmlElementTextOrEmpty(
+      dom, "openSearch:totalResults"))
   parse_end = time.time()
   result_set.parse_time = parse_end - parse_start
   return result_set

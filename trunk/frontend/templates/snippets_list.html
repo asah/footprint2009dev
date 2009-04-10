@@ -124,7 +124,7 @@
   asyncLoadManager.addCallback('bodyload', function() {
     calendar.render();
   });
-  renderPaginator(el('paginator'), {{result_set.total_merged_results}});
+  renderPaginator(el('paginator'), {{result_set.estimated_merged_results}});
   initMap();
 </script>
 
@@ -133,6 +133,7 @@
 DEBUG INFO:<br>
  FP query=<a href='{{ view_url }}'>{{ view_url }}</a><br>
  Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded }}</a><br>
+ num results: backend-estimated={{result_set.estimated_results}}  merged-estimated={{result_set.estimated_merged_results}}  backend={{result_set.num_results}}   merged={{result_set.num_merged_results}}  
 </div>
 
 {% endif %}

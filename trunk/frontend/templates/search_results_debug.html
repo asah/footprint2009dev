@@ -12,6 +12,7 @@ query_url=<a href="{{result_set.query_url}}">{{result_set.query_url}}</a>
 query (q)={{keywords}}
 location center (vol_loc)={{location}} / {{latlong}}   (center point)
 max distance from center (vol_dist)={{max_distance}}  (max distance)
+results: backend-estimated={{result_set.estimated_results}}  merged-estimated={{result_set.estimated_merged_results}}  backend={{result_set.num_results}}   merged={{result_set.num_merged_results}}
 
 <hr/>
 {% for result in result_set.clipped_results %}

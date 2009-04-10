@@ -312,6 +312,9 @@ function renderPaginator(div, totalNum) {
   if (numPages == 1) {
     return;
   }
+  if (numPages > 20) {
+    numPages = 20;
+  }
 
   var html = [];
 
