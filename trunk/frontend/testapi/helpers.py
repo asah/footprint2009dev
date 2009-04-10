@@ -20,13 +20,15 @@ import xml.sax.saxutils
 import re
 import logging
 import md5
+import random
+import math
 from urllib import urlencode
 
 DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/volopps'
 DEFAULT_RESPONSE_TYPES = 'rss'
 LOCAL_STATIC_URL = 'http://localhost:8080/test/sampleData.xml'
 CURRENT_STATIC_XML = 'sampleData0.1.xml'
-ALL_TEST_TYPES = 'num, query, provider, start' #'query, num, start, provider'
+ALL_TEST_TYPES = 'num, query, provider, start, geo' #'query, num, start, provider'
 
 class ApiResult(object):
   def __init__(self, item_id, title, description, url, provider, latlong):
@@ -204,11 +206,18 @@ class ApiTesting(object):
                   'Unable to parse response.</p>')
     
     return None
+  
+  def random_item(self, items):
+    max = len(items)
+    if max == 1:
+      return items[0]
+    else:
+      return items[random.randrange(0, max - 1)]
     
   def test_num(self):
     """test whether the result set has a given number of results."""
     result = True
-    expected_count = 7
+    expected_count = int(self.random_item(['7', '14', '21', '28', '57']))
     
     result_set = self.get_result_set({'num':expected_count})
     if not self.assert_valid_results(result_set):
@@ -227,17 +236,16 @@ class ApiTesting(object):
   def test_query(self):
     """run a hardcoded test query (q=)."""
     result = True
-    term = "hospital"
-    provider = "HandsOn Network"
+    term = self.random_item(["hospital", "walk", "help", "read", "children", "mercy"])
   
-    result_set = self.get_result_set({'q':term, 'provider':provider})
+    result_set = self.get_result_set({'q':term})
     if not self.assert_valid_results(result_set):
       return False
 
     for opp in result_set:
       if (not re.search(term, opp.title, re.I) and
           not re.search(term, opp.description, re.I)):
-        self.output('<p class="result amplification">Did not find search term'+
+        self.output('<p class="result amplification">Did not find search term '+
                     '<strong>' + term + '</strong> in item ' + opp.title +
                     ': ' + opp.description + '</p>')
         result = False
@@ -247,6 +255,52 @@ class ApiTesting(object):
     else:
       self.output('<p class="result fail">Fail. <span>One or more items did '+
                   'not match search term <strong>' + term +
+                  '</strong></span></p>')
+      result = False
+    
+    return result
+  
+  def in_location(self, opp, loc, radius):
+    loc_arr = loc.split(',')
+    opp_arr = opp.latlong.split(',')
+    
+    loc_lat = math.radians(float(loc_arr[0].strip()))
+    loc_lng = math.radians(float(loc_arr[1].strip()))
+    opp_lat = math.radians(float(opp_arr[0].strip()))
+    opp_lng = math.radians(float(opp_arr[1].strip()))
+    
+    dlng = opp_lng - loc_lng
+    dlat = opp_lat - loc_lat #lat_2 - lat_1
+    a = (math.sin(dlat / 2))**2 + math.cos(loc_lat) * math.cos(opp_lat) * (math.sin(dlng / 2))**2
+    c = 2 * math.asin(min(1, math.sqrt(a)))
+    dist = 3956 * c
+    
+    if (dist <= radius):
+      return True
+    else:
+      return False
+  
+  def test_geo(self):
+    """run a query and check the geo results."""
+    result = True
+    loc = self.random_item(["37.8524741,-122.273895", "33.41502, -111.82298", "29.759956, -95.362534", "33.76145285137889, -84.38941955566406"])
+    radius = self.random_item(["10", "20", "30", "50"])
+  
+    result_set = self.get_result_set({'vol_loc':loc, 'vol_dist':radius, 'num':20})
+    if not self.assert_valid_results(result_set):
+      return False
+
+    for opp in result_set:
+      if (not self.in_location(opp, loc, radius)):
+        self.output('<p class="result amplification">Item outside location/distance '+
+                    '<strong>' + opp.id + ': ' + opp.title + '</strong> ' + opp.latlong + '</p>')
+        result = False
+      
+    if result:
+      self.output('<p class="result success">Passed</p>')
+    else:
+      self.output('<p class="result fail">Fail. <span>One or more items did '+
+                  'not fall in the requested location/distance <strong>' + 
                   '</strong></span></p>')
       result = False
     
