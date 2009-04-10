@@ -23,6 +23,14 @@ PARAM_SORT = 'sort'
 PARAM_START = 'start'
 PARAM_CACHE = 'cache'
 
+# the ratio of actual results to request from the backend--
+# typical values range from 1.0 to 10.0, where larger numbers
+# provide better quality results at a linear incease in latency
+# This internal value is exposed as an URL parameter so we can
+# run performance tests, please email engineering before using
+# this in apps, so we don't change it later.
+PARAM_OVERFETCH_RATIO = 'overfetch'
+
 PARAM_VOL_LOC = 'vol_loc'
 PARAM_VOL_DIST = 'vol_dist'
 PARAM_VOL_STARTDATE = 'vol_startdate'

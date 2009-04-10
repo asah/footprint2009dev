@@ -208,7 +208,7 @@ class ui_snippets_view(webapp.RequestHandler):
         'user' : user,
         'result_set': result_set,
         'current_page' : 'SEARCH',
-        'has_results' : (result_set.total_merged_results > 0),  # For django.
+        'has_results' : (result_set.num_merged_results > 0),  # For django.
         'view_url': self.request.url,
       }
     self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,

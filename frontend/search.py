@@ -53,6 +53,13 @@ def search(args):
     if start_index > 1000-num: start_index = 1000-num
   args[api.PARAM_START] = start_index
 
+  overfetch_ratio = 2.0
+  if api.PARAM_OVERFETCH_RATIO in args:
+    overfetch_ratio = float(args[api.PARAM_OVERFETCH_RATIO])
+    if overfetch_ratio < 1.0: overfetch_ratio = 1.0
+    if overfetch_ratio > 10.0: overfetch_ratio = 10.0
+  args[api.PARAM_OVERFETCH_RATIO] = overfetch_ratio
+
   use_cache = True
   if api.PARAM_CACHE in args and args[api.PARAM_CACHE] == '0':
     use_cache = False
@@ -136,5 +143,4 @@ def fetch_result_set(args):
   scoring.score_results_set(result_set, args)
   result_set.apply_post_search_filters(args)
   result_set.dedup()
-
   return result_set
