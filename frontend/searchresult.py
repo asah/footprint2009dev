@@ -243,7 +243,10 @@ class SearchResultSet(object):
       merge_result(res)
     compute_more_less()
     self.num_merged_results = len(self.merged_results)
-    self.estimated_merged_results = int(self.estimated_results * \
-      self.num_merged_results / len(self.results))
+    if len(self.results) == 0:
+      self.estimated_merged_results = self.estimated_results
+    else:
+      self.estimated_merged_results = int(self.estimated_results * \
+          self.num_merged_results / len(self.results))
       
 
