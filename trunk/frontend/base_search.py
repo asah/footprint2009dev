@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cgi
 import datetime
 import time
-import os
 import re
 import urllib
 import logging
@@ -44,6 +42,8 @@ GBASE_LOC_FIXUP = 1000
 DATE_FORMAT_PATTERN = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')
 
 BASE_MAX_RESULTS = 1000
+
+BASE_CUSTOMER_ID = 5663714
 
 def base_argname(name):
   """base-sepcific urlparams all start with "base_" to avoid conflicts with
@@ -149,7 +149,7 @@ def search(args):
 
   cust_arg = base_argname("customer")
   if cust_arg not in args:
-    args[cust_arg] = 5663714;
+    args[cust_arg] = BASE_CUSTOMER_ID
   base_query += base_restrict_str("customer_id", int(args[cust_arg]))
 
   #base_query += base_restrict_str("detailurl")
@@ -179,6 +179,7 @@ def search(args):
 
 
 def query(query_url, args, cache):
+  """run a query using Google Base as the backend."""
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
                                             query_url,
                                             [])
@@ -221,8 +222,11 @@ def query(query_url, args, cache):
     if latstr and longstr and latstr != "" and longstr != "":
       latval = float(latstr)
       longval = float(longstr)
-      if latval > GBASE_LOC_FIXUP/2: latval -= GBASE_LOC_FIXUP
-      if longval > GBASE_LOC_FIXUP/2: longval -= GBASE_LOC_FIXUP
+      # divide by two because these can be negative numbers
+      if latval > GBASE_LOC_FIXUP/2:
+        latval -= GBASE_LOC_FIXUP
+      if longval > GBASE_LOC_FIXUP/2:
+        longval -= GBASE_LOC_FIXUP
       res.latlong = str(latval) + "," + str(longval)
 
     # TODO: remove-- working around a DB bug where all latlongs are the same
@@ -284,7 +288,7 @@ def get_from_ids(ids):
   results = {}
   try:
     results = memcache.get(ids, RESULT_CACHE_KEY)
-  except Exception:
+  except:
     logging.info("get_from_ids: memcache is busted.  ignoring...")
     pass
   for result in results:
@@ -301,9 +305,9 @@ def get_from_ids(ids):
       missing_ids)
 
   datastore_missing_ids = []
-  for id in ids:
-    if not id in datastore_results:
-      datastore_missing_ids.append(id)
+  for item_id in ids:
+    if not item_id in datastore_results:
+      datastore_missing_ids.append(item_id)
   if datastore_missing_ids:
     logging.warning('Could not find entry in datastore for ids: %s' %
                     datastore_missing_ids)
@@ -312,14 +316,14 @@ def get_from_ids(ids):
   args = {}
   args[api.PARAM_VOL_STARTDATE] = (datetime.date.today() +
                        datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-  tt = time.strptime(args[api.PARAM_VOL_STARTDATE], "%Y-%m-%d")
-  args[api.PARAM_VOL_ENDDATE] = (datetime.date(tt.tm_year,
-          tt.tm_mon, tt.tm_mday) + datetime.timedelta(days=60))
+  datetm = time.strptime(args[api.PARAM_VOL_STARTDATE], "%Y-%m-%d")
+  args[api.PARAM_VOL_ENDDATE] = (datetime.date(datetm.tm_year, datetm.tm_mon,
+      datetm.tm_mday) + datetime.timedelta(days=60))
 
   # TODO(mblain): Figure out how to pull in multiple base entries in one call.
-  for (id, volunteer_opportunity_entity) in datastore_results.iteritems():
+  for (item_id, volunteer_opportunity_entity) in datastore_results.iteritems():
     if not volunteer_opportunity_entity.base_url:
-      logging.warning('Could not find base_url in datastore for id: %s' % id)
+      logging.warning('no base_url in datastore for id: %s' % item_id)
       continue
     temp_results = query(volunteer_opportunity_entity.base_url, args, True)
     if not temp_results.results:
@@ -334,10 +338,10 @@ def get_from_ids(ids):
           datetime.datetime.now()
       volunteer_opportunity_entity.put()
       continue
-    if temp_results.results[0].id != id:
+    if temp_results.results[0].id != item_id:
       logging.error('First result is not expected result. '
                     'Expected: %s Found: %s. len(results): %s' %
-                    (id, temp_results.results[0].id, len(results)))
+                    (item_id, temp_results.results[0].id, len(results)))
       # Not sure if we should touch the VolunteerOpportunity or not.
       continue
     result_set.results.append(temp_results.results[0])
