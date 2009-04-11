@@ -14,7 +14,6 @@
 
 import hashlib
 import logging
-import math
 import re
 
 from google.appengine.api import memcache
@@ -23,8 +22,6 @@ import api
 import base_search
 import geocode
 import scoring
-import utils
-import views
 
 CACHE_TIME = 24*60*60  # seconds
 
@@ -33,12 +30,17 @@ CACHE_TIME = 24*60*60  # seconds
 # e.g. /listing/56_foo should be resolved into [('id',56)]
 # by convention, repeated args are ignored, LAST ONE wins.
 def search(args):
+  """run a search against the backend specified by the 'backend' arg.
+  Returns a result set that's been (a) de-dup'd ("merged") and (b) truncated
+  to the appropriate number of results ("clipped").  Impression tracking
+  happens here as well."""
+  
   # TODO(paul): Create a QueryParams object to handle validation.
   #     Validation should be lazy, so that (for example) here
   #     only 'num' and 'start' are validated, since we don't
   #     yet need the rest.  QueryParams can have a function to
   #     create a normalized string, for the memcache key.
-
+  # pylint: disable-msg=C0321
   num = 10
   if api.PARAM_NUM in args:
     num = int(args[api.PARAM_NUM])
@@ -99,23 +101,15 @@ def fetch_result_set(args):
   if api.PARAM_Q not in args:
     args[api.PARAM_Q] = ""
 
-  if api.PARAM_OUTPUT in args:
-    if args[api.PARAM_OUTPUT] in ['html','tsv','csv','json','rss','rssdesc','xml',
-                          'snippets_list']:
-      output = args[api.PARAM_OUTPUT]
-    else:
-      searchParamError(args, api.PARAM_OUTPUT)
-  else:
-    args[api.PARAM_OUTPUT] = "html"
-
-  if api.PARAM_FIELDS in args:
-    # TODO: csv list of fields
-    if args[api.PARAM_FIELDS] in ['all','rss']:
-      fields = args[api.PARAM_FIELDS]
-    else:
-      searchParamError(args, api.PARAM_FIELDS)
-  else:
-    args[api.PARAM_FIELDS] = "all"
+  # api.PARAM_OUTPUT is only used by callers (the view)
+  #   (though I can imagine some output formats dictating which fields are
+  #    retrieved from the backend...)
+  #
+  #if args[api.PARAM_OUTPUT] not in ['html', 'tsv', 'csv', 'json', 'rss', 
+  #  'rssdesc', 'xml', 'snippets_list']
+  #
+  # TODO: csv list of fields
+  #if args[api.PARAM_FIELDS] not in ['all', 'rss']:
 
   # TODO: process dbg -- currently, anything goes...
 
@@ -130,7 +124,7 @@ def fetch_result_set(args):
     else:
       res = geocode.geocode(args[api.PARAM_VOL_LOC])
     if res != "":
-      args["lat"],args["long"] = res.split(",")
+      args["lat"], args["long"] = res.split(",")
       # don't break on spurious whitespace
       args["lat"] = args["lat"].strip()
       args["long"] = args["long"].strip()
