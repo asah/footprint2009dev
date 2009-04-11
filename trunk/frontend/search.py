@@ -135,6 +135,5 @@ def fetch_result_set(args):
 
   result_set = base_search.search(args)
   scoring.score_results_set(result_set, args)
-  result_set.apply_post_search_filters(args)
   result_set.dedup()
   return result_set

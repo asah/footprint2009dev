@@ -16,64 +16,66 @@ import re
 import urlparse
 import datetime
 import time
-import math
 import hashlib
 import logging
-
-from google.appengine.api import memcache
 from xml.sax.saxutils import escape
 
-import api
 from fastpageviews import pagecount
 
-def getRFCdatetime(when = None):
-  # GAE server localtime appears to be UTC and timezone %Z
-  # is an empty string so to satisfy RFC date format
-  # requirements in output=rss we append the offset in hours
-  # from UTC for our local time (now, UTC) i.e. +0000 hours
-  # ref: http://feedvalidator.org/docs/error/InvalidRFC2822Date.html
-  # ref: http://www.feedvalidator.org to check feed validity
-  # eg, Tue, 10 Feb 2009 17:04:28 +0000
+def get_rfc2822_datetime(when = None):
+  """GAE server localtime appears to be UTC and timezone %Z
+  is an empty string so to satisfy RFC date format
+  requirements in output=rss we append the offset in hours
+  from UTC for our local time (now, UTC) i.e. +0000 hours
+  ref: http://feedvalidator.org/docs/error/InvalidRFC2822Date.html
+  ref: http://www.feedvalidator.org to check feed validity
+  eg, Tue, 10 Feb 2009 17:04:28 +0000"""
   if not when:
-     when = time.gmtime();
+    when = time.gmtime()
   return time.strftime("%a, %d %b %Y %H:%M:%S", when) + " +0000"
 
+def js_escape(string):
+  """quote characters appropriately for javascript.
+  TODO: This escape method is overly agressive and is messing some snippets
+  up.  We only need to escape single and double quotes."""
+  return re.escape(string)
+
 class SearchResult(object):
-  def __init__(self, url, title, snippet, location, id, base_url):
+  """class to hold the results of a search to the backend."""
+  def __init__(self, url, title, snippet, location, item_id, base_url):
     # TODO: Consider using kwargs or something to make this more generic.
     self.url = url
     self.title = title
     self.snippet = snippet
     self.location = location
-    self.id = id
+    self.item_id = item_id
     self.base_url = base_url
     # app engine does not currently support the escapejs filter in templates
     # so we have to do it our selves for now
-    self.js_escaped_title = self.js_escape(title)
-    self.js_escaped_snippet = self.js_escape(snippet)
-
+    self.js_escaped_title = js_escape(title)
+    self.js_escaped_snippet = js_escape(snippet)
     # TODO: find out why this is not unique
-    self.xml_url = escape(url) + "#" + self.id # hack to avoid guid duplicates
-
+    # hack to avoid guid duplicates
+    self.xml_url = escape(url) + "#" + self.item_id
     parsed_url = urlparse.urlparse(url)
     self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
-
     # user's expressed interest, models.InterestTypeProperty
     self.interest = None
     # stats from other users.
     self.interest_count = 0
-
-    # TODO: real quality score
+    # TODO: implement quality score
     self.quality_score = 0.1
-
     self.impressions = 0
+    self.pubdate = get_rfc2822_datetime()
+    self.score = 0.0
+    self.score_notes = ""
+    self.score_str = ""
 
-    self.pubDate = getRFCdatetime()
-
-  def js_escape(self, string):
-    # TODO: This escape method is overly agressive and is messing some snippets
-    # up.  We only need to escape single and double quotes.
-    return re.escape(string)
+  def set_score(self, score, notes):
+    """assign score value-- TODO: consider moving scoring code to this class."""
+    self.score = score
+    self.score_notes = notes
+    self.score_str = "%.4g" % (score)
 
 class SearchResultSet(object):
   """Contains a list of SearchResult objects.
@@ -101,18 +103,10 @@ class SearchResultSet(object):
     self.estimated_results = 0
     self.num_merged_results = 0
     self.merged_results = []
+    self.clipped_results = []
     self.estimated_merged_results = 0
-    self.pubDate = getRFCdatetime()
-    self.lastBuildDate = self.pubDate
-
-  def apply_post_search_filters(self, args):
-    if (api.PARAM_VOL_STARTDAYOFWEEK in args 
-         and args[api.PARAM_VOL_STARTDAYOFWEEK] != ""):
-      # we are going to filter by day of week
-      for i,res in enumerate(self.results):
-        dow = str(res.startdate.strftime("%w"))
-        if args[api.PARAM_VOL_STARTDAYOFWEEK].find(dow) < 0:
-          del self.results[i]
+    self.pubdate = get_rfc2822_datetime()
+    self.last_build_date = self.pubdate
 
   def clip_merged_results(self, start, num):
     """Extract just the slice of merged results from start to start+num.
@@ -121,28 +115,29 @@ class SearchResultSet(object):
     self.clipped_results = self.merged_results[start:start+num]
 
   def track_views(self):
+    """increment impression counts for items in the set."""
     logging.info(str(datetime.datetime.now())+" track_views: start")
-    for i, primary_res in enumerate(self.clipped_results):
+    for primary_res in self.clipped_results:
       logging.info("track_views: key="+primary_res.merge_key)
       primary_res.merged_impressions = pagecount.IncrPageCount(
         primary_res.merge_key, 1)
-      primary_res.impressions = pagecount.IncrPageCount(primary_res.id, 1)
-      for j, res in enumerate(primary_res.merged_list):
-        res.impressions = pagecount.IncrPageCount(res.id, 1)
+      primary_res.impressions = pagecount.IncrPageCount(primary_res.item_id, 1)
+      for res in primary_res.merged_list:
+        res.impressions = pagecount.IncrPageCount(res.item_id, 1)
     logging.info(str(datetime.datetime.now())+" track_views: end")
 
   def dedup(self):
     """modify in place, merged by title and snippet."""
 
-    def safe_str(s):
+    def safe_str(instr):
       """private helper function for dedup()"""
       return_val = ""
       try:
-        return_val = str(s)
+        return_val = str(instr)
       except ValueError:
-        for i, c in enumerate(s):
+        for inchar in instr:
           try:
-            safe_char = str(c)
+            safe_char = str(inchar)
             return_val += safe_char
           except ValueError:
             continue # discard
@@ -150,7 +145,7 @@ class SearchResultSet(object):
 
     def assign_merge_keys():
       """private helper function for dedup()"""
-      for i,res in enumerate(self.results):
+      for res in self.results:
         res.merge_key = hashlib.md5(safe_str(res.title) +
                                     safe_str(res.snippet) +
                                     safe_str(res.location)).hexdigest()
@@ -164,11 +159,14 @@ class SearchResultSet(object):
         res.merged_list = []
         res.merged_debug = []
 
-    def compare_merged_dates(a, b):
+    def compare_merged_dates(dt1, dt2):
       """private helper function for dedup()"""
-      if (a.t_startdate > b.t_startdate): return 1
-      elif (a.t_startdate < b.t_startdate): return -1
-      else: return 0
+      if (dt1.t_startdate > dt2.t_startdate):
+        return 1
+      elif (dt1.t_startdate < dt2.t_startdate):
+        return -1
+      else:
+        return 0
 
     def merge_result(res):
       """private helper function for dedup()"""
@@ -177,7 +175,7 @@ class SearchResultSet(object):
         if primary_result.merge_key == res.merge_key:
           # merge it
           listed = False
-          for n, merged_result in enumerate(self.merged_results[i].merged_list):
+          for merged_result in self.merged_results[i].merged_list:
             # do we already have this date + url?
             if (merged_result.t_startdate == self.merged_results[i].t_startdate
                 and merged_result.url == self.merged_results[i].url):
@@ -198,23 +196,25 @@ class SearchResultSet(object):
       but we also use the url if it is unique too
       for more than 2 extras we will offer "more" and "less"
       we will be showing the unique dates as "Month Date"."""
-      for i,res in enumerate(self.merged_results):
+      for i, res in enumerate(self.merged_results):
         res.idx = i + 1
         if len(res.merged_list) > 1:
           res.merged_list.sort(cmp=compare_merged_dates)
           location_was = res.location
-          need_more = False
+          # TODO(mt1955)-- need_more appears to be unused?!  pls fix or remove.
+          #need_more = False
           res.less_list = []
           if len(res.merged_list) > 2:
-            need_more = True
+            #need_more = True
             more_id = "more_" + str(res.idx)
             res.more_id = more_id
             res.more_list = []
 
           more = 0
           res.have_more = True
-          for n,merged_result in enumerate(res.merged_list):
+          for merged_result in res.merged_list:
             def make_linkable(text, merged_result, res):
+              """generate HTML hyperlink for text if merged_result != res."""
               if merged_result.url != res.url:
                 return '<a href="' + merged_result.url + '">' + text + '</a>'
               else:
@@ -239,7 +239,7 @@ class SearchResultSet(object):
 
     # dedup() main code
     assign_merge_keys()
-    for i,res in enumerate(self.results):
+    for res in self.results:
       merge_result(res)
     compute_more_less()
     self.num_merged_results = len(self.merged_results)

@@ -7,7 +7,7 @@
 <description>One For All - blah blah blah</description>
 <language>en-us</language>
 <pubDate>{{ result_set.pubDate }}</pubDate>
-<lastBuildDate>{{ result_set.lastBuildDate }}</lastBuildDate>
+<lastBuildDate>{{ result_set.last_build_date }}</lastBuildDate>
 {% include 'snippets_list.rss' %}
 </channel>
 </rss>
