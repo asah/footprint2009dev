@@ -12,33 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
+from datetime import datetime
 import logging
 import math
-import time
 
 import view_helper
 
 
-def compare_scores(x,y):
-  diff = y.score - x.score
-  if (diff > 0): return 1
-  if (diff < 0): return -1
+def compare_scores(val1, val2):
+  """helper function for sorting."""
+  diff = val2.score - val1.score
+  if (diff > 0):
+    return 1
+  if (diff < 0):
+    return -1
   return 0
 
 def score_results_set(result_set, args):
-  # handle rescoring on interest weights
+  """sort results by score, and for each, set .score, .scorestr, .score_notes"""
+  logging.debug(str(datetime.now())+": score_results_set(): start")
   idlist = map(lambda x: x.id, result_set.results)
+  # handle rescoring on interest weights
   others_interests = view_helper.get_interest_for_opportunities(idlist)
   total_results = float(len(result_set.results))
-  for i,res in enumerate(result_set.results):
+  for i, res in enumerate(result_set.results):
     res.score_by_base_rank = (total_results - i)/total_results
     res.score = res.score_by_base_rank
 
     # TODO: match on start time, etc.
-    delta = res.startdate - datetime.datetime.now()
+    delta = res.startdate - datetime.now()
     if delta.days <= 0:
-      # good luck joining event this quickly; also covers divide-by-zero and past-dates
+      # good luck joining event this soon
+      # also avoids divide-by-zero and dates in the past
       res.date_dist_multiplier = .0001
     else:  
       res.date_dist_multiplier = 1.0/(delta.days + (delta.seconds/(24 * 3600)))
@@ -55,7 +60,8 @@ def score_results_set(result_set, args):
       # keep one value to right of decimal
       delta_dist = latdist*latdist + lngdist * lngdist
       #logging.info("qloc=%s,%s - listing=%g,%g - dist=%g,%g - delta = %g" %
-      #             (args["lat"], args["long"], float(lat), float(lng), latdist, lngdist, delta_dist))
+      #             (args["lat"], args["long"], float(lat), float(lng),
+      #              latdist, lngdist, delta_dist))
       # reasonably local
       if delta_dist > 0.025:
         delta_dist = 0.9 + delta_dist
@@ -89,11 +95,12 @@ def score_results_set(result_set, args):
     score_notes += "\n"
     score_notes += "  days delta=" + str(delta.days)
     score_notes += "  start=" + str(res.startdate)
-    score_notes += "  now=" + str(datetime.datetime.now())
+    score_notes += "  now=" + str(datetime.now())
     score_notes += "  delta.seconds=" + str(delta.seconds)
 
     res.scorestr = "%.4g" % (res.score)
     res.score_notes = score_notes
 
   result_set.results.sort(cmp=compare_scores)
+  logging.debug(str(datetime.now())+": score_results_set(): done")
 
