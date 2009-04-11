@@ -21,6 +21,7 @@ from google.appengine.api import urlfetch
 from google.appengine.api import memcache
 
 def geocode(addr, usecache=True, retries=4):
+  """convert a human-readable address into a "lat,long" value (string)."""
   loc = addr.lower().strip()
   loc = re.sub(r'^[^0-9a-z]+', r'', loc)
   loc = re.sub(r'[^0-9a-z]+$', r'', loc)
@@ -34,9 +35,11 @@ def geocode(addr, usecache=True, retries=4):
     #logging.info("geocode: cache hit loc="+loc+"  val="+val)
     return val
 
-  params = urllib.urlencode({'q':loc.lower(), 'output':'csv',
-                             'oe':'utf8', 'sensor':'false',
-                             'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
+  params = urllib.urlencode(
+    {'q':loc.lower(), 'output':'csv',
+     'oe':'utf8', 'sensor':'false',
+     'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY'+\
+       '_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
   fetchurl = "http://maps.google.com/maps/geo?%s" % params
   #logging.info("geocode: cache miss, trying "+fetchurl)
   fetch_result = urlfetch.fetch(fetchurl)
@@ -48,10 +51,11 @@ def geocode(addr, usecache=True, retries=4):
     # fail and also don't cache
     return ""
   try:
-    respcode,zoom,lat,long = res.split(",")
+    # pylint: disable-msg=W0612
+    respcode, zoom, lat, lng = res.split(",")
   except:
     logging.info(str(datetime.now())+"unparseable response: "+res[0:80])
-    respcode,zoom,lat,long = 999,0,0,0
+    respcode, zoom, lat, lng = 999, 0, 0, 0
 
   respcode = int(respcode)
   if respcode == 500 or respcode == 620:
@@ -62,7 +66,7 @@ def geocode(addr, usecache=True, retries=4):
   # these results get cached
   val = ""
   if respcode == 200:
-    val = lat+","+long
+    val = lat+","+lng
 
   memcache.set(memcache_key, val)
   return val
