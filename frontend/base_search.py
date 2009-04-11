@@ -67,6 +67,9 @@ def base_restrict_str(key, val=None):
     res += ':' + urllib.quote_plus(str(val))
   return res + ']'
 
+def apply_post_search_filters(args):
+  """implement restricts that Base doesn't."""
+
 # note: many of the XSS and injection-attack defenses are unnecessary
 # given that the callers are also protecting us, but I figure better
 # safe than sorry, and defense-in-depth.
@@ -173,13 +176,23 @@ def search(args):
   query_url += "&bq=" + base_query
 
   logging.info("calling Base: "+query_url)
-  res = query(query_url, args, False)
+  results = query(query_url, args, False)
   logging.info("Base call done.")
-  return res
+
+  # Base doesn't implement day-of-week filtering
+  if (api.PARAM_VOL_STARTDAYOFWEEK in args and
+      args[api.PARAM_VOL_STARTDAYOFWEEK] != ""):
+    startday = args[api.PARAM_VOL_STARTDAYOFWEEK]
+    for i, res in enumerate(results):
+      dow = str(res.startdate.strftime("%w"))
+      if startday.find(dow) < 0:
+        del results[i]
+
+  return results
 
 
 def query(query_url, args, cache):
-  """run a query using Google Base as the backend."""
+  """run the actual Base query (no filtering or sorting)."""
   result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
                                             query_url,
                                             [])
@@ -261,8 +274,8 @@ def query(query_url, args, cache):
         setattr(res, name, utils.GetXmlElementTextOrEmpty(entry, "g:" + name))
 
     result_set.results.append(res)
-    if cache and res.id:
-      key = RESULT_CACHE_KEY + res.id
+    if cache and res.item_id:
+      key = RESULT_CACHE_KEY + res.item_id
       memcache.set(key, res, time=RESULT_CACHE_TIME)
 
   result_set.num_results = len(result_set.results)
@@ -338,10 +351,10 @@ def get_from_ids(ids):
           datetime.datetime.now()
       volunteer_opportunity_entity.put()
       continue
-    if temp_results.results[0].id != item_id:
+    if temp_results.results[0].item_id != item_id:
       logging.error('First result is not expected result. '
                     'Expected: %s Found: %s. len(results): %s' %
-                    (item_id, temp_results.results[0].id, len(results)))
+                    (item_id, temp_results.results[0].item_id, len(results)))
       # Not sure if we should touch the VolunteerOpportunity or not.
       continue
     result_set.results.append(temp_results.results[0])
