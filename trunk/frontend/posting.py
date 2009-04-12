@@ -165,12 +165,13 @@ def create_from_xml(xml):
     return ""
 
   posting = Posting(listing_xml=xml)
-  posting.title = utils.GetXmlElementTextOrEmpty(dom, "title")
+  posting.title = utils.xml_elem_text(dom, "title", '')
   #logging.info("create_from_xml: xml="+xml)
   logging.info("create_from_xml: title="+posting.title)
-  posting.description = utils.GetXmlElementTextOrEmpty(dom, "description")
+  posting.description = utils.xml_elem_text(dom, "description", '')
   try:
-    start_date = datetime.strptime(utils.GetXmlElementTextOrEmpty(dom, "startDate"), "%Y-%m-%d")
+    start_date = datetime.strptime(utils.xml_elem_text(
+        dom, "startDate", ''), "%Y-%m-%d")
     posting.start_date = start_date.date()
   except:
     pass

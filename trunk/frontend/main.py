@@ -34,6 +34,7 @@ APPLICATION = webapp.WSGIApplication(
     debug=True)
 
 def main():
+  """this comment to appease pylint."""
   run_wsgi_app(APPLICATION)
 
 if __name__ == "__main__":
