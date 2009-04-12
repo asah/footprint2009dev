@@ -14,10 +14,13 @@
 
 # Various test pages.
 
-import cgi
+# view classes aren inherently not pylint-compatible
+# pylint: disable-msg=C0103
+# pylint: disable-msg=W0232
+# pylint: disable-msg=E1101
+# pylint: disable-msg=R0903
+
 import datetime
-import logging
-import os
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -28,7 +31,9 @@ import models
 import userinfo
 
 class TestLogin(webapp.RequestHandler):
+  """test user login sequence."""
   def get(self):
+    """HTTP get method."""
     user = userinfo.get_user(self.request)
     self.response.out.write('Login info<ul>')
     if user:
@@ -60,8 +65,10 @@ class TestLogin(webapp.RequestHandler):
 
 
   def post(self):
+    """HTTP post method."""
     userid = self.request.get('userid')
-    self.response.headers.add_header('Set-Cookie', 'footprinttest=%s;path=/' % userid)
+    self.response.headers.add_header('Set-Cookie',
+                                     'footprinttest=%s;path=/' % userid)
     self.response.out.write('You are logged ')
     if userid:
       self.response.out.write('in!')
@@ -71,7 +78,9 @@ class TestLogin(webapp.RequestHandler):
 
 
 class TestModerator(webapp.RequestHandler):
+  """test moderation functionality."""
   def get(self):
+    """HTTP get method."""
     user = userinfo.get_user(self.request)
     if not user:
       self.response.out.write('Not logged in.')
@@ -83,7 +92,7 @@ class TestModerator(webapp.RequestHandler):
       self.response.out.write('<li>You are already a moderator.')
 
     if user.get_user_info().moderator_request_email:
-      # NOTE: This is very vulnerable to html injection.
+      # TODO: This is very vulnerable to html injection.
       self.response.out.write('<li>We have received your request'
                               '<li>Your email: %s'
                               '<li>Your comments: %s'
@@ -92,13 +101,15 @@ class TestModerator(webapp.RequestHandler):
                                user.get_user_info().moderator_request_desc))
 
     self.response.out.write('</ul>')
-    self.response.out.write('<form method="POST">'
-                            'Your email address: <input name="email" /><br>'
-                            'Why you want to be a moderator: <br><textarea name="desc"></textarea>'
-                            '<br><input type="submit" name="submit"/>'
-                            '</form>')
+    self.response.out.write(
+      '<form method="POST">'
+      'Your email address: <input name="email" /><br>'
+      'Why you want to be a moderator: <br><textarea name="desc"></textarea>'
+      '<br><input type="submit" name="submit"/>'
+      '</form>')
 
   def post(self):
+    """HTTP post method."""
     # todo: xsrf protection
     user = userinfo.get_user(self.request)
     if not user:
@@ -107,7 +118,8 @@ class TestModerator(webapp.RequestHandler):
 
     if not self.request.get('email'):
       # TODO: Actual validation.
-      self.response.out.write('<div style="color:red">Email address required.</div>')
+      self.response.out.write('<div style="color:red">' +
+                              'Email address required.</div>')
     else:
       user_info = user.get_user_info()
       user_info.moderator_request_email = self.request.get('email')
@@ -123,7 +135,9 @@ class TestModerator(webapp.RequestHandler):
 
 
 class AdminModerator(webapp.RequestHandler):
+  """test moderation functionality (for admins)."""
   def get(self):
+    """HTTP get method."""
     if not users.is_current_user_admin():
       html = '<html><body><a href="%s">Sign in</a></body></html>'
       self.response.out.write(html % (users.create_login_url(self.request.url)))
@@ -137,7 +151,8 @@ class AdminModerator(webapp.RequestHandler):
 
     self.response.out.write('<form method="POST">')
     self.response.out.write('Existing moderators<table>')
-    self.response.out.write('<tr><td>+</td><td>-</td><td>UID</td><td>Email</td></tr>')
+    self.response.out.write('<tr><td>+</td><td>-</td>'
+                            '<td>UID</td><td>Email</td></tr>')
     for moderator in moderator_query:
       # NOTE: This is very vulnerable to html injection.
       self.response.out.write('<tr><td>&nbsp;</td><td>'
@@ -148,7 +163,8 @@ class AdminModerator(webapp.RequestHandler):
 
     self.response.out.write('</table>Requests<table>')
 
-    self.response.out.write('<tr><td>+</td><td>-</td><td>UID</td><td>Email</td></tr>')
+    self.response.out.write('<tr><td>+</td><td>-</td>'
+                            '<td>UID</td><td>Email</td></tr>')
     for request in request_query:
       # NOTE: This is very vulnerable to html injection.
       self.response.out.write('<tr><td>'
@@ -162,6 +178,7 @@ class AdminModerator(webapp.RequestHandler):
                             '</form>')
 
   def post(self):
+    """HTTP post method."""
     # todo: xsrf protection
     if not users.is_current_user_admin():
       html = '<html><body><a href="%s">Sign in</a></body></html>'
@@ -179,7 +196,8 @@ class AdminModerator(webapp.RequestHandler):
       user.moderator = True
       if not user.moderator_request_admin_notes:
         user.moderator_request_admin_notes = ''
-      user.moderator_request_admin_notes += '%s: Enabled by %s.\n' % (now, admin)
+      user.moderator_request_admin_notes += '%s: Enabled by %s.\n' % \
+          (now, admin)
     db.put(users_to_enable)
 
     users_to_disable = models.UserInfo.get_by_key_name(keys_to_disable)
@@ -187,25 +205,27 @@ class AdminModerator(webapp.RequestHandler):
       user.moderator = False
       if not user.moderator_request_admin_notes:
         user.moderator_request_admin_notes = ''
-      user.moderator_request_admin_notes += '%s: Disabled by %s.\n' % (now, admin)
+      user.moderator_request_admin_notes += '%s: Disabled by %s.\n' % \
+          (now, admin)
     db.put(users_to_disable)
 
     self.response.out.write(
-        '<div style="color: green">Enabled %s and disabled %s moderators.</div>' %
+        '<div style="color: green">Enabled %s and '
+        'disabled %s moderators.</div>' %
         (len(users_to_enable), len(users_to_disable)))
     self.response.out.write('<a href="?zx=%d">Continue</a>' %
                             datetime.datetime.now().microsecond)
 
 
-application = webapp.WSGIApplication(
-                                     [('/test/login', TestLogin),
-                                      ('/test/moderator', TestModerator),
-                                      ('/test/adminmoderator', AdminModerator),
-                                      ],
-                                     debug=True)
+APP = webapp.WSGIApplication([
+    ('/test/login', TestLogin),
+    ('/test/moderator', TestModerator),
+    ('/test/adminmoderator', AdminModerator),
+    ], debug=True)
 
 def main():
-  run_wsgi_app(application)
+  """main() for standalone execution."""
+  run_wsgi_app(APP)
 
 if __name__ == '__main__':
   main()
