@@ -12,50 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from xml.dom import minidom
 
-def GetXmlDomText(node):
+def get_xml_dom_text(node):
+  """Returns the text of the first node found with the given tagname.
+  Returns None if no node found."""
   text = ''
   for child in node.childNodes:
     if child.nodeType == minidom.Node.TEXT_NODE:
       text += child.data
   return text
 
-def GetXmlElementTextNS(node, namespace, tagname):
+def get_xml_dom_text_ns(node, namespace, tagname):
   """Returns the text of the first node found with the given namespace/tagname.
-  
-  May return None if no node found."""
+  Returns None if no node found."""
   child_nodes = node.getElementsByTagNameNS(namespace, tagname)
   if child_nodes:
-    return GetXmlDomText(child_nodes[0])
+    return get_xml_dom_text(child_nodes[0])
 
-def GetXmlElementText(node, tagname):
-  """Returns the text of the first node found with the given tagname.
-  
-  May return None if no node found."""
+def xml_elem_text(node, tagname, default=None):
+  """Returns the text of the first node found with the given namespace/tagname.
+  returns default if no node found."""
   child_nodes = node.getElementsByTagName(tagname)
   if child_nodes:
-    return GetXmlDomText(child_nodes[0])
-
-def GetXmlElementTextOrEmpty(node, tagname):
-  """Returns the text of the first node found with the given namespace/tagname.
-  returns empty string if no node found."""
-  res = GetXmlElementText(node, tagname)
-  if res == None:
-    return ""
-  return res
-
-def StringToInt(string):
-  try:
-    return int(string)
-  except ValueError:
-    return None
+    return get_xml_dom_text(child_nodes[0])
+  return default
 
 def get_last_arg(request, argname, default):
+  """Returns the last urlparam in an HTTP request-- this allows the
+  later args to override earlier ones, which is easier for developers
+  (vs. earlier ones taking precedence)."""
   values = request.get(argname, allow_multiple=True)
   if values:
     return values[len(values) - 1]
-
   return default
