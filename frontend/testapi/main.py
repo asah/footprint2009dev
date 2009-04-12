@@ -12,27 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cgi
-import sys
+# view classes aren inherently not pylint-compatible
+# pylint: disable-msg=C0103
+# pylint: disable-msg=W0232
+# pylint: disable-msg=E1101
+# pylint: disable-msg=R0903
+
 import os
 
-from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.ext.webapp import template
 
 import testapi.helpers
 
 class DumpSampleData(webapp.RequestHandler):
+  """print the contents of the static XML file."""
   def get(self):
+    """HTTP get method."""
     path = os.path.join(os.path.dirname(__file__),
                         testapi.helpers.CURRENT_STATIC_XML)
-    f = open(path, 'r')
+    xmlfh = open(path, 'r')
     self.response.headers['Content-Type'] = 'text/xml'
-    self.response.out.write(f.read())
+    self.response.out.write(xmlfh.read())
 
 class RunTests(webapp.RequestHandler):
+  """main for running all tests."""
   def get(self):
+    """HTTP get method."""
     testType = self.request.get('test_type') or 'all'
     responseTypes = self.request.get('response_types') or \
         testapi.helpers.DEFAULT_RESPONSE_TYPES
@@ -75,13 +81,14 @@ class RunTests(webapp.RequestHandler):
       api_testing.run_tests(testType, apiUrl, responseType)
     
 
-application = webapp.WSGIApplication(
+APP = webapp.WSGIApplication(
   [('/testapi/run', RunTests),
    ('/testapi/sampleData.xml', DumpSampleData)],
   debug=True)
 
 def main():
-  run_wsgi_app(application)
+  """main for standalone execution."""
+  run_wsgi_app(APP)
 
 if __name__ == "__main__":
   main()
