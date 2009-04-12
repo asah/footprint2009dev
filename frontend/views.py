@@ -12,30 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import cgi
+# view classes aren inherently not pylint-compatible
+# pylint: disable-msg=C0103
+# pylint: disable-msg=W0232
+# pylint: disable-msg=E1101
+# pylint: disable-msg=R0903
+
 import datetime
 import os
 import urllib
-import urlparse
 import logging
-import re
 
 from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
-from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.ext import db
+
+from fastpageviews import pagecount
 
 import recaptcha
 
 import api
-import base_search
-import geocode
 import models
 import posting
 import search
-import urls
 import userinfo
 import view_helper
 
@@ -91,15 +91,18 @@ def get_unique_args_from_request(request):
   return unique_args
 
 
-def load_userinfo_into_dict(user, dict):
+def load_userinfo_into_dict(user, userdict):
+  """populate the given dict with user info."""
   if user:
-    dict["user"] = user
-    dict["user_days_since_joined"] = (datetime.datetime.now()
-                                      - user.get_user_info().first_visit).days
+    userdict["user"] = user
+    userdict["user_days_since_joined"] = (datetime.datetime.now() -
+                                          user.get_user_info().first_visit).days
   else:
-    dict["user"] = None
+    userdict["user"] = None
+    userdict["user_days_since_joined"] = None
 
 def render_template(template_filename, template_values):
+  """wrapper for template.render() which handles path."""
   path = os.path.join(os.path.dirname(__file__),
                       TEMPLATE_DIR + template_filename)
   rendered = template.render(path, template_values)
@@ -107,7 +110,9 @@ def render_template(template_filename, template_values):
 
 
 class test_page_views_view(webapp.RequestHandler):
+  """testpage for pageviews counter."""
   def get(self):
+    """HTTP get method."""
     pagename = "testpage%s" % (self.request.get('pagename'))
     pc = pagecount.IncrPageCount(pagename, 1)
     template_values = pagecount.GetStats()
@@ -117,7 +122,9 @@ class test_page_views_view(webapp.RequestHandler):
                                            template_values))
 
 class main_page_view(webapp.RequestHandler):
+  """default homepage for consumer UI."""
   def get(self):
+    """HTTP get method."""
     template_values = {
         'result_set': {},
         'current_page' : 'SEARCH',
@@ -130,14 +137,17 @@ class main_page_view(webapp.RequestHandler):
                                             template_values))
 
 class legacy_search_view(webapp.RequestHandler):
+  """legacy API -- OK to remove after 2009/06/01."""
   def get(self):
+    """HTTP get method."""
     self.response.out.write("<!DOCTYPE html><html><body>sorry!  " +
                             "this API has changed-- try /api/volopps" +
-                            "</body></html>");
+                            "</body></html>")
 
 class search_view(webapp.RequestHandler):
+  """run a search.  note various output formats."""
   def get(self):
-    # Perform the search.
+    """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
     result_set = search.search(unique_args)
 
@@ -150,32 +160,35 @@ class search_view(webapp.RequestHandler):
     if not output or output == "html":
       if "geocode_responses" not in unique_args:
         unique_args["geocode_responses"] = 1
-      template = SEARCH_RESULTS_DEBUG_TEMPLATE
+      tpl = SEARCH_RESULTS_DEBUG_TEMPLATE
     elif output == "rss":
       self.response.headers["Content-Type"] = "application/rss+xml"
-      template = SEARCH_RESULTS_RSS_TEMPLATE
+      tpl = SEARCH_RESULTS_RSS_TEMPLATE
     elif output == "csv":
       # TODO: implement SEARCH_RESULTS_CSV_TEMPLATE
-      template = SEARCH_RESULTS_RSS_TEMPLATE
+      tpl = SEARCH_RESULTS_RSS_TEMPLATE
     elif output == "tsv":
       # TODO: implement SEARCH_RESULTS_TSV_TEMPLATE
-      template = SEARCH_RESULTS_RSS_TEMPLATE
+      tpl = SEARCH_RESULTS_RSS_TEMPLATE
     elif output == "xml":
       # TODO: implement SEARCH_RESULTS_XML_TEMPLATE
-      template = SEARCH_RESULTS_XML_TEMPLATE
+      #tpl = SEARCH_RESULTS_XML_TEMPLATE
+      tpl = SEARCH_RESULTS_RSS_TEMPLATE
     elif output == "rssdesc":
       # TODO: implement SEARCH_RESULTS_RSSDESC_TEMPLATE
-      template = SEARCH_RESULTS_RSS_TEMPLATE
+      tpl = SEARCH_RESULTS_RSS_TEMPLATE
     else:
       # TODO: implement SEARCH_RESULTS_ERROR_TEMPLATE
       # TODO: careful about escapification/XSS
-      template = SEARCH_RESULTS_DEBUG_TEMPLATE
+      tpl = SEARCH_RESULTS_DEBUG_TEMPLATE
 
     latlng_string = ""
     if "lat" in result_set.args and "long" in result_set.args:
-      latlng_string = "%s,%s" % (result_set.args["lat"], result_set.args["long"])
+      latlng_string = "%s,%s" % (result_set.args["lat"],
+                                 result_set.args["long"])
 
-    #logging.info("geocode("+result_set.args[api.PARAM_VOL_LOC]+") = "+result_set.args["lat"]+","+result_set.args["long"])
+    #logging.info("geocode("+result_set.args[api.PARAM_VOL_LOC]+\
+    #   ") = "+result_set.args["lat"]+","+result_set.args["long"])
     template_values = {
         'result_set': result_set,
         'current_page' : 'SEARCH',
@@ -188,12 +201,15 @@ class search_view(webapp.RequestHandler):
         'location': result_set.args[api.PARAM_VOL_LOC],
         'max_distance': result_set.args[api.PARAM_VOL_DIST],
       }
-    self.response.out.write(render_template(template, template_values))
+    self.response.out.write(render_template(tpl, template_values))
 
 
 class ui_snippets_view(webapp.RequestHandler):
+  """run a search and return consumer HTML for the results--
+  this awful hack exists for latency reasons: it's super slow to
+  parse things on the client."""
   def get(self):
-    # Perform the search.
+    """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
     result_set = search.search(unique_args)
     # TODO: re-implement using django filters
@@ -222,9 +238,10 @@ class ui_snippets_view(webapp.RequestHandler):
                                             template_values))
 
 
-#TODO: implement and merge with friends_view
 class my_events_view(webapp.RequestHandler):
+  """TODO: implement and merge with friends_view"""
   def get(self):
+    """HTTP get method."""
     user_info = userinfo.get_user(self.request)
     if not user_info:
       template_values = {'current_page' : 'MY_EVENTS'}
@@ -240,29 +257,31 @@ class my_events_view(webapp.RequestHandler):
     self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
                                             template_values))
 
-# TODO: Merge this class with the my_events_view
 class friends_view(webapp.RequestHandler):
+  """TODO: Merge this class with the my_events_view."""
   def get(self):
+    """HTTP get method."""
     user_info = userinfo.get_user(self.request)
 
     if not user_info:
       template_values = {
         'current_page' : 'FRIENDS'
       }
-      self.response.out.write(render_template(FRIENDS_TEMPLATE, template_values))
+      self.response.out.write(render_template(FRIENDS_TEMPLATE,
+                                              template_values))
       return
 
     is_debug = self.request.get('debug')
     view_data = view_helper.get_data_for_friends_view(user_info, is_debug)
     logging.info(repr(view_data))
     template_values = {
-        'current_page' : 'FRIENDS',
-        'current_user_opps_result_set': view_data['current_user_opps_result_set'],
-        'has_results' : view_data['has_results'],
-        'friends' : view_data['friends'],
-        'total_friends' : user_info.total_friends,
-        'friend_total_opp_count': view_data['friend_total_opp_count'],
-        'friend_interests_by_oid_js': view_data['friend_interests_by_oid_js'],
+      'current_page' : 'FRIENDS',
+      'current_user_opps_result_set': view_data['current_user_opps_result_set'],
+      'has_results' : view_data['has_results'],
+      'friends' : view_data['friends'],
+      'total_friends' : user_info.total_friends,
+      'friend_total_opp_count': view_data['friend_total_opp_count'],
+      'friend_interests_by_oid_js': view_data['friend_interests_by_oid_js'],
     }
     load_userinfo_into_dict(user_info, template_values)
 
@@ -270,15 +289,19 @@ class friends_view(webapp.RequestHandler):
                                             template_values))
 
 class post_view(webapp.RequestHandler):
+  """user posting flow."""
   def post(self):
+    """HTTP post method."""
     return self.get()
   def get(self):
+    """HTTP get method."""
     user_info = userinfo.get_user(self.request)
 
     # synthesize GET method url from either GET or POST submission
     geturl = self.request.path + "?"
     for arg in self.request.arguments():
-      geturl += urllib.quote_plus(arg) + "=" + urllib.quote_plus(self.request.get(arg)) + "&"
+      geturl += urllib.quote_plus(arg) + "=" + \
+          urllib.quote_plus(self.request.get(arg)) + "&"
     template_values = {
       'current_page' : 'POST',
       'geturl' : geturl,
@@ -307,12 +330,12 @@ class post_view(webapp.RequestHandler):
       load_userinfo_into_dict(user_info, vals)
       for arg in self.request.arguments():
         vals[arg] = self.request.get(arg)
-      respcode, id, content = posting.create_from_args(vals, computed_vals)
+      respcode, item_id, content = posting.create_from_args(vals, computed_vals)
       # TODO: is there a way to reference a dict-value in appengine+django ?
       for key in computed_vals:
         template_values["val_"+str(key)] = str(computed_vals[key])
       template_values["respcode"] = str(respcode)
-      template_values["id"] = str(id)
+      template_values["id"] = str(item_id)
       template_values["content"] = str(content)
     else:
       template_values["respcode"] = "401"
@@ -329,11 +352,14 @@ class post_view(webapp.RequestHandler):
         logging.error("internal error: duplicate template key: "+keystr)
         return
       template_values[keystr] = str(vals[key])
-    self.response.out.write(render_template(POST_RESULT_TEMPLATE, template_values))
+    self.response.out.write(render_template(POST_RESULT_TEMPLATE,
+                                            template_values))
 
 
 class admin_view(webapp.RequestHandler):
+  """admin UI."""
   def get(self):
+    """HTTP get method."""
     template_values = {
       'logout_link': users.create_logout_url('/'),
     }
@@ -351,7 +377,9 @@ class admin_view(webapp.RequestHandler):
     self.response.out.write(render_template(ADMIN_TEMPLATE, template_values))
 
 class redirect_view(webapp.RequestHandler):
+  """process redirects.  TODO: is this a security issue?"""
   def get(self):
+    """HTTP get method."""
     url = self.request.get('q')
     if url:
       self.redirect(url)
@@ -360,7 +388,9 @@ class redirect_view(webapp.RequestHandler):
 
 
 class moderate_view(webapp.RequestHandler):
+  """fast UI for voting/moderating on listings."""
   def get(self):
+    """HTTP get method."""
     # TODO: require admin access-- implement when we agree on mechanism
     action = self.request.get('action')
     if action == "test":
@@ -380,13 +410,16 @@ class moderate_view(webapp.RequestHandler):
 
     num = self.request.get('num', "20")
     reslist = posting.query(num=int(num))
-    def compare_quality_scores(x,y):
-      diff = y.quality_score - x.quality_score
-      if (diff > 0): return 1
-      if (diff < 0): return -1
+    def compare_quality_scores(s1, s2):
+      """compare two quality scores for the purposes of sorting."""
+      diff = s2.quality_score - s1.quality_score
+      if (diff > 0):
+        return 1
+      if (diff < 0):
+        return -1
       return 0
     reslist.sort(cmp=compare_quality_scores)
-    for i,res in enumerate(reslist):
+    for i, res in enumerate(reslist):
       res.idx = i+1
       if res.description > 100:
         res.description = res.description[0:97]+"..."
@@ -401,7 +434,9 @@ class moderate_view(webapp.RequestHandler):
 
 
 class action_view(webapp.RequestHandler):
+  """vote/tag/etc on a listing.  TODO: rename to something more specific."""
   def get(self):
+    """HTTP get method."""
     if self.request.get('type') != 'star':
       self.error(400)  # Bad request
       return
