@@ -12,14 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
 from google.appengine.api import memcache
 from xml.dom import minidom
 import xml.sax.saxutils
 import re
-import logging
-import md5
+import hashlib
 import random
 import math
 from urllib import urlencode
@@ -28,11 +26,14 @@ DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/volopps'
 DEFAULT_RESPONSE_TYPES = 'rss'
 LOCAL_STATIC_URL = 'http://localhost:8080/test/sampleData.xml'
 CURRENT_STATIC_XML = 'sampleData0.1.xml'
-ALL_TEST_TYPES = 'num, query, provider, start, geo' #'query, num, start, provider'
+#'query, num, start, provider'
+ALL_TEST_TYPES = 'num, query, provider, start, geo'
+
 
 class ApiResult(object):
+  """result object used for testing."""
   def __init__(self, item_id, title, description, url, provider, latlong):
-    self.id = item_id
+    self.item_id = item_id
     self.title = title
     self.description = description
     self.url = url
@@ -40,6 +41,8 @@ class ApiResult(object):
     self.latlong = latlong
 
 def get_node_data(entity):
+  """returns the value of a DOM node with some escaping, substituting
+  "" (empty string) if no child/value is found."""
   if (entity.firstChild == None):
     return ""
   if (entity.firstChild.data == None):
@@ -50,6 +53,8 @@ def get_node_data(entity):
   return nodestr
     
 def get_children_by_tagname(elem, name):
+  """returns a list of children nodes whose name matches."""
+  # TODO: use list comprehension?
   temp = []
   for child in elem.childNodes:
     if child.nodeType == child.ELEMENT_NODE and child.nodeName == name:
@@ -57,7 +62,9 @@ def get_children_by_tagname(elem, name):
   return temp
   
 
-def get_tag_value( entity, tag):
+def get_tag_value(entity, tag):
+  """within entity, find th first child with the given tagname, then
+  return its value, processed to UTF-8 and with newlines escaped."""
   #print "----------------------------------------"
   nodes = entity.getElementsByTagName(tag)
   #print "nodes: "
@@ -72,12 +79,69 @@ def get_tag_value( entity, tag):
   if (nodes[0].firstChild.data == None):
     return ""
   #print nodes[0].firstChild.data
-  s = nodes[0].firstChild.data
-  s = xml.sax.saxutils.escape(s).encode('UTF-8')
-  s = re.sub(r'\n', r'\\n', s)
-  return s
+  outstr = nodes[0].firstChild.data
+  outstr = xml.sax.saxutils.escape(outstr).encode('UTF-8')
+  outstr = re.sub(r'\n', r'\\n', outstr)
+  return outstr
 
+def parse_rss(data):
+  """convert an RSS response to an ApiResult."""
+  result = []
+  xmldoc = minidom.parseString(data)
+  items = xmldoc.getElementsByTagName('item')
+  for item in items:
+    api_result = (ApiResult(
+        get_tag_value(item, 'fp:id'),
+        get_tag_value(item, 'title'),
+        get_tag_value(item, 'description'), 
+        get_tag_value(item, 'link'),
+        get_tag_value(item, 'fp:provider'),
+        get_tag_value(item, 'fp:latlong')))
+    result.append(api_result)
+  return result
+
+def random_item(items):
+  """pick a random item from a list.  TODO: is there a more concise
+  way to do this in python?"""
+  num_items = len(items)
+  if num_items == 1:
+    return items[0]
+  else:
+    return items[random.randrange(0, num_items - 1)]
+    
+def retrieve_raw_data(full_uri):
+  """call urlfetch and cache the results in memcache."""
+  memcache_key = hashlib.md5('api_test_data:' + full_uri).hexdigest()
+  result_content = memcache.get(memcache_key)
+  if not result_content:
+    fetch_result = urlfetch.fetch(full_uri)
+    if fetch_result.status_code != 200:
+      return None
+    result_content = fetch_result.content
+    # memcache.set(memcache_key, result_content, time=300)
+  return result_content
+  
+def in_location(opp, loc, radius):
+  """is given opportunity within the radius of loc?"""
+  loc_arr = loc.split(',')
+  opp_arr = opp.latlong.split(',')
+  
+  loc_lat = math.radians(float(loc_arr[0].strip()))
+  loc_lng = math.radians(float(loc_arr[1].strip()))
+  opp_lat = math.radians(float(opp_arr[0].strip()))
+  opp_lng = math.radians(float(opp_arr[1].strip()))
+  
+  dlng = opp_lng - loc_lng
+  dlat = opp_lat - loc_lat #lat_2 - lat_1
+  # TODO: rename a_val and c_val to human-readable (named for pylint)
+  a_val = (math.sin(dlat / 2))**2 + \
+          (math.sin(dlng / 2))**2 * math.cos(loc_lat) * math.cos(opp_lat)
+  c_val = 2 * math.asin(min(1, math.sqrt(a_val)))
+  dist = 3956 * c_val
+  return (dist <= radius)
+  
 class ApiTesting(object):
+  """class to hold testing methods."""
   def __init__(self, wsfi_app):
     self.web_app = wsfi_app
     self.num_failures = 0
@@ -85,21 +149,21 @@ class ApiTesting(object):
     self.response_type = None
     
   def fail(self):
+    """report test failure."""
     self.web_app.response.set_status(500)
     
   def output(self, html):
+    """macro: output some HTML."""
     self.web_app.response.out.write(html)
     
-  def safe_get(handler, name, default):
-    value = handler.request.get(name) or default
-    return value
-  
   def make_uri(self, options):
+    """generate an API call given args."""
     result = self.api_url + '?output=' + self.response_type + '&'
     result += urlencode(options)
     return result
   
   def assert_valid_results(self, result_set):
+    """require that the results are valid (returns true/false)."""
     if result_set is None or result_set == False:
       self.num_failures = self.num_failures + 1
       self.fail()
@@ -114,7 +178,17 @@ class ApiTesting(object):
     self.fail()
     return False
   
+  def parse_raw_data(self, data):
+    """wrapper for parse_TYPE()."""
+    if self.response_type == 'rss':
+      return parse_rss(data)
+    elif self.response_type == 'xml':
+      # TODO: implement: return self.parse_xml(data)
+      return []
+    return []
+  
   def run_test(self, test_type):
+    """run one test."""
     self.output('<p class="test">Running test <em>' + test_type +
                 '</em> for response type <em>' + self.response_type +
                 '</em></p>')
@@ -128,6 +202,7 @@ class ApiTesting(object):
     return True
   
   def run_tests(self, test_type, api_url, response_type):
+    """run multiple tests (comma-separated)."""
     self.api_url = api_url
     self.response_type = response_type
     
@@ -140,52 +215,6 @@ class ApiTesting(object):
 
     return True
   
-  def hash_md5(self, s):
-    it = md5.new()
-    it.update(s)
-    return it.digest()
-
-  def retrieve_raw_data(self, fullUri):
-    memcache_key = self.hash_md5('api_test_data:' + fullUri)
-    result_content = memcache.get(memcache_key)
-    if not result_content:
-      fetch_result = urlfetch.fetch(fullUri)
-      if fetch_result.status_code != 200:
-        return None
-      result_content = fetch_result.content
-      # memcache.set(memcache_key, result_content, time=300)
-
-    return result_content
-    
-  def parse_rss(self, data):
-    result = []
-    
-    xmldoc = minidom.parseString(data)
-    items = xmldoc.getElementsByTagName('item')
-    for item in items:
-      api_result = (ApiResult(
-          get_tag_value(item, 'fp:id'),
-          get_tag_value(item, 'title'),
-          get_tag_value(item, 'description'), 
-          get_tag_value(item, 'link'),
-          get_tag_value(item, 'fp:provider'),
-          get_tag_value(item, 'fp:latlong')))
-      result.append(api_result)
-      
-    return result
-    
-  def parse_xml(data):
-    return []
-  
-  def parse_raw_data(self, data):
-    """wrapper for parse_TYPE()."""
-    if self.response_type == 'rss':
-      return self.parse_rss(data)
-    elif self.response_type == 'xml':
-      return self.parse_xml(data)
-      
-    return []
-  
   def get_result_set(self, arg_list):
     """macro for forming and making a request and parsing the results."""
     full_uri = self.make_uri(arg_list)
@@ -193,7 +222,7 @@ class ApiTesting(object):
     self.output('<p class="uri">URI: ' + full_uri + '</p>')
     
     #try:
-    data = self.retrieve_raw_data(full_uri)
+    data = retrieve_raw_data(full_uri)
     #except:
       #self.output('<p class="result fail">retrieve_raw_data failed.</p>')
       #return False
@@ -207,17 +236,10 @@ class ApiTesting(object):
     
     return None
   
-  def random_item(self, items):
-    max = len(items)
-    if max == 1:
-      return items[0]
-    else:
-      return items[random.randrange(0, max - 1)]
-    
   def test_num(self):
     """test whether the result set has a given number of results."""
     result = True
-    expected_count = int(self.random_item(['7', '14', '21', '28', '57']))
+    expected_count = int(random_item(['7', '14', '21', '28', '57']))
     
     result_set = self.get_result_set({'num':expected_count})
     if not self.assert_valid_results(result_set):
@@ -236,7 +258,8 @@ class ApiTesting(object):
   def test_query(self):
     """run a hardcoded test query (q=)."""
     result = True
-    term = self.random_item(["hospital", "walk", "help", "read", "children", "mercy"])
+    term = random_item(["hospital", "walk", "help", "read", "children",
+                        "mercy"])
   
     result_set = self.get_result_set({'q':term})
     if not self.assert_valid_results(result_set):
@@ -260,40 +283,25 @@ class ApiTesting(object):
     
     return result
   
-  def in_location(self, opp, loc, radius):
-    loc_arr = loc.split(',')
-    opp_arr = opp.latlong.split(',')
-    
-    loc_lat = math.radians(float(loc_arr[0].strip()))
-    loc_lng = math.radians(float(loc_arr[1].strip()))
-    opp_lat = math.radians(float(opp_arr[0].strip()))
-    opp_lng = math.radians(float(opp_arr[1].strip()))
-    
-    dlng = opp_lng - loc_lng
-    dlat = opp_lat - loc_lat #lat_2 - lat_1
-    a = (math.sin(dlat / 2))**2 + math.cos(loc_lat) * math.cos(opp_lat) * (math.sin(dlng / 2))**2
-    c = 2 * math.asin(min(1, math.sqrt(a)))
-    dist = 3956 * c
-    
-    if (dist <= radius):
-      return True
-    else:
-      return False
-  
   def test_geo(self):
     """run a query and check the geo results."""
     result = True
-    loc = self.random_item(["37.8524741,-122.273895", "33.41502, -111.82298", "29.759956, -95.362534", "33.76145285137889, -84.38941955566406"])
-    radius = self.random_item(["10", "20", "30", "50"])
+    loc = random_item(["37.8524741,-122.273895", "33.41502,-111.82298",
+                       "33.76145285137889,-84.38941955566406",
+                       "29.759956,-95.362534"])
+    radius = random_item(["10", "20", "30", "50"])
   
-    result_set = self.get_result_set({'vol_loc':loc, 'vol_dist':radius, 'num':20})
+    result_set = self.get_result_set({'vol_loc':loc, 'vol_dist':radius,
+                                      'num':20})
     if not self.assert_valid_results(result_set):
       return False
 
     for opp in result_set:
-      if (not self.in_location(opp, loc, radius)):
-        self.output('<p class="result amplification">Item outside location/distance '+
-                    '<strong>' + opp.id + ': ' + opp.title + '</strong> ' + opp.latlong + '</p>')
+      if (not in_location(opp, loc, radius)):
+        self.output(
+          '<p class="result amplification">Item outside location/distance '+
+          '<strong>' + opp.id + ': ' + opp.title + '</strong> ' + 
+          opp.latlong + '</p>')
         result = False
       
     if result:
