@@ -33,9 +33,9 @@ def register_org(orgname, orgstr):
   orgstr += '<missionStatement></missionStatement>'
   orgstr += '<description></description>'
   orgstr += '<location>'
-  orgstr += xmlh.outputVal("city", "")
-  orgstr += xmlh.outputVal("region", "")
-  orgstr += xmlh.outputVal("postalCode", "")
+  orgstr += xmlh.output_val("city", "")
+  orgstr += xmlh.output_val("region", "")
+  orgstr += xmlh.output_val("postalCode", "")
   orgstr += '</location>'
   orgstr += '<organizationURL></organizationURL>'
   orgstr += '<donateURL></donateURL>'
@@ -68,25 +68,25 @@ def parse(instr, maxrecs, progress):
   for i, oppstr in enumerate(opps):
     if (maxrecs > 0 and i > maxrecs):
       break
-    xmlh.printProgress("opps", progress, i, maxrecs)
+    xmlh.print_progress("opps", progress, i, maxrecs)
 
-    item = xmlh.simpleParser(oppstr, known_elnames, progress=False)
+    item = xmlh.simple_parser(oppstr, known_elnames, progress=False)
 
     # SponsoringOrganization/Name -- fortunately, no conflicts
     # but there's no data except the name
-    orgname = xmlh.getTagValue(item, "Name")
+    orgname = xmlh.get_tag_val(item, "Name")
     orgid = register_org(orgname, orgname)
 
     # logoURL -- sigh, this is for the opportunity not the org
     volopps += '<VolunteerOpportunity>'
-    volopps += xmlh.outputVal('volunteerOpportunityID', str(i))
-    volopps += xmlh.outputVal('sponsoringOrganizationID', str(orgid))
-    volopps += xmlh.outputNode('volunteerHubOrganizationID', item, "LocalID")
-    volopps += xmlh.outputNode('title', item, "Title")
-    volopps += xmlh.outputNode('abstract', item, "Abstract")
-    volopps += xmlh.outputNode('description', item, "Description")
-    volopps += xmlh.outputNode('detailURL', item, "DetailURL")
-    volopps += xmlh.outputVal('volunteersNeeded', "-8888")
+    volopps += xmlh.output_val('volunteerOpportunityID', str(i))
+    volopps += xmlh.output_val('sponsoringOrganizationID', str(orgid))
+    volopps += xmlh.output_node('volunteerHubOrganizationID', item, "LocalID")
+    volopps += xmlh.output_node('title', item, "Title")
+    volopps += xmlh.output_node('abstract', item, "Abstract")
+    volopps += xmlh.output_node('description', item, "Description")
+    volopps += xmlh.output_node('detailURL', item, "DetailURL")
+    volopps += xmlh.output_val('volunteersNeeded', "-8888")
 
     oppdates = item.getElementsByTagName("OpportunityDate")
     if (oppdates.length != 1):
@@ -95,22 +95,22 @@ def parse(instr, maxrecs, progress):
       return None
     oppdate = oppdates[0]
     volopps += '<dateTimeDurations><dateTimeDuration>'
-    volopps += xmlh.outputVal('openEnded', 'No')
-    volopps += xmlh.outputVal('duration', 'P%s%s' % 
-                              (xmlh.getTagValue(oppdate, "DurationQuantity"),
-                               xmlh.getTagValue(oppdate, "DurationUnit")))
-    volopps += xmlh.outputVal('commitmentHoursPerWeek', '0')
-    volopps += xmlh.outputNode('startDate', oppdate, "StartDate")
-    volopps += xmlh.outputNode('endDate', oppdate, "EndDate")
+    volopps += xmlh.output_val('openEnded', 'No')
+    volopps += xmlh.output_val('duration', 'P%s%s' % 
+                              (xmlh.get_tag_val(oppdate, "DurationQuantity"),
+                               xmlh.get_tag_val(oppdate, "DurationUnit")))
+    volopps += xmlh.output_val('commitmentHoursPerWeek', '0')
+    volopps += xmlh.output_node('startDate', oppdate, "StartDate")
+    volopps += xmlh.output_node('endDate', oppdate, "EndDate")
     volopps += '</dateTimeDuration></dateTimeDurations>'
 
     volopps += '<locations>'
     opplocs = item.getElementsByTagName("Location")
     for opploc in opplocs:
       volopps += '<location>'
-      volopps += xmlh.outputNode('region', opploc, "StateOrProvince")
-      volopps += xmlh.outputNode('country', opploc, "Country")
-      volopps += xmlh.outputNode('postalCode', opploc, "ZipOrPostalCode")
+      volopps += xmlh.output_node('region', opploc, "StateOrProvince")
+      volopps += xmlh.output_node('country', opploc, "Country")
+      volopps += xmlh.output_node('postalCode', opploc, "ZipOrPostalCode")
       volopps += '</location>'
     volopps += '</locations>'
 
@@ -123,12 +123,12 @@ def parse(instr, maxrecs, progress):
   outstr += '<FootprintFeed schemaVersion="0.1">'
   outstr += '<FeedInfo>'
   # TODO: assign provider IDs?
-  outstr += xmlh.outputVal('providerID', '106')
-  outstr += xmlh.outputVal('providerName', 'networkforgood')
-  outstr += xmlh.outputVal('feedID', 'americorps')
-  outstr += xmlh.outputVal('createdDateTime', xmlh.curTimeString())
-  outstr += xmlh.outputVal('providerURL', 'http://www.networkforgood.org/')
-  outstr += xmlh.outputVal('description', 'Americorps')
+  outstr += xmlh.output_val('providerID', '106')
+  outstr += xmlh.output_val('providerName', 'networkforgood')
+  outstr += xmlh.output_val('feedID', 'americorps')
+  outstr += xmlh.output_val('createdDateTime', xmlh.current_ts())
+  outstr += xmlh.output_val('providerURL', 'http://www.networkforgood.org/')
+  outstr += xmlh.output_val('description', 'Americorps')
   # TODO: capture ts -- use now?!
   outstr += '</FeedInfo>'
 

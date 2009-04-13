@@ -92,7 +92,7 @@ def parse(instr, maxrecs, progress):
   outstr += '<providerName>handsonnetwork.org</providerName>'
   outstr += '<feedID>handsonnetwork.org</feedID>'
   # TODO: get/create real feed date
-  outstr += '<createdDateTime>%s</createdDateTime>' % xmlh.curTimeString()
+  outstr += '<createdDateTime>%s</createdDateTime>' % xmlh.current_ts()
   outstr += '<providerURL>http://www.handsonnetwork.org/</providerURL>'
   outstr += '<description></description>'
   # TODO: capture ts -- use now?!
@@ -106,30 +106,30 @@ def parse(instr, maxrecs, progress):
   for i, orgstr in enumerate(sponsorstrs):
     if progress and i > 0 and i % 250 == 0:
       print datetime.now(), ": ", i, " orgs processed."
-    org = xmlh.simpleParser(orgstr, known_elnames, False)
+    org = xmlh.simple_parser(orgstr, known_elnames, False)
     #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
     #for i,org in enumerate(sponsors):
     outstr += '<Organization>'
-    name = xmlh.getTagValue(org, "Name")
-    desc = xmlh.getTagValue(org, "Description")
+    name = xmlh.get_tag_val(org, "Name")
+    desc = xmlh.get_tag_val(org, "Description")
     outstr += '<organizationID>%d</organizationID>' % (i+1)
     outstr += '<nationalEIN></nationalEIN>'
-    outstr += '<name>%s</name>' % (xmlh.getTagValue(org, "Name"))
+    outstr += '<name>%s</name>' % (xmlh.get_tag_val(org, "Name"))
     outstr += '<missionStatement></missionStatement>'
     outstr += '<description>%s</description>' % \
-        (xmlh.getTagValue(org, "Description"))
+        (xmlh.get_tag_val(org, "Description"))
     # unmapped: Email
     # unmapped: Phone
     # unmapped: Extension
     outstr += '<location>'
-    #outstr += '<city>%s</city>' % (xmlh.getTagValue(org, "City"))
-    #outstr += '<region>%s</region>' % (xmlh.getTagValue(org, "State"))
+    #outstr += '<city>%s</city>' % (xmlh.get_tag_val(org, "City"))
+    #outstr += '<region>%s</region>' % (xmlh.get_tag_val(org, "State"))
     #outstr += '<postalCode>%s</postalCode>' % \
-    #   (xmlh.getTagValue(org, "PostalCode"))
-    outstr += '<country>%s</country>' % (xmlh.getTagValue(org, "Country"))
+    #   (xmlh.get_tag_val(org, "PostalCode"))
+    outstr += '<country>%s</country>' % (xmlh.get_tag_val(org, "Country"))
     outstr += '</location>'
     outstr += '<organizationURL>%s</organizationURL>' % \
-        (xmlh.getTagValue(org, "URL"))
+        (xmlh.get_tag_val(org, "URL"))
     outstr += '<donateURL></donateURL>'
     outstr += '<logoURL></logoURL>'
     outstr += '<detailURL></detailURL>'
@@ -151,11 +151,11 @@ def parse(instr, maxrecs, progress):
   for i, oppstr in enumerate(opps):
     if (maxrecs > 0 and i > maxrecs):
       break
-    xmlh.printProgress("opps", progress, i, maxrecs)
-    opp = xmlh.simpleParser(oppstr, known_elnames, False)
+    xmlh.print_progress("opps", progress, i, maxrecs)
+    opp = xmlh.simple_parser(oppstr, known_elnames, False)
     orgs = opp.getElementsByTagName("SponsoringOrganization")
-    name = xmlh.getTagValue(orgs[0], "Name")
-    desc = xmlh.getTagValue(orgs[0], "Description")
+    name = xmlh.get_tag_val(orgs[0], "Name")
+    desc = xmlh.get_tag_val(orgs[0], "Description")
     sponsor_id = sponsor_ids[name+desc]
     oppdates = opp.getElementsByTagName("OpportunityDate")
     if (oppdates == None or oppdates.count == 0):
@@ -164,12 +164,12 @@ def parse(instr, maxrecs, progress):
       # unmapped: LogoURL
       # unmapped: OpportunityTypeID   (categoryTag?)
       # unmapped: LocationClassificationID (flatten)
-      datestr_pre = xmlh.outputVal('volunteerOpportunityID', opp, "LocalID")
-      datestr_pre = xmlh.outputPlural('sponsoringOpportunityID', sponsor_id)
+      datestr_pre = xmlh.output_val('volunteerOpportunityID', opp, "LocalID")
+      datestr_pre = xmlh.output_plural('sponsoringOpportunityID', sponsor_id)
       # unmapped: OrgLocalID
-      datestr_pre = xmlh.outputPluralNode('volunteerHubOrganizationID', opp,
-                                         "AffiliateID")
-      datestr_pre = xmlh.outputNode('title', opp, "Title")
+      datestr_pre = xmlh.output_plural_node('volunteerHubOrganizationID', 
+                                            opp, "AffiliateID")
+      datestr_pre = xmlh.output_node('title', opp, "Title")
       datestr_pre += '<abstract></abstract>'
       datestr_pre += '<volunteersNeeded>-8888</volunteersNeeded>'
       
@@ -181,19 +181,19 @@ def parse(instr, maxrecs, progress):
       datestr_post = '<locations><location>'
       # yuck, uses address1 for venue name... sometimes...
       #no way to detect: presence of numbers?
-      datestr_post += xmlh.outputNode('streetAddress1', loc, "Address1")
-      datestr_post += xmlh.outputNode('streetAddress2', loc, "Address2")
-      datestr_post += xmlh.outputNode('city', loc, "City")
-      datestr_post += xmlh.outputNode('region', loc, "State")
-      datestr_post += xmlh.outputNode('country', loc, "Country")
-      datestr_post += xmlh.outputNode('postalCode', loc, "ZipOrPostalCode")
+      datestr_post += xmlh.output_node('streetAddress1', loc, "Address1")
+      datestr_post += xmlh.output_node('streetAddress2', loc, "Address2")
+      datestr_post += xmlh.output_node('city', loc, "City")
+      datestr_post += xmlh.output_node('region', loc, "State")
+      datestr_post += xmlh.output_node('country', loc, "Country")
+      datestr_post += xmlh.output_node('postalCode', loc, "ZipOrPostalCode")
       # no equivalent: latitude, longitude
       datestr_post += '</location></locations>'
       
-      datestr_post += xmlh.outputNode('detailURL', opp, "DetailURL")
-      datestr_post += xmlh.outputNode('description', opp, "Description")
-      datestr_post += xmlh.outputVal('lastUpdated', opp,
-                 '%sT00:00:00' % (xmlh.getTagValue(opp, "DateListed")))
+      datestr_post += xmlh.output_node('detailURL', opp, "DetailURL")
+      datestr_post += xmlh.output_node('description', opp, "Description")
+      datestr_post += xmlh.output_val('lastUpdated', opp,
+                 '%sT00:00:00' % (xmlh.get_tag_val(opp, "DateListed")))
        
       oppcount = 0
       datetimedur = ''
@@ -212,10 +212,10 @@ def parse(instr, maxrecs, progress):
           # hardcoded: commitmentHoursPerWeek
           datetimedur += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
           # TODO: timezone
-          datetimedur += xmlh.outputNode("startDate", oppdate, "StartDate")
-          datetimedur += xmlh.outputNode("endDate", oppdate, "EndDate")
-          datetimedur += xmlh.outputNode("startTime", oppdate, "StartTime")
-          datetimedur += xmlh.outputNode("endTime", oppdate, "EndTime")
+          datetimedur += xmlh.output_node("startDate", oppdate, "StartDate")
+          datetimedur += xmlh.output_node("endDate", oppdate, "EndDate")
+          datetimedur += xmlh.output_node("startTime", oppdate, "StartTime")
+          datetimedur += xmlh.output_node("endTime", oppdate, "EndTime")
         datetimedur += '</dateTimeDuration>'
         
       if oppcount == 0: # insert an open ended datetimeduration
