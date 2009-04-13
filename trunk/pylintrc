@@ -80,7 +80,7 @@ include-ids=yes
 #enable-msg=
 
 # Disable the message(s) with the given id(s).
-disable-msg=W0403, W0702, W0603
+disable-msg=W0403, W0702, W0603, R0902, F0401
 
 
 
