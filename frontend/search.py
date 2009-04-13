@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+high-level routines for querying backend datastores and processing the results.
+"""
+
 import hashlib
 import logging
 import re

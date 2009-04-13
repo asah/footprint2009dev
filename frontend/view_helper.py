@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+TODO: module docs go here?!
+"""
+
 import logging
 import re
 

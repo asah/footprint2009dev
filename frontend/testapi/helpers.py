@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+core classes for testing the API.
+"""
+
 from google.appengine.api import urlfetch
 from google.appengine.api import memcache
 from xml.dom import minidom

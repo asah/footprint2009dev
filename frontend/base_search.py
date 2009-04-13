@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+low-level routines for querying Google Base and processing the results.
+Please don't call this directly-- instead call search.py
+"""
+
 import datetime
 import time
 import re
@@ -41,8 +46,10 @@ GBASE_LOC_FIXUP = 1000
 # Date format pattern used in date ranges.
 DATE_FORMAT_PATTERN = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}')
 
+# max number of results to ask from Base (for latency-- and correctness?)
 BASE_MAX_RESULTS = 1000
 
+# what base customer/author ID did we load the data under?
 BASE_CUSTOMER_ID = 5663714
 
 def base_argname(name):
@@ -67,17 +74,11 @@ def base_restrict_str(key, val=None):
     res += ':' + urllib.quote_plus(str(val))
   return res + ']'
 
-def apply_post_search_filters(args):
-  """implement restricts that Base doesn't."""
-
-# note: many of the XSS and injection-attack defenses are unnecessary
-# given that the callers are also protecting us, but I figure better
-# safe than sorry, and defense-in-depth.
-def search(args):
-  """run a Google Base search."""
+def form_base_query(args):
+  """ensure args[] has all correct and well-formed members and
+  return a base query string."""
   logging.info(args)
   base_query = ""
-
   if api.PARAM_Q in args and args[api.PARAM_Q] != "":
     base_query += urllib.quote_plus(args[api.PARAM_Q])
 
@@ -159,7 +160,15 @@ def search(args):
 
   if api.PARAM_START not in args:
     args[api.PARAM_START] = 1
+  return base_query
 
+# note: many of the XSS and injection-attack defenses are unnecessary
+# given that the callers are also protecting us, but I figure better
+# safe than sorry, and defense-in-depth.
+def search(args):
+  """run a Google Base search."""
+
+  base_query = form_base_query(args)
   query_url = args["backend"]
   num_to_fetch = int(args[api.PARAM_NUM] * args[api.PARAM_OVERFETCH_RATIO])
   if num_to_fetch > BASE_MAX_RESULTS:

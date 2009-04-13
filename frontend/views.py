@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# view classes aren inherently not pylint-compatible
+"""
+views in the app, in the MVC sense.
+"""
+# note: view classes aren inherently not pylint-compatible
 # pylint: disable-msg=C0103
 # pylint: disable-msg=W0232
 # pylint: disable-msg=E1101
 # pylint: disable-msg=R0903
-
 import datetime
 import os
 import urllib

@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# API query parameters.  Defined here as symbolic constants to ensure
-# typos become compile-time errors.
+"""
+API query parameters.  Defined here as symbolic constants to ensure
+typos become compile-time errors.
+"""
 
 PARAM_FIELDS = 'fields'
 PARAM_NUM = 'num'
