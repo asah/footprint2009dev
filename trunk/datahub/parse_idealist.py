@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+parser for idealist, which (IIRC) originates from Base?
+"""
 from xml.dom import minidom
 import xml_helpers
 import re

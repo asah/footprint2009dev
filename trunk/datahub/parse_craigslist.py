@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+parser for craigslist custom crawl-- not FPXML
+"""
+
 # note: this is designed to consume the output from the craigslist crawler
 # example record
 #http://limaohio.craigslist.org/vol/1048151556.html-Q-<!DOCTYPE html PUBLIC

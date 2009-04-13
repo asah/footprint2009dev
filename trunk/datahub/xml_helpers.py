@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#from xml.dom import pulldom
-#from xml.parsers.expat pulldom
+"""
+dumping ground for functions common across all parsers.
+"""
 
 from xml.dom import minidom
 from datetime import datetime
