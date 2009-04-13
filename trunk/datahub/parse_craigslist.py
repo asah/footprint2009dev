@@ -114,7 +114,7 @@ def parse(instr, maxrecs, progress):
   outstr += '<providerID>105</providerID>'
   outstr += '<providerName>craigslist.org</providerName>'
   outstr += '<providerURL>http://www.craigslist.org/</providerURL>'
-  outstr += '<createdDateTime>%s</createdDateTime>' % xmlh.curTimeString()
+  outstr += '<createdDateTime>%s</createdDateTime>' % xmlh.current_ts()
   outstr += '</FeedInfo>'
 
   # no "organization" in craigslist postings
@@ -126,9 +126,9 @@ def parse(instr, maxrecs, progress):
   outstr += '<missionStatement></missionStatement>'
   outstr += '<description></description>'
   outstr += '<location>'
-  outstr += xmlh.outputVal("city", "")
-  outstr += xmlh.outputVal("region", "")
-  outstr += xmlh.outputVal("postalCode", "")
+  outstr += xmlh.output_val("city", "")
+  outstr += xmlh.output_val("region", "")
+  outstr += xmlh.output_val("postalCode", "")
   outstr += '</location>'
   outstr += '<organizationURL></organizationURL>'
   outstr += '<donateURL></donateURL>'
@@ -162,7 +162,7 @@ def parse(instr, maxrecs, progress):
 
     if (maxrecs>0 and i>maxrecs):
       break
-    xmlh.printProgress("opps", progress, i, maxrecs)
+    xmlh.print_progress("opps", progress, i, maxrecs)
     if progress and i > 0 and i % 250 == 0:
       print datetime.now(), ": skipped",
       print skipped_listings["title"]+skipped_listings["body"], "listings (",

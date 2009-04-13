@@ -24,9 +24,9 @@ def parse(s, maxrecs, progress):
   """return FPXML given volunteermatch data"""
   # TODO: progress
   known_elnames = ['feed', 'title', 'subtitle', 'div', 'span', 'updated', 'id', 'link', 'icon', 'logo', 'author', 'name', 'uri', 'email', 'rights', 'entry', 'published', 'g:publish_date', 'g:expiration_date', 'g:event_date_range', 'g:start', 'g:end', 'updated', 'category', 'summary', 'content', 'awb:city', 'awb:country', 'awb:state', 'awb:postalcode', 'g:location', 'g:age_range', 'g:employer', 'g:job_type', 'g:job_industry', 'awb:paid', ]
-  xmldoc = xml_helpers.simpleParser(s, known_elnames, progress)
+  xmldoc = xml_helpers.simple_parser(s, known_elnames, progress)
 
-  pubdate = xml_helpers.getTagValue(xmldoc, "created")
+  pubdate = xml_helpers.get_tag_val(xmldoc, "created")
   ts = dateutil.parser.parse(pubdate)
   pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -54,16 +54,16 @@ def parse(s, maxrecs, progress):
     if (orgs.length == 1):
       org = orgs[0]
       s += '<Organization>'
-      s += '<organizationID>%s</organizationID>' % (xml_helpers.getTagValue(org, "key"))
+      s += '<organizationID>%s</organizationID>' % (xml_helpers.get_tag_val(org, "key"))
       s += '<nationalEIN></nationalEIN>'
-      s += '<name>%s</name>' % (xml_helpers.getTagValue(org, "name"))
+      s += '<name>%s</name>' % (xml_helpers.get_tag_val(org, "name"))
       s += '<missionStatement></missionStatement>'
       s += '<description></description>'
       s += '<location><city></city><region></region><postalCode></postalCode></location>'
-      s += '<organizationURL>%s</organizationURL>' % (xml_helpers.getTagValue(org, "URL"))
+      s += '<organizationURL>%s</organizationURL>' % (xml_helpers.get_tag_val(org, "URL"))
       s += '<donateURL></donateURL>'
       s += '<logoURL></logoURL>'
-      s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(org, "detailURL"))
+      s += '<detailURL>%s</detailURL>' % (xml_helpers.get_tag_val(org, "detailURL"))
       s += '</Organization>'
     else:
       print datetime.now(), "parse_volunteermatch: listing does not have an organization"
@@ -75,22 +75,22 @@ def parse(s, maxrecs, progress):
   items = xmldoc.getElementsByTagName("listing")
   for item in items[0:maxrecs]:
     s += '<VolunteerOpportunity>'
-    s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(item, "key"))
+    s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.get_tag_val(item, "key"))
 
     orgs = item.getElementsByTagName("parent")
     if (orgs.length == 1):
       org = orgs[0]
-      s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (xml_helpers.getTagValue(org, "key"))
+      s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (xml_helpers.get_tag_val(org, "key"))
     else:
       s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>0</sponsoringOrganizationID></sponsoringOrganizationIDs>'
       print datetime.now(), "parse_volunteermatch: listing does not have an organization"
       
-    s += '<title>%s</title>' % (xml_helpers.getTagValue(item, "title"))
+    s += '<title>%s</title>' % (xml_helpers.get_tag_val(item, "title"))
 
     s += '<volunteersNeeded>-8888</volunteersNeeded>'
 
     s += '<dateTimeDurations><dateTimeDuration>'
-    durations = xml_helpers.getChildrenByTagName(item, "duration")
+    durations = xml_helpers.get_children_by_tagname(item, "duration")
     if (len(durations) == 1):
       duration = durations[0]
       ongoing = duration.getAttribute("ongoing")
@@ -102,8 +102,8 @@ def parse(s, maxrecs, progress):
       listingTimes = duration.getElementsByTagName("listingTime")
       if (listingTimes.length == 1):
         listingTime = listingTimes[0]
-        s += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(listingTime, "startTime"))
-        s += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(listingTime, "endTime"))
+        s += '<startTime>%s</startTime>' % (xml_helpers.get_tag_val(listingTime, "startTime"))
+        s += '<endTime>%s</endTime>' % (xml_helpers.get_tag_val(listingTime, "endTime"))
     else:
       print datetime.now(), "parse_volunteermatch: number of durations in item != 1"
       return None
@@ -112,9 +112,9 @@ def parse(s, maxrecs, progress):
     l_period = l_duration = ""
     if (commitments.length == 1):
       commitment = commitments[0]
-      l_num = xml_helpers.getTagValue(commitment, "num")
-      l_duration = xml_helpers.getTagValue(commitment, "duration")
-      l_period = xml_helpers.getTagValue(commitment, "period")
+      l_num = xml_helpers.get_tag_val(commitment, "num")
+      l_duration = xml_helpers.get_tag_val(commitment, "duration")
+      l_period = xml_helpers.get_tag_val(commitment, "period")
       if ((l_duration == "hours") and (l_period == "week")):
         s += '<commitmentHoursPerWeek>' + l_num + '</commitmentHoursPerWeek>'
       elif ((l_duration == "hours") and (l_period == "day")):
@@ -138,39 +138,39 @@ def parse(s, maxrecs, progress):
       return None
     dbaddress = dbaddresses[0]
     s += '<locations><location>'
-    s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(dbaddress, "street1"))
-    s += '<city>%s</city>' % (xml_helpers.getTagValue(dbaddress, "city"))
-    s += '<region>%s</region>' % (xml_helpers.getTagValue(dbaddress, "region"))
-    s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(dbaddress, "postalCode"))
+    s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.get_tag_val(dbaddress, "street1"))
+    s += '<city>%s</city>' % (xml_helpers.get_tag_val(dbaddress, "city"))
+    s += '<region>%s</region>' % (xml_helpers.get_tag_val(dbaddress, "region"))
+    s += '<postalCode>%s</postalCode>' % (xml_helpers.get_tag_val(dbaddress, "postalCode"))
     
     geolocs = item.getElementsByTagName("geolocation")
     if (geolocs.length == 1):
       geoloc = geolocs[0]
-      s += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(geoloc, "latitude"))
-      s += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(geoloc, "longitude"))
+      s += '<latitude>%s</latitude>' % (xml_helpers.get_tag_val(geoloc, "latitude"))
+      s += '<longitude>%s</longitude>' % (xml_helpers.get_tag_val(geoloc, "longitude"))
     
     s += '</location></locations>'
     
     s += '<audienceTags>'
     audiences = item.getElementsByTagName("audience")
     for audience in audiences:
-      type = xml_helpers.getNodeData(audience)
+      type = xml_helpers.node_data(audience)
       s += '<audienceTag>%s</audienceTag>' % (type)
     s += '</audienceTags>'
 
     s += '<categoryTags>'
     categories = item.getElementsByTagName("category")
     for category in categories:
-      type = xml_helpers.getNodeData(category)
+      type = xml_helpers.node_data(category)
       s += '<categoryTag>%s</categoryTag>' % (type)
     s += '</categoryTags>'
 
-    s += '<skills>%s</skills>' % (xml_helpers.getTagValue(item, "skill"))
+    s += '<skills>%s</skills>' % (xml_helpers.get_tag_val(item, "skill"))
 
-    s += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(item, "detailURL"))
-    s += '<description>%s</description>' % (xml_helpers.getTagValue(item, "description"))
+    s += '<detailURL>%s</detailURL>' % (xml_helpers.get_tag_val(item, "detailURL"))
+    s += '<description>%s</description>' % (xml_helpers.get_tag_val(item, "description"))
 
-    expires = xml_helpers.getTagValue(item, "expires")
+    expires = xml_helpers.get_tag_val(item, "expires")
     ts = dateutil.parser.parse(expires)
     expires = ts.strftime("%Y-%m-%dT%H:%M:%S")
     s += '<expires>%s</expires>' % (expires)

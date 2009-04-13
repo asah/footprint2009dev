@@ -40,7 +40,7 @@ def parse(instr, maxrecs, progress):
   s += '<providerID>108</providerID>'
   s += '<providerName>footprint</providerName>'
   s += '<feedID>footprint</feedID>'
-  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.curTimeString()
+  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.current_ts()
   s += '<providerURL>http://sites.google.com/site/footprintorg/</providerURL>'
   s += '<description></description>'
   # TODO: capture ts -- use now?!
@@ -53,27 +53,27 @@ def parse(instr, maxrecs, progress):
   for i,orgstr in enumerate(sponsorstrs):
     if progress and i > 0 and i % 250 == 0:
       print datetime.now(), ": ", i, " orgs processed."
-    org = xml_helpers.simpleParser(orgstr, known_elnames, False)
+    org = xml_helpers.simple_parser(orgstr, known_elnames, False)
     #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
     #for i,org in enumerate(sponsors):
     s += '<Organization>'
-    name = xml_helpers.getTagValue(org, "Name")
-    desc = xml_helpers.getTagValue(org, "Description")
+    name = xml_helpers.get_tag_val(org, "Name")
+    desc = xml_helpers.get_tag_val(org, "Description")
     s += '<organizationID>%d</organizationID>' % (i+1)
     s += '<nationalEIN></nationalEIN>'
-    s += '<name>%s</name>' % (xml_helpers.getTagValue(org, "Name"))
+    s += '<name>%s</name>' % (xml_helpers.get_tag_val(org, "Name"))
     s += '<missionStatement></missionStatement>'
-    s += '<description>%s</description>' % (xml_helpers.getTagValue(org, "Description"))
+    s += '<description>%s</description>' % (xml_helpers.get_tag_val(org, "Description"))
     # unmapped: Email
     # unmapped: Phone
     # unmapped: Extension
     s += '<location>'
-    #s += '<city>%s</city>' % (xml_helpers.getTagValue(org, "City"))
-    #s += '<region>%s</region>' % (xml_helpers.getTagValue(org, "State"))
-    #s += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(org, "PostalCode"))
-    s += '<country>%s</country>' % (xml_helpers.getTagValue(org, "Country"))
+    #s += '<city>%s</city>' % (xml_helpers.get_tag_val(org, "City"))
+    #s += '<region>%s</region>' % (xml_helpers.get_tag_val(org, "State"))
+    #s += '<postalCode>%s</postalCode>' % (xml_helpers.get_tag_val(org, "PostalCode"))
+    s += '<country>%s</country>' % (xml_helpers.get_tag_val(org, "Country"))
     s += '</location>'
-    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.getTagValue(org, "URL"))
+    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.get_tag_val(org, "URL"))
     s += '<donateURL></donateURL>'
     s += '<logoURL></logoURL>'
     s += '<detailURL></detailURL>'
@@ -89,12 +89,12 @@ def parse(instr, maxrecs, progress):
   for i,oppstr in enumerate(opps):
     if (maxrecs>0 and i>maxrecs):
       break
-    xml_helpers.printProgress("opps", progress, i, maxrecs)
-    opp = xml_helpers.simpleParser(oppstr, known_elnames, False)
+    xml_helpers.print_progress("opps", progress, i, maxrecs)
+    opp = xml_helpers.simple_parser(oppstr, known_elnames, False)
     orgs = opp.getElementsByTagName("SponsoringOrganization")
     if orgs:
-        name = xml_helpers.getTagValue(orgs[0], "Name")
-        desc = xml_helpers.getTagValue(orgs[0], "Description")
+        name = xml_helpers.get_tag_val(orgs[0], "Name")
+        desc = xml_helpers.get_tag_val(orgs[0], "Description")
         sponsor_id = sponsor_ids[name+desc]
     else:
         name = ""
@@ -107,11 +107,11 @@ def parse(instr, maxrecs, progress):
       # unmapped: LogoURL
       # unmapped: OpportunityTypeID   (categoryTag?)
       # unmapped: LocationClassificationID (flatten)
-      outstr_for_all_dates_pre = '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.getTagValue(opp, "LocalID"))
+      outstr_for_all_dates_pre = '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.get_tag_val(opp, "LocalID"))
       outstr_for_all_dates_pre += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (sponsor_id)
         # unmapped: OrgLocalID
-      outstr_for_all_dates_pre += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>%s</volunteerHubOrganizationID></volunteerHubOrganizationIDs>' % (xml_helpers.getTagValue(opp, "AffiliateID"))
-      outstr_for_all_dates_pre += '<title>%s</title>' % (xml_helpers.getTagValue(opp, "Title"))
+      outstr_for_all_dates_pre += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>%s</volunteerHubOrganizationID></volunteerHubOrganizationIDs>' % (xml_helpers.get_tag_val(opp, "AffiliateID"))
+      outstr_for_all_dates_pre += '<title>%s</title>' % (xml_helpers.get_tag_val(opp, "Title"))
       outstr_for_all_dates_pre += '<abstract></abstract>'
       outstr_for_all_dates_pre += '<volunteersNeeded>-8888</volunteersNeeded>'
       
@@ -122,20 +122,20 @@ def parse(instr, maxrecs, progress):
       loc = locations[0]
       outstr_for_all_dates_post = '<locations><location>'
         # yuck, uses address1 for venue name... sometimes... no way to detect: presence of numbers?
-      outstr_for_all_dates_post += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.getTagValue(loc, "Address1"))
-      outstr_for_all_dates_post += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.getTagValue(loc, "Address2"))
-      outstr_for_all_dates_post += '<city>%s</city>' % (xml_helpers.getTagValue(loc, "city"))
-      outstr_for_all_dates_post += '<region>%s</region>' % (xml_helpers.getTagValue(loc, "region"))
-      outstr_for_all_dates_post += '<country>%s</country>' % (xml_helpers.getTagValue(loc, "country"))
-      outstr_for_all_dates_post += '<postalCode>%s</postalCode>' % (xml_helpers.getTagValue(loc, "postalCode"))
-      outstr_for_all_dates_post += '<latitude>%s</latitude>' % (xml_helpers.getTagValue(loc, "latitude"))
-      outstr_for_all_dates_post += '<longitude>%s</longitude>' % (xml_helpers.getTagValue(loc, "longitude"))
+      outstr_for_all_dates_post += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.get_tag_val(loc, "Address1"))
+      outstr_for_all_dates_post += '<streetAddress2>%s</streetAddress2>' % (xml_helpers.get_tag_val(loc, "Address2"))
+      outstr_for_all_dates_post += '<city>%s</city>' % (xml_helpers.get_tag_val(loc, "city"))
+      outstr_for_all_dates_post += '<region>%s</region>' % (xml_helpers.get_tag_val(loc, "region"))
+      outstr_for_all_dates_post += '<country>%s</country>' % (xml_helpers.get_tag_val(loc, "country"))
+      outstr_for_all_dates_post += '<postalCode>%s</postalCode>' % (xml_helpers.get_tag_val(loc, "postalCode"))
+      outstr_for_all_dates_post += '<latitude>%s</latitude>' % (xml_helpers.get_tag_val(loc, "latitude"))
+      outstr_for_all_dates_post += '<longitude>%s</longitude>' % (xml_helpers.get_tag_val(loc, "longitude"))
         # no equivalent: latitude, longitude
       outstr_for_all_dates_post += '</location></locations>'
       
-      outstr_for_all_dates_post += '<detailURL>%s</detailURL>' % (xml_helpers.getTagValue(opp, "DetailURL"))
-      outstr_for_all_dates_post += '<description>%s</description>' % (xml_helpers.getTagValue(opp, "Description"))
-      outstr_for_all_dates_post += '<lastUpdated>%sT00:00:00</lastUpdated>' % (xml_helpers.getTagValue(opp, "DateListed"))
+      outstr_for_all_dates_post += '<detailURL>%s</detailURL>' % (xml_helpers.get_tag_val(opp, "DetailURL"))
+      outstr_for_all_dates_post += '<description>%s</description>' % (xml_helpers.get_tag_val(opp, "Description"))
+      outstr_for_all_dates_post += '<lastUpdated>%sT00:00:00</lastUpdated>' % (xml_helpers.get_tag_val(opp, "DateListed"))
        
       oppcount = 0
       dtds = ''
@@ -154,10 +154,10 @@ def parse(instr, maxrecs, progress):
           # hardcoded: commitmentHoursPerWeek
           dtds += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
           # TODO: timezone
-          dtds += '<startDate>%s</startDate>' % (xml_helpers.getTagValue(oppdate, "startDate"))
-          dtds += '<endDate>%s</endDate>' % (xml_helpers.getTagValue(oppdate, "endDate"))
-          dtds += '<startTime>%s</startTime>' % (xml_helpers.getTagValue(oppdate, "startTime"))
-          dtds += '<endTime>%s</endTime>' % (xml_helpers.getTagValue(oppdate, "endTime"))
+          dtds += '<startDate>%s</startDate>' % (xml_helpers.get_tag_val(oppdate, "startDate"))
+          dtds += '<endDate>%s</endDate>' % (xml_helpers.get_tag_val(oppdate, "endDate"))
+          dtds += '<startTime>%s</startTime>' % (xml_helpers.get_tag_val(oppdate, "startTime"))
+          dtds += '<endTime>%s</endTime>' % (xml_helpers.get_tag_val(oppdate, "endTime"))
         dtds += '</dateTimeDuration>'
         
       if oppcount == 0: # insert an open ended datetimeduration

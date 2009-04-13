@@ -46,6 +46,28 @@ MAX_ABSTRACT_LEN = 250
 DEBUG = False
 PROGRESS = False
 PRINTHEAD = False
+ABRIDGED = False
+
+#BASE_PUB_URL = "http://change.gov/"
+BASE_PUB_URL = "http://adamsah.net/"
+
+SEARCHFIELDS = {
+  # required
+  "description":"builtin",
+  "event_date_range":"builtin",
+  "link":"builtin",
+  "location":"builtin",
+  "title":"builtin",
+  # needed for search restricts
+  "latitude":"float",
+  "longitude":"float",
+  # needed for basic search results
+  "id":"builtin",
+  "detailURL":"URL",
+  "abstract":"string",
+  "location_string":"string",
+  "feed_providerName":"string",
+}  
 
 FIELDTYPES = {
   "title":"builtin",
@@ -179,7 +201,7 @@ def output_field(name, value):
 
 def get_addr_field(node, field):
   """assuming a node is named (field), return it with optional trailing space."""
-  addr = xml_helpers.getTagValue(node, field)
+  addr = xml_helpers.get_tag_val(node, field)
   if addr != "":
     addr += " "
   return addr
@@ -211,8 +233,8 @@ def compute_city_field(node):
 def lookup_loc_fields(node):
   """try a multitude of field combinations to get a geocode."""
   fullloc = loc = compute_city_field(node)
-  latlong = xml_helpers.getTagValue(node, "latitude") + ","
-  latlong += xml_helpers.getTagValue(node, "longitude")
+  latlong = xml_helpers.get_tag_val(node, "latitude") + ","
+  latlong += xml_helpers.get_tag_val(node, "longitude")
   if latlong == ",":
     latlong = geocode(loc)
   if latlong == "":
@@ -255,21 +277,21 @@ def output_loc_field(node, mapped_name):
 
 def output_tag_value(node, fieldname):
   """macro for output_field( get node value )"""
-  return output_field(fieldname, xml_helpers.getTagValue(node, fieldname))
+  return output_field(fieldname, xml_helpers.get_tag_val(node, fieldname))
 
 def output_tag_value_renamed(node, xmlname, newname):
   """macro for output_field( get node value ) then emitted as newname"""
-  return output_field(newname, xml_helpers.getTagValue(node, xmlname))
+  return output_field(newname, xml_helpers.get_tag_val(node, xmlname))
 
 def compute_stable_id(opp, org, locstr, openended, duration,
                       hrs_per_week, startend):
   """core algorithm for computing an opportunity's unique id."""
   if DEBUG:
     print "opp=" + str(opp)  # shuts up pylint
-  eid = xml_helpers.getTagValue(org, "nationalEIN")
+  eid = xml_helpers.get_tag_val(org, "nationalEIN")
   if (eid == ""):
     # support informal "organizations" that lack EINs
-    eid = xml_helpers.getTagValue(org, "organizationURL")
+    eid = xml_helpers.get_tag_val(org, "organizationURL")
   # TODO: if two providers have same listing, good odds the
   # locations will be slightly different...
   loc = locstr
@@ -279,10 +301,26 @@ def compute_stable_id(opp, org, locstr, openended, duration,
   timestr = openended + duration + hrs_per_week + startend
   return hashlib.md5(eid + loc + timestr).hexdigest()
 
-def get_direct_mapped_field(opp, org):
+def get_abstract(opp):
+  # process abstract-- shorten, strip newlines and formatting
+  abstract = xml_helpers.get_tag_val(opp, "abstract")
+  if abstract == "":
+    abstract = xml_helpers.get_tag_val(opp, "description")
+  # strip \n and \b
+  abstract = re.sub(r'(\\[bn])+', ' ', abstract)
+  # strip XML escaped chars
+  abstract = re.sub(r'&([a-z]+|#[0-9]+);', '', abstract)
+  abstract = abstract[:MAX_ABSTRACT_LEN]
+  return abstract
+
+def get_direct_mapped_fields(opp, org):
   """map a field directly from FPXML to Google Base."""
+  if ABRIDGED:
+    outstr = output_field("abstract", get_abstract(opp))
+    return outstr
+
   outstr = ""
-  paid = xml_helpers.getTagValue(opp, "paid")
+  paid = xml_helpers.get_tag_val(opp, "paid")
   if (paid == "" or paid.lower()[0] != "y"):
     paid = "n"
   else:
@@ -291,7 +329,7 @@ def get_direct_mapped_field(opp, org):
   for field in DIRECT_MAP_FIELDS:
     outstr += FIELDSEP + output_tag_value(opp, field)
   for field in ORGANIZATION_FIELDS:
-    outstr += FIELDSEP + output_field("org_"+field, xml_helpers.getTagValue(org, field))
+    outstr += FIELDSEP + output_field("org_"+field, xml_helpers.get_tag_val(org, field))
   for field in CSV_REPEATED_FIELDS:
     outstr += FIELDSEP
     fieldval = opp.getElementsByTagName(field)
@@ -300,17 +338,9 @@ def get_direct_mapped_field(opp, org):
       val = flatten_to_csv(fieldval[0])
     outstr += output_field(field, val)
 
-  # process abstract-- shorten, strip newlines and formatting
-  abstract = xml_helpers.getTagValue(opp, "abstract")
-  if abstract == "":
-    abstract = xml_helpers.getTagValue(opp, "description")
-  # strip \n and \b
-  abstract = re.sub(r'(\\[bn])+', ' ', abstract)
-  # strip XML escaped chars
-  abstract = re.sub(r'&([a-z]+|#[0-9]+);', '', abstract)
-  abstract = abstract[:MAX_ABSTRACT_LEN]
+  # abstract
   outstr += FIELDSEP
-  outstr += output_field("abstract", abstract)
+  outstr += output_field("abstract", get_abstract(opp))
 
   # orgLocation
   outstr += FIELDSEP
@@ -335,8 +365,13 @@ def get_base_other_fields(opp, org):
   possible syndication, we try to make ourselves look like other Base
   feeds.  Since we're talking about a small overlap, these fields are
   populated *as well as* direct mapping of the footprint XML fields."""
-  outstr = output_field("quantity", xml_helpers.getTagValue(opp, "volunteersNeeded"))
-  outstr += FIELDSEP + output_field("employer", xml_helpers.getTagValue(org, "name"))
+  if ABRIDGED:
+    outstr = output_field("employer", xml_helpers.get_tag_val(org, "name"))
+    return outstr
+
+  outstr = output_field("quantity", xml_helpers.get_tag_val(opp, "volunteersNeeded"))
+  outstr += FIELDSEP + output_field("employer", xml_helpers.get_tag_val(org, "name"))
+  outstr += FIELDSEP + output_field("image_link", xml_helpers.get_tag_val(org, "logoURL"))
   # don't map expiration_date -- Base has strict limits (e.g. 2 weeks) on this field
   return outstr
 
@@ -344,12 +379,15 @@ def get_event_reqd_fields(opp, org):
   """Fields required by Google Base, note that they aren't necessarily used by the FP app."""
   outstr = output_tag_value(opp, "title")
   outstr += FIELDSEP + output_tag_value(opp, "description")
-  outstr += FIELDSEP + output_field("link", "http://change.gov/")
-  outstr += FIELDSEP + output_field("image_link", xml_helpers.getTagValue(org, "logoURL"))
+  outstr += FIELDSEP + output_field("link", BASE_PUB_URL)
   return outstr
 
 def get_feed_fields(feedinfo):
   """Fields from the <Feed> portion of FPXML."""
+  if ABRIDGED:
+    outstr = output_tag_value_renamed(feedinfo, "providerName", "feed_providerName")
+    return outstr
+
   outstr = output_tag_value(feedinfo, "feedID")
   outstr += FIELDSEP + output_tag_value_renamed(feedinfo, "providerID", "feed_providerID")
   outstr += FIELDSEP + output_tag_value_renamed(feedinfo, "providerName", "feed_providerName")
@@ -432,21 +470,18 @@ def geocode(addr, retries=4):
 def output_opportunity(opp, feedinfo, known_orgs, totrecs):
   """main function for outputting a complete opportunity."""
   outstr = ""
-  opp_id = xml_helpers.getTagValue(opp, "volunteerOpportunityID")
+  opp_id = xml_helpers.get_tag_val(opp, "volunteerOpportunityID")
   if (opp_id == ""):
     print datetime.now(), "no opportunityID"
     return totrecs, ""
-  org_id = xml_helpers.getTagValue(opp, "sponsoringOrganizationID")
+  org_id = xml_helpers.get_tag_val(opp, "sponsoringOrganizationID")
   if (org_id not in known_orgs):
     print datetime.now(), "unknown sponsoringOrganizationID: " + org_id + ".  skipping opportunity " + opp_id
     return totrecs, ""
   org = known_orgs[org_id]
   opp_locations = opp.getElementsByTagName("location")
   opp_times = opp.getElementsByTagName("dateTimeDuration")
-  repeated_fields = FIELDSEP + get_feed_fields(feedinfo)
-  repeated_fields += FIELDSEP + get_event_reqd_fields(opp, org)
-  repeated_fields += FIELDSEP + get_base_other_fields(opp, org)
-  repeated_fields += FIELDSEP + get_direct_mapped_field(opp, org)
+  repeated_fields = get_repeated_fields(feedinfo, opp, org)
   if len(opp_times) == 0:
     opp_times = [ None ]
   for opptime in opp_times:
@@ -456,11 +491,11 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
     else:
       # event_date_range
       # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
-      start_date = xml_helpers.getTagValue(opptime, "startDate")
-      start_time = xml_helpers.getTagValue(opptime, "startTime")
-      end_date = xml_helpers.getTagValue(opptime, "endDate")
-      end_time = xml_helpers.getTagValue(opptime, "endTime")
-      openended = xml_helpers.getTagValue(opptime, "openEnded")
+      start_date = xml_helpers.get_tag_val(opptime, "startDate")
+      start_time = xml_helpers.get_tag_val(opptime, "startTime")
+      end_date = xml_helpers.get_tag_val(opptime, "endDate")
+      end_time = xml_helpers.get_tag_val(opptime, "endTime")
+      openended = xml_helpers.get_tag_val(opptime, "openEnded")
       # e.g. 2006-12-20T23:00:00/2006-12-21T08:30:00, in PST (GMT-8)
       if (start_date == ""):
         start_date = "1971-01-01"
@@ -469,12 +504,9 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
       if (end_date != "" and end_date + end_time > start_date + start_time):
         startend += "/"
         startend += convert_dt_to_gbase(end_date, end_time, "UTC")
-    duration = xml_helpers.getTagValue(opptime, "duration")
-    hrs_per_week = xml_helpers.getTagValue(opptime, "commitmentHoursPerWeek")
-    time_fields = FIELDSEP + output_field("openended", openended)
-    time_fields += FIELDSEP + output_field("duration", duration)
-    time_fields += FIELDSEP + output_field("commitmentHoursPerWeek", hrs_per_week)
-    time_fields += FIELDSEP + output_field("event_date_range", startend)
+    duration = xml_helpers.get_tag_val(opptime, "duration")
+    hrs_per_week = xml_helpers.get_tag_val(opptime, "commitmentHoursPerWeek")
+    time_fields = get_time_fields(openended, duration, hrs_per_week, startend)
     if len(opp_locations) == 0:
       opp_locations = [ None ]
     for opploc in opp_locations:
@@ -483,21 +515,15 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
         print datetime.now(), ": ", totrecs, " records generated."
       if opploc == None:
         locstr, latlong, geocoded_loc = ("", "", "")
-        loc_fields = FIELDSEP + output_field("location", "0.0")
-        loc_fields += FIELDSEP + output_field("latitude", "0.0")
-        loc_fields += FIELDSEP + output_field("longitude", "0.0")
-        loc_fields += FIELDSEP + output_field("location_string", "")
-        loc_fields += FIELDSEP + output_field("venue_name", "")
+        loc_fields = get_loc_fields("0.0", "0.0", "0.0", "", "")
       else:
         locstr, latlong, geocoded_loc = lookup_loc_fields(opploc)
         lat = lng = "0.0"
         if latlong != "":
           lat, lng = latlong.split(",")
-        loc_fields = FIELDSEP + output_field("location", "")
-        loc_fields += FIELDSEP + output_field("latitude", str(float(lat)+1000.0))
-        loc_fields += FIELDSEP + output_field("longitude", str(float(lng)+1000.0))
-        loc_fields += FIELDSEP + output_field("location_string", geocoded_loc)
-        loc_fields += FIELDSEP + output_field("venue_name", xml_helpers.getTagValue(opploc, "name"))
+        loc_fields = get_loc_fields("", str(float(lat)+1000.0),
+                                    str(float(lng)+1000.0), geocoded_loc,
+                                    xml_helpers.get_tag_val(opploc, "name"))
       #if locstr != geocoded_loc:
       #  #print datetime.now(), "locstr: ", locstr, " geocoded_loc: ", geocoded_loc
       #  descs = opp.getElementsByTagName("description")
@@ -514,27 +540,52 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
       outstr += RECORDSEP
   return totrecs, outstr
 
+def get_time_fields(openended, duration, commitmentHoursPerWeek,
+                    event_date_range):
+  if ABRIDGED:
+    time_fields = FIELDSEP + output_field("event_date_range", event_date_range)
+    return time_fields
+
+  time_fields = FIELDSEP + output_field("openended", openended)
+  time_fields += FIELDSEP + output_field("duration", duration)
+  time_fields += FIELDSEP + output_field("commitmentHoursPerWeek",
+                                         commitmentHoursPerWeek)
+  time_fields += FIELDSEP + output_field("event_date_range", event_date_range)
+  return time_fields
+
+def get_loc_fields(location, latitude, longitude, location_string,
+                   venue_name):
+  if ABRIDGED:
+    loc_fields = FIELDSEP + output_field("location", location)
+    loc_fields += FIELDSEP + output_field("latitude", latitude)
+    loc_fields += FIELDSEP + output_field("longitude", longitude)
+    loc_fields += FIELDSEP + output_field("location_string", location_string)
+    return loc_fields
+
+  loc_fields = FIELDSEP + output_field("location", location)
+  loc_fields += FIELDSEP + output_field("latitude", latitude)
+  loc_fields += FIELDSEP + output_field("longitude", longitude)
+  loc_fields += FIELDSEP + output_field("location_string", location_string)
+  loc_fields += FIELDSEP + output_field("venue_name", venue_name)
+  return loc_fields
+
+def get_repeated_fields(feedinfo, opp, org):
+  repeated_fields = FIELDSEP + get_feed_fields(feedinfo)
+  repeated_fields += FIELDSEP + get_event_reqd_fields(opp, org)
+  repeated_fields += FIELDSEP + get_base_other_fields(opp, org)
+  repeated_fields += FIELDSEP + get_direct_mapped_fields(opp, org)
+  return repeated_fields
+
 def output_header(feedinfo, opp, org):
   """fake opportunity printer, which prints the header line instead."""
   global PRINTHEAD
   PRINTHEAD = True
   outstr = output_field("id", "")
-  repeated_fields = FIELDSEP + get_feed_fields(feedinfo)
-  repeated_fields += FIELDSEP + get_event_reqd_fields(opp, org)
-  repeated_fields += FIELDSEP + get_base_other_fields(opp, org)
-  repeated_fields += FIELDSEP + get_direct_mapped_field(opp, org)
-  time_fields = FIELDSEP + output_field("openended", "")
-  time_fields += FIELDSEP + output_field("duration", "")
-  time_fields += FIELDSEP + output_field("commitmentHoursPerWeek", "")
-  time_fields += FIELDSEP + output_field("event_date_range", "")
-  loc_fields = FIELDSEP + output_field("location", "")
-  loc_fields += FIELDSEP + output_field("latitude", "")
-  loc_fields += FIELDSEP + output_field("longitude", "")
-  loc_fields += FIELDSEP + output_field("location_string", "")
-  loc_fields += FIELDSEP + output_field("venue_name", "")
-  loc_fields += RECORDSEP
+  repeated_fields = get_repeated_fields(feedinfo, opp, org)
+  time_fields = get_time_fields("", "", "", "")
+  loc_fields = get_loc_fields("", "", "", "", "")
   PRINTHEAD = False
-  return outstr + repeated_fields + time_fields + loc_fields
+  return outstr + repeated_fields + time_fields + loc_fields + RECORDSEP
 
 def convert_to_footprint_xml(instr, do_fastparse, maxrecs, progress):
   """macro for parsing an FPXML string to XML then format it."""
@@ -583,24 +634,24 @@ def convert_to_gbase_events_type(instr, do_fastparse, maxrecs, progress):
     # note: preserves order, so diff works (vs. one sweep per element type)
     chunks = re.findall(r'<(?:Organization|VolunteerOpportunity|FeedInfo)>.+?</(?:Organization|VolunteerOpportunity|FeedInfo)>', instr, re.DOTALL)
     for chunk in chunks:
-      node = xml_helpers.simpleParser(chunk, known_elnames, False)
+      node = xml_helpers.simple_parser(chunk, known_elnames, False)
       if re.search("<FeedInfo>", chunk):
         if progress:
           print datetime.now(), ": feedinfo seen."
-        feedinfo = xml_helpers.simpleParser(chunk, known_elnames, False)
+        feedinfo = xml_helpers.simple_parser(chunk, known_elnames, False)
         continue
       if re.search("<Organization>", chunk):
         if progress and len(known_orgs) % 250 == 0:
           print datetime.now(), ": ", len(known_orgs), " organizations seen."
-        org = xml_helpers.simpleParser(chunk, known_elnames, False)
-        org_id = xml_helpers.getTagValue(org, "organizationID")
+        org = xml_helpers.simple_parser(chunk, known_elnames, False)
+        org_id = xml_helpers.get_tag_val(org, "organizationID")
         if (org_id != ""):
           known_orgs[org_id] = org
         if example_org == None:
           example_org = org
         continue
       if re.search("<VolunteerOpportunity>", chunk):
-        opp = xml_helpers.simpleParser(chunk, None, False)
+        opp = xml_helpers.simple_parser(chunk, None, False)
         if totrecs == 0:
           outstr += output_header(feedinfo, node, example_org)
         totrecs, spiece = output_opportunity(opp, feedinfo, known_orgs, totrecs)
@@ -619,7 +670,7 @@ def convert_to_gbase_events_type(instr, do_fastparse, maxrecs, progress):
     #      feedinfo = node
     #    elif node.nodeName == 'Organization':
     #      nodes.expandNode(node)
-    #      id = xml_helpers.getTagValue(node, "organizationID")
+    #      id = xml_helpers.get_tag_val(node, "organizationID")
     #      if (id != ""):
     #        known_orgs[id] = node
     #      if example_org == None:
@@ -642,7 +693,7 @@ def convert_to_gbase_events_type(instr, do_fastparse, maxrecs, progress):
     feedinfo = feedinfos[0]
     organizations = footprint_xml.getElementsByTagName("Organization")
     for org in organizations:
-      org_id = xml_helpers.getTagValue(org, "organizationID")
+      org_id = xml_helpers.get_tag_val(org, "organizationID")
       if (org_id != ""):
         known_orgs[org_id] = org
     opportunities = footprint_xml.getElementsByTagName("VolunteerOpportunity")
@@ -771,17 +822,18 @@ def clean_input_string(instr):
   instr = re.sub(r'\xc2?[\225\226\227]', "-", instr)
   if PROGRESS:
     print datetime.now(), "filtered iso8859-1 dashes:", len(instr), " bytes"
-  instr = xml_helpers.cleanString(instr)
+  instr = xml_helpers.clean_string(instr)
   if PROGRESS:
     print datetime.now(), "filtered nonprintables:", len(instr), " bytes"
   return instr
 
 def parse_options():
   """parse cmdline options"""
-  global DEBUG, PROGRESS, GEOCODE_DEBUG, FIELDSEP, RECORDSEP
+  global DEBUG, PROGRESS, GEOCODE_DEBUG, FIELDSEP, RECORDSEP, ABRIDGED
   parser = OptionParser("usage: %prog [options] sample_data.xml ...")
   parser.set_defaults(geocode_debug=False)
   parser.set_defaults(debug=False)
+  parser.set_defaults(abridged=False)
   parser.set_defaults(progress=False)
   parser.set_defaults(debug_input=False)
   parser.set_defaults(output="basetsv")
@@ -789,6 +841,8 @@ def parse_options():
   parser.set_defaults(clean=True)
   parser.set_defaults(maxrecs=-1)
   parser.add_option("-d", "--dbg", action="store_true", dest="debug")
+  parser.add_option("--abridged", action="store_true", dest="abridged")
+  parser.add_option("--noabridged", action="store_false", dest="abridged")
   parser.add_option("--clean", action="store_true", dest="clean")
   parser.add_option("--noclean", action="store_false", dest="clean")
   parser.add_option("--inputfmt", action="store", dest="inputfmt")
@@ -814,6 +868,8 @@ def parse_options():
     GEOCODE_DEBUG = True
     PROGRESS = True
     FIELDSEP = "\n"
+  if (options.abridged):
+    ABRIDGED = True
   if (options.geocode_debug):
     GEOCODE_DEBUG = True
   if options.test:

@@ -38,7 +38,7 @@ def ParseFast(instr, maxrecs, progress):
     if progress and totrecs % 250 == 0:
       print datetime.now(), ": ", totrecs, " records generated."
       
-    node = xml_helpers.simpleParser(chunk, known_elnames, False)
+    node = xml_helpers.simple_parser(chunk, known_elnames, False)
     s = xml_helpers.prettyxml(node, True)
     outstr += s
   outstr += '</FootprintFeed>'
@@ -53,7 +53,7 @@ def parse(s, maxrecs, progress):
   # TODO: progress
   if progress:
     print datetime.now(), "parse_footprint: parsing ", len(s), " bytes."
-  xmldoc = xml_helpers.simpleParser(s, known_elnames, progress)
+  xmldoc = xml_helpers.simple_parser(s, known_elnames, progress)
   if progress:
     print datetime.now(), "parse_footprint: done parsing."
   return xmldoc
