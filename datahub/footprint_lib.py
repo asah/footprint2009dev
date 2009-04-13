@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+main() for the crawling/parsing/loading pipeline
+"""
 #from xml.dom.ext import PrettyPrint
 import gzip
 import hashlib
@@ -612,7 +615,7 @@ def convert_to_footprint_xml(instr, do_fastparse, maxrecs, progress):
     outstr += '</FootprintFeed>'
     return outstr
   if do_fastparse:
-    return parse_footprint.ParseFast(instr, maxrecs, progress)
+    return parse_footprint.parse_fast(instr, maxrecs, progress)
   else:
     # slow parse
     xmldoc = parse_footprint.parse(instr, maxrecs, progress)
