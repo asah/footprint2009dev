@@ -45,10 +45,12 @@ import sys
 import urllib
 import urllib2
 import urlparse
+import tempfile
 
 try:
   import readline
 except ImportError:
+  logging.debug("readline not found.")
   pass
 
 # The logging verbosity:
@@ -61,6 +63,13 @@ verbosity = 1
 # Max size of patch or base file.
 MAX_UPLOAD_SIZE = 900 * 1024
 
+
+def AreYouSureOrExit(exit_if_no=True):
+  prompt = "Are you sure you want to continue?(y/N) "
+  answer = raw_input(prompt).strip()
+  if exit_if_no and answer.lower() != "y":
+    ErrorExit("User aborted")
+  return answer.lower() == "y"
 
 def GetEmail(prompt):
   """Prompts the user for their email address and returns it.
@@ -423,11 +432,19 @@ group = parser.add_option_group("Issue options")
 group.add_option("-d", "--description", action="store", dest="description",
                  metavar="DESCRIPTION", default=None,
                  help="Optional description when creating an issue.")
+group.add_option("--min_pylint_score", action="store", dest="min_pylint_score",
+                 metavar="MIN_PYLINT_SCORE", default=None,
+                 help="run pylint over changed files and require a min score.")
 group.add_option("-f", "--description_file", action="store",
                  dest="description_file", metavar="DESCRIPTION_FILE",
                  default=None,
                  help="Optional path of a file that contains "
                       "the description when creating an issue.")
+group.add_option("--description_editor", action="store_true",
+                 dest="description_editor", metavar="DESCRIPTION_EDITOR",
+                 default=False,
+                 help="use an editor (EDITOR env variable) to get the "
+                      "description when creating an issue.")
 group.add_option("-r", "--reviewers", action="store", dest="reviewers",
                  metavar="REVIEWERS", default=None,
                  help="Add reviewers (comma separated email addresses).")
@@ -617,10 +634,7 @@ class VersionControlSystem(object):
       print "The following files are not added to version control:"
       for line in unknown_files:
         print line
-      prompt = "Are you sure to continue?(y/N) "
-      answer = raw_input(prompt).strip()
-      if answer != "y":
-        ErrorExit("User aborted")
+      AreYouSureOrExit()
 
   def GetBaseFile(self, filename):
     """Get the content of the upstream version of a file.
@@ -829,9 +843,9 @@ class SubversionVCS(VersionControlSystem):
     }
 
     def repl(m):
-       if m.group(2):
-         return "$%s::%s$" % (m.group(1), " " * len(m.group(3)))
-       return "$%s$" % m.group(1)
+      if m.group(2):
+        return "$%s::%s$" % (m.group(1), " " * len(m.group(3)))
+      return "$%s$" % m.group(1)
     keywords = [keyword
                 for name in keyword_str.split(" ")
                 for keyword in svn_keywords.get(name, [])]
@@ -1289,6 +1303,26 @@ def RealMain(argv, data=None):
   if data is None:
     data = vcs.GenerateDiff(args)
   files = vcs.GetBaseFiles(data)
+
+  if options.min_pylint_score:
+    print "running pylint..."
+    has_low_score = 0
+    for file in files:
+      if re.search(r'[.]py$', file):
+        print "pylinting "+file+"..."
+        res = RunShell(["pylint", file], silent_ok=True)
+        match = re.search(r'Your code has been rated at ([0-9.]*)', res)
+        try:
+          score = float(match.group(1))
+        except:
+          score = -1.0
+        print file,"rated at",score
+        if score < float(options.min_pylint_score):
+          has_low_score += 1
+    if has_low_score > 0:
+      print "pylint reported", has_low_score, \
+          "files with scores below", options.min_pylint_score
+      AreYouSureOrExit()
   if verbosity >= 1:
     print "Upload server:", options.server, "(change with -s/--server)"
   if options.issue:
@@ -1323,6 +1357,27 @@ def RealMain(argv, data=None):
     file = open(options.description_file, 'r')
     description = file.read()
     file.close()
+  if options.description_editor:
+    if options.description:
+      ErrorExit("Can't specify description and description_editor")
+    if options.description_file:
+      ErrorExit("Can't specify description_file and description_editor")
+    editor = os.environ['EDITOR']
+    if editor == None:
+      ErrorExit("Please set the EDITOR environment variable.")
+    tempfh, filename = tempfile.mkstemp()
+    msg = "please describe your patch:\n"
+    os.write(tempfh, msg)
+    os.close(tempfh)
+    print "running EDITOR:", editor, filename
+    cmd = editor + " " + filename
+    subprocess.call(cmd, shell=True)
+    file = open(filename, 'r')
+    description = file.read()
+    file.close()
+    os.unlink(filename)
+    description = re.sub(re.escape(msg), '', description)
+    print description
   if description:
     form_fields.append(("description", description))
   # Send a hash of all the base file so the server can determine if a copy
@@ -1383,12 +1438,21 @@ def main():
     if len(sys.argv) > 1:
       args = [sys.argv[0], "-s", "footprint2009reviews.appspot.com"]
       args.append("--cc=footprint-eng@googlegroups.com")
+      args.append("--description_editor")
       args.append("--send_mail")
+      args.append("--min_pylint_score")
+      # we're starting with 9.0
+      args.append("9.0")
       args.append("-r")
-      args += sys.argv[1:]
-      sys.argv = args
+      email = sys.argv[1]
+      if email.find("@") == -1:
+        email += "@gmail.com"
+        print >>sys.stderr, "\n\nsending to "+email+"@gmail.com for review.",\
+            " (note: @gmail.com)\n\n"
+      args.append(email)
+      sys.argv = args + sys.argv[2:]
     print " ".join(sys.argv)
-    RealMain(args)
+    RealMain(sys.argv)
   except KeyboardInterrupt:
     print
     StatusUpdate("Interrupted.")

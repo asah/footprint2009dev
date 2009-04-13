@@ -139,7 +139,8 @@ disable-msg=W0403, W0702, W0603, R0902, F0401
 #
 ## List of builtins function names that should not be used, separated by a comma
 #bad-functions=map,filter,apply,input
-
+# we allow map and filter, for the benefit of python newbies.
+bad-functions=apply,input
 
 # try to find bugs in the code using type inference
 # 
