@@ -3,6 +3,8 @@
 # didn't use generateDS because it required a slew of packages to be installed,
 # like pulling on a sweater.
 
+"""horrible regexp-based converter from XSD to human-readable HTML."""
+
 # disable line too long-- irrelevant here
 # pylint: disable-msg=C0301
 
