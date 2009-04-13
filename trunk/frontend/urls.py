@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+paths used in the app
+"""
 URL_HOME = '/'
 URL_API_SEARCH = '/api/volopps'
 URL_LEGACY_API_SEARCH = '/api/search'

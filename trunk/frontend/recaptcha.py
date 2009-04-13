@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+RE:Captcha client, from 
+http://pypi.python.org/pypi/recaptcha-client
+http://recaptcha.googlecode.com/svn/trunk/recaptcha-plugins/python
+http://code.google.com/p/recaptcha/
+"""
 import urllib2, urllib
 import logging
 from google.appengine.api import urlfetch

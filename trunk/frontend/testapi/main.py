@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+main() for API testing framework
+"""
+
 # view classes aren inherently not pylint-compatible
 # pylint: disable-msg=C0103
 # pylint: disable-msg=W0232

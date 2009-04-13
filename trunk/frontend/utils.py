@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+dumping ground for misc utility functions-- please create separate
+files as this gets cluttered
+"""
+
 from xml.dom import minidom
 
 def get_xml_dom_text(node):

@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+toss all the scoring code into one place (rather than a class file)
+because scoring tends to get complex quickly.
+"""
+
 from datetime import datetime
 import logging
 import math
 
 import view_helper
-
 
 def compare_scores(val1, val2):
   """helper function for sorting."""
