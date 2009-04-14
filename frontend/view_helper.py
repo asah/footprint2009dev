@@ -16,15 +16,10 @@
 TODO: module docs go here?!
 """
 
-import logging
-import re
-
-#from google.appengine.api import users
+#import logging
 
 import base_search
 import models
-#import search
-import userinfo
 
 def get_user_interests(user, remove_no_interest):
   """Get the opportunities a user has expressed interest in.
@@ -60,9 +55,9 @@ def get_interest_for_opportunities(opp_ids):
   others_interests = {}
 
   interests = models.get_by_ids(models.VolunteerOpportunityStats, opp_ids)
-  for (id, interest) in interests.iteritems():
+  for (item_id, interest) in interests.iteritems():
     if interest:
-      others_interests[id] = interest.interested_count
+      others_interests[item_id] = interest.interested_count
   return others_interests
 
 
@@ -77,7 +72,7 @@ def get_annotated_results(user, result_set):
   """
 
   # Get all the ids of items we've found
-  opp_ids = [result.id for result in result_set.results];
+  opp_ids = [result.item_id for result in result_set.results]
 
   # mark the items the user is interested in
   user_interests = get_user_interests(user, True)
@@ -102,12 +97,13 @@ def annotate_results(user_interests, others_interests, result_set):
 
   # Mark up the results
   for result in result_set.results:
-    if user_interests and result.id in user_interests:
-      result.interest = user_interests[result.id]
-    if others_interests and result.id in others_interests:
-      #logging.info("others interest in %s = %s " % (result.id, others_interests[result.id]))
+    if user_interests and result.item_id in user_interests:
+      result.interest = user_interests[result.item_id]
+    if others_interests and result.item_id in others_interests:
+      #logging.info("others interest in %s = %s " % \
+      #  (result.item_id, others_interests[result.item_id]))
       # TODO: Consider updating the base url here if it's changed.
-      result.interest_count = others_interests[result.id]
+      result.interest_count = others_interests[result.item_id]
 
   return result_set
 
@@ -130,8 +126,8 @@ def get_data_for_friends_view(user_info, is_debug):
   # filtered by the current user's friends.
   others_interests = get_interest_for_opportunities(current_user_opps_ids)
   for result in current_user_opps_result_set.results:
-    if result.id in others_interests:
-      result.overall_interest_count = others_interests[result.id]
+    if result.item_id in others_interests:
+      result.overall_interest_count = others_interests[result.item_id]
 
   # Assemble the opportunities your friends have starred.        
   friends = user_info.load_friends()
@@ -160,12 +156,13 @@ def get_data_for_friends_view(user_info, is_debug):
   # Leverage the similarity of js and python object & array formats
   # to produce a serialized form that can be used client-side.
   # TODO(timman): Use a real json library.
-  friend_interests_by_oid_js = repr(friend_interests_by_oid).replace('u\'', '\'')
+  friend_interests_by_oid_js = \
+      repr(friend_interests_by_oid).replace('u\'', '\'')
 
   # Annotate each opportunity with its friends-specific stars count.
   for result in current_user_opps_result_set.results:
-    if result.id in friend_opp_count:
-      result.friends_interest_count = friend_opp_count[result.id]
+    if result.item_id in friend_opp_count:
+      result.friends_interest_count = friend_opp_count[result.item_id]
 
   view_vals = {
     'has_results': len(current_user_opps_result_set.results) > 0,
