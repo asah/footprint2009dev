@@ -48,7 +48,7 @@ REJECTED_AUTOMATIC  = "10.REJECTED_AUTOMATIC"
 class Posting(db.Model):
   """Postings going through the approval process."""
   # Key is assigned ID (not the stable ID)
-  id = db.StringProperty(default="")
+  item_id = db.StringProperty(default="")
   status = db.StringProperty(default=NEW)
 
   # for queries, parse-out these fields - note that we don't care about datatypes
@@ -176,7 +176,7 @@ def create_from_xml(xml):
   except:
     pass
     # ignore bad start date
-  posting.id = hashlib.md5(xml+str(posting.creation_time)).hexdigest()
+  posting.item_id = hashlib.md5(xml+str(posting.creation_time)).hexdigest()
   posting.put()
   return posting.key()
 
@@ -342,8 +342,8 @@ def create_from_args(vals, computed_vals):
     vals["title"] = "T:" + vals["title"]
     vals["description"] = "TEST DELETEME: " + vals["description"]
   # TODO: organization
-  #xml += "<volunteerOpportunityID>%d</volunteerOpportunityID>" % (id)
-  #xml += "<sponsoringOrganizationIDs><sponsoringOrganizationID>%d</sponsoringOrganizationID></sponsoringOrganizationIDs>" % (id)
+  #xml += "<volunteerOpportunityID>%d</volunteerOpportunityID>" % (item_id)
+  #xml += "<sponsoringOrganizationIDs><sponsoringOrganizationID>%d</sponsoringOrganizationID></sponsoringOrganizationIDs>" % (item_id)
   #xml += "<volunteerHubOrganizationIDs><volunteerHubOrganizationID>%s</volunteerHubOrganizationID></volunteerHubOrganizationIDs>" % ("")
   xml += "<title>%s</title>" % (vals["title"])
   xml += "<description>%s</description>" % (vals["description"])
@@ -379,8 +379,8 @@ def create_from_args(vals, computed_vals):
   xml += "</dateTimeDurations>"
   xml += "</VolunteerOpportunity>"
   #logging.info(re.sub(r'><', '>\n<', xml))
-  id = create_from_xml(xml)
-  return 200, id, xml
+  item_id = create_from_xml(xml)
+  return 200, item_id, xml
 
 def createTestDatabase():
   id1 = create_from_xml("<VolunteerOpportunity><volunteerOpportunityID>1001</volunteerOpportunityID><sponsoringOrganizationIDs><sponsoringOrganizationID>1</sponsoringOrganizationID></sponsoringOrganizationIDs><volunteerHubOrganizationIDs><volunteerHubOrganizationID>3011</volunteerHubOrganizationID></volunteerHubOrganizationIDs><title>Be a Business Mentor - Trenton, NJ &amp; Beyond</title><dateTimeDurations><dateTimeDuration><openEnded>Yes</openEnded><duration>P6M</duration><commitmentHoursPerWeek>4</commitmentHoursPerWeek></dateTimeDuration></dateTimeDurations><locations><location><city>Trenton</city><region>NJ</region><postalCode>08608</postalCode></location><location><city>Berkeley</city><region>CA</region><postalCode>94703</postalCode></location><location><city>Santa Cruz</city><region>CA</region><postalCode>95062</postalCode></location></locations><categoryTags><categoryTag>Community</categoryTag><categoryTag>Computers &amp; Technology</categoryTag><categoryTag>Employment</categoryTag></categoryTags><minimumAge>21</minimumAge><skills>In order to maintain the integrity of the MicroMentor program, we require that our Mentor volunteers have significant business experience and expertise, such as: 3 years of business ownership experience</skills><detailURL>http://www.volunteermatch.org/search/index.jsp?l=08540</detailURL><description>This is where you come in. Simply by sharing your business know-how, you can make a huge difference in the lives of entrepreneurs from low-income and marginalized communities, helping them navigate the opportunities and challenges of running a business and improving their economic well-being and creating new jobs where they are most needed.</description></VolunteerOpportunity>")

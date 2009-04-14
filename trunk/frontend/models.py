@@ -213,8 +213,7 @@ class UserInterest(db.Model):
   # Key is 'id:' + the stable ID from base; it is probabaly not the same ID
   # provided in the feed from providers.
   DATASTORE_PREFIX = 'id:'
-  user = db.ReferenceProperty(UserInfo,
-                              collection_name='interests')
+  user = db.ReferenceProperty(UserInfo, collection_name='interests')
   broadcast_on = db.DateTimeProperty()
   expressed_interest = InterestTypeProperty()
 
