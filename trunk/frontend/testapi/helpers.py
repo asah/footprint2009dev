@@ -31,7 +31,7 @@ DEFAULT_RESPONSE_TYPES = 'rss'
 LOCAL_STATIC_URL = 'http://localhost:8080/test/sampleData.xml'
 CURRENT_STATIC_XML = 'sampleData0.1.xml'
 #'query, num, start, provider'
-ALL_TEST_TYPES = 'num, query, provider, start, geo'
+ALL_TEST_TYPES = 'num, query, provider, start, geo, snippets'
 
 
 class ApiResult(object):
@@ -383,3 +383,17 @@ class ApiTesting(object):
       result = False
     
     return result
+
+  def test_snippets(self):
+    """ check to make sure that /ui_snippets returns something valid """
+    result = True
+    
+    data = retrieve_raw_data('http://footprint2009dev.appspot.com/ui_snippets?q=test')
+    if (data):
+      self.output('<p class="result success">Passed</p>')
+    else:
+      self.output('<p class="result fail">Fail. <span>/ui_snippets failed</span></p>')
+      result = False
+    
+    return result
+  
