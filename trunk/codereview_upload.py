@@ -1366,7 +1366,7 @@ def RealMain(argv, data=None):
     if editor == None:
       ErrorExit("Please set the EDITOR environment variable.")
     tempfh, filename = tempfile.mkstemp()
-    msg = "please describe your patch:\n"
+    msg = "demo URL: http://your-url/foo/\ndescription: (start on next line)\n"
     os.write(tempfh, msg)
     os.close(tempfh)
     print "running EDITOR:", editor, filename
@@ -1376,7 +1376,6 @@ def RealMain(argv, data=None):
     description = file.read()
     file.close()
     os.unlink(filename)
-    description = re.sub(re.escape(msg), '', description)
     print description
   if description:
     form_fields.append(("description", description))

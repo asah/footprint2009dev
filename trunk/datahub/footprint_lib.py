@@ -828,6 +828,9 @@ def clean_input_string(instr):
   instr = xml_helpers.clean_string(instr)
   if PROGRESS:
     print datetime.now(), "filtered nonprintables:", len(instr), " bytes"
+  instr = re.sub(r'&[a-z]+;', '', instr)
+  if PROGRESS:
+    print datetime.now(), "filtered weird X/HTML escapes:", len(instr), " bytes"
   return instr
 
 def parse_options():
