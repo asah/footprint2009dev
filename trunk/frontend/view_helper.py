@@ -20,6 +20,7 @@ TODO: module docs go here?!
 
 import base_search
 import models
+import modelutils
 
 def get_user_interests(user, remove_no_interest):
   """Get the opportunities a user has expressed interest in.
@@ -54,7 +55,7 @@ def get_interest_for_opportunities(opp_ids):
   """
   others_interests = {}
 
-  interests = models.get_by_ids(models.VolunteerOpportunityStats, opp_ids)
+  interests = modelutils.get_by_ids(models.VolunteerOpportunityStats, opp_ids)
   for (item_id, interest) in interests.iteritems():
     if interest:
       others_interests[item_id] = interest.interested_count

@@ -31,6 +31,7 @@ from xml.dom import minidom
 import api
 import geocode
 import models
+import modelutils
 import searchresult
 import utils
 
@@ -322,7 +323,7 @@ def get_from_ids(ids):
     if not item_id in results:
       missing_ids.append(item_id)
 
-  datastore_results = models.get_by_ids(models.VolunteerOpportunity,
+  datastore_results = modelutils.get_by_ids(models.VolunteerOpportunity,
       missing_ids)
 
   datastore_missing_ids = []
