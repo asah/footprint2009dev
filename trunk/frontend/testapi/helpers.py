@@ -24,6 +24,7 @@ import re
 import hashlib
 import random
 import math
+from google.appengine.ext import db
 from urllib import urlencode
 
 DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/volopps'
@@ -33,6 +34,20 @@ CURRENT_STATIC_XML = 'sampleData0.1.xml'
 #'query, num, start, provider'
 ALL_TEST_TYPES = 'num, query, provider, start, geo, snippets'
 
+class TestResultCode(db.IntegerProperty):
+  """success and failure types."""
+  PASS = 0
+  UNKNOWN_FAIL = 1
+  INTERNAL_ERROR = 2
+  LOW_LEVEL_PARSE_FAIL = 3
+  DATA_MISMATCH = 4
+
+class TestResults(db.Model):
+  """results of running tests."""
+  timestamp = db.DateTimeProperty(auto_now=True)
+  test_type = db.StringProperty()
+  result_code = TestResultCode()
+  result_string = db.StringProperty()
 
 class ApiResult(object):
   """result object used for testing."""
@@ -47,9 +62,9 @@ class ApiResult(object):
 def get_node_data(entity):
   """returns the value of a DOM node with some escaping, substituting
   "" (empty string) if no child/value is found."""
-  if (entity.firstChild == None):
+  if entity.firstChild == None:
     return ""
-  if (entity.firstChild.data == None):
+  if entity.firstChild.data == None:
     return ""
   nodestr = entity.firstChild.data
   nodestr = xml.sax.saxutils.escape(nodestr).encode('UTF-8')
@@ -73,14 +88,14 @@ def get_tag_value(entity, tag):
   nodes = entity.getElementsByTagName(tag)
   #print "nodes: "
   #print nodes
-  if (nodes.length == 0):
+  if nodes.length == 0:
     return ""
   #print nodes[0]
-  if (nodes[0] == None):
+  if nodes[0] == None:
     return ""
-  if (nodes[0].firstChild == None):
+  if nodes[0].firstChild == None:
     return ""
-  if (nodes[0].firstChild.data == None):
+  if nodes[0].firstChild.data == None:
     return ""
   #print nodes[0].firstChild.data
   outstr = nodes[0].firstChild.data
@@ -151,10 +166,30 @@ class ApiTesting(object):
     self.num_failures = 0
     self.api_url = None
     self.response_type = None
+    self.test_type = ""
     
-  def fail(self):
-    """report test failure."""
+  def success(self):
+    """report test success. returns True to make it easy on callers."""
+    res = TestResults(test_type=self.test_type, result_code=TestResultCode.PASS)
+    res.put()
+    self.web_app.response.set_status(200)
+    self.output('<p class="result success">Passed</p>')
+    return True
+
+  def fail(self, code, msg):
+    """report test failure. returns False to make it easy on callers."""
+    res = TestResults(test_type=self.test_type, result_code=code,
+                      result_string=msg)
+    res.put()
     self.web_app.response.set_status(500)
+    self.output('<p class="result fail">Fail. <span>'+msg+'</span></p>')
+    return False
+
+  def print_details(self, msg):
+    """print extra error details for humans, which aren't logged.
+    returns False for convenience of callers."""
+    self.output('<p class="result amplification">'+msg+'</p>')
+    return False
     
   def output(self, html):
     """macro: output some HTML."""
@@ -166,21 +201,14 @@ class ApiTesting(object):
     result += urlencode(options)
     return result
   
-  def assert_valid_results(self, result_set):
-    """require that the results are valid (returns true/false)."""
-    if result_set is None or result_set == False:
-      self.num_failures = self.num_failures + 1
-      self.fail()
-    else:
-      if len(result_set) == 0:
-        self.num_failures = self.num_failures + 1
-        self.fail()
-      else:
-        return True
-
-    self.output('<p class="result fail">Fail. The result set is empty.</p>')
-    self.fail()
-    return False
+  def assert_nonempty_results(self, result_set):
+    """require that the results are valid (returns true/false).
+    Handles the fail() call internally, but not the success() call."""
+    if result_set is None or result_set == False or len(result_set) == 0:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        "test_"+self.test_type+": expected non-empty results.")
+    return True
   
   def parse_raw_data(self, data):
     """wrapper for parse_TYPE()."""
@@ -193,31 +221,30 @@ class ApiTesting(object):
   
   def run_test(self, test_type):
     """run one test."""
-    self.output('<p class="test">Running test <em>' + test_type +
-                '</em> for response type <em>' + self.response_type +
-                '</em></p>')
-    test_func = getattr(self, 'test_' + test_type.strip(), None)
+    self.test_type = test_type.strip()
+    msg = 'test_type='+self.test_type
+    if self.response_type != "rss":
+      msg += '&amp;output=' + self.response_type
+    self.output('<p class="test">Running <em>'+msg+'</em></p>')
+    test_func = getattr(self, 'test_' + self.test_type, None)
     if callable(test_func):
-      test_func()
-    else:
-      self.output('<p class="result fail">No such test <strong>' +
-                  test_type + '</strong> in suite.')
-      
-    return True
+      return test_func()
+    return self.fail(
+      TestResultCode.INTERNAL_ERROR,
+      'No such test <strong>'+self.test_type+'</strong> in suite.')
   
   def run_tests(self, test_type, api_url, response_type):
-    """run multiple tests (comma-separated)."""
+    """run multiple tests (comma-separated).  beware of app engine timeouts!"""
     self.api_url = api_url
     self.response_type = response_type
-    
     if test_type == 'all':
       test_type = ALL_TEST_TYPES
-    
     test_types = test_type.split(',')
+    res = True
     for test_type in test_types:
-      self.run_test(test_type)
-
-    return True
+      if not self.run_test(test_type):
+        res = False
+    return res
   
   def get_result_set(self, arg_list):
     """macro for forming and making a request and parsing the results."""
@@ -225,39 +252,26 @@ class ApiTesting(object):
     self.output('<p class="uri">Fetching result set for following tests</p>')
     self.output('<p class="uri">URI: ' + full_uri + '</p>')
     
-    #try:
     data = retrieve_raw_data(full_uri)
-    #except:
-      #self.output('<p class="result fail">retrieve_raw_data failed.</p>')
-      #return False
-    
     try:
-      opps = self.parse_raw_data(data)
-      return opps
+      return self.parse_raw_data(data)
     except:
-      self.output('<p class="result fail">parse_raw_data failed. ' +
-                  'Unable to parse response.</p>')
-    
+      self.fail(TestResultCode.LOW_LEVEL_PARSE_FAIL,
+                'parse_raw_data: unable to parse response.')
     return None
   
   def test_num(self):
     """test whether the result set has a given number of results."""
-    result = True
     expected_count = int(random_item(['7', '14', '21', '28', '57']))
-    
     result_set = self.get_result_set({'num':expected_count})
-    if not self.assert_valid_results(result_set):
+    if not self.assert_nonempty_results(result_set):
       return False
-    
-    if (len(result_set) == expected_count):
-      self.output('<p class="result success">Passed</p>')
-    else:
-      self.output('<p class="result fail">Fail. <span>Requested ' +
-                  str(expected_count) + ', received ' + str(len(result_set))+
-                  '</span></p>')
-      result = False
-    
-    return result
+    if len(result_set) != expected_count:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        'Requested num='+str(expected_count)+' but received '+
+        str(len(result_set))+' results.')
+    return self.success()
   
   def test_query(self):
     """run a hardcoded test query (q=)."""
@@ -266,84 +280,64 @@ class ApiTesting(object):
                         "mercy"])
   
     result_set = self.get_result_set({'q':term})
-    if not self.assert_valid_results(result_set):
+    if not self.assert_nonempty_results(result_set):
       return False
 
+    result = True
     for opp in result_set:
       if (not re.search(term, opp.title, re.I) and
           not re.search(term, opp.description, re.I)):
-        self.output('<p class="result amplification">Did not find search term '+
-                    '<strong>' + term + '</strong> in item ' + opp.title +
-                    ': ' + opp.description + '</p>')
+        self.print_details('Did not find search term <strong>'+term+
+                           '</strong> in item '+opp.title+': '+opp.description)
         result = False
-      
-    if result:
-      self.output('<p class="result success">Passed</p>')
-    else:
-      self.output('<p class="result fail">Fail. <span>One or more items did '+
-                  'not match search term <strong>' + term +
-                  '</strong></span></p>')
-      result = False
-    
-    return result
+    if not result:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        'some item(s) did not match search term <strong>' + term)
+    return self.success()
   
   def test_geo(self):
     """run a query and check the geo results."""
-    result = True
     loc = random_item(["37.8524741,-122.273895", "33.41502,-111.82298",
                        "33.76145285137889,-84.38941955566406",
                        "29.759956,-95.362534"])
     radius = random_item(["10", "20", "30", "50"])
-  
     result_set = self.get_result_set({'vol_loc':loc, 'vol_dist':radius,
                                       'num':20})
-    if not self.assert_valid_results(result_set):
+    if not self.assert_nonempty_results(result_set):
       return False
 
+    result = True
     for opp in result_set:
-      if (not in_location(opp, loc, radius)):
-        self.output(
-          '<p class="result amplification">Item outside location/distance '+
-          '<strong>' + opp.id + ': ' + opp.title + '</strong> ' + 
-          opp.latlong + '</p>')
+      if not in_location(opp, loc, radius):
+        self.print_details('Item outside location/distance <strong>'+opp.id+
+                           ': '+opp.title+'</strong> '+opp.latlong)
         result = False
-      
-    if result:
-      self.output('<p class="result success">Passed</p>')
-    else:
-      self.output('<p class="result fail">Fail. <span>One or more items did '+
-                  'not fall in the requested location/distance <strong>' + 
-                  '</strong></span></p>')
-      result = False
-    
-    return result
+    if not result:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        'One or more items did not fall in the requested location/distance.')
+    return self.success()
   
   def test_provider(self):
     """run a hardcoded test query (&provider=)."""
-    result = True
-    term = "hospital"
     provider = "HandsOn Network"
-  
-    result_set = self.get_result_set({'q':term, 'provider':provider})
-    if not self.assert_valid_results(result_set):
+    result_set = self.get_result_set({'q':'hospital', 'provider':provider})
+    if not self.assert_nonempty_results(result_set):
       return False
 
+    result = True
     for opp in result_set:
       if re.search(provider, opp.provider, re.I) == None:
-        self.output('<p class="result amplification">Wrong provider '+
-                    '<strong>' + opp.provider + '</strong> found in item '+
-                    '<em>' + opp.title + '</em></p>')
+        self.print_details('Wrong provider <strong>'+opp.provider+'</strong>'+
+                           'found in item <em>'+opp.title+'</em>')
         result = False
-      
-    if result:
-      self.output('<p class="result success">Passed</p>')
-    else:
-      self.output('<p class="result fail">Fail. <span>One or more items '+
-                  'did not match provider <strong>' + provider + '</strong>'+
-                  '</span></p>')
-      result = False
+    if not result:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        'One or more items did not match provider <strong>provider+</strong>')
     
-    return result
+    return self.success()
   
   def test_start(self):
     """
@@ -355,45 +349,35 @@ class ApiTesting(object):
       Simply tests to make sure that result_set1[start2] = result_set2[start1]
       and continues testing through the end of the items that should overlap
     """
-    result = True
     start1 = 1
     start2 = 5
     num_items = 10
-    
     result_set1 = self.get_result_set({'num': num_items, 'start': start1})
     result_set2 = self.get_result_set({'num': num_items, 'start': start2})
-    if (not self.assert_valid_results(result_set1) or
-        not self.assert_valid_results(result_set2)):
+    if (not self.assert_nonempty_results(result_set1) or
+        not self.assert_nonempty_results(result_set2)):
       return False
 
+    result = True
     for i in range(start2, num_items):
       opp1 = result_set1[i]
       opp2 = result_set2[start1 + (i - start2)]
-      if (opp1.title != opp2.title):
-        self.output('<p class="result amplification">List items different, '+
-                    '<em>' + opp1.title + '</em> != <em>' + opp2.title +
-                    '</em></p>')
+      if opp1.title != opp2.title:
+        self.print_details('List items different, <em>'+opp1.title+'</em> != '+
+                           '<em>'+opp2.title+'</em>')
         result = False
-      
-    if result:
-      self.output('<p class="result success">Passed</p>')
-    else:
-      self.output('<p class="result fail">Fail. <span>Start param returned '+
-                  'non-overlapping results</p>')
-      result = False
-    
-    return result
+    if not result:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        'Start param returned non-overlapping results.')
+    return self.success()
 
   def test_snippets(self):
-    """ check to make sure that /ui_snippets returns something valid """
-    result = True
-    
-    data = retrieve_raw_data('http://footprint2009dev.appspot.com/ui_snippets?q=test')
-    if (data):
-      self.output('<p class="result success">Passed</p>')
-    else:
-      self.output('<p class="result fail">Fail. <span>/ui_snippets failed</span></p>')
-      result = False
-    
-    return result
-  
+    """ensure that /ui_snippets returns something valid."""
+    domain = 'footprint2009dev.appspot.com'
+    data = retrieve_raw_data('http://'+domain+'/ui_snippets?q=test')
+    if not data:
+      return self.fail(
+        TestResultCode.UNKNOWN_FAIL,
+        'misc problem with /ui_snippets')
+    return self.success()
