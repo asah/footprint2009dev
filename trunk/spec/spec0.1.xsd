@@ -67,7 +67,12 @@
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        A unique ID for the provider organization. Either a number assigned by Footprint or a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
+                        A unique ID for the provider organization. Either a number assigned by Footprint or a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required. No default.
+                        <p>Examples:
+                        <br><pcode>
+                        &lt;providerID&gt;99&lt;/providerID&gt;<br>
+                        &lt;providerID&gt;adomainweown.org&lt;/providerID&gt;
+                        </pcode>
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -78,6 +83,10 @@
                     <xs:documentation>
                       <![CDATA[
                         Name of organization providing the feed. Required.
+                        <p>Example:
+                        <br><pcode>
+                        &lt;providerName&gt;Volunteer Opportunity Aggregators&lt;/providerName&gt;<br>
+                        </pcode>
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -87,7 +96,11 @@
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        Only needed if the provider delivers multiple, mutually exclusive feeds (can be <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>). Optional. Default: "0".
+                        Only needed if the provider delivers multiple, mutually exclusive feeds (can be <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>). Optional. Default is "0".
+                        <p>Example:
+                        <br><pcode>
+                        &lt;feedID&gt;1&lt;/feedID&gt;<br>
+                        </pcode>
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -97,7 +110,12 @@
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        The date+time (Olson time zone attribute optional, defaults to U.S. Pacific time zone) that this specific iteration of the feed was created. Required.
+                        The date+time (Olson time zone attribute optional, default is "America/Los_Angeles" which represents the U.S. Pacific time zone) that this specific iteration of the feed was created. Required. No default.
+                        <p>Examples:
+                        <br><pcode>
+                        &lt;createdDateTime olsonTZ="Etc/UTC"&gt;2009-08-02T09:24:34&lt;/createdDateTime&gt;<br>
+                        &lt;createdDateTime olsonTZ="America/New_York"&gt;2009-03-02T09:24:34&lt;/createdDateTime&gt;<br>
+                        </pcode>                        
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -107,7 +125,11 @@
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        URL to the provider organization's homepage. Optional.
+                        URL to the provider organization's homepage. Optional. No default.
+                        <p>Example:
+                        <br><pcode>
+                        &lt;providerURL&gt;http://www.voloppaggregator.org&lt;/providerURL&gt;<br>
+                        </pcode>
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -117,7 +139,12 @@
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        Terms of use. Optional. Recommended.
+                        Terms of use. Optional. Recommended. No default.
+                        <p>Examples:
+                        <br><pcode>
+                        &lt;termsOfUse&gt;Public Domain.&lt;/termsOfUse&gt;<br>
+                        &lt;termsOfUse&gt;See terms of use on our website: http://www.voloppaggregator.org/terms.html&lt;/termsOfUse&gt;<br>
+                        </pcode>
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -127,7 +154,12 @@
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        Any notes about the feed. Optional. Not recommended.
+                        Any notes about the feed. Optional. Not recommended. No default.
+                        <p>Examples:
+                        <br><pcode>
+                        &lt;description&gt;This feed contains all volunteer opportunities from Volunteer Opportunity Aggregators. &lt;/description&gt;<br>
+                        &lt;description&gt;This feed contains only virtual volunteer opportunities from Volunteer Opportunity Aggregators. See feed with feedID=2 for physical opportunities. &lt;/description&gt;<br>
+                        </pcode>
                       ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -166,7 +198,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Unique ID within the feed. Most likely a number (from a database primary key) but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required. Would be helpful if it were constant across feeds from one provider.
+                              Unique ID within the feed. Most likely a number (from a database primary key) but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.  No default. Would be helpful if it were constant across feeds from one provider.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -176,7 +208,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              National Employer Identification Number. Optional.
+                              National Employer Identification Number. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -186,7 +218,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              ID number from guidestar.org. Optional.
+                              ID number from guidestar.org. Optional. No default. Cannot be blank.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -196,7 +228,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Name of the organization. Required.
+                              Name of the organization. Required.  No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -206,7 +238,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Mission statement of organization. Optional.
+                              Mission statement of organization. Optional.  No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -216,7 +248,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Description of organization. Optional.
+                              Description of organization. Optional.  No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -226,7 +258,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Physical location of organization. See locationType for type definition. Optional, but recommended at the city/regional/postalCode level.
+                              Physical location of organization. See locationType for type definition. Optional, but recommended at the city/regional/postalCode level.  No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -236,7 +268,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Phone number (and extension) of organization. Optional. Not expected from most providers.
+                              Phone number (and extension) of organization. Optional. No default. Not expected from most providers.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -246,7 +278,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Fax number of organization. Optional. Not expected from most providers.
+                              Fax number of organization. Optional. No default. Not expected from most providers.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -256,7 +288,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Email of organization. Optional. Not expected from most providers.
+                              Email of organization. Optional. No default. Not expected from most providers.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -266,7 +298,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              URL of the organization's homepage. Optional.
+                              URL of the organization's homepage. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -276,7 +308,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              URL of the organization's donation page. Optional.
+                              URL of the organization's donation page. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -286,7 +318,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              URL of the organization's logo. Optional. Dimensions are TBD.
+                              URL of the organization's logo. Optional.  No default. Dimensions are TBD.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -296,7 +328,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              URL of the organization's page on the providers site. Optional. Highly recommended.
+                              URL of the organization's page on the providers site. Optional. No default. Highly recommended.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -335,7 +367,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Unique ID within the feed. Often a primary key from a database, but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
+                              Unique ID within the feed. Often a primary key from a database, but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.  No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -381,7 +413,7 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional.
+                                    Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional.  No default.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -394,7 +426,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Short title of the opportunity. Required.
+                              Short title of the opportunity. Required. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -404,7 +436,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Abstract of the opportunity. Generally one paragraph. Optional.
+                              Abstract of the opportunity. Generally one paragraph. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -414,7 +446,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              How many volunteers are needed for this opportunity. Special codes: -999 for unlimited. -8888 for unknown number of volunteers. Other than those exceptions, must be a non-negative integer. Optional. Cannot be blank.
+                              How many volunteers are needed for this opportunity. Special codes: -999 for unlimited. -8888 for unknown number of volunteers. Other than those exceptions, must be a non-negative integer. Optional. Default is -8888 to represent unknown number of volunteers. Cannot be blank.
                               May not be up-to-date as volunteers sign up.
                               Design decision: large negative numbers for special codes since overbooking might lead to accidental use of negative numbers.
                             ]]>
@@ -471,7 +503,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Does the opportunity pay volunteers. Domain is {"Yes" | "No"}. Optional. Defaults to "No".
+                              Does the opportunity pay volunteers. Domain is {"Yes" | "No"}. Optional. Default is "No".
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -497,7 +529,7 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    String that represents a target audience. No domain. Optional.
+                                    String that represents a target audience. No domain. Optional. No default.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -526,7 +558,7 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    String that represents a category of the opportunity or a key word/phrase of the opportunity. No domain. Optional. Recommended.
+                                    String that represents a category of the opportunity or a key word/phrase of the opportunity. No domain. Optional. No default. Recommended.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -538,7 +570,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              The minimum age of volunteers. Optional. Recommended.
+                              The minimum age of volunteers. Optional. Recommended. Cannot be blank.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -548,7 +580,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Is the opportunity restricted to one sex/gender. Domain: {"Female" | "Male" | "Neither"}. Default is "Neither". Optional.
+                              Is the opportunity restricted to one sex/gender. Domain: {"Female" | "Male" | "Neither"}. Optional. Default is "Neither".
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -558,7 +590,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                               String of all the skills a volunteer needs. One (potentially long) string. Optional. Recommended.
+                               String of all the skills a volunteer needs. One (potentially long) string. Optional. Recommended. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -568,7 +600,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Name of contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.
+                              Name of contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -578,7 +610,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Phone number (and extension) for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.
+                              Phone number (and extension) for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -588,7 +620,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Email for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional.
+                              Email for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -598,7 +630,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Links to the page on the provider's website that displays detailed info about the opportunity. Optional. Highly recommended for feeds that do not transmit contact info.
+                              Links to the page on the provider's website that displays detailed info about the opportunity. Optional. No default. Highly recommended for feeds that do not transmit contact info.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -608,7 +640,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Language of the opportunity. Default: English. Optional.
+                              Language of the opportunity. Optional. Default is "English".
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -618,7 +650,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Full description of the opportunity. Optional.
+                              Full description of the opportunity. Optional. No default. Recommended.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -628,7 +660,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone) of last update to the opportunity on the provider's site. Optional.
+                              Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; default is "America/Los_Angeles" which represents the U.S. Pacific time zone) of last update to the opportunity on the provider's site. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -638,7 +670,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional.
+                              Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; default is "America/Los_Angeles" which represents the U.S. Pacific time zone) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -679,7 +711,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A unique ID for the review. Can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
+                              A unique ID for the review. Can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -689,7 +721,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Link to <code>organizationID</code> in the <code>Organization</code> object. Optional, though required if <code>volunteerOpportunityID</code> is not present.
+                              Link to <code>organizationID</code> in the <code>Organization</code> object. Optional, though required if <code>volunteerOpportunityID</code> is not present. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -699,7 +731,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Link to <code>volunteerOpportunityID</code> in the <code>VolunteerOpportunity</code> object. Optional, though required if <code>organizationID</code> is not present.
+                              Link to <code>volunteerOpportunityID</code> in the <code>VolunteerOpportunity</code> object. Optional, though required if <code>organizationID</code> is not present. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -709,7 +741,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              The rating, or numeric score, of the review. For instance, this field would be 4 if the review gives 4 of 5 stars. Optional.
+                              The rating, or numeric score, of the review. For instance, this field would be 4 if the review gives 4 of 5 stars. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -719,7 +751,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              The maximum rating, or numeric score, possible of the review. For instance, this field would be 5 if the review gives 4 of 5 stars. Optional. Highly recommended if <code>numericScore</code> is present.
+                              The maximum rating, or numeric score, possible of the review. For instance, this field would be 5 if the review gives 4 of 5 stars. Optional. Highly recommended if <code>numericScore</code> is present. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -729,7 +761,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              The text of the review. Optional.
+                              The text of the review. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -739,7 +771,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              The name of the reviewer. Optional. Recommended
+                              The name of the reviewer. Optional. No default. Recommended.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -749,7 +781,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              An ID for the reviewer. If present, must identify a unique reviewer. Optional.
+                              An ID for the reviewer. If present, must identify a unique reviewer. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -759,7 +791,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              What role the review played in the review entity (either an organization or volunteer opportunity).
+                              What role the review played in the review entity (either an organization or volunteer opportunity). No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -769,7 +801,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Date+time of when the review was created or last updated (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone). Optional.
+                              Date+time of when the review was created or last updated (Olson time zone attribute, <code>olsonTZ</code>, optional; default is "America/Los_Angeles" which represents the U.S. Pacific time zone). Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -793,7 +825,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-           Is the opportunity virtual (i.e., not physically located anywhere)? Domain: Yes, No (default). Optional.
+           Is the opportunity virtual (i.e., not physically located anywhere)? Domain: Yes, No. Optional. Default is "No".
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -803,7 +835,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Name of physical location. Example: Camelot Elementary School. Optional.
+             Name of physical location. Example: Camelot Elementary School. Optional. No default.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -813,7 +845,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             First line of street address. Optional. Not expected from most providers.
+             First line of street address. Optional. No default. Not expected from most providers.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -823,7 +855,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Second line of street address. Optional. Not expected from most providers.
+             Second line of street address. Optional. No default. Not expected from most providers.
              Only provide if streetAddress1 is provided.
            ]]>
           </xs:documentation>
@@ -834,7 +866,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Third line of street address. Optional. Not expected from most providers.
+             Third line of street address. Optional. No default. Not expected from most providers.
              Only provide if streetAddress1 and streetAddress2 are provided.
            ]]>
           </xs:documentation>
@@ -845,7 +877,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             City of physical location. Optional. Expected from most providers.
+             City of physical location. Optional. No default. Expected from most providers.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -855,7 +887,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Region (e.g., State or Province) of physical location. Optional. Expected from most providers.
+             Region (e.g., State or Province) of physical location. Optional. No default. Expected from most providers.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -865,7 +897,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Postal Code (e.g., zip code) of physical location. Optional. Expected from most providers.
+             Postal Code (e.g., zip code) of physical location. Optional. No default. Expected from most providers.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -875,7 +907,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Country. Optional. Defaults to "US".
+             Country. Optional. Default is "US".
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -885,7 +917,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Latitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
+             Latitude of location. Optional. No default. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -895,7 +927,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Longitude of location. Optional. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
+             Longitude of location. Optional. No default. If conflicts with streetAddress1/city/region/postalCode, the latter has precedence.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -905,7 +937,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Directions to or special instructions for the location. Optional.
+             Directions to or special instructions for the location. Optional. No default.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -921,7 +953,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Whether the opportunity is not limited by dates. Domain: Yes, No (default). Optional. If Yes, parser ignores startDate and endDate fields.
+             Whether the opportunity is not limited by dates. Domain: Yes, No. Optional. Default is "No". If Yes, parser ignores startDate and endDate fields.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -931,7 +963,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             The start date of the opportunity. Optional; highly recommended if openEnded is No.
+             The start date of the opportunity. Optional. No default. Highly recommended if openEnded is No.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -941,7 +973,7 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             The end date of the opportunity. Optional; highly recommended if openEnded is No.
+             The end date of the opportunity. Optional. No default. Highly recommended if openEnded is No.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -951,7 +983,8 @@
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
+             String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. Optional. Default is the empty string, representing no recurrence.
+             String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
 FREQ=WEEKLY;INTERVAL=2
            ]]>
           </xs:documentation>
@@ -962,7 +995,7 @@ FREQ=WEEKLY;INTERVAL=2
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional; highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
+             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional. No default. Highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -972,7 +1005,7 @@ FREQ=WEEKLY;INTERVAL=2
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional.
+             Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, default is "America/Los_Angeles" which represents the U.S. Pacific time zone). There is no "all day" option: exact times should be specified where applicable. Optional. No default.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -982,7 +1015,7 @@ FREQ=WEEKLY;INTERVAL=2
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, defaults to U.S. Pacific). There is no "all day" option: exact times should be specified where applicable. Optional. Time zone required if time is present.
+             End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, default is "America/Los_Angeles" which represents the U.S. Pacific time zone). There is no "all day" option: exact times should be specified where applicable. Optional. No default.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -992,7 +1025,7 @@ FREQ=WEEKLY;INTERVAL=2
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is Yes if both startTime and endTime are missing; default is No otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.
+             Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is "Yes" if both startTime and endTime are missing; default is "No" otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.
            ]]>
           </xs:documentation>
         </xs:annotation>
@@ -1003,7 +1036,7 @@ FREQ=WEEKLY;INTERVAL=2
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. Recommended if either openEnded or timeFlexible is Yes.
+             For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. No default. Recommended if either openEnded or timeFlexible is Yes.
            ]]>
           </xs:documentation>
         </xs:annotation>
