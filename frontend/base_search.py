@@ -261,15 +261,18 @@ def query(query_url, args, cache):
     #     <start_date>T<start_time> <end_date>T<end_time>
     #     <date>T<time>
     res.event_date_range = utils.xml_elem_text(entry, 'g:event_date_range' '')
-    match = DATE_FORMAT_PATTERN.findall(res.event_date_range)
-    if not match:
-      # TODO(oansaldi): should we accept an event with an invalid date range?
-      logging.info('bad date range: %s for %s' % (res.event_date_range, url))
-    else:
-      # first match is start date/time
-      res.startdate = datetime.datetime.strptime(match[0], '%Y-%m-%dT%H:%M:%S')
-      # last match is either end date/time or start/date time
-      res.enddate = datetime.datetime.strptime(match[-1], '%Y-%m-%dT%H:%M:%S')
+    res.startdate = datetime.datetime.strptime("2000-01-01", "%Y-%m-%d")
+    res.enddate = datetime.datetime.strptime("2038-01-01", "%Y-%m-%d")
+    if res.event_date_range:
+      match = DATE_FORMAT_PATTERN.findall(res.event_date_range)
+      if not match:
+        # TODO(oansaldi): should we accept an event with an invalid date range?
+        logging.info('bad date range: %s for %s' % (res.event_date_range, url))
+      else:
+        # first match is start date/time
+        res.startdate = datetime.datetime.strptime(match[0], '%Y-%m-%dT%H:%M:%S')
+        # last match is either end date/time or start/date time
+        res.enddate = datetime.datetime.strptime(match[-1], '%Y-%m-%dT%H:%M:%S')
 
     # posting.py currently has an authoritative list of fields in "argnames"
     # that are available to submitted events which may later appear in GBase
