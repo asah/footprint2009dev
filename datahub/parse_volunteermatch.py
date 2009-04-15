@@ -40,7 +40,7 @@ def parse(s, maxrecs, progress):
   # TODO: assign provider IDs?
   s += '<providerID>104</providerID>'
   s += '<providerName>volunteermatch.org</providerName>'
-  s += '<feedID>volunteermatch.org</feedID>'
+  s += '<feedID>1</feedID>'
   s += '<providerURL>http://www.volunteermatch.org/</providerURL>'
   s += '<createdDateTime>%s</createdDateTime>' % (pubdate)
   s += '<description></description>' 

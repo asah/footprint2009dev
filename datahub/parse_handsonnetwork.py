@@ -94,7 +94,7 @@ def parse(instr, maxrecs, progress):
   # TODO: assign provider IDs?
   outstr += '<providerID>102</providerID>'
   outstr += '<providerName>handsonnetwork.org</providerName>'
-  outstr += '<feedID>handsonnetwork.org</feedID>'
+  outstr += '<feedID>1</feedID>'
   # TODO: get/create real feed date
   outstr += '<createdDateTime>%s</createdDateTime>' % xmlh.current_ts()
   outstr += '<providerURL>http://www.handsonnetwork.org/</providerURL>'

@@ -35,7 +35,7 @@ def parse(instr, maxrecs, progress):
   # TODO: assign provider IDs?
   s += '<providerID>101</providerID>'
   s += '<providerName>usaservice.org</providerName>'
-  s += '<feedID>usaservice.org</feedID>'
+  s += '<feedID>1</feedID>'
   s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.current_ts()
   s += '<providerURL>http://www.usaservice.org/</providerURL>'
   s += '<description>Syndicated events</description>'
@@ -94,7 +94,6 @@ def parse(instr, maxrecs, progress):
       s += '<openEnded>Yes</openEnded>'
     else:
       s += '<openEnded>No</openEnded>'
-    s += '<commitmentHoursPerWeek>0</commitmentHoursPerWeek>'
     date,time = xml_helpers.get_tag_val(dbscheduledTime, "db_dateTime").split(" ")
     s += '<startDate>%s</startDate>' % (date)
     # TODO: timezone???
