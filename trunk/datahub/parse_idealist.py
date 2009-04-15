@@ -66,7 +66,7 @@ def ParseHelper(instr, maxrecs, progress):
   s += '<FootprintFeed schemaVersion="0.1">'
   s += '<FeedInfo>'
   # TODO: assign provider IDs?
-  s += '<feedID>idealist.org</feedID>'
+  s += '<feedID>1</feedID>'
   s += '<providerID>103</providerID>'
   s += '<providerName>idealist.org</providerName>'
   s += '<providerURL>http://www.idealist.org/</providerURL>'

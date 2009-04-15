@@ -39,7 +39,7 @@ def parse(instr, maxrecs, progress):
   # TODO: assign provider IDs?
   s += '<providerID>108</providerID>'
   s += '<providerName>footprint</providerName>'
-  s += '<feedID>footprint</feedID>'
+  s += '<feedID>1</feedID>'
   s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.current_ts()
   s += '<providerURL>http://sites.google.com/site/footprintorg/</providerURL>'
   s += '<description></description>'

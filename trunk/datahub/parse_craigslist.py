@@ -114,7 +114,7 @@ def parse(instr, maxrecs, progress):
   outstr = '<?xml version="1.0" ?>'
   outstr += '<FootprintFeed schemaVersion="0.1">'
   outstr += '<FeedInfo>'
-  outstr += '<feedID>craigslist.org</feedID>'
+  outstr += '<feedID>1</feedID>'
   outstr += '<providerID>105</providerID>'
   outstr += '<providerName>craigslist.org</providerName>'
   outstr += '<providerURL>http://www.craigslist.org/</providerURL>'
