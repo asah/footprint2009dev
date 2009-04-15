@@ -3,15 +3,31 @@
   <xs:annotation>
     <xs:documentation>
       <![CDATA[
-        The Footprint XML Specification is design for easy delivery of volunteer opportunities that are collected by aggregating organizations (e.g., VolunteerMatch, Idealist). These organizations are referred to as "providers" as they provide opportunity information to the Footprint project. Footprint's goal is to organize these opportunities in one place and direct web traffic back to the provider when a user locates a suitable opportunity.<p>
-        Overall, there are four main stand-alone objects: the <code>FeedInfo</code>, <code>Organization</code>, and <code>VolunteerOpportunity</code>. The provider is the source of information for the FeedInfo object; this object specifies the details of the feed being transmitted to Footprint. The Organization object specifies the details of a any group involved in the process, whether it be a sponsoring organization or (e.g., Habitat for Humanity) a local volunteer hub that coordinates local opportunities from various organization. The <code>VolunteerOpportunity</code> object specifies the details of a volunteer opportunity and usually links to either at least one Organization (e.g., a sponsoring organization and/or a volunteer hub).<p>
-        The spec is based on several existing xml specifications (specifically the specs developed by Network for Good, <a href="http://www.volunteermatch.org/schema/2007/2/listings.xsd">VolunteerMatch</a>, and 1-800-Volunteer). The major difference is that volunteer organizations and hubs are stand-along objects to which opportunities refer, thus saving space in the xml document. For instance, if Habitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habitat Organization object and 100 <code>VolunteerOpportunity</code> objects, rather than 100 of each. Another difference is the use of the iCal <a href="">Recurrence Rule</a> format so that repeating opportunities need use multiple <code>dateTimeRecurrance</code> sub-objects to represent one opportunity.<p>
+        The Footprint XML Specification is design for easy delivery of volunteer opportunities that are collected by aggregating organizations
+         (e.g., VolunteerMatch, Idealist). These organizations are referred to as "providers" as they provide opportunity information to the
+          Footprint project. Footprint's goal is to organize these opportunities in one place and direct web traffic back to the provider when
+           a user locates a suitable opportunity.<p>
+        Overall, there are four main stand-alone objects: the <code>FeedInfo</code>, <code>Organization</code>, <code>VolunteerOpportunity</code>,
+         and <code>Review</code> objects. The provider is the source of information for the <code>FeedInfo</code> object; this object specifies the details
+         of the feed being transmitted to Footprint. The Organization object specifies the details of a any group involved in the process, whether
+         it be a sponsoring organization or (e.g., Habitat for Humanity) a local volunteer hub that coordinates local opportunities from various
+         organization. The <code>VolunteerOpportunity</code> object specifies the details of a volunteer opportunity and usually links to either
+         at least one Organization (e.g., a sponsoring organization and/or a volunteer hub). The <code>Review</code> objects can be reviews of
+         organizations or opportunities.<p>
+        The spec is based on several existing xml specifications (specifically the specs developed by Network for Good,
+         <a href="http://www.volunteermatch.org/schema/2007/2/listings.xsd">VolunteerMatch</a>, and 1-800-Volunteer for opportunities and Great Nonprofits for reviews).
+         The major difference is that volunteer organizations and hubs are stand-along objects to which opportunities refer, thus saving space in the xml document.
+         For instance, if Habitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habitat Organization
+         object and 100 <code>VolunteerOpportunity</code> objects, rather than 100 of each. Another difference is the use of the iCal
+         <a href="http://www.kanzaki.com/docs/ical/rrule.html">Recurrence Rule</a> format so that repeating opportunities need use multiple
+         <code>dateTimeRecurrance</code> sub-objects to represent one opportunity.<p>
         Quick access to objects:<p>
-        <a href="#FeedInfo"> <code>FeedInfo</code> elements</a><br>
-        <a href="#Organization"><code>Organization</code>elements</a><br>
-        <a href="#VolunteerOpportunity"><code>VolunteerOpportunity</code> elements</a><br>
-        <a href="#locationType"><code>location</code> type elements</a><br>
-        <a href="#dateTimeDurationType"><code>dateTimeDuration</code> type elements</a><br><p>
+        <pcode>FeedInfo</pcode> <a href="#FeedInfo">elements</a><br>
+        <pcode>Organization</pcode> <a href="#Organization">elements</a><br>
+        <pcode>VolunteerOpportunity</pcode> <a href="#VolunteerOpportunity">elements</a><br>
+        <pcode>Review</pcode> <a href="#Review">elements</a><br>
+        <pcode>location</pcode> type <a href="#locationType">elements</a><br>
+        <pcode>dateTimeDuration</pcode> type <a href="#dateTimeDurationType">elements</a><br><p>
         Sample data (so you can see the format in action) is available <a href="http://code.google.com/p/footprint2009dev/downloads/list">here</a>.
       ]]>
     </xs:documentation>
@@ -20,19 +36,20 @@
 
     
   <xs:element name="FootprintFeed">
-    <xs:complexType>
-      <xs:annotation>
-        <xs:documentation>
-         <![CDATA[
-           The top-level object is <code>FootprintFeed</code> and requires a schemaVersion attribute. Order of objects does not matter. Thus, a feed would be wrapped in the following XML:<p><code>
+    <xs:annotation>
+      <xs:documentation>
+       <![CDATA[
+         The top-level object is <code>FootprintFeed</code> and requires a <a href="#schemaVersion"><code>schemaVersion</code></a> attribute. Order of objects does not matter. Thus, a feed would be wrapped in the following XML:
+         <p><pcode>
 &lt;?xml version="1.0" ?&gt;<br>
 &lt;FootprintFeed schemaVersion="0.1"&gt;<br>
 ...<br>
-&lt;/FootprintFeed&gt;</code>
-         ]]>
-        </xs:documentation>
-      </xs:annotation>
-    
+&lt;/FootprintFeed&gt;</pcode>
+       ]]>
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:complexType>    
       <xs:all>
 
           <xs:element name="FeedInfo" minOccurs="1" maxOccurs="1">
@@ -428,21 +445,21 @@
                           </xs:sequence>
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="locations">
+                      <xs:element name="locations" minOccurs="0">
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order of <code>location</code> objects matters only in that the first location is the default time zone if the time zone for the opportunity start or end time is unspecified. Required.
+                              A wrapper around one or more <code>location</code> sub-objects. See the sub-object documentation. Order of <code>location</code> objects matters only in that the first location is the default time zone if the time zone for the opportunity start or end time is unspecified. Required, unless <code>volunteerHubOrganizationID</code> is present and that <code>Organization</code> object has <code>location</code> informaion.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="location" type="locationType" minOccurs="1" maxOccurs="unbounded" >
+                            <xs:element name="location" type="locationType" minOccurs="0" maxOccurs="unbounded" >
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Required. Order of fields does not matter.
+                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Required, unless <code>volunteerHubOrganizationID</code> is present and that <code>Organization</code> object has <code>location</code> informaion. Order of fields does not matter.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -464,11 +481,12 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order of <code>audienceTag</code> entries has no semantic meaning. Example:<br><code>
+                              A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order of <code>audienceTag</code> entries has no semantic meaning. Example:
+                              <br><pcode>
                               &lt;audienceTags&gt;<br>
                               &nbsp;&nbsp; &lt;audienceTag&gt;Teens&lt;/audienceTag&gt;<br>
                               &nbsp;&nbsp; &lt;audienceTag&gt;College-aged&lt;/audienceTag&gt;<br>
-                              &lt;/audienceTags&gt;</code>
+                              &lt;/audienceTags&gt;</pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -491,12 +509,13 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                             A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning. Example:<br><code>
+                             A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning. Example:
+                             <br><pcode>
                              &lt;categoryTags&gt;<br>
                              &nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>
                              &nbsp;&nbsp; &lt;categoryTag&gt;Hunger&lt;/categoryTag&gt;<br>
                              &nbsp;&nbsp; &lt;categoryTag&gt;Weekend opportunity&lt;/categoryTag&gt;<br>
-                             &lt;/categoryTags&gt;</code>
+                             &lt;/categoryTags&gt;</pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -630,13 +649,143 @@
               </xs:sequence>
             </xs:complexType>
           </xs:element> 
-          
+
+
+          <xs:element name="Reviews" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>
+               <![CDATA[
+                 The <code>Review</code> object wraps a set of <code>Reviews</code> objects. Order of <code>Review</code> objects has no semantic meaning.
+               ]]>
+              </xs:documentation>
+            </xs:annotation>
+
+            <xs:complexType>
+              <xs:sequence>
+
+                <xs:element name="Review" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:documentation>
+                     <![CDATA[
+                       The <code>Review</code> object represents a review of an organization or volunteer opportunity. <code>Review</code> objects are wrapped in an <code>Reviews</code>. Order of fields does not matter.
+                     ]]>
+                    </xs:documentation>
+                  </xs:annotation>
+
+                  <xs:complexType>
+                    <xs:all>
+
+                      <xs:element name="reviewID" type="xs:string">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              A unique ID for the review. Can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    
+                      <xs:element name="organizationID" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Link to <code>organizationID</code> in the <code>Organization</code> object. Optional, though required if <code>volunteerOpportunityID</code> is not present.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="volunteerOpportunityID" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Link to <code>volunteerOpportunityID</code> in the <code>VolunteerOpportunity</code> object. Optional, though required if <code>organizationID</code> is not present.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="rating" type="xs:decimal" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              The rating, or numeric score, of the review. For instance, this field would be 4 if the review gives 4 of 5 stars. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="ratingMaximum" type="xs:decimal" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              The maximum rating, or numeric score, possible of the review. For instance, this field would be 5 if the review gives 4 of 5 stars. Optional. Highly recommended if <code>numericScore</code> is present.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="text" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              The text of the review. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="reviewerName" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              The name of the reviewer. Optional. Recommended
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      
+                      <xs:element name="reviewerID" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              An ID for the reviewer. If present, must identify a unique reviewer. Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="reviewerRole" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              What role the review played in the review entity (either an organization or volunteer opportunity).
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                      <xs:element name="lastUpdated" type="dateTimeOlsonDefaultPacific" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              Date+time of when the review was created or last updated (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to U.S. Pacific time zone). Optional.
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
+                    </xs:all>
+                  </xs:complexType>
+                </xs:element> 
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>           
                       
         </xs:all>
         <xs:attribute name="schemaVersion" type="xs:decimal" use="required" fixed="0.1" />
     </xs:complexType>  
   </xs:element>
-
 
   <xs:complexType name="locationType">
     <xs:all>
@@ -898,7 +1047,7 @@ FREQ=WEEKLY;INTERVAL=2
     <xs:annotation>
       <xs:documentation>
        <![CDATA[
-         Date/time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<p>
+         Date/time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<br/>
          The content is of the base type <code>xs:datetime</code>, except any additional timezone data is disallowed.
        ]]>
       </xs:documentation>
@@ -914,7 +1063,7 @@ FREQ=WEEKLY;INTERVAL=2
     <xs:annotation>
       <xs:documentation>
        <![CDATA[
-         Time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<p>
+         Time type that has an attribute called olsonTZ, which is a string from the <a href="http://en.wikipedia.org/wiki/Zoneinfo">Olson timezone database</a> (default: "America/Los_Angeles").<br/>
          The content is of the base type <code>xs:time</code>, except any additional timezone data is disallowed.
        ]]>
       </xs:documentation>
@@ -954,4 +1103,5 @@ FREQ=WEEKLY;INTERVAL=2
 
 
 </xs:schema>
+
 
