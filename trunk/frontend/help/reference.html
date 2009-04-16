@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Footprint Search API Reference Guide</title>
+<title>Footprint API Reference Guide</title>
 </head>
 
 <body>
-<h1>Footprint Search API Reference Guide</h1>
+<h1>Footprint  API Reference Guide</h1>
 <h2>Introduction</h2>
-<p>The Footrprint Search application programming interface (API) allows client applications to retrieve and view the content of <a href="http://servicefootprint.appspot.com/http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint Search API to request a list of volunteer opportunities using a number of parameters documented here.</p>
+<p>The Footrprint  application programming interface (API) allows client applications to retrieve and view the content of <a href="http://servicefootprint.appspot.com/http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint  API to request a list of volunteer opportunities using a number of parameters documented here.</p>
 <h2>Contents</h2>
 <p><a href="#Audience">Audience</a></p>
 <p><a href="#Access">Access</a></p>
@@ -17,18 +17,17 @@
 <p><a href="#Examples">Examples</a></p>
 <p><a href="#Elements">Elements</a></p>
 <p><a href="#Notes">Miscellaneous notes</a></p>
-<p><a href="#Resources">Further resources</a></p>
 <h2 id="Audience">Audience</h2>
-<p>This document is intended for programmers who want to write client applications that can interact with Footprint, an open source aggregator of volunteer opportunities. It provides reference documentation for using the Footprint Search API.</p>
+<p>This document is intended for programmers who want to write client applications that can interact with Footprint, an open source aggregator of volunteer opportunities. It provides reference documentation for using the Footprint  API.</p>
 <p>This document doesn't contain information about the programming-language client libraries. For client-library reference information, see related programming-language-specific guides.</p>
 <h2 id="Access">Access</h2>
-<p>The Footprint Search API is available at:<br />
+<p>The Footprint  API is available at:<br />
   <a href="http://servicefootprint.appspot.com/api/volopps">http://servicefootprint.appspot.com/api/volopps</a></p>
 <p>As a <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>-based API, Footprint provides all output over HTTP at distinct <a href="Uniform_Resource_Identifier">URIs</a>, which makes it easy to test applications with browsers and command-line web clients. Footprint contains listings of volunteer opportunities, which today are defined as events (offline or online), optionally containing locations and start-end times.</p>
 <p>In their simplest form, listings have just a title, description and basic contact, time and location information.  In their fullest form, listings can contain dozens of detailed fields, as described in the <a href="#Elements">Elements</a> section and associated <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html">specification</a>. Because of the short lifespan of these posts, there is little point in storing results.</p>
 <h2 id="Parameters">Query parameters</h2>
 <p>Footprint uses <a href="http://code.google.com/apis/gdata/docs/2.0/reference.html#Queries">Google conventions on query parameters</a>, , e.g. q=... is used for keyword search, num= specifies the number of results and start= sets offset for pagination.</p>
-<p>The syntax for API calls requires following the aforementioned Footprint Search API URL (<a href="http://servicefootprint.appspot.com/api/volopps">http://servicefootprint.appspot.com/api/volopps</a>) with a question mark (?) and then a parameter name, equal sign (=), and value. Here's the syntax for constructing API calls:<br />
+<p>The syntax for API calls requires following the aforementioned Footprint  API URL (<a href="http://servicefootprint.appspot.com/api/volopps">http://servicefootprint.appspot.com/api/volopps</a>) with a question mark (?) and then a parameter name, equal sign (=), and value. Here's the syntax for constructing API calls:<br />
   <code>http://servicefootprint.appspot.com/api/volopps?<em>parameter_name</em>=<em>value</em></code></p>
 <p>For instance, a query for location would use the vol_loc parameter and resemble:<br />
 <code>http://footprint2009dev.appspot.com/api/volopps?vol_loc=<em>City</em>+<em>Name</em>,<em>STATEABBREV</em></code></p>
@@ -54,7 +53,7 @@
     <tr>
       <td><code>output</code></td>
       <td><p>The output format for presenting the results.</p>
-      <p><strong>Important</strong>: This parameter is required for all uses other than debugging. Append the Footprint Search API URI with <code>&amp;output=rss</code> to receive the output in a machine-readable format. See the<em> <a href="#Formats">Output formats</a></em> section for additional details.</p></td>
+      <p><strong>Important</strong>: This parameter is required for all uses other than debugging. Append the Footprint  API URI with <code>&amp;output=rss</code> to receive the output in a machine-readable format. See the<em> <a href="#Formats">Output formats</a></em> section for additional details.</p></td>
       <td><p>Default value: html (This should be used only for debugging and otherwise overridden with another format, such as RSS, for production use.)</p>
       <p>Expected values: rss</p></td>
     </tr>
@@ -103,12 +102,12 @@
   </tbody>
 </table>
 <h2 id="Formats">Output formats</h2>
-<p>The Footprint Search API provides its output in the following formats:</p>
+<p>The Footprint  API provides its output in the following formats:</p>
 <p><strong>RSS</strong> - A machine-readable format that is currently recommended for all  uses other than debugging. You can specify this setting by appending the API call with: <code>&amp;output=rss</code></p>
 <p><strong>HTML</strong> - A  human-readable format that's currently dedicated to debugging. This is the default and will appear whenever you load the API without the output parameter and can be manually set with: <code>&amp;output=html</code></p>
 <p>In addition, many more output formats are planned, including XML (FPXML), xSV (comma, tab, etc. separated values) and more. Ask <a href="mailto:footprint-eng@googlegroups.com">us</a> and we'll quickly provide them. Return to this page or visit the <a href="http://code.google.com/p/footprint2009dev/">Footprint project site</a> for <a href="http://code.google.com/p/footprint2009dev/updates/list">updates</a>.</p>
 <h2 id="Examples">Examples</h2>
-<p>Here are some example queries made against the Footprint Search API to help you see how the API works. We've appended <code>&amp;output=rss</code> to each query to get machine-readable output.</p>
+<p>Here are some example queries made against the Footprint  API to help you see how the API works. We've appended <code>&amp;output=rss</code> to each query to get machine-readable output.</p>
 <p>Listings near San Francisco:<br />
   <a href="http://servicefootprint.appspot.com/api/volopps?vol_loc=San+Francisco,CA&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?vol_loc=San+Francisco,CA&amp;output=rss</a><br />
   </p>
@@ -120,6 +119,15 @@
   <a href="http://servicefootprint.appspot.com/api/volopps?q=park&amp;num=50&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?q=park&amp;num=50&amp;output=rss</a></p>
 <p>Park listings starting May 10th or later:<br />
 <a href="http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_startdate=2009-05-10&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_startdate=2009-05-10&amp;output=rss</a></p>
+<p>And here is an example of a Footprint query called from a program, this one written in Java:</p>
+<pre>
+URLConnection connection;
+URL url = new URL
+     &quot;http://footprint2009dev.appspot.com/api/volopps?output=rss&amp;vol_loc=&quot; +
+     location);
+connection = url.openConnection();
+connection.connect();
+InputStream stream = connection.getInputStream();</pre>
 <h2 id="Elements">Elements</h2>
 <p>Footprint stores one record per location, i.e. if an event has multiple locations, there's one record per location.  Likewise, for repeated events, we store one record per timerange. These elements are described in the Footprint XML specification for data received from providers here:<br />
   <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd">http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd</a><br />
@@ -141,25 +149,6 @@
   unknown URL parameters.  Unknown args result in an error-- HTTP 404 with custom error msg.<br />
   bookmarking query URLs.  Yes, you may bookmark query URLs including emailing them, linking to them, etc.<br />
   caching results.  Yes, you may cache results for at least 1 hour.  Please contact us if you want to cache for longer.<br />
-HTTP compressed output.  We can probably add this if you need-- please ask and explain why. </p>
-<h2 id="Resources">Further resources</h2>
-<h3>XML Specification</h3>
-<p> <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd">http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd</a><a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html"><br />
-http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html</a></p>
-<h3>Live application site</h3>
-<p><a href="http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a></p>
-<h3>Development site</h3>
-<p><a href="http://footprint2009dev.appspot.com/">http://footprint2009dev.appspot.com/</a></p>
-<h3>Team site</h3>
-<p><a href="https://sites.google.com/site/footprintorg/">https://sites.google.com/site/footprintorg/</a></p>
-<h3>Project site</h3>
-<p><a href="http://code.google.com/p/footprint2009dev/">http://code.google.com/p/footprint2009dev/</a></p>
-<h3>Bugs and feature requests</h3>
-<p><a href="http://code.google.com/p/footprint2009dev/issues/list">http://code.google.com/p/footprint2009dev/issues/list</a></p>
-<p>API issues: <a href="http://code.google.com/p/footprint2009dev/issues/detail?id=36">http://code.google.com/p/footprint2009dev/issues/detail?id=36</a></p>
-<h3>Source code</h3>
-<p><a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/">http://code.google.com/p/footprint2009dev/source/browse/trunk/</a></p>
-<h3>Team email address</h3>
-<p><a href="mailto:footprint-eng@googlegroups.com">footprint-eng@googlegroups.com</a></p>
+HTTP compressed output.  We can probably add this if you need-- please ask and explain why.</p>
 </body>
 </html>
