@@ -7,8 +7,9 @@
 
 <body>
 <h1>Footprint  API Reference Guide</h1>
+<p><a href="index.html">Return to Help index</a></p>
 <h2>Introduction</h2>
-<p>The Footrprint  application programming interface (API) allows client applications to retrieve and view the content of <a href="http://servicefootprint.appspot.com/http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint  API to request a list of volunteer opportunities using a number of parameters documented here.</p>
+<p>The Footprint  application programming interface (API) allows client applications to retrieve and view the content of <a href="http://servicefootprint.appspot.com/http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint  API to request a list of volunteer opportunities using a number of parameters documented here.</p>
 <h2>Contents</h2>
 <p><a href="#Audience">Audience</a></p>
 <p><a href="#Access">Access</a></p>
@@ -16,7 +17,7 @@
 <p><a href="#Formats">Output formats</a></p>
 <p><a href="#Examples">Examples</a></p>
 <p><a href="#Elements">Elements</a></p>
-<p><a href="#Notes">Miscellaneous notes</a></p>
+<p><a href="#Notes">Developer notes</a></p>
 <h2 id="Audience">Audience</h2>
 <p>This document is intended for programmers who want to write client applications that can interact with Footprint, an open source aggregator of volunteer opportunities. It provides reference documentation for using the Footprint  API.</p>
 <p>This document doesn't contain information about the programming-language client libraries. For client-library reference information, see related programming-language-specific guides.</p>
@@ -103,8 +104,10 @@
 </table>
 <h2 id="Formats">Output formats</h2>
 <p>The Footprint  API provides its output in the following formats:</p>
-<p><strong>RSS</strong> - A machine-readable format that is currently recommended for all  uses other than debugging. You can specify this setting by appending the API call with: <code>&amp;output=rss</code></p>
-<p><strong>HTML</strong> - A  human-readable format that's currently dedicated to debugging. This is the default and will appear whenever you load the API without the output parameter and can be manually set with: <code>&amp;output=html</code></p>
+<ul>
+  <li><em>RSS</em> - A machine-readable format that is currently recommended for all  uses other than debugging. You can specify this setting by appending the API call with: <code>&amp;output=rss</code></li>
+  <li><em>HTML</em> - A  human-readable format that's currently dedicated to debugging. This is the default and will appear whenever you load the API without the output parameter and can be manually set with: <code>&amp;output=html</code></li>
+</ul>
 <p>In addition, many more output formats are planned, including XML (FPXML), xSV (comma, tab, etc. separated values) and more. Ask <a href="mailto:footprint-eng@googlegroups.com">us</a> and we'll quickly provide them. Return to this page or visit the <a href="http://code.google.com/p/footprint2009dev/">Footprint project site</a> for <a href="http://code.google.com/p/footprint2009dev/updates/list">updates</a>.</p>
 <h2 id="Examples">Examples</h2>
 <p>Here are some example queries made against the Footprint  API to help you see how the API works. We've appended <code>&amp;output=rss</code> to each query to get machine-readable output.</p>
@@ -135,20 +138,20 @@ InputStream stream = connection.getInputStream();</pre>
 <p>TODO: Publish at least the above HTML file outside of the SVN source view to ease readibility, like so:<br />
   <a href="Footprint_XML_spec.html">Footprint_XML_spec.html</a><br />
 </p>
-<h2 id="Notes">Miscellaneous notes</h2>
-<p>maximum results.  As with most search engines, we have limits on the number of result records, both per query (999) and total (TBD).<br />
-  Please ask us if you need to download all results, and explain why.<br />
-  ranking / sorting.  Record sorting ('ranking') is hardcoded right now, but it's pretty easy to add new sorting functions-- please ask us.<br />
-  keyword stemming/plurals/etc.  We use Google's search engine as the underlying provider for keyword queries, so it should match<br />
-  alternate word forms.  As with all search engines, please don't rely on this-- and don't hesitate to file bugs with us if you don't get<br />
-  expected behavior.<br />
-  keyword queries on various fields.  q= queries all fields.  There's no way to restrict to fewer fields.<br />
-  skills field.  Due to the data from providers, the skills field is unstructured, i.e. can't run restriction-searches on it.  Sorry!<br />
-  repeated URL parameters.  If multiple URL parameters are provided, we take the last of them, e.g. &amp;cats=foo&amp;cats=bar is the same as &amp;cats=bar.<br />
-  querying on the skills field.  Not supported beyond : keyword search only (providers only have longhand descriptions).<br />
-  unknown URL parameters.  Unknown args result in an error-- HTTP 404 with custom error msg.<br />
-  bookmarking query URLs.  Yes, you may bookmark query URLs including emailing them, linking to them, etc.<br />
-  caching results.  Yes, you may cache results for at least 1 hour.  Please contact us if you want to cache for longer.<br />
-HTTP compressed output.  We can probably add this if you need-- please ask and explain why.</p>
+<h2 id="Notes">Developer notes</h2>
+<ul>
+  <li><em>maximum results</em> - As with most search engines, we have limits on the number of result records, both per query (999) and total (TBD). Please ask us if you need to download all results, and explain why.</li>
+  <li><em>ranking / sorting</em> -  Record sorting ('ranking') is hardcoded right now, but it's pretty easy to add new sorting functions-- please ask us.</li>
+  <li><em>keyword stemming/plurals/etc</em>.  - We use Google's search engine as the underlying provider for keyword queries, so it should match alternate word forms.  As with all search engines, please don't rely on this-- and don't hesitate to file bugs with us if you don't get expected behavior.</li>
+  <li><em>keyword queries on various fields</em> - q= queries all fields.  There's no way to restrict to fewer fields.</li>
+  <li><em>skills field</em> - Due to the data from providers, the skills field is unstructured, i.e. can't run restriction-searches on it.  Sorry!</li>
+  <li><em>repeated URL parameters</em> - If multiple URL parameters are provided, we take the last of them, e.g. &amp;cats=foo&amp;cats=bar is the same as &amp;cats=bar.</li>
+  <li><em>querying on the skills field </em>- Not supported beyond : keyword search only (providers only have longhand descriptions).</li>
+  <li><em>unknown URL parameters</em> - Unknown args result in an error-- HTTP 404 with custom error msg.</li>
+  <li><em>bookmarking query URLs</em> - Yes, you may bookmark query URLs including emailing them, linking to them, etc. </li>
+  <li><em>caching results</em> - Yes, you may cache results for at least 1 hour.  Please contact us if you want to cache for longer.</li>
+  <li><em>HTTP compressed output</em> - We can probably add this if you need-- please ask and explain why</li>
+</ul>
+<p><a href="index.html">Return to Help index</a>.</p>
 </body>
 </html>
