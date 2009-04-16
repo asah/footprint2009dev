@@ -8,6 +8,8 @@
 # disable line too long-- irrelevant here
 # pylint: disable-msg=C0301
 
+# usage: python spec2html.py < spec0.1.xsd > spec0.1.html
+
 import sys
 import re
 
