@@ -3,20 +3,20 @@
   <xs:annotation>
     <xs:documentation>
       <![CDATA[
-        The Footprint XML Specification is design for easy delivery of volunteer opportunities that are collected by aggregating organizations
+        The Footprint XML Specification is designed for easy delivery of volunteer opportunities that are collected by aggregating organizations
          (e.g., VolunteerMatch, Idealist). These organizations are referred to as "providers" as they provide opportunity information to the
           Footprint project. Footprint's goal is to organize these opportunities in one place and direct web traffic back to the provider when
            a user locates a suitable opportunity.<p>
         Overall, there are four main stand-alone objects: the <code>FeedInfo</code>, <code>Organization</code>, <code>VolunteerOpportunity</code>,
          and <code>Review</code> objects. The provider is the source of information for the <code>FeedInfo</code> object; this object specifies the details
-         of the feed being transmitted to Footprint. The Organization object specifies the details of a any group involved in the process, whether
-         it be a sponsoring organization or (e.g., Habitat for Humanity) a local volunteer hub that coordinates local opportunities from various
-         organization. The <code>VolunteerOpportunity</code> object specifies the details of a volunteer opportunity and usually links to either
-         at least one Organization (e.g., a sponsoring organization and/or a volunteer hub). The <code>Review</code> objects can be reviews of
+         of the feed being transmitted to Footprint. The <code>Organization</code> object specifies the details of any group involved in the process, whether
+         it be a sponsoring organization (e.g., Habitat for Humanity) or a local volunteer hub that coordinates local opportunities from various
+         organizations. The <code>VolunteerOpportunity</code> object specifies the details of a volunteer opportunity and usually links to 
+         at least one organization (e.g., a sponsoring organization and/or a volunteer hub). The <code>Review</code> objects can be reviews of
          organizations or opportunities.<p>
-        The spec is based on several existing xml specifications (specifically the specs developed by Network for Good,
-         <a href="http://www.volunteermatch.org/schema/2007/2/listings.xsd">VolunteerMatch</a>, and 1-800-Volunteer for opportunities and Great Nonprofits for reviews).
-         The major difference is that volunteer organizations and hubs are stand-along objects to which opportunities refer, thus saving space in the xml document.
+        The spec is based on several existing XML specifications (specifically the specs developed by Network for Good,
+         <a href="http://www.volunteermatch.org/schema/2007/2/listings.xsd">VolunteerMatch</a>, and 1-800-Volunteer for opportunities, and Great Nonprofits for reviews).
+         The major difference is that volunteer organizations and hubs are stand-alone objects to which opportunities refer, thus saving space in the XML document.
          For instance, if Habitat for Humanity posts 100 opportunities on Idealist, Idealist would create a feed with one Habitat Organization
          object and 100 <code>VolunteerOpportunity</code> objects, rather than 100 of each. Another difference is the use of the iCal
          <a href="http://www.kanzaki.com/docs/ical/rrule.html">Recurrence Rule</a> format so that repeating opportunities need use multiple
@@ -356,7 +356,7 @@
                   <xs:annotation>
                     <xs:documentation>
                       <![CDATA[
-                        The <code>VolunteerOpportunity</code> object represents one volunteer opportunity listing. It is capable of representing a repeating or on-going event.
+                        The <code>VolunteerOpportunity</code> object represents one volunteer opportunity listing. It is capable of representing a repeating or ongoing event.
                         Often an <code>Opportunity</code> object will link to an <code>Organization</code> object via the <sponsoringOrganizationID> or <volunteerHubOrganizationID> fields. Order of fields does not matter.
                       ]]>
                     </xs:documentation>
@@ -469,7 +469,7 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. ReOrder of objects must follow order below. Required. Order of fields does not matter.
+                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. Reorder of objects must follow order below. Required. Order of fields does not matter.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -491,7 +491,7 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represents multiple opportunity sites. Required, unless <code>volunteerHubOrganizationID</code> is present and that <code>Organization</code> object has <code>location</code> informaion. Order of fields does not matter.
+                                    Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represent multiple opportunity sites. Required, unless <code>volunteerHubOrganizationID</code> is present and that <code>Organization</code> object has <code>location</code> informaion. Order of fields does not matter.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -541,7 +541,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                             A wrapper for one or more <code>categoryTag</code> fields. An <code>categoryTag</code> field is a short string that describes the opportunity. Key words also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning. Example:
+                             A wrapper for one or more <code>categoryTag</code> fields. A <code>categoryTag</code> field is a short string that describes the opportunity. Keywords also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning. Example:
                              <br><pcode>
                              &lt;categoryTags&gt;<br>
                              &nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>
@@ -558,7 +558,7 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    String that represents a category of the opportunity or a key word/phrase of the opportunity. No domain. Optional. No default. Recommended.
+                                    String that represents a category of the opportunity or a keyword/phrase of the opportunity. No domain. Optional. No default. Recommended.
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -600,7 +600,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Name of contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional. No default.
+                              Name of contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this field. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -620,7 +620,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Email for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional. No default.
+                              Email for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this field. Optional. No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -630,7 +630,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Links to the page on the provider's website that displays detailed info about the opportunity. Optional. No default. Highly recommended for feeds that do not transmit contact info.
+                              Links to the page on the provider's website that displays detailed information about the opportunity. Optional. No default. Highly recommended for feeds that do not transmit contact info.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -699,7 +699,7 @@
                   <xs:annotation>
                     <xs:documentation>
                      <![CDATA[
-                       The <code>Review</code> object represents a review of an organization or volunteer opportunity. <code>Review</code> objects are wrapped in an <code>Reviews</code>. Order of fields does not matter.
+                       The <code>Review</code> object represents a review of an organization or volunteer opportunity. <code>Review</code> objects are wrapped in <code>Reviews</code>. Order of fields does not matter.
                      ]]>
                     </xs:documentation>
                   </xs:annotation>
@@ -791,7 +791,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              What role the review played in the review entity (either an organization or volunteer opportunity). No default.
+                              What role the reviewer played in the review entity (either an organization or volunteer opportunity). No default.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -995,7 +995,7 @@ FREQ=WEEKLY;INTERVAL=2
         <xs:annotation>
           <xs:documentation>
            <![CDATA[
-             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that only meets once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional. No default. Highly recommended is openEnded is Yes. Ignored if startDate and endDate are populated.
+             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that meets only once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional. No default. Highly recommended if openEnded is Yes. Ignored if startDate and endDate are populated.
            ]]>
           </xs:documentation>
         </xs:annotation>
