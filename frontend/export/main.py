@@ -11,17 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+export main().
+"""
 
-import cgi
-import sys
-import os
-
+import re
 import logging
 import hashlib
 
 from google.appengine.ext import db
-from google.appengine.ext.db import GqlQuery
-from google.appengine.ext.db import Key
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
@@ -34,14 +32,54 @@ QT = "%s%s%s" % ("ec813d6d0c96f3a562c70d78b7ac98d7ec2cfcaaf44cbd7",
                  "b77ea55f62cf002ad7e4b5ec3f89d18954")
 
 USAGE = """
-<pre>/export/TABLENAME.tsv, eg. UserStats.tsv
+<pre>
+/export/TABLENAME.tsv, eg. UserStats.tsv
+/export/TABLENAME/TABLENAME_BACKUP, eg. UserInfo/UserInfo_20090416
 </pre>
 """
 
 class Fail(Exception):
+  """
+  handle errors
+  """
   def __init__(self, message):
+    if hasattr(Exception, '__init__'):
+      Exception.__init__(self)
     logging.error("see /export/ for usage")
     logging.error(message)
+
+class ShowUsage(webapp.RequestHandler):
+  """ show user how to export a table """
+  def __init__(self):
+    if hasattr(webapp.RequestHandler, '__init__'):
+      webapp.RequestHandler.__init__(self)
+
+  def response(self):
+    """ pylint wants a public reponse method """
+    webapp.RequestHandler.__response__(self)
+
+  def get(self):
+    """ show the usage string """
+    self.response.out.write(USAGE)
+
+def get_min_key(table, min_key = ""):
+  """
+  get the next key in our sequence
+  or get the lowest key value in the table
+  """
+  if min_key == "":
+    query = table.gql("ORDER BY __key__ LIMIT 1")
+    row = query.get()
+  else:
+    row = table(key_name = min_key)
+
+  if not row:
+    if min_key == "":
+      raise Fail("no data in %s" % table)
+    else:
+      return None
+
+  return row.key()
 
 def export_table_as_tsv(table, min_key, limit):
   """ 
@@ -50,32 +88,15 @@ def export_table_as_tsv(table, min_key, limit):
 
   delim, recsep = ("\t", "\n")
 
-  def get_min_key(table, min_key = ""):
-    # get the next key in our sequence
-    # or get the lowest key value in the table
-    if min_key == "":
-      query = table.gql("ORDER BY __key__ LIMIT 1")
-      row = query.get()
-    else:
-      row = table(key_name = min_key)
-
-    if not row:
-      if min_key == "":
-        raise Fail("no data in %s" % table)
-      else:
-        return None
-
-    return row.key()
-
   def get_fields(table_object):
-    # get a list of field names prepended with "key"
+    """ get a list of field names prepended with 'key' """
     fields = ["key"]
-    for i,field in enumerate(table_object.properties()):
+    for field in table_object.properties():
       fields.append(field)
     return fields
 
   def field_to_str(value):
-    # get our field value as a string
+    """ get our field value as a string """
     if not value:
       field_value = ""
     else:
@@ -87,12 +108,12 @@ def export_table_as_tsv(table, min_key, limit):
     return field_value
 
   def get_header(fields, delim):
-    # get a delimited list of the field names
+    """ get a delimited list of the field names """
     header = delim.join(fields)
     return header
 
   def esc_value(value, delim, recsep):
-    # make sure our delimiter and record separator are not in the data
+    """ make sure our delimiter and record separator are not in the data """
     return field_to_str(value).replace(delim, "\\t").replace(recsep, "\\n")
 
   fields = get_fields(table)
@@ -101,11 +122,11 @@ def export_table_as_tsv(table, min_key, limit):
   if min_key == "":
     # this is the first record we output so add the header
     output.append(get_header(fields, delim))
-    cmp = ">="
+    inequality = ">="
   else:
-    cmp = ">"
+    inequality = ">"
 
-  query = table.gql(("WHERE __key__ %s :1 ORDER BY __key__" % cmp), 
+  query = table.gql(("WHERE __key__ %s :1 ORDER BY __key__" % inequality), 
           get_min_key(table, min_key))
 
   rsp = query.fetch(limit)
@@ -121,9 +142,22 @@ def export_table_as_tsv(table, min_key, limit):
 
   return "%s%s" % (recsep.join(output), recsep)
 
-class exportTableTSV(webapp.RequestHandler):
-  # export a table
+class ExportTableTSV(webapp.RequestHandler):
+  """ export the data in the table """
+  def __init__(self):
+    if hasattr(webapp.RequestHandler, '__init__'):
+      webapp.RequestHandler.__init__(self)
+
+  def request(self):
+    """ pylint wants a public request method """
+    webapp.RequestHandler.__response__(self)
+
+  def response(self):
+    """ pylint wants a public response method """
+    webapp.RequestHandler.__response__(self)
+
   def get(self, table):
+    """ handle the request to export the table """
 
     digsig = utils.get_last_arg(self.request, "digsig", "")
     if hashlib.sha512(digsig).hexdigest() != QT:
@@ -164,18 +198,135 @@ class exportTableTSV(webapp.RequestHandler):
     else:
       raise Fail("not programmed to handle '%s'" % table)
 
-class showUsage(webapp.RequestHandler):
-  # show a list of the Models we can export
-  def get(self):
-    self.response.out.write(USAGE)
+def transfer_table(source, destination, min_key, limit):
+  """ transfer records from source to destination """
+  number_of_rows = 0
 
-application = webapp.WSGIApplication(
-    [ ("/export/(.*)\.tsv", exportTableTSV),
-      ("/export/", showUsage)
+  def populate_row(src_table, dest_table, row, key = None):
+    """ put a row from the src_table into the dest_table """
+    if key:
+      row_i = dest_table(key_name = str(key))
+    else:
+      row_i = dest_table()
+
+    for field in src_table.properties():
+      setattr(row_i, field, getattr(row, field))
+
+    row_i.put()
+
+  if min_key == "":
+    # this is the first record 
+    inequality = ">="
+  else:
+    inequality = ">"
+
+  query = source.gql(("WHERE __key__ %s :1 ORDER BY __key__" % inequality),
+          get_min_key(source, min_key))
+
+  rsp = query.fetch(limit)
+  for row in rsp:
+    try:
+      # try to preserve our key name
+      populate_row(source, destination, row, row.key().id_or_name())
+      number_of_rows += 1
+    except:
+      populate_row(source, destination, row)
+      number_of_rows += 1
+
+  return number_of_rows
+
+class TransferTable(webapp.RequestHandler):
+  """ export the data in the table """
+  def __init__(self):
+    if hasattr(webapp.RequestHandler, '__init__'):
+      webapp.RequestHandler.__init__(self)
+
+  def request(self):
+    """ pylint wants a public request method """
+    webapp.RequestHandler.__response__(self)
+
+  def response(self):
+    """ pylint wants a public response method """
+    webapp.RequestHandler.__response__(self)
+
+  def get(self, table_from, table_to):
+    """ handle the request to replicate a table """
+
+    if table_from == table_to:
+      raise Fail("cannot transfer '%s' to itself" % table_from)
+
+    digsig = utils.get_last_arg(self.request, "digsig", "")
+    if hashlib.sha512(digsig).hexdigest() != QT:
+      # require callers pass param &digsig=[string] such that
+      # the hash of the string they pass to us equals QT
+      raise Fail("no &digsig")
+
+    try:
+      limit = int(utils.get_last_arg(self.request, "limit", "1000"))
+    except:
+      raise Fail("non integer &limit")
+
+    if limit < 1:
+      # 1000 is the max records that can be fetched ever
+      limit = 1000
+
+    min_key = utils.get_last_arg(self.request, "min_key", "")
+
+    if table_from == "UserInfo":
+      source = models.UserInfo
+      destination = type(table_to, (models.UserInfo,), {})
+    elif table_from == "UserStats":
+      source = models.UserStats
+      destination = type(table_to, (models.UserStats,), {})
+    elif table_from == "UserInterest":
+      source = models.UserInterest
+      destination = type(table_to, (models.UserInterest,), {})
+    elif table_from == "VolunteerOpportunityStats":
+      source = models.VolunteerOpportunityStats
+      destination = type(table_to, (models.VolunteerOpportunityStats,), {})
+    elif table_from == "VolunteerOpportunity":
+      source = models.VolunteerOpportunity
+      destination = type(table_to, (models.VolunteerOpportunity,), {})
+    elif table_from == "Posting":
+      # TODO add Posting to models.py
+      source = posting.Posting
+      destination = type(table_to, (posting.Posting,), {})
+    else:
+      raise Fail("not programmed to handle '%s'" % table_from)
+
+    if (table_to[0:len(table_from)] + '_') != (table_from + '_'):
+      raise Fail("destination must start with '%s_'" % table_from)
+
+    good_chars = re.compile(r'[A-Za-z0-9_]')
+    good_name = ''.join(c for c in table_to if good_chars.match(c))
+    if table_to != good_name:
+      raise Fail("destination contains nonalphanumerics '%s'" % table_to)
+
+    if min_key == "":
+      while True:
+        query = destination.all()
+        results = query.fetch(1000)
+        if results:
+          # this would only happen if we inadvertantly backup 
+          # to the same destination more than once
+          # TODO: find out if we should fail here instead
+          db.delete(results)
+        else:
+          break
+
+    self.response.out.write("copied %d rows from %s to %s"
+      % (transfer_table(source, destination, min_key, limit), 
+         table_from, table_to))
+
+APPLICATION = webapp.WSGIApplication(
+    [ ("/export/(.*)\.tsv", ExportTableTSV),
+      ("/export/(.*)/(.*)", TransferTable),
+      ("/export/", ShowUsage)
     ], debug=True)
 
 def main():
-  run_wsgi_app(application)
+  """ execution begins """
+  run_wsgi_app(APPLICATION)
 
 if __name__ == "__main__":
   main()
