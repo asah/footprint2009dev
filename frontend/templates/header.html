@@ -35,6 +35,7 @@
    <nobr>
     {% if user %}
     <div class='sign_in'>
+      <a href="/help/index.html" target="help"><b>Help</b></a> |
       Hello, {{ user.display_name }} |
 
       {% ifequal user.account_type "friendconnect"%}
@@ -67,6 +68,7 @@
 
     {% else %}
     <div class='sign_in'>
+      <a href="/help/index.html" target="help"><b>Help</b></a> |
       Sign in with <span id="signInProvider"></span> :
       <img height='18px' width='18px' src="images/signin-yahoo.gif" alt="Yahoo!" title="Yahoo!" onclick="google.friendconnect.requestSignIn()"/>
       <img height='18px' width='18px'  src="images/signin-google.gif" alt="Google" title="Google" onclick="google.friendconnect.requestSignIn()"/>
