@@ -9,7 +9,7 @@
 <h1>Footprint  API Reference Guide</h1>
 <p><a href="index.html">Return to Help index</a></p>
 <h2>Introduction</h2>
-<p>The Footprint  application programming interface (API) allows client applications to retrieve and view the content of <a href="http://servicefootprint.appspot.com/http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint  API to request a list of volunteer opportunities using a number of parameters documented here.</p>
+<p>The Footprint  application programming interface (API) allows client applications to retrieve and view the content of <a href="http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint  API to request a list of volunteer opportunities using a number of parameters documented here.</p>
 <h2>Contents</h2>
 <p><a href="#Audience">Audience</a></p>
 <p><a href="#Access">Access</a></p>
@@ -17,14 +17,14 @@
 <p><a href="#Formats">Output formats</a></p>
 <p><a href="#Examples">Examples</a></p>
 <p><a href="#Elements">Elements</a></p>
-<p><a href="#Notes">Developer notes</a></p>
+<p><a href="#Notes">Developer notes and requests</a></p>
 <h2 id="Audience">Audience</h2>
 <p>This document is intended for programmers who want to write client applications that can interact with Footprint, an open source aggregator of volunteer opportunities. It provides reference documentation for using the Footprint  API.</p>
 <p>This document doesn't contain information about the programming-language client libraries. For client-library reference information, see related programming-language-specific guides.</p>
 <h2 id="Access">Access</h2>
 <p>The Footprint  API is available at:<br />
   <a href="http://servicefootprint.appspot.com/api/volopps">http://servicefootprint.appspot.com/api/volopps</a></p>
-<p>As a <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>-based API, Footprint provides all output over HTTP at distinct <a href="Uniform_Resource_Identifier">URIs</a>, which makes it easy to test applications with browsers and command-line web clients. Footprint contains listings of volunteer opportunities, which today are defined as events (offline or online), optionally containing locations and start-end times.</p>
+<p>As a <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>-based API, Footprint provides all output over HTTP at distinct <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URIs</a>, which makes it easy to test applications with browsers and command-line web clients. Footprint contains listings of volunteer opportunities, which today are defined as events (offline or online), optionally containing locations and start-end times.</p>
 <p>In their simplest form, listings have just a title, description and basic contact, time and location information.  In their fullest form, listings can contain dozens of detailed fields, as described in the <a href="#Elements">Elements</a> section and associated <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html">specification</a>. Because of the short lifespan of these posts, there is little point in storing results.</p>
 <h2 id="Parameters">Query parameters</h2>
 <p>Footprint uses <a href="http://code.google.com/apis/gdata/docs/2.0/reference.html#Queries">Google conventions on query parameters</a>, , e.g. q=... is used for keyword search, num= specifies the number of results and start= sets offset for pagination.</p>
@@ -68,7 +68,7 @@
       <td><code>q</code></td>
       <td>The keyword search string, which offers support for most Google features.</td>
       <td><p>Default value: none</p>
-      <p>Expected values: any string,  including quoted phrases (&quot;term&quot;) , and exclusions (-excluded_term)</p></td>
+      <p>Expected values: any string,  including quoted phrases (&quot;some terms&quot;) , and exclusions (-excluded_term)</p></td>
     </tr>
     <tr>
       <td><code>start</code></td>
@@ -78,7 +78,7 @@
     </tr>
     <tr>
       <td><code>vol_dist</code></td>
-      <td>Maximum distance from center point, in miles. <strong>Important</strong>: Requires vol_loc be set.</td>
+      <td>Maximum distance from center point, in miles. <strong>Important</strong>: Requires vol_loc to be set.</td>
       <td><p>Default value: null</p>
       <p>Expected value: any integer between 1 and 99</p></td>
     </tr>
@@ -132,13 +132,11 @@ connection = url.openConnection();
 connection.connect();
 InputStream stream = connection.getInputStream();</pre>
 <h2 id="Elements">Elements</h2>
-<p>Footprint stores one record per location, i.e. if an event has multiple locations, there's one record per location.  Likewise, for repeated events, we store one record per timerange. These elements are described in the Footprint XML specification for data received from providers here:<br />
+<p>Footprint stores one record per location, i.e. if an event has multiple locations, there's one record per location.  Likewise, for repeated events, we store one record per time range. These elements are described in the Footprint XML specification for data received from providers here:<br />
   <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd">http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd</a><br />
-<a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html">http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html</a></p>
-<p>TODO: Publish at least the above HTML file outside of the SVN source view to ease readibility, like so:<br />
-  <a href="Footprint_XML_spec.html">Footprint_XML_spec.html</a><br />
+<a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html">http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html</a><br />
 </p>
-<h2 id="Notes">Developer notes</h2>
+<h2 id="Notes">Developer notes and requests</h2>
 <ul>
   <li><em>maximum results</em> - As with most search engines, we have limits on the number of result records, both per query (999) and total (TBD). Please ask us if you need to download all results, and explain why.</li>
   <li><em>ranking / sorting</em> -  Record sorting ('ranking') is hardcoded right now, but it's pretty easy to add new sorting functions-- please ask us.</li>
@@ -146,12 +144,12 @@ InputStream stream = connection.getInputStream();</pre>
   <li><em>keyword queries on various fields</em> - q= queries all fields.  There's no way to restrict to fewer fields.</li>
   <li><em>skills field</em> - Due to the data from providers, the skills field is unstructured, i.e. can't run restriction-searches on it.  Sorry!</li>
   <li><em>repeated URL parameters</em> - If multiple URL parameters are provided, we take the last of them, e.g. &amp;cats=foo&amp;cats=bar is the same as &amp;cats=bar.</li>
-  <li><em>querying on the skills field </em>- Not supported beyond : keyword search only (providers only have longhand descriptions).</li>
+  <li><em>querying on the skills field </em>- Not supported beyond : keyword search only (providers  have only longhand descriptions).</li>
   <li><em>unknown URL parameters</em> - Unknown args result in an error-- HTTP 404 with custom error msg.</li>
   <li><em>bookmarking query URLs</em> - Yes, you may bookmark query URLs including emailing them, linking to them, etc. </li>
   <li><em>caching results</em> - Yes, you may cache results for at least 1 hour.  Please contact us if you want to cache for longer.</li>
-  <li><em>HTTP compressed output</em> - We can probably add this if you need-- please ask and explain why</li>
+  <li><em>HTTP compressed output</em> - We can probably add this if you need-- please ask and explain why.</li>
 </ul>
-<p><a href="index.html">Return to Help index</a>.</p>
+<p><a href="index.html">Return to Help index</a></p>
 </body>
 </html>
