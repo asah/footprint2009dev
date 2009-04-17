@@ -15,6 +15,7 @@
 <p><a href="#Access">Access</a></p>
 <p><a href="#Parameters">Query parameters</a></p>
 <p><a href="#Formats">Output formats</a></p>
+<p><a href="#Fields">Output fields</a></p>
 <p><a href="#Examples">Examples</a></p>
 <p><a href="#Elements">Elements</a></p>
 <p><a href="#Notes">Developer notes and requests</a></p>
@@ -109,6 +110,12 @@
   <li><em>HTML</em> - A  human-readable format that's currently dedicated to debugging. This is the default and will appear whenever you load the API without the output parameter and can be manually set with: <code>&amp;output=html</code></li>
 </ul>
 <p>In addition, many more output formats are planned, including XML (FPXML), xSV (comma, tab, etc. separated values) and more. Ask <a href="mailto:footprint-eng@googlegroups.com">us</a> and we'll quickly provide them. Return to this page or visit the <a href="http://code.google.com/p/footprint2009dev/">Footprint project site</a> for <a href="http://code.google.com/p/footprint2009dev/updates/list">updates</a>.</p>
+<h2 id="Fields">Output fields</h2>
+<p>Generally, the output fields correspond to the input fields found in FPXML (see the <a href="#Elements">Elements</a> section), with a few extra fields:</p>
+<ul>
+  <li><em>quality_score</em> - Internally, we score each record using heuristics to predict what will be popular with users, then use this for ranking.  This field contains that value, between 0.0 and 1.0</li>
+  <li><em>pageviews</em> - Whenever possible, trusted clients report to Footprint the number of pageviews from each listing.  This value is the total lifetime pageviews for this listing.</li>
+</ul>
 <h2 id="Examples">Examples</h2>
 <p>Here are some example queries made against the Footprint  API to help you see how the API works. We've appended <code>&amp;output=rss</code> to each query to get machine-readable output.</p>
 <p>Listings near San Francisco:<br />
