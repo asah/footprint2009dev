@@ -50,6 +50,7 @@ DEBUG = False
 PROGRESS = False
 PRINTHEAD = False
 ABRIDGED = False
+OUTPUTFMT = "fpxml"
 
 #BASE_PUB_URL = "http://change.gov/"
 BASE_PUB_URL = "http://adamsah.net/"
@@ -187,13 +188,22 @@ def output_field(name, value):
   """print a field value, handling long strings, header lines and custom datatypes."""
   #global PRINTHEAD, DEBUG
   if PRINTHEAD:
-    if (name not in FIELDTYPES):
+    if name not in FIELDTYPES:
       print datetime.now(), "no type for field: " + name + FIELDTYPES[name]
       sys.exit(1)
-    elif (FIELDTYPES[name] == "builtin"):
+    elif FIELDTYPES[name] == "builtin":
       return name
-    else:
+    elif OUTPUTFMT == "basetsv":
       return "c:"+name+":"+FIELDTYPES[name]
+    else:
+      return name+":"+FIELDTYPES[name]
+  if OUTPUTFMT == "basetsv":
+    # grr: Base tries to treat commas in custom fields as being lists ?!
+    # http://groups.google.com/group/base-help-basics/browse_thread/thread/
+    #   c4f51447191a6741
+    # TODO: note that this may cause fields to expand beyond their maxlen
+    # (e.g. abstract)
+    value = re.sub(r',', ';;', value)
   if DEBUG:
     if (len(value) > 70):
       value = value[0:67] + "... (" + str(len(value)) + " bytes)"
@@ -836,6 +846,7 @@ def clean_input_string(instr):
 def parse_options():
   """parse cmdline options"""
   global DEBUG, PROGRESS, GEOCODE_DEBUG, FIELDSEP, RECORDSEP, ABRIDGED
+  global OUTPUTFMT
   parser = OptionParser("usage: %prog [options] sample_data.xml ...")
   parser.set_defaults(geocode_debug=False)
   parser.set_defaults(debug=False)
@@ -882,6 +893,9 @@ def parse_options():
     options.progress = True
   if (options.progress):
     PROGRESS = True
+  if options.ftpinfo and not options.outputfmt:
+    options.outputfmt = "basetsv"
+  OUTPUTFMT = options.outputfmt
   return options, args
 
 def main():
@@ -966,15 +980,15 @@ def main():
     sys.exit(0)
 
   do_fastparse = not options.debug_input
-  if options.outputfmt == "fpxml":
+  if OUTPUTFMT == "fpxml":
     # TODO: pretty printing option
     print convert_to_footprint_xml(footprint_xmlstr, do_fastparse, int(options.maxrecs), PROGRESS)
     sys.exit(0)
 
-  if options.outputfmt == "basetsv" or options.ftpinfo:
+  if OUTPUTFMT == "basetsv":
     outstr = convert_to_gbase_events_type(footprint_xmlstr, do_fastparse, int(options.maxrecs), PROGRESS)
   #coming soon... footprint vertical for Base...
-  #elif options.outputfmt == "fpbasetsv":
+  #elif OUTPUTFMT == "fpbasetsv":
   #  outstr = convertToGoogleBaseVolunteerType(footprint_xmlstr, do_fastparse, int(options.maxrecs), PROGRESS)
   else:
     print datetime.now(), "--outputfmt not implemented: try 'basetsv', 'fpbasetsv' or 'fpxml'"
