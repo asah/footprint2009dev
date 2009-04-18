@@ -89,58 +89,58 @@ blockquote {
                   <div class="doc-text">The <a href="#Organization"><code>Organization</code></a> object represents any organization involved in the non-profit process (specifically volunteer hubs count as organizations). <a href="#Organization"><code>Organization</code></a> objects are wrapped in an <a href="#Organizations"><code>Organizations</code></a>. Order of fields does not matter.</div>                                                  <blockquote><div class="entry"><div class="entryName"><a name="organizationID">organizationID (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
-                        <div class="doc-text">Unique ID within the feed. Most likely a number (from a database primary key) but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.  No default. Would be helpful if it were constant across feeds from one provider.</div>                      </div><div class="entry"><div class="entryName"><a name="nationalEIN">nationalEIN (element)</a></div>
+                        <div class="doc-text">Unique ID within the feed. Most likely a number (from a database primary key) but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.  No default. Would be helpful if it were constant across feeds from one provider.                              <p>Examples:                              <br><code>                              &lt;organizationID&gt;57&lt;/providerID&gt;<br>                              &lt;organizationID&gt;genericvolorg.org&lt;/organizationID&gt;                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="nationalEIN">nationalEIN (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">National Employer Identification Number. Optional. No default.</div>                      </div><div class="entry"><div class="entryName"><a name="guidestarID">guidestarID (element)</a></div>
+                        <div class="doc-text">National Employer Identification Number. Optional. No default.                              <p>Example:                              <br><code>                              &lt;nationalEIN&gt;91-1914867&lt;/nationalEIN&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="guidestarID">guidestarID (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_numeric.asp"><code>integer</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">ID number from guidestar.org. Optional. No default. Cannot be blank.</div>                      </div><div class="entry"><div class="entryName"><a name="name">name (element)</a></div>
+                        <div class="doc-text">ID number from guidestar.org. Optional. No default. Cannot be blank.                              <p>Example:                              <br><code>                              &lt;guidestarID&gt;91&lt;/guidestarID&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="name">name (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
-                        <div class="doc-text">Name of the organization. Required.  No default.</div>                      </div><div class="entry"><div class="entryName"><a name="missionStatement">missionStatement (element)</a></div>
-<span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
-</span><br/>
- <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">Mission statement of organization. Optional.  No default.</div>                      </div><div class="entry"><div class="entryName"><a name="description">description (element)</a></div>
+                        <div class="doc-text">Name of the organization. Required.  No default.                              <p>Example:                              <br><code>                              &lt;name&gt;American Helpers United&lt;/name&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="missionStatement">missionStatement (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">Description of organization. Optional.  No default.</div>                      </div><div class="entry"><div class="entryName"><a name="location">location (element)</a></div>
+                        <div class="doc-text">Mission statement of organization. Optional.  No default.                              <p>Example:                              <br><code>                              &lt;missionStatement&gt;Change the world. Do good.&lt;/missionStatement&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="description">description (element)</a></div>
+<span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
+</span><br/>
+ <span class="info">required: optional.</span><br/>
+                        <div class="doc-text">Description of organization. Optional.  No default.                              <p>Example:                              <br><code>                              &lt;description&gt;Based in Faketown, VA, we help people change the world and do good things.&lt;/description&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="location">location (element)</a></div>
 <span class="info">datatype: <a href="#locationType"><code>locationType</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">Physical location of organization. See locationType for type definition. Optional, but recommended at the city/regional/postalCode level.  No default.</div>                      </div><div class="entry"><div class="entryName"><a name="phone">phone (element)</a></div>
+                        <div class="doc-text">Physical location of organization. See locationType for type definition. Optional, but recommended at the city/regional/postalCode level.  No default.                              <p>Example:                              <br><code>                              &lt;location&gt;<br>                               &nbsp;&lt;virtual&gt;no&lt;/virtual&gt;<br>                               &nbsp;&lt;streetAddress1&gt;45 W 3rd St&lt;/streetAddress1&gt;<br>                               &nbsp;&lt;city&gt;Faketown&lt;/city&gt;<br>                               &nbsp;&lt;region&gt;VA&lt;/region&gt;<br>                               &nbsp;&lt;postalCode&gt;22322&lt;/postalCode&gt;<br>                              &lt;/location&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="phone">phone (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">Phone number (and extension) of organization. Optional. No default. Not expected from most providers.</div>                      </div><div class="entry"><div class="entryName"><a name="fax">fax (element)</a></div>
+                        <div class="doc-text">Phone number (and extension) of organization. Optional. No default. Not expected from most providers.                              <p>Examples:                              <br><code>                              &lt;phone&gt;121-555-1212&lt;/phone&gt;<br>                              &lt;phone&gt;1215551212&lt;/phone&gt;<br>                              &lt;phone&gt;44 844 394 0 787&lt;/phone&gt;                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="fax">fax (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">Fax number of organization. Optional. No default. Not expected from most providers.</div>                      </div><div class="entry"><div class="entryName"><a name="email">email (element)</a></div>
+                        <div class="doc-text">Fax number of organization. Optional. No default. Not expected from most providers.                              <p>Examples:                              <br><code>                              &lt;fax&gt;121-555-1213&lt;/fax&gt;<br>                              &lt;fax&gt;1215551213&lt;/fax&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="email">email (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">Email of organization. Optional. No default. Not expected from most providers.</div>                      </div><div class="entry"><div class="entryName"><a name="organizationURL">organizationURL (element)</a></div>
+                        <div class="doc-text">Email of organization. Optional. No default. Not expected from most providers.                              <p>Example:                              <br><code>                              &lt;email&gt;contact@coolvols.org&lt;/email&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="organizationURL">organizationURL (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">URL of the organization's homepage. Optional. No default.</div>                      </div><div class="entry"><div class="entryName"><a name="donateURL">donateURL (element)</a></div>
+                        <div class="doc-text">URL of the organization's homepage. Optional. No default.                              <p>Example:                              <br><code>                              &lt;organizationURL&gt;http://www.coolvols.org&lt;/organizationURL&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="donateURL">donateURL (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">URL of the organization's donation page. Optional. No default.</div>                      </div><div class="entry"><div class="entryName"><a name="logoURL">logoURL (element)</a></div>
+                        <div class="doc-text">URL of the organization's donation page. Optional. No default.                              <p>Example:                              <br><code>                              &lt;donateURL&gt;http://www.coolvols.org/donate&lt;/donateURL&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="logoURL">logoURL (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">URL of the organization's logo. Optional.  No default. Dimensions are TBD.</div>                      </div><div class="entry"><div class="entryName"><a name="detailURL">detailURL (element)</a></div>
+                        <div class="doc-text">URL of the organization's logo. Optional.  No default. Dimensions are TBD.                              <p>Example:                              <br><code>                              &lt;logoURL&gt;http://www.coolvols.org/logo.gif&lt;/logoURL&gt;<br>                              </code></div>                      </div><div class="entry"><div class="entryName"><a name="detailURL">detailURL (element)</a></div>
 <span class="info">datatype: <a href="http://www.w3schools.com/Schema/schema_dtypes_string.asp"><code>string</code></a>
 </span><br/>
  <span class="info">required: optional.</span><br/>
-                        <div class="doc-text">URL of the organization's page on the providers site. Optional. No default. Highly recommended.</div>                      </div>
+                        <div class="doc-text">URL of the organization's page on the providers site. Optional. No default. Highly recommended.                              <p>Examples:                              <br><code>                              &lt;detailURL&gt;http://www.awesomevolaggergator.org/orgs.php?id=3&lt;/detailURL&gt;<br>                              &lt;detailURL&gt;http://www.anothervolaggergator.org/coolvols.html&lt;/detailURL&gt;<br>                              </code></div>                      </div>
                                           </blockquote>                                  </div>
                </blockquote>                      </div><div class="entry"><div class="entryName"><a name="VolunteerOpportunities">VolunteerOpportunities (element)</a></div>
 <span class="info">required: optional.</span><br/>
