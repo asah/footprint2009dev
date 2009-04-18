@@ -218,6 +218,8 @@ def query(query_url, args, cache):
   result_content = fetch_result.content
 
   parse_start = time.time()
+  # undo comma encoding -- see datahub/footprint_lib.py
+  result_content = re.sub(r';;', ',', result_content)
   dom = minidom.parseString(result_content)
   elems = dom.getElementsByTagName('entry')
   for i, entry in enumerate(elems):
