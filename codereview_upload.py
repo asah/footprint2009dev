@@ -1362,8 +1362,10 @@ def RealMain(argv, data=None):
       ErrorExit("Can't specify description and description_editor")
     if options.description_file:
       ErrorExit("Can't specify description_file and description_editor")
+    if EDITOR not in os.environ:
+      ErrorExit("Please set the EDITOR environment variable.")
     editor = os.environ['EDITOR']
-    if editor == None:
+    if editor == None or editor == "":
       ErrorExit("Please set the EDITOR environment variable.")
     tempfh, filename = tempfile.mkstemp()
     msg = "demo URL: http://your-url/foo/\ndescription: (start on next line)\n"
@@ -1446,10 +1448,15 @@ def main():
       email = sys.argv[1]
       if email.find("@") == -1:
         email += "@gmail.com"
-        print >>sys.stderr, "\n\nsending to "+email+"@gmail.com for review.",\
-            " (note: @gmail.com)\n\n"
+        print >>sys.stderr, "*** sending to "+email+"@gmail.com for review.",\
+            " (note: @gmail.com)"
       args.append(email)
       sys.argv = args + sys.argv[2:]
+      if "PYLINTRC" not in os.environ:
+        cwd = os.getcwd()
+        path_to_pylint = re.sub(r'footprint2009dev/.+$', 'footprint2009dev/pylintrc', cwd)
+        os.environ['PYLINTRC'] = path_to_pylint
+        print "guessing", path_to_pylint, "as PYLINTRC path"
     print " ".join(sys.argv)
     RealMain(sys.argv)
   except KeyboardInterrupt:
