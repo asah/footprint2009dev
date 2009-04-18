@@ -199,6 +199,11 @@
                           <xs:documentation>
                             <![CDATA[
                               Unique ID within the feed. Most likely a number (from a database primary key) but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.  No default. Would be helpful if it were constant across feeds from one provider.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;organizationID&gt;57&lt;/providerID&gt;<br>
+                              &lt;organizationID&gt;genericvolorg.org&lt;/organizationID&gt;
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -209,6 +214,10 @@
                           <xs:documentation>
                             <![CDATA[
                               National Employer Identification Number. Optional. No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;nationalEIN&gt;91-1914867&lt;/nationalEIN&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -219,6 +228,10 @@
                           <xs:documentation>
                             <![CDATA[
                               ID number from guidestar.org. Optional. No default. Cannot be blank.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;guidestarID&gt;91&lt;/guidestarID&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -229,6 +242,10 @@
                           <xs:documentation>
                             <![CDATA[
                               Name of the organization. Required.  No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;name&gt;American Helpers United&lt;/name&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -239,6 +256,10 @@
                           <xs:documentation>
                             <![CDATA[
                               Mission statement of organization. Optional.  No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;missionStatement&gt;Change the world. Do good.&lt;/missionStatement&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -249,6 +270,10 @@
                           <xs:documentation>
                             <![CDATA[
                               Description of organization. Optional.  No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;description&gt;Based in Faketown, VA, we help people change the world and do good things.&lt;/description&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -259,6 +284,16 @@
                           <xs:documentation>
                             <![CDATA[
                               Physical location of organization. See locationType for type definition. Optional, but recommended at the city/regional/postalCode level.  No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;location&gt;<br>
+                               &nbsp;&lt;virtual&gt;no&lt;/virtual&gt;<br>
+                               &nbsp;&lt;streetAddress1&gt;45 W 3rd St&lt;/streetAddress1&gt;<br>
+                               &nbsp;&lt;city&gt;Faketown&lt;/city&gt;<br>
+                               &nbsp;&lt;region&gt;VA&lt;/region&gt;<br>
+                               &nbsp;&lt;postalCode&gt;22322&lt;/postalCode&gt;<br>
+                              &lt;/location&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -269,6 +304,12 @@
                           <xs:documentation>
                             <![CDATA[
                               Phone number (and extension) of organization. Optional. No default. Not expected from most providers.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;phone&gt;121-555-1212&lt;/phone&gt;<br>
+                              &lt;phone&gt;1215551212&lt;/phone&gt;<br>
+                              &lt;phone&gt;44 844 394 0 787&lt;/phone&gt;
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -279,6 +320,11 @@
                           <xs:documentation>
                             <![CDATA[
                               Fax number of organization. Optional. No default. Not expected from most providers.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;fax&gt;121-555-1213&lt;/fax&gt;<br>
+                              &lt;fax&gt;1215551213&lt;/fax&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -289,6 +335,10 @@
                           <xs:documentation>
                             <![CDATA[
                               Email of organization. Optional. No default. Not expected from most providers.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;email&gt;contact@coolvols.org&lt;/email&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -299,6 +349,10 @@
                           <xs:documentation>
                             <![CDATA[
                               URL of the organization's homepage. Optional. No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;organizationURL&gt;http://www.coolvols.org&lt;/organizationURL&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -309,6 +363,10 @@
                           <xs:documentation>
                             <![CDATA[
                               URL of the organization's donation page. Optional. No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;donateURL&gt;http://www.coolvols.org/donate&lt;/donateURL&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -319,6 +377,10 @@
                           <xs:documentation>
                             <![CDATA[
                               URL of the organization's logo. Optional.  No default. Dimensions are TBD.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;logoURL&gt;http://www.coolvols.org/logo.gif&lt;/logoURL&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -329,6 +391,11 @@
                           <xs:documentation>
                             <![CDATA[
                               URL of the organization's page on the providers site. Optional. No default. Highly recommended.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;detailURL&gt;http://www.awesomevolaggergator.org/orgs.php?id=3&lt;/detailURL&gt;<br>
+                              &lt;detailURL&gt;http://www.anothervolaggergator.org/coolvols.html&lt;/detailURL&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
