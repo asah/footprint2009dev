@@ -1362,7 +1362,7 @@ def RealMain(argv, data=None):
       ErrorExit("Can't specify description and description_editor")
     if options.description_file:
       ErrorExit("Can't specify description_file and description_editor")
-    if EDITOR not in os.environ:
+    if 'EDITOR' not in os.environ:
       ErrorExit("Please set the EDITOR environment variable.")
     editor = os.environ['EDITOR']
     if editor == None or editor == "":
