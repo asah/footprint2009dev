@@ -12422,3 +12422,20 @@ baton rouge la 70808|30.4192451,-91.1448981
 brookside al 35036|33.6378496,-86.9098159
 rutland ma 01543|42.3670180,-71.9460990
 las vegas nv 89123|36.0357492,-115.1533426
+rutledge winder, georgia, 30663/30680, united states|33.9775520,-83.7664170
+gulu kitgum, 20009, uganda|3.0827515,32.8441429
+managua puerto cabezas, nicaragua|
+marianitas nanegal, pichincha, ecuador|
+palm beach broward counties, florida, 33486, united states|
+everett other cities, massachusetts, 02149, united states|
+various in se asia l. amer., various, 01775, virtual (global|
+auburn orting, washington, united states|
+alameda contra costa county, california, united states|37.8723970,-122.2662300
+accra rural areas, ghana, ghana|
+scotland northern ireland, united kingdom|58.9676304,-3.2115202
+accra, akatsi hohoe, greater accra, ghana|
+davidson co. surrounding, tennessee, united states|
+cuzco elsewhere, cuzco province, peru|
+bemidji park rapids, minnesota, 56619, united states|
+phoenix manlius, new york, 13135 13104, united states|
+fremont richmond, california, united states|37.5431750,-121.9991160
