@@ -115,8 +115,9 @@ class SearchResultSet(object):
   def clip_merged_results(self, start, num):
     """Extract just the slice of merged results from start to start+num.
     No need for bounds-checking -- python list slicing does that
-    automatically."""
-    self.clipped_results = self.merged_results[start:start+num]
+    automatically.  Indexed from 1."""
+    logging.info("clip_merged_results: "+str(start)+" "+str(num))
+    self.clipped_results = self.merged_results[start-1:start-1+num]
 
   def track_views(self):
     """increment impression counts for items in the set."""

@@ -93,6 +93,21 @@ def get_tag_val(entity, tag):
   outstr = re.sub(r'\n', r'\\n', outstr)
   return outstr
 
+def set_default_value(doc, entity, tagname, default_value):
+  """add the element if not already present in the DOM tree."""
+  nodes = entity.getElementsByTagName(tagname)
+  if len(nodes) == 0:
+    newnode = doc.createElement(tagname)
+    newnode.appendChild(doc.createTextNode(str(default_value)))
+    entity.appendChild(newnode)
+    return newnode
+  return nodes[0]
+
+def set_default_attr(doc, entity, attrname, default_value):
+  """create and set the attribute if not already set."""
+  if entity.getAttributeNode(attrname) == None:
+    entity.setAttribute(attrname, default_value)
+
 def validate_xml(xmldoc, known_elnames):
   """a simple XML validator, given known tagnames."""
   for node in xmldoc.childNodes:
@@ -104,7 +119,7 @@ def validate_xml(xmldoc, known_elnames):
     validate_xml(node, known_elnames)
 
 def simple_parser(instr, known_elnames_list, progress):
-  """a simple wrapper for parsing XML which attempts to hanle errors."""
+  """a simple wrapper for parsing XML which attempts to handle errors."""
   try:
     if known_elnames_list:
       known_elnames_dict = {}
@@ -158,7 +173,18 @@ def output_plural_node(name, node, nodename):
   return "<" + name + "s>" + output_node(name, node, nodename) + \
       "</" + name + "s>"
   
-def current_ts():
-  """Return a formatted time string for the current time, e.g.
+def current_ts(delta_secs=0):
+  """Return a formatted datetime string for the current time, e.g.
   2008-12-30T14:30:10.5"""
-  return time.strftime("%Y-%m-%dT%H:%M:%S")
+  return time.strftime("%Y-%m-%dT%H:%M:%S",
+                       time.gmtime(time.mktime(time.gmtime()) + delta_secs))
+
+def current_time(delta_secs=0):
+  """Return a formatted time string for the current time, e.g. 14:30:10.5"""
+  return time.strftime("%H:%M:%S",
+                       time.gmtime(time.mktime(time.gmtime()) + delta_secs))
+
+def current_date(delta_secs=0):
+  """Return a formatted date string for the current time, e.g. 2008-12-30"""
+  return time.strftime("%Y-%m-%d",
+                       time.gmtime(time.mktime(time.gmtime()) + delta_secs))

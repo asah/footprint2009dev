@@ -128,12 +128,24 @@ def fetch_result_set(args):
     else:
       res = geocode.geocode(args[api.PARAM_VOL_LOC])
     if res != "":
-      args["lat"], args["long"] = res.split(",")
+      args["lat"], args["long"], zoom = res.split(",")
       # don't break on spurious whitespace
       args["lat"] = args["lat"].strip()
       args["long"] = args["long"].strip()
     if api.PARAM_VOL_DIST not in args:
-      args[api.PARAM_VOL_DIST] = 25
+      zoom = int(zoom)
+      if zoom == 1: # country
+        args[api.PARAM_VOL_DIST] = 500
+      elif zoom == 2: # region
+        args[api.PARAM_VOL_DIST] = 300
+      elif zoom == 3: # county
+        args[api.PARAM_VOL_DIST] = 100
+      elif zoom == 4 or zoom == 0: # city/town
+        args[api.PARAM_VOL_DIST] = 50
+      elif zoom == 5: # postal code
+        args[api.PARAM_VOL_DIST] = 25
+      elif zoom > 5: # street or level
+        args[api.PARAM_VOL_DIST] = 10
   else:
     args[api.PARAM_VOL_LOC] = args[api.PARAM_VOL_DIST] = ""
 
