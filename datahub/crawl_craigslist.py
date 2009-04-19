@@ -37,7 +37,7 @@ crawlers_lock = thread.allocate_lock()
 cachefile_lock = thread.allocate_lock()
 
 # set to a lower number if you have problems
-MAX_CRAWLERS = 20
+MAX_CRAWLERS = 40
 
 def read_metros():
   global metros

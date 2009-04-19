@@ -15,9 +15,15 @@
 """
 parser for footprint itself (identity parse)
 """
-import xml_helpers
+import xml_helpers as xmlh
 from datetime import datetime
 import re
+
+# 90 days
+DEFAULT_EXPIRATION = (90 * 86400)
+
+# 10 years
+DEFAULT_DURATION = (10 * 365 * 86400)
 
 KNOWN_ELNAMES = [
   'FeedInfo', 'FootprintFeed', 'Organization', 'Organizations',
@@ -39,6 +45,11 @@ KNOWN_ELNAMES = [
   'volunteersNeeded', 'yesNoEnum'
   ]
 
+def set_default_time_elem(doc, entity, tagname, timest=xmlh.current_ts()):
+  """footprint macro."""
+  cdt = xmlh.set_default_value(doc, entity, tagname, timest)
+  xmlh.set_default_attr(doc, cdt, "olsonTZ", "America/Los_Angeles")
+
 def parse_fast(instr, maxrecs, progress):
   """fast parser but doesn't check correctness,
   i.e. must be pre-checked by caller."""
@@ -46,23 +57,48 @@ def parse_fast(instr, maxrecs, progress):
   outstr = '<?xml version="1.0" ?>'
   outstr += '<FootprintFeed schemaVersion="0.1">'
   # note: preserves order, so diff works (vs. one sweep per element type)
-  chunks = re.findall(r'<(?:Organizations|VolunteerOpportunities|FeedInfo)>.+?</(?:Organizations|VolunteerOpportunities|FeedInfo)>', instr, re.DOTALL)
+  chunks = re.findall(
+    re.compile('<(?:Organizations|VolunteerOpportunities|FeedInfo)>.+?'+\
+                 '</(?:Organizations|VolunteerOpportunities|FeedInfo)>',
+               re.DOTALL), instr)
   for chunk in chunks:
-    subchunks = re.findall(
-      r'<(?:VolunteerOpportunity)>.+?</(?:VolunteerOpportunity)>',
-      chunk, re.DOTALL)
-    totrecs += len(subchunks)
-      
-    #if re.search("<VolunteerOpportunity>", chunk):
-      #totrecs = totrecs + 1
-      
-    if (maxrecs > 0 and totrecs > maxrecs):
-      break
-    if progress and totrecs % 250 == 0:
-      print datetime.now(), ": ", totrecs, " records generated."
-      
-    node = xml_helpers.simple_parser(chunk, KNOWN_ELNAMES, False)
-    outstr += xml_helpers.prettyxml(node, True)
+    node = xmlh.simple_parser(chunk, KNOWN_ELNAMES, False)
+    if node.firstChild.nodeName == "FeedInfo":
+      xmlh.set_default_value(node, node.firstChild, "feedID", "0")
+      set_default_time_elem(node, node.firstChild, "createdDateTime")
+    if node.firstChild.nodeName == "VolunteerOpportunities":
+      totrecs += len(node.firstChild.childNodes)
+      if (maxrecs > 0 and totrecs > maxrecs):
+        break
+      if progress and totrecs % 250 == 0:
+        print datetime.now(), ": ", totrecs, " records generated."
+      for opp in node.firstChild.childNodes:
+        if opp.nodeType == node.ELEMENT_NODE:
+          xmlh.set_default_value(node, opp, "volunteersNeeded", -8888)
+          xmlh.set_default_value(node, opp, "paid", "No")
+          xmlh.set_default_value(node, opp, "sexRestrictedTo", "Neither")
+          xmlh.set_default_value(node, opp, "language", "English")
+          set_default_time_elem(node, opp, "lastUpdated")
+          set_default_time_elem(node, opp, "expires", 
+                                xmlh.current_ts(DEFAULT_EXPIRATION))
+          for loc in opp.getElementsByTagName("location"):
+            xmlh.set_default_value(node, loc, "virtual", "No")
+            xmlh.set_default_value(node, loc, "country", "US")
+          for dttm in opp.getElementsByTagName("dateTimeDurations"):
+            xmlh.set_default_value(node, dttm, "openEnded", "No")
+            xmlh.set_default_value(node, dttm, "iCalRecurrence", "")
+            if (dttm.getElementsByTagName("startTime") == None and
+                dttm.getElementsByTagName("endTime") == None):
+              set_default_time_elem(node, dttm, "timeFlexible", "Yes")
+            else:
+              set_default_time_elem(node, dttm, "timeFlexible", "No")
+            xmlh.set_default_value(node, dttm, "openEnded", "No")
+          time_elems = opp.getElementsByTagName("startTime")
+          time_elems += opp.getElementsByTagName("endTime")
+          for el in time_elems:
+            xmlh.set_default_attr(node, el, "olsonTZ", "America/Los_Angeles")
+            
+    outstr += xmlh.prettyxml(node, True)
   outstr += '</FootprintFeed>'
   if progress:
     print datetime.now(), totrecs, "opportunities found."
@@ -75,7 +111,7 @@ def parse(instr, maxrecs, progress):
   # TODO: progress
   if progress:
     print datetime.now(), "parse_footprint: parsing ", len(instr), " bytes."
-  xmldoc = xml_helpers.simple_parser(instr, KNOWN_ELNAMES, progress)
+  xmldoc = xmlh.simple_parser(instr, KNOWN_ELNAMES, progress)
   if progress:
     print datetime.now(), "parse_footprint: done parsing."
   return xmldoc
