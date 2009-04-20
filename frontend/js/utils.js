@@ -159,15 +159,21 @@ function GetHashParams() {
 
 /** Retrieve a parameter from the URL hashstring or querystring.
  * Hashstring takes precedence.
+ * Note: this function uses cached results, invoke GetHashParams and
+ * GetQueryParams to refresh the caches.
+ *
  * @param {string} paramName Parameter name
+ * @param {string} opt_defaultValue Default value returned by this function if
+ *     the parameter does not exist. If left unspecified, the function returns
+ *     {@code null}.
  */
-function getHashOrQueryParam(paramName) {
+function getHashOrQueryParam(paramName, opt_defaultValue) {
   if (hashParams[paramName]) {
     return hashParams[paramName];
   } else if (queryParams[paramName]) {
     return queryParams[paramName];
   }
-  return null;
+  return opt_defaultValue || null;
 }
 
 /** Count number of elements inside a JS object */

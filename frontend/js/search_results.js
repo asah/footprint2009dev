@@ -13,10 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var isMapsApiInited = false;
 var map;
 var calendar;
-var clientLocationString;
 var NUM_PER_PAGE = 10;
 var lastSearchQuery;
 
@@ -59,27 +57,34 @@ function initCalendar() {
 }
 asyncLoadManager.addCallback('bodyload', initCalendar);
 
-function mapApiLoadComplete() {
-  map = new SimpleMap(el('map'));
-}
 
 /** Get the IP geolocation given by the Common Ajax Loader.
+ * Note: this function caches its own result.
+ * @return {string} the current geolocation of the client, if it is known,
+ *     otherwise an empty string.
  */
-function readClientLocation() {
-  try {
-    lat = google.loader.ClientLocation.latitude;
-    lon = google.loader.ClientLocation.longitude;
-    if (lat > 0) {
-      lat = '+' + lat;
+getClientLocation = function() {
+  var clientLocationString;
+  return function() {
+    if (clientLocationString === undefined) {
+      try {
+        lat = google.loader.ClientLocation.latitude;
+        lon = google.loader.ClientLocation.longitude;
+        if (lat > 0) {
+          lat = '+' + lat;
+        }
+        if (lon > 0) {
+          lon = '+' + lon;
+        }
+        clientLocationString = lat + lon;
+      } catch (err) {
+        clientLocationString = '';
+      }
     }
-    if (lon > 0) {
-      lon = '+' + lon;
-    }
-    clientLocationString = lat + lon;
-  } catch (err) {
-    clientLocationString = '';
-  }
-}
+    return clientLocationString;
+  };
+}(); // executed inline to close over the 'clientLocationString' variable.
+
 
 /** Query params for backend search, based on frontend parameters.
  *
@@ -93,28 +98,27 @@ function readClientLocation() {
  */
 function Query(keywords, location, pageNum, dateRange) {
   var me = this;
-
   me.keywords_ = keywords;
   me.location_ = location;
   me.pageNum_ = pageNum;
   me.dateRange_ = dateRange;
-}
+};
 
 Query.prototype.setPageNum = function(pageNum) {
   this.pageNum_ = pageNum;
-}
+};
 
 Query.prototype.getPageNum = function() {
   return this.pageNum_;
-}
+};
 
 Query.prototype.getKeywords = function() {
   return this.keywords_;
-}
+};
 
 Query.prototype.getLocation = function() {
   return this.location_;
-}
+};
 
 Query.prototype.getUrlQuery = function() {
   var me = this;
@@ -144,98 +148,120 @@ Query.prototype.getUrlQuery = function() {
                   vol.Calendar.dateAsString(me.dateRange_[1]));
   }
   return urlQuery;
+};
+
+function QueryFromUrlParams() {
+  var keywords = getHashOrQueryParam('q', '');
+
+  var location = getHashOrQueryParam('vol_loc', getClientLocation());
+
+  var start = Number(getHashOrQueryParam('start', '0'));
+  start = Math.max(start, 0);
+
+  var numPerPage = Number(getHashOrQueryParam('num', NUM_PER_PAGE));
+  numPerPage = Math.max(numPerPage, 1);
+
+  var pageNum = start / numPerPage;
+
+  var startDate = getHashOrQueryParam('vol_startdate');
+  if (startDate) {
+    startDate = vol.Calendar.dateFromString(startDate);
+  } else {
+    var today = new Date();
+    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  }
+
+  var endDate = getHashOrQueryParam('vol_enddate');
+  if (endDate) {
+    endDate = vol.Calendar.dateFromString(endDate);
+  } else {
+    var today = new Date();
+    endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  }
+
+  return new Query(keywords, location, pageNum, [startDate, endDate]);
 }
 
 
 /** Perform a search using the current URL parameters and IP geolocation.
  */
 function onLoadSearch() {
-  readClientLocation();
-
-  var q = getHashOrQueryParam('q');
-  var location = getHashOrQueryParam('vol_loc');
-  if (!location || !location.length) {
-    // Not vol_loc param, so use IP geolocation (which defaults to '').
-    location = clientLocationString;
-  }
-
-  var query = new Query(q, location, 0, calendar.getDateRange());
-  doInlineSearch(query, true);
+  executeSearch(QueryFromUrlParams());
+  executeSearchFromHashParams();
+  $(window).hashchange(executeSearchFromHashParams);
 }
 asyncLoadManager.addCallback('bodyload', onLoadSearch);
 
-/** Perform an inline search, meaning avoid round trip html fetch.
+/** Updates the location.hash with the given query.
  * @param {Query} query Query parameters.
- * @param {bool} updateMap Move the map to the new location?
  */
-function doInlineSearch(query, updateMap) {
-  el('keywords').value = query.getKeywords();
-
-  el('no_results_message').style.display = 'none';
-  el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
-
-  /* UI snippets URL.  We don't use '/api/search?' because the UI output
-     contains application-specific formatting and inline JS, and has
-     user-specific info. */
-  var url = '/ui_snippets?';
-
-  lastSearchQuery = query;
-
+function executeSearch(query) {
   var urlQueryString = query.getUrlQuery();
-
-  var callback = function(text) {
-    if (updateMap) {
-      asyncLoadManager.addCallback('map', function() {
-        map.setCenterGeocode(query.getLocation());
-      });
-    }
-    el('snippets_pane').innerHTML = text;
-
-    // Set the URL hash, but only if the query string is not empty.
-    // Setting hash to an empty string causes a page reload.
-    if (urlQueryString.length > 0) {
-      window.location.hash = urlQueryString;
-    }
-
-    // Inline scripts inside the html won't be invoked
-    // when .innerHTML is set.  Here we iterate through each inline
-    // <script> node and execute it directly (by creating a new
-    // script node and replacing the old one).
-    var scripts = el('snippets_pane').getElementsByTagName('script');
-    forEach (scripts, function(script, index) {
-        if (index >= 30) {
-          // TODO: remove this once we retrieve geocoded search results, and
-          // the too-many-search-results bug is fixed.
-
-          // Force rendering of the calendar, since the last <script> won't be
-          // executed.
-          calendar.render();
-          return;
-        }
-        var newScript = document.createElement('script');
-        var scriptText = script.innerHTML;
-        if (newScript.text) {
-          newScript.text = scriptText;
-          script.parentNode.replaceChild(newScript, script);
-        } else {
-          var textNode = document.createTextNode(scriptText);
-          newScript.appendChild(textNode);
-          script.parentNode.replaceChild(newScript, script);
-        }
-    });
+  // Set the URL hash, but only if the query string is not empty.
+  // Setting hash to an empty string causes a page reload.
+  if (urlQueryString.length > 0 && urlQueryString != window.location.hash) {
+    window.location.hash = urlQueryString;
   }
-
-  var xmlHttp = window.ActiveXObject ?
-      window.ActiveXObject('Microsoft.XMLHTTP') :
-      new XMLHttpRequest();
-  xmlHttp.open('GET', url + urlQueryString, true);
-  xmlHttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      callback(this.responseText);
-    }
-  };
-  xmlHttp.send(null);
 }
+
+
+/** Asynchronously execute a search based on the current parameters.
+ */
+executeSearchFromHashParams = function() {
+  /** The XMLHttpRequest of the current search, kept so it can be cancelled.
+   * @type {XMLHttpRequest}
+   */
+  var currentXhr;
+
+  return function() {
+    // abort any currently running query
+    if (currentXhr) {
+      currentXhr.abort();
+    }
+
+    // reset hash params cache since we have a new hash.
+    // (no need to refresh GET param cache.)
+    hashParams = GetHashParams();
+
+    var query = QueryFromUrlParams();
+    el('keywords').value = query.getKeywords();
+    el('location').value = query.getLocation();
+    el('no_results_message').style.display = 'none';
+    el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
+    calendar.clearMarks();
+    calendar.render();
+
+    // TODO: eliminate the need for lastSearchQuery to be global
+    lastSearchQuery = query;
+
+    var success = function(text, status) {
+      if (false) { // TODO: only updateMap if necessary
+        asyncLoadManager.addCallback('map', function() {
+          map.setCenterGeocode(query.getLocation());
+        });
+      }
+      jQuery('#snippets_pane').html(text);
+    };
+    
+    var error = function (XMLHttpRequest, textStatus, errorThrown) {
+      // TODO: handle error
+    };
+
+    /* UI snippets URL.  We don't use '/api/search?' because the UI output
+       contains application-specific formatting and inline JS, and has
+       user-specific info. */
+    var url = '/ui_snippets?';
+
+    currentXhr = jQuery.ajax({
+      url: url + query.getUrlQuery(),
+      async: true,
+      dataType: 'html',
+      error: error,
+      success: success
+    });
+  };
+}(); // executed inline to close over the 'currentXhr' variable.
+
 
 /** Called from the "Refine" button's onclick, and the main form onsubmit.
  *
@@ -249,14 +275,12 @@ function submitForm(fromWhere) {
   // TODO: strip leading/trailing whitespace.
 
   if (location == '') {
-    location = clientLocationString;
+    location = getClientLocation();
   }
 
   var updateMap = (fromWhere == "map");
-  calendar.clearMarks();
-  calendar.render();
   var query = new Query(keywords, location, 0, calendar.getDateRange());
-  doInlineSearch(query, updateMap);
+  executeSearch(query);
 }
 
 
@@ -299,7 +323,7 @@ function goToPage(pageNum) {
   if (lastSearchQuery) {
     // Change page number, and re-do the last search.
     lastSearchQuery.setPageNum(pageNum);
-    doInlineSearch(lastSearchQuery, false);
+    executeSearch(lastSearchQuery);
   }
 }
 
@@ -341,22 +365,29 @@ function renderPaginator(div, totalNum) {
   div.innerHTML = html.join('');
 }
 
-function initMap() {
-  if (!isMapsApiInited) {
-    google.load('maps', '2',
-        { 'callback' : function() {
-            // Maps API is now loaded.  First initialize
-            // the map object, then execute any
-            // map-dependent functions that are queued up.
-            mapApiLoadComplete();
-            asyncLoadManager.doneLoading('map');
-         }});
-    isMapsApiInited = true;
-  }
-}
 
-/**
- * A single search result.
+/** Loads the Maps API asynchronously and notifies the asynchronous load
+ * manager on completion.
+ */
+initMap = function() {
+  var initialized = false;
+  return function() {
+    if (!initialized) {
+      google.load('maps', '2',
+          { 'callback' : function() {
+              // Maps API is now loaded.  First initialize
+              // the map object, then execute any
+              // map-dependent functions that are queued up.
+              map = new SimpleMap(el('map'));
+              asyncLoadManager.doneLoading('map');
+           }});
+      initialized = true;
+    }
+  };
+}(); // executed inline to close over the 'initialized' variable.
+
+
+/** A single search result.
  * @constructor
  * @param {string} url a url.
  * @param {string} title a title.
