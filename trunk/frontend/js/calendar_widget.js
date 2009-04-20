@@ -253,3 +253,17 @@ vol.Calendar.dateAsString = function(date) {
   buffer.push(day);
   return buffer.join('');
 };
+
+
+/**
+ * Converts a 'yyyy-mm-dd' formatted string to a date.
+ * @param {string} str the string to convert.
+ * @return {Date|null} the date, or null if the string cannot be converted.
+ */
+vol.Calendar.dateFromString = function(str) {
+  var matches = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str);
+  return !matches ? null : new Date(
+      Number(matches[1]),
+      Number(matches[2]) - 1, // month is 0 based.
+      Number(matches[3]));
+};
