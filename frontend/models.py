@@ -15,26 +15,17 @@
 
 """Datastore models."""
 
-import datetime
-import logging
-
 from google.appengine.api import memcache
 from google.appengine.ext import db
 
 import modelutils
 
-class Error(Exception): pass
-class BadAccountType(Error): pass
-
-
-# Constants
-
-class InterestTypeProperty(db.IntegerProperty):
-  """Describes the level of interest a user has in an opportunity."""
-  UNKNOWN = 0
-  INTERESTED = 1
-  WILL_ATTEND = 2
-  HAVE_ATTENDED = 3
+class Error(Exception):
+  """Generic error."""
+  pass
+class BadAccountType(Error):
+  """Account type is unknown (not facebook, friendconnect, or test)."""
+  pass
 
 
 # Models
@@ -50,10 +41,12 @@ class UserInfo(db.Model):
   moderator_request_admin_notes = db.StringProperty(multiline=True)
 
   def account_type(self):
+    """Returns one of (FRIENDCONNECT, FACEBOOK, TEST)."""
     key_name = self.key().name()
     return key_name.split(':', 1)[0]
 
   def user_id(self):
+    """User id."""
     key_name = self.key().name()
     return key_name.split(':', 1)[1]
 
@@ -87,6 +80,7 @@ class UserInfo(db.Model):
     user_info = cls.get_by_key_name(key_name)
 
     def txn():
+      """Transaction to get or insert user."""
       entity = cls.get_by_key_name(key_name)
       created_entity = False
       if entity is None:
@@ -98,7 +92,7 @@ class UserInfo(db.Model):
     (user_info, created_entity) = db.run_in_transaction(txn)
 
     if created_entity:
-      UserStats.Increment(account_type, user_id)
+      UserStats.increment(account_type, user_id)
 
     return user_info
 
@@ -108,10 +102,10 @@ class UserStats(db.Model):
   count = db.IntegerProperty(default=0)
 
   @classmethod
-  def Increment(cls, account_type, user_id):
+  def increment(cls, account_type, user_id):
     """Sharded counter. User ID is only for sharding."""
-
     def txn():
+      """Transaction to increment account_type's stats."""
       # We want << 1000 shards.
       # This cheesy shard mechanism allows us some amount of way to see how
       # many users of each type we have too.
@@ -126,6 +120,7 @@ class UserStats(db.Model):
 
   @staticmethod
   def get_count():
+    """Returns total number of users."""
     total = 0
     for counter in UserStats.all():
       total += counter.count
@@ -134,12 +129,24 @@ class UserStats(db.Model):
 
 class UserInterest(db.Model):
   """Our record a user's actions related to an opportunity."""
-  # Key is 'id:' + the stable ID from base; it is probabaly not the same ID
-  # provided in the feed from providers.
+  # Key is ('id:%s#%s' % (the stable ID from base, user key name))
+  # stable ID is probabaly not the same ID provided in the feed from providers.
   DATASTORE_PREFIX = 'id:'
   user = db.ReferenceProperty(UserInfo, collection_name='interests')
+  opp_id = db.StringProperty()
   broadcast_on = db.DateTimeProperty()
-  expressed_interest = InterestTypeProperty()
+
+  # The interest types (liked, will_attend, etc) must exist with the
+  # same property names in UserInterest and VolunteerOpportunityStats,
+  # and be in sync with USER_INTEREST_ATTRIBUTES at the end of this file.
+  liked = db.IntegerProperty(default=0)
+  will_attend = db.IntegerProperty(default=0)
+  flagged = db.IntegerProperty(default=0)
+
+  @classmethod
+  def make_key_name(cls, user_entity, opp_id):
+    """Generate key name for a given user_entity/opp_id pair."""
+    return '%s:%s#%s' % (cls.DATASTORE_PREFIX, opp_id, user_entity.key().name())
 
 
 class VolunteerOpportunityStats(db.Model):
@@ -150,36 +157,44 @@ class VolunteerOpportunityStats(db.Model):
   MEMCACHE_TIME = 60000  # seconds
   last_edit = db.DateTimeProperty(auto_now=True)
 
-  # Statistics about expressed interest:
-  broadcast_count = db.IntegerProperty(default=0)
-  interested_count = db.IntegerProperty(default=0)
-  will_attend_count = db.IntegerProperty(default=0)
-  have_attended_count = db.IntegerProperty(default=0)
+  # The interest types (liked, will_attend, etc) must exist with the
+  # same property names in UserInterest and VolunteerOpportunityStats,
+  # and be in sync with USER_INTEREST_ATTRIBUTES at the end of this file.
+  liked = db.IntegerProperty(default=0)
+  will_attend = db.IntegerProperty(default=0)
+  flagged = db.IntegerProperty(default=0)
 
   @classmethod
-  def increment(cls, volunteer_opportunity_id, **kwargs):
+  def increment(cls, volunteer_opportunity_id, relative_attributes):
     """Helper to increment volunteer opportunity stats.
 
     Example:
-    models.VolunteerOpportunity.increment(opp_id, interested_count=1)
+      VolunteerOpportunityStats.increment(opp_id,
+        { USER_INTEREST_LIKED: 1, USER_INTEREST_WILL_ATTEND: 1 })
 
     Args:
       volunteer_opportunity_id: ID of opportunity.
-      kwargs: Named properties to increment, and the delta to increment by.
+      relative_attributes: Dictionary of attr_name:value pairs to set as
+          relative to current value.
+    Returns:
+      Success boolean
     """
-    props_to_set = {}
-    result = modelutils.IncrementProperties(cls,
-        cls.DATASTORE_PREFIX + volunteer_opportunity_id,
-        None,
-        **kwargs)
-    memcache.set(cls.MEMCACHE_PREFIX + volunteer_opportunity_id, result,
+    entity = VolunteerOpportunityStats.get_or_insert(
+        cls.DATASTORE_PREFIX + volunteer_opportunity_id)
+    if not entity:
+      return False
+
+    (new_entity, unused_deltas) = \
+        modelutils.set_entity_attributes(entity, None, relative_attributes)
+    memcache.set(cls.MEMCACHE_PREFIX + volunteer_opportunity_id, new_entity,
                  time=cls.MEMCACHE_TIME)
-    return result
+    return True
+
 
 class VolunteerOpportunity(db.Model):
   """Basic information about opportunities.
 
-  Separate from VolunteerOpportunity because these entries need not be
+  Separate from VolunteerOpportunityStats because these entries need not be
   operated on transactionally since there's no counts.
   """
   # The __key__ is 'id:' + volunteer_opportunity_id
@@ -196,3 +211,16 @@ class VolunteerOpportunity(db.Model):
   # to load the data from base but fail. Also the last date/time seen.
   base_url_failure_count = db.IntegerProperty(default=0)
   last_base_url_update_failure = db.DateTimeProperty()
+
+
+# TODO(paul): added_to_calendar, added_to_facebook_profile, etc
+
+USER_INTEREST_LIKED = 'liked'
+USER_INTEREST_WILL_ATTEND = 'will_attend'
+USER_INTEREST_FLAGGED = 'flagged'
+
+USER_INTEREST_ATTRIBUTES = (
+  USER_INTEREST_LIKED,
+  USER_INTEREST_WILL_ATTEND,
+  USER_INTEREST_FLAGGED,
+)
