@@ -777,6 +777,8 @@ def ftp_to_base(filename, ftpinfo, instr):
     dest_fn = "handsonnetwork1.gz"
   elif re.search("(volunteer[.]gov)", filename):
     dest_fn = "volunteergov1.gz"
+  elif re.search("whichoneis.com", filename):
+    dest_fn = "extraordinaries1.gz"
   elif re.search("idealist", filename):
     dest_fn = "idealist1.gz"
   elif re.search("(userpostings|/export/Posting)", filename):
@@ -828,7 +830,10 @@ def guess_parse_func(inputfmt, filename):
     # now using FPXML
     #parsefunc = parse_handsonnetwork.ParseFPXML
     return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'(volunteer[.]gov)', filename)):
+  if (inputfmt == None and re.search(r'volunteer[.]gov', filename)):
+    return "fpxml", parse_footprint.parse
+  if (inputfmt == None and re.search(r'whichoneis[.]com/opps/list/format/xml',
+                                     filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == "idealist" or
       (inputfmt == None and re.search(r'idealist', filename))):
@@ -998,9 +1003,10 @@ def main():
   if options.debug_input:
     instr = re.sub(r'><', r'>\n<', instr)
 
-  print "inputfmt:", inputfmt
-  print "outputfmt:", options.outputfmt
-  print "instr:", len(instr), "bytes"
+  if PROGRESS:
+    print "inputfmt:", inputfmt
+    print "outputfmt:", options.outputfmt
+    print "instr:", len(instr), "bytes"
   if inputfmt == "fpxml":
     footprint_xmlstr = instr
   else:
