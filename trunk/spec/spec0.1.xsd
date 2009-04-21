@@ -43,7 +43,7 @@
          <p><pcode>
 &lt;?xml version="1.0" ?&gt;<br>
 &lt;FootprintFeed schemaVersion="0.1"&gt;<br>
-...<br>
+&nbsp;...<br>
 &lt;/FootprintFeed&gt;</pcode>
        ]]>
       </xs:documentation>
@@ -414,6 +414,17 @@
               <xs:documentation>
                 <![CDATA[
                   The <code>VolunteerOpportunities</code> object wraps a set of <code>VolunteerOpportunity</code> objects. Order of <code>VolunteerOpportunity</code> objects has no semantic meaning.
+                  <p>Example:
+                  <br><pcode>
+                  &lt;VolunteerOpportunities&gt;<br>                        
+                  &nbsp;&lt;VolunteerOpportunity&gt;<br>
+                  &nbsp;&nbsp;...<br>
+                  &nbsp;&lt;/VolunteerOpportunity&gt;<br>
+                  &nbsp;&lt;VolunteerOpportunity&gt;<br>
+                  &nbsp;&nbsp;...<br>
+                  &nbsp;&lt;/VolunteerOpportunity&gt;<br>
+                  &lt;/VolunteerOpportunities&gt;<br>                        
+                  </pcode>
                 ]]>
               </xs:documentation>
             </xs:annotation>
@@ -435,6 +446,11 @@
                           <xs:documentation>
                             <![CDATA[
                               Unique ID within the feed. Often a primary key from a database, but can be a <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a>. Required.  No default.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;volunteerOpportunityID&gt;157&lt;/volunteerOpportunityID&gt;<br>
+                              &lt;volunteerOpportunityID&gt;urn:fpvol:101-001-157&lt;/volunteerOpportunityID&gt;
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -455,7 +471,14 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended.
+                                    Link to an <code>Organization</code> object that relates to this opportunity as the sponsoring organization via the <code>organizationID</code> field. Most opportunities will have an associated <code>sponsoringOrganizationID</code>, which funds and/or conducts the opportunity. Optional. Recommended.
+                                    If present, must be the same as exactly one <code>Organization.organizationID</code> value in the same field.
+                                    <p>Example:
+                                    <br><pcode>
+                                    &lt;sponsoringOrganizationIDs&gt;<br>
+                                    &nbsp;&lt;sponsoringOrganizationID&gt;57&lt;/sponsoringOrganizationID&gt;<br>
+                                    &lt;/sponsoringOrganizationIDs&gt;<br>
+                                    </pcode>
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -480,7 +503,14 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them. Optional.  No default.
+                                    Link to an <code>Organization</code> object that relates to this opportunity as the local volunteer hub via the <code>organizationID</code> field. In contrast to the sponsoring organization, the volunteer hub is the organization that coordinates many local opportunities conducted by several sponsoring organizations. A minority of opportunities will have a volunteer hub associated with them, so if you are confused by this field, that's fine, you probably do not have the data in your database. Optional.  No default.
+                                    If present, must be the same as exactly one <code>Organization.organizationID</code> value in the same field.
+                                    <p>Example:
+                                    <br><pcode>
+                                    &lt;volunteerHubOrganizationID&gt;<br>
+                                    &nbsp;&lt;volunteerHubOrganizationID&gt;genericvolorg.org&lt;/volunteerHubOrganizationID&gt;<br>
+                                    &lt;/volunteerHubOrganizationID&gt;<br>
+                                    </pcode>
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -494,6 +524,11 @@
                           <xs:documentation>
                             <![CDATA[
                               Short title of the opportunity. Required. No default.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;title&gt;Help at the Newville Shelter&lt;/title&gt;<br>
+                              &lt;title&gt;Plant some Trees in Widerton&lt;/title&gt;
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -503,7 +538,11 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              Abstract of the opportunity. Generally one paragraph. Optional. No default.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;abstract&gt;Help cook, pass out food and clean at the Newville Shelter. Every Sunday at 10am to noon. Bring friends.&lt;/abstract&gt;<br>
+                              &lt;abstract&gt;Come to Widerton park and plant trees this Sunday, April 19th, 2:00pm. Sponsored by the local SAVE organization. Bring gloves.&lt;/abstract&gt;
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -516,6 +555,12 @@
                               How many volunteers are needed for this opportunity. Special codes: -999 for unlimited. -8888 for unknown number of volunteers. Other than those exceptions, must be a non-negative integer. Optional. Default is -8888 to represent unknown number of volunteers. Cannot be blank.
                               May not be up-to-date as volunteers sign up.
                               Design decision: large negative numbers for special codes since overbooking might lead to accidental use of negative numbers.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;volunteersNeeded&gt;10&lt;/volunteersNeeded&gt;<br>
+                              &lt;volunteersNeeded&gt;-999&lt;/volunteersNeeded&gt;<br>
+                              &lt;volunteersNeeded&gt;-8888&lt;/volunteersNeeded&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -536,7 +581,79 @@
                               <xs:annotation>
                                 <xs:documentation>
                                   <![CDATA[
-                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. Reorder of objects must follow order below. Required. Order of fields does not matter.
+                                    Represents the dates/timing of the event. Has a recurrence element for repeated opportunities. Required. Order of fields does not matter.
+                                    <p>Example of one-time event:<br><pcode>
+                                    &lt;dateTimeDurations&gt;<br>
+                                    &nbsp;&lt;dateTimeDuration&gt;<br>
+                                    &nbsp;&nbsp;&lt;openEnded&gt;No&lt;/openEnded&gt;<br>
+                                    &nbsp;&nbsp;&lt;startDate&gt;2009-04-19&lt;/startDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;endDate&gt;2009-04-19&lt;/endDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;startTime olsonTZ="America/Chicago"&gt;14:00:00&lt;/startTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;endTime olsonTZ="America/Chicago"&gt;16:00:00&lt;/endTime&gt;<br>
+                                    &nbsp;&lt;/dateTimeDuration&gt;<br>
+                                    &lt;/dateTimeDurations&gt;<br>
+                                    </pcode>
+                                    <p>Example of two-time (in this case, two-day) event:<br><pcode>
+                                    &lt;dateTimeDurations&gt;<br>
+                                    &nbsp;&lt;dateTimeDuration&gt;<br>
+                                    &nbsp;&nbsp;&lt;openEnded&gt;No&lt;/openEnded&gt;<br>
+                                    &nbsp;&nbsp;&lt;startDate&gt;2009-04-18&lt;/startDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;endDate&gt;2009-04-18&lt;/endDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;startTime olsonTZ="America/Chicago"&gt;14:00:00&lt;/startTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;endTime olsonTZ="America/Chicago"&gt;16:00:00&lt;/endTime&gt;<br>
+                                    &nbsp;&lt;/dateTimeDuration&gt;<br>
+                                    &nbsp;&nbsp;&lt;openEnded&gt;No&lt;/openEnded&gt;<br>
+                                    &nbsp;&nbsp;&lt;startDate&gt;2009-04-19&lt;/startDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;endDate&gt;2009-04-19&lt;/endDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;startTime olsonTZ="America/Chicago"&gt;14:00:00&lt;/startTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;endTime olsonTZ="America/Chicago"&gt;16:00:00&lt;/endTime&gt;<br>
+                                    &nbsp;&lt;/dateTimeDuration&gt;<br>
+                                    &lt;/dateTimeDurations&gt;<br>
+                                    </pcode>
+                                    <p>Same example, but using the <pcode>iCalRecurrance</pcode> to specify a two-day event:<br><pcode>
+                                    &lt;dateTimeDurations&gt;<br>
+                                    &nbsp;&lt;dateTimeDuration&gt;<br>
+                                    &nbsp;&nbsp;&lt;openEnded&gt;No&lt;/openEnded&gt;<br>
+                                    &nbsp;&nbsp;&lt;startDate&gt;2009-04-18&lt;/startDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;endDate&gt;2009-04-19&lt;/endDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;startTime olsonTZ="America/Chicago"&gt;14:00:00&lt;/startTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;endTime olsonTZ="America/Chicago"&gt;16:00:00&lt;/endTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;iCalRecurrence&gt;FREQ=DAILY;COUNT=2&lt;/iCalRecurrence&gt;<br>
+                                    &nbsp;&lt;/dateTimeDuration&gt;<br>
+                                    &lt;/dateTimeDurations&gt;<br>
+                                    </pcode>
+                                    <p>Example of using the <pcode>iCalRecurrance</pcode> to specify a biweekly Tuesday meeting, open-ended:<br><pcode>
+                                    &lt;dateTimeDurations&gt;<br>
+                                    &nbsp;&lt;dateTimeDuration&gt;<br>
+                                    &nbsp;&nbsp;&lt;openEnded&gt;Yes&lt;/openEnded&gt;<br>
+                                    &nbsp;&nbsp;&lt;startTime olsonTZ="America/New_York"&gt;17:00:00&lt;/startTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;endTime olsonTZ="America/New_York"&gt;18:00:00&lt;/endTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;iCalRecurrence&gt;FREQ=WEEKLY;INTERVAL=2;WKST=SU;BYDAY=TU&lt;/iCalRecurrence&gt;<br>
+                                    &nbsp;&lt;/dateTimeDuration&gt;<br>
+                                    &lt;/dateTimeDurations&gt;<br>
+                                    </pcode>
+                                    <p>Example of an open inviation to come in during business hours for a day:<br><pcode>
+                                    &lt;dateTimeDurations&gt;<br>
+                                    &nbsp;&lt;dateTimeDuration&gt;<br>
+                                    &nbsp;&nbsp;&lt;openEnded&gt;No&lt;/openEnded&gt;<br>
+                                    &nbsp;&nbsp;&lt;startDate&gt;2009-04-16&lt;/startDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;endDate&gt;2009-04-16&lt;/endDate&gt;<br>
+                                    &nbsp;&nbsp;&lt;startTime olsonTZ="America/New_York"&gt;09:00:00&lt;/startTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;endTime olsonTZ="America/New_York"&gt;17:00:00&lt;/endTime&gt;<br>
+                                    &nbsp;&nbsp;&lt;timeFlexible&gt;Yes&lt;/timeFlexible&gt;<br>
+                                    &nbsp;&lt;/dateTimeDuration&gt;<br>
+                                    &lt;/dateTimeDurations&gt;<br>
+                                    </pcode>
+                                    <p>Example of a flexible, commitment of 2 months, with 10 hours of work per week:<br><pcode>
+                                    &lt;dateTimeDurations&gt;<br>
+                                    &nbsp;&lt;dateTimeDuration&gt;<br>
+                                    &nbsp;&nbsp;&lt;openEnded&gt;Yes&lt;/openEnded&gt;<br>
+                                    &nbsp;&nbsp;&lt;duration&gt;P2M&lt;/duration&gt;<br>
+                                    &nbsp;&nbsp;&lt;timeFlexible&gt;Yes&lt;/timeFlexible&gt;<br>
+                                    &nbsp;&nbsp;&lt;commitmentHoursPerWeek&gt;10&lt;/commitmentHoursPerWeek&gt;<br>
+                                    &nbsp;&lt;/dateTimeDuration&gt;<br>
+                                    &lt;/dateTimeDurations&gt;<br>
+                                    </pcode>
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -559,6 +676,46 @@
                                 <xs:documentation>
                                   <![CDATA[
                                     Represents where the opportunity is physically located or denotes a virtual (non-physical) opportunity. May use multiple <code>location</code> elements to represent multiple opportunity sites. Required, unless <code>volunteerHubOrganizationID</code> is present and that <code>Organization</code> object has <code>location</code> informaion. Order of fields does not matter.
+                                    <p>Example of one physical location:<br><pcode>
+                                    &lt;locations&gt;<br>
+                                    &nbsp;&lt;location&gt;<br>
+                                    &nbsp;&nbsp;&lt;virtual&gt;No&lt;/virtual&gt;<br>
+                                    &nbsp;&nbsp;&lt;name&gt;Widerton Homless Shelter&lt;/name&gt;<br>
+                                    &nbsp;&nbsp;&lt;streetAddress1&gt;10 City Ln&lt;/streetAddress1&gt;<br>
+                                    &nbsp;&nbsp;&lt;city&gt;Widerton&lt;/city&gt;<br>
+                                    &nbsp;&nbsp;&lt;region&gt;VA&lt;/region&gt;<br>
+                                    &nbsp;&nbsp;&lt;postalCode&gt;22003&lt;/postalCode&gt;<br>
+                                    &nbsp;&nbsp;&lt;directions&gt;Use door on the First St side of building&lt;/directions&gt;<br>
+                                    &nbsp;&lt;/location&gt;<br>
+                                    &lt;/locations&gt;<br>
+                                    </pcode>
+                                    <p>Example of an event taking place in two physical locations:<br><pcode>
+                                    &lt;locations&gt;<br>
+                                    &nbsp;&lt;location&gt;<br>
+                                    &nbsp;&nbsp;&lt;virtual&gt;No&lt;/virtual&gt;<br>
+                                    &nbsp;&nbsp;&lt;name&gt;Widerton Homless Shelter&lt;/name&gt;<br>
+                                    &nbsp;&nbsp;&lt;streetAddress1&gt;10 City Ln&lt;/streetAddress1&gt;<br>
+                                    &nbsp;&nbsp;&lt;city&gt;Widerton&lt;/city&gt;<br>
+                                    &nbsp;&nbsp;&lt;region&gt;VA&lt;/region&gt;<br>
+                                    &nbsp;&nbsp;&lt;postalCode&gt;22003&lt;/postalCode&gt;<br>
+                                    &nbsp;&lt;/location&gt;<br>
+                                    &nbsp;&lt;location&gt;<br>
+                                    &nbsp;&nbsp;&lt;virtual&gt;No&lt;/virtual&gt;<br>
+                                    &nbsp;&nbsp;&lt;name&gt;Narrowton Homless Shelter&lt;/name&gt;<br>
+                                    &nbsp;&nbsp;&lt;streetAddress1&gt;101 Park St&lt;/streetAddress1&gt;<br>
+                                    &nbsp;&nbsp;&lt;city&gt;Narrowton&lt;/city&gt;<br>
+                                    &nbsp;&nbsp;&lt;region&gt;VA&lt;/region&gt;<br>
+                                    &nbsp;&nbsp;&lt;postalCode&gt;22004&lt;/postalCode&gt;<br>
+                                    &nbsp;&lt;/location&gt;<br>
+                                    &lt;/locations&gt;<br>
+                                    </pcode>
+                                    <p>Example of a virtual event (such as online translation help):<br><pcode>
+                                    &lt;locations&gt;<br>
+                                    &nbsp;&lt;location&gt;<br>
+                                    &nbsp;&nbsp;&lt;virtual&gt;Yes&lt;/virtual&gt;<br>
+                                    &nbsp;&lt;/location&gt;<br>
+                                    &lt;/locations&gt;<br>
+                                    </pcode>
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -580,12 +737,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                              A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order of <code>audienceTag</code> entries has no semantic meaning. Example:
-                              <br><pcode>
-                              &lt;audienceTags&gt;<br>
-                              &nbsp;&nbsp; &lt;audienceTag&gt;Teens&lt;/audienceTag&gt;<br>
-                              &nbsp;&nbsp; &lt;audienceTag&gt;College-aged&lt;/audienceTag&gt;<br>
-                              &lt;/audienceTags&gt;</pcode>
+                              A wrapper for one or more <code>audienceTag</code> fields. An <code>audienceTag</code> field is a string that describes a group of people who would be appropriate volunteers. There is no set domain for the <code>audienceTag</code> field.  Optional. Order of <code>audienceTag</code> entries has no semantic meaning.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -597,6 +749,12 @@
                                 <xs:documentation>
                                   <![CDATA[
                                     String that represents a target audience. No domain. Optional. No default.
+                                    <p>Example of a two-audience event:
+                                    <br><pcode>
+                                    &lt;audienceTags&gt;<br>
+                                    &nbsp;&nbsp; &lt;audienceTag&gt;Teens&lt;/audienceTag&gt;<br>
+                                    &nbsp;&nbsp; &lt;audienceTag&gt;College-aged&lt;/audienceTag&gt;<br>
+                                    &lt;/audienceTags&gt;</pcode>
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -608,13 +766,7 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                             A wrapper for one or more <code>categoryTag</code> fields. A <code>categoryTag</code> field is a short string that describes the opportunity. Keywords also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning. Example:
-                             <br><pcode>
-                             &lt;categoryTags&gt;<br>
-                             &nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>
-                             &nbsp;&nbsp; &lt;categoryTag&gt;Hunger&lt;/categoryTag&gt;<br>
-                             &nbsp;&nbsp; &lt;categoryTag&gt;Weekend opportunity&lt;/categoryTag&gt;<br>
-                             &lt;/categoryTags&gt;</pcode>
+                             A wrapper for one or more <code>categoryTag</code> fields. A <code>categoryTag</code> field is a short string that describes the opportunity. Keywords also belong here, as <code>categoryTag</code> fields. There is no set domain for the <code>categoryTag</code> field.  Order of <code>categoryTag</code> entries has no semantic meaning.
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -626,6 +778,12 @@
                                 <xs:documentation>
                                   <![CDATA[
                                     String that represents a category of the opportunity or a keyword/phrase of the opportunity. No domain. Optional. No default. Recommended.
+                                   <p>Example of a three-category event:<br><pcode>
+                                   &lt;categoryTags&gt;<br>
+                                   &nbsp;&nbsp; &lt;categoryTag&gt;Homeless&lt;/categoryTag&gt;<br>
+                                   &nbsp;&nbsp; &lt;categoryTag&gt;Hunger&lt;/categoryTag&gt;<br>
+                                   &nbsp;&nbsp; &lt;categoryTag&gt;Weekend opportunity&lt;/categoryTag&gt;<br>
+                                   &lt;/categoryTags&gt;</pcode>
                                   ]]>
                                 </xs:documentation>
                               </xs:annotation>
@@ -638,6 +796,12 @@
                           <xs:documentation>
                             <![CDATA[
                               The minimum age of volunteers. Optional. Recommended. Cannot be blank.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;minimumAge&gt;18&lt;/minimumAge&gt;<br>
+                              &lt;minimumAge&gt;7&lt;/minimumAge&gt;<br>
+                              &lt;minimumAge&gt;50&lt;/minimumAge&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -648,6 +812,12 @@
                           <xs:documentation>
                             <![CDATA[
                               Is the opportunity restricted to one sex/gender. Domain: {"Female" | "Male" | "Neither"}. Optional. Default is "Neither".
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;sexRestrictedTo&gt;Neither&lt;/sexRestrictedTo&gt;<br>
+                              &lt;sexRestrictedTo&gt;Female&lt;/sexRestrictedTo&gt;<br>
+                              &lt;sexRestrictedTo&gt;Male&lt;/sexRestrictedTo&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -657,7 +827,12 @@
                         <xs:annotation>
                           <xs:documentation>
                             <![CDATA[
-                               String of all the skills a volunteer needs. One (potentially long) string. Optional. Recommended. No default.
+                              String of all the skills a volunteer needs. One (potentially long) string. Optional. Recommended. No default.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;skills&gt;Able-bodied.&lt;/skills&gt;<br>
+                              &lt;skills&gt;Be able to translate Spanish to English and back. Must be able to work remotely via the Internet.&lt;/skills&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -668,6 +843,10 @@
                           <xs:documentation>
                             <![CDATA[
                               Name of contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this field. Optional. No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;contactName&gt;John Smith&lt;/contactName&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -678,6 +857,12 @@
                           <xs:documentation>
                             <![CDATA[
                               Phone number (and extension) for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this fields. Optional. No default.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;contactPhone&gt;121-555-1212x32&lt;/contactPhone&gt;<br>
+                              &lt;contactPhone&gt;1215551212&lt;/contactPhone&gt;<br>
+                              &lt;contactPhone&gt;44 844 394 0 787&lt;/contactPhone&gt;
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -688,6 +873,10 @@
                           <xs:documentation>
                             <![CDATA[
                               Email for the contact for this opportunity. Many providers will choose to populate the <code>detailURL</code> instead of this field. Optional. No default.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;contactEmail&gt;johnsmith@example.com&lt;/contactEmail&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -698,6 +887,11 @@
                           <xs:documentation>
                             <![CDATA[
                               Links to the page on the provider's website that displays detailed information about the opportunity. Optional. No default. Highly recommended for feeds that do not transmit contact info.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;detailURL&gt;http://www.awesomevolaggergator.org/opps.php?id=3&lt;/detailURL&gt;<br>
+                              &lt;detailURL&gt;http://www.anothervolaggergator.org/goodopportunity.html&lt;/detailURL&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -708,6 +902,11 @@
                           <xs:documentation>
                             <![CDATA[
                               Language of the opportunity. Optional. Default is "English".
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;language&gt;English&lt;/language&gt;<br>
+                              &lt;language&gt;Spanish&lt;/language&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -718,6 +917,10 @@
                           <xs:documentation>
                             <![CDATA[
                               Full description of the opportunity. Optional. No default. Recommended.
+                              <p>Example:
+                              <br><pcode>
+                              &lt;description&gt;Some really long text that describes the event.&lt;/description&gt;<br>
+                              </pcode>                              
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -728,6 +931,12 @@
                           <xs:documentation>
                             <![CDATA[
                               Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; default is "America/Los_Angeles" which represents the U.S. Pacific time zone) of last update to the opportunity on the provider's site. Optional. No default.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;lastUpdated olsonTZ="Etc/UTC"&gt;2009-08-02T09:24:34&lt;/lastUpdated&gt;<br>
+                              &lt;lastUpdated olsonTZ="America/New_York"&gt;2009-03-02T09:24:34&lt;/lastUpdated&gt;<br>
+                              &lt;lastUpdated&gt;2009-03-02T06:24:34&lt;/lastUpdated&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -738,6 +947,12 @@
                           <xs:documentation>
                             <![CDATA[
                               Date+time (Olson time zone attribute, <code>olsonTZ</code>, optional; default is "America/Los_Angeles" which represents the U.S. Pacific time zone) of when the <u>listing</u> of the opportunity (not the opportunity itself) expires on the provider's site. Optional. No default.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;expires olsonTZ="Etc/UTC"&gt;2010-08-02T09:24:34&lt;/expires&gt;<br>
+                              &lt;expires olsonTZ="America/New_York"&gt;2010-03-02T09:24:34&lt;/expires&gt;<br>
+                              &lt;expires&gt;2010-03-02T06:24:34&lt;/expires&gt;<br>
+                              </pcode>
                             ]]>
                           </xs:documentation>
                         </xs:annotation>
@@ -886,7 +1101,126 @@
     </xs:complexType>  
   </xs:element>
 
+
+  <xs:complexType name="dateTimeDurationType">
+  
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+            See <a href="#VolunteerOpportunity">VolunteerOpportunity</a> for use examples.
+          ]]>
+      </xs:documentation>
+    </xs:annotation>
+  
+    <xs:all>
+      <xs:element name="openEnded" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Whether the opportunity is not limited by dates. Domain: Yes, No. Optional. Default is "No". If Yes, parser ignores startDate and endDate fields.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="startDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The start date of the opportunity. Optional. No default. Highly recommended if openEnded is No.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="endDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The end date of the opportunity. Optional. No default. Highly recommended if openEnded is No.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. Optional. Default is the empty string, representing no recurrence.
+             String does not include "RRULE:" and should start with "FREQ=".<p>
+             Example for a biweekly meeting:<br><pcode>
+             &nbsp;&nbsp;&lt;iCalRecurrence&gt;FREQ=WEEKLY;INTERVAL=2;&lt;/iCalRecurrence&gt;<br></pcode>
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="duration" type="xs:duration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that meets only once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional. No default. Highly recommended if openEnded is Yes. Ignored if startDate and endDate are populated.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+      <xs:element name="startTime" type="timeOlson" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, default is "America/Los_Angeles" which represents the U.S. Pacific time zone). There is no "all day" option: exact times should be specified where applicable. Optional. No default.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="endTime" type="timeOlson" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, default is "America/Los_Angeles" which represents the U.S. Pacific time zone). There is no "all day" option: exact times should be specified where applicable. Optional. No default.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="timeFlexible" type="yesNoEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is "Yes" if both startTime and endTime are missing; default is "No" otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+
+      <xs:element name="commitmentHoursPerWeek" type="xs:decimal" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+           <![CDATA[
+             For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. No default. Recommended if either openEnded or timeFlexible is Yes.
+           ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      
+    </xs:all>
+  </xs:complexType>
+
+
   <xs:complexType name="locationType">
+
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+            See <a href="#VolunteerOpportunity">VolunteerOpportunity</a> for use examples.
+          ]]>
+      </xs:documentation>
+    </xs:annotation>
+
     <xs:all>
       <xs:element name="virtual" type="yesNoEnum" minOccurs="0">
         <xs:annotation>
@@ -1005,105 +1339,6 @@
           <xs:documentation>
            <![CDATA[
              Directions to or special instructions for the location. Optional. No default.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      
-    </xs:all>
-  </xs:complexType>
-
-
-  <xs:complexType name="dateTimeDurationType">
-    <xs:all>
-      <xs:element name="openEnded" type="yesNoEnum" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Whether the opportunity is not limited by dates. Domain: Yes, No. Optional. Default is "No". If Yes, parser ignores startDate and endDate fields.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="startDate" type="xs:date" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             The start date of the opportunity. Optional. No default. Highly recommended if openEnded is No.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="endDate" type="xs:date" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             The end date of the opportunity. Optional. No default. Highly recommended if openEnded is No.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="iCalRecurrence" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             String from <a href="http://www.kanzaki.com/docs/ical/rrule.html">iCal format</a> specifying the frequency of the opportunity. Optional. Default is the empty string, representing no recurrence.
-             String does not include "RRULE:" and should start with "FREQ=". Example for a biweekly meeting:<br>
-FREQ=WEEKLY;INTERVAL=2
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="duration" type="xs:duration" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             The duration of open-ended opportunity; i.e., the long-term commitment. For instance, a six-month club that meets only once a week for an hour would have a duration of six months. Type is <a href="http://www.w3schools.com/Schema/schema_dtypes_date.asp">xs:duration</a> (e.g., P6M for six months). Optional. No default. Highly recommended if openEnded is Yes. Ignored if startDate and endDate are populated.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      
-      <xs:element name="startTime" type="timeOlson" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Start time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, default is "America/Los_Angeles" which represents the U.S. Pacific time zone). There is no "all day" option: exact times should be specified where applicable. Optional. No default.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="endTime" type="timeOlson" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             End time for the opportunity (Olson time zone attribute, <code>olsonTZ</code>, optional; defaults to time zone of first <code>location</code> of opportunity; if virtual opportunity, default is "America/Los_Angeles" which represents the U.S. Pacific time zone). There is no "all day" option: exact times should be specified where applicable. Optional. No default.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-      <xs:element name="timeFlexible" type="yesNoEnum" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             Whether the opportunity is not limited by time of day. Domain: Yes, No. Optional. Default is "Yes" if both startTime and endTime are missing; default is "No" otherwise. If startTime and endTime are present and timeFlexible is Yes then the opportunity is assumed to be open between startTime and endTime but not necessarily fill up that entire time. If timeFlexible is Yes, then commitmentHoursPerWeek is recommended.
-           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-
-
-      <xs:element name="commitmentHoursPerWeek" type="xs:decimal" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>
-           <![CDATA[
-             For long-term or time-flexible opportunities, how many hours per week are expected? Decimal values allowed. Optional. No default. Recommended if either openEnded or timeFlexible is Yes.
            ]]>
           </xs:documentation>
         </xs:annotation>
