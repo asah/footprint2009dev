@@ -21,43 +21,71 @@ import logging
 from google.appengine.api import memcache
 from google.appengine.ext import db
 
-
-def IncrementProperties(model_class, key, props_to_set, **kwargs):
-  """Generic method to increment statistics. Can also set properties.
-
-  Example:
+def set_entity_attributes(entity, absolute_attributes, relative_attributes):
+  """Set entity attributes, using absolute or relative values.
 
   Args:
     model_class: model class
     key: Entity key.
-    props_to_set: Dictionary of properties to set to explicit values.
-    kwargs: Properties to increment by specified amount.
+    absolute_attributes: Dictionary of attr_name:value pairs to set.
+    relative_attributes: Dictionary of attr_name:value pairs to set as
+        relative to current value.  If some attr_name appears in both
+        the absolute and relative dictionaries, the absolute is set first.
+
+  Returns:
+    On error: (None, None)
+    On success: (entity, deltas)
+      entity: The entity after applying the changes
+      deltas: Dict of attr_name:delta_values, where each delta shows how
+          the change in value in the respective attribute.
   """
+  if not absolute_attributes:
+    absolute_attributes = {}
+  if not relative_attributes:
+    relative_attributes = {}
 
-  def txn():
-    stats = model_class.get_by_key_name(key)
-    if not stats:
-      stats = model_class(key_name=key)
+  def txn(entity):
+    # Passed 'entity' as function parameter because of python scope rules.
 
-    def increment(prop):
-      if getattr(stats, prop):
-        setattr(stats, prop, getattr(stats, prop) + kwargs[prop])
+    entity = entity.get(entity.key())
+
+    # Initialize the deltas list with starting values.  Also, set any undefined
+    # attribute to zero.
+    deltas = {}
+
+    combined_attributes = (set([x for x in absolute_attributes.iterkeys()]) |
+                           set([x for x in relative_attributes.iterkeys()]))
+    for attr in combined_attributes:
+      if not getattr(entity, attr):
+        setattr(entity, attr, 0)  # Ensure all attributes are defined.
+        deltas[attr] = 0
       else:
-        setattr(stats, prop, kwargs[prop])
+        deltas[attr] = getattr(entity, attr)
 
-    # Set explicit values first.
-    if props_to_set:
-      for prop in props_to_set.iterkeys():
-        setattr(stats, prop, props_to_set[prop])
+    # Set absolute values first.
+    for attr in absolute_attributes.iterkeys():
+      setattr(entity, attr, absolute_attributes[attr])
 
-    # Increment properties by requested amount.
-    for prop in kwargs.iterkeys():
-      increment(prop)
+    # Set relative values.
+    for attr in relative_attributes.iterkeys():
+      # Here, we know getattr() is defined, since we initialized all undefined
+      # attributes at the top of this function.
+      setattr(entity, attr, getattr(entity, attr) + relative_attributes[attr])
 
-    stats.put()
-    return stats
+    # Compute the final delta value for each attribute.
+    for attr in combined_attributes:
+      deltas[attr] = getattr(entity, attr) - deltas[attr]
 
-  return db.run_in_transaction(txn)
+    entity.put()
+    return (entity, deltas)
+
+  try:
+    return_value = db.run_in_transaction(txn, entity)
+    return return_value
+  except Exception:
+    logging.exception('set_entity_attributes failed for key %s' %
+                      entity.key().id_or_name())
+    return (None, None)
 
 
 def get_by_ids(cls, ids, memcache_prefix=None, datastore_prefix=None):

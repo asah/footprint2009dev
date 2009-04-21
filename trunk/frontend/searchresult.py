@@ -63,7 +63,7 @@ class SearchResult(object):
     self.xml_url = escape(url) + "#" + self.item_id
     parsed_url = urlparse.urlparse(url)
     self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
-    # user's expressed interest, models.InterestTypeProperty
+    # user's expressed interest
     self.interest = None
     # stats from other users.
     self.interest_count = 0

@@ -16,8 +16,6 @@
 TODO: module docs go here?!
 """
 
-#import logging
-
 import base_search
 import models
 import modelutils
@@ -27,9 +25,9 @@ def get_user_interests(user, remove_no_interest):
 
   Args:
     user: userinfo.User of a user
-    remove_no_interest: Filter out items with expressed_interest = UNKNOWN.
+    remove_no_interest: Filter out items with no expressed interest.
   Returns:
-    Dictionary of volunteer opportunity id: expressed_interest.
+    Dictionary of volunteer opportunity id: expressed interest (liked).
   """
   user_interests = {}
   if user:
@@ -37,10 +35,9 @@ def get_user_interests(user, remove_no_interest):
     # UserInterest entries, we'll have to do a more clever
     # query than the magic reverse reference query.
     for interest in user.get_user_info().interests:
-      if (not remove_no_interest or
-          interest.expressed_interest != models.InterestTypeProperty.UNKNOWN):
-        # TODO: Eliminate "3:" as a hardcoded range -- bug-prone.
-        user_interests[interest.key().name()[3:]] = interest.expressed_interest
+      interest_value = getattr(interest, models.USER_INTEREST_LIKED)
+      if not remove_no_interest or interest_value != 0:
+        user_interests[interest.opp_id] = interest_value
     #logging.info('Found interests: %s' % user_interests)
   return user_interests
 
@@ -51,14 +48,14 @@ def get_interest_for_opportunities(opp_ids):
     opp_ids: list of volunteer opportunity ids.
 
   Returns:
-    Dictionary of volunteer opportunity id: interested_count.
+    Dictionary of volunteer opportunity id: aggregated interest values.
   """
   others_interests = {}
 
   interests = modelutils.get_by_ids(models.VolunteerOpportunityStats, opp_ids)
   for (item_id, interest) in interests.iteritems():
     if interest:
-      others_interests[item_id] = interest.interested_count
+      others_interests[item_id] = getattr(interest, models.USER_INTEREST_LIKED)
   return others_interests
 
 

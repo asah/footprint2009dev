@@ -36,6 +36,7 @@ import recaptcha
 
 import api
 import models
+import modelutils
 import posting
 import search
 import userinfo
@@ -437,8 +438,8 @@ class moderate_view(webapp.RequestHandler):
 
 class action_view(webapp.RequestHandler):
   """vote/tag/etc on a listing.  TODO: rename to something more specific."""
-  def get(self):
-    """HTTP get method."""
+  def post(self):
+    """HTTP POST method."""
     if self.request.get('type') != 'star':
       self.error(400)  # Bad request
       return
@@ -446,47 +447,53 @@ class action_view(webapp.RequestHandler):
     user = userinfo.get_user(self.request)
     opp_id = self.request.get('oid')
     base_url = self.request.get('base_url')
-    if self.request.get('i') and self.request.get('i') != '0':
-      expressed_interest = models.InterestTypeProperty.INTERESTED
-      delta = 1
-    else:
-      # OK, we probably should add a new 'not interested' value to the enum.
-      expressed_interest = models.InterestTypeProperty.UNKNOWN
-      delta = -1
+    new_value = self.request.get('i')
 
     if not user:
       logging.warning('No user.')
       self.error(401)  # Unauthorized
       return
 
-    if not opp_id:
+    if not opp_id or not base_url or not new_value:
+      logging.warning('bad param')
       self.error(400)  # Bad request
       return
 
+    new_value = int(new_value)
+    if new_value != 0 and new_value != 1:
+      self.error(400)  # Bad request
+      return
 
     # Note: this is inscure and should use some simple xsrf protection like
     # a token in a cookie.
     user_entity = user.get_user_info()
-    opportunity = models.UserInterest.get_or_insert(
-        models.UserInterest.DATASTORE_PREFIX + opp_id,
-        user=user_entity)
+    user_interest = models.UserInterest.get_or_insert(
+      models.UserInterest.make_key_name(user_entity, opp_id),
+      user=user_entity, opp_id=opp_id)
 
-    if opportunity.expressed_interest != expressed_interest:
-      opportunity.expressed_interest = expressed_interest
-      opportunity.put()
-      models.VolunteerOpportunityStats.increment(opp_id,
-                                                 interested_count=delta)
-      key = models.UserInterest.DATASTORE_PREFIX + opp_id
-      info = models.VolunteerOpportunity.get_or_insert(key)
-      if info.base_url != base_url:
-        info.base_url = base_url
-        info.last_base_url_update = datetime.datetime.now()
-        info.base_url_failure_count = 0
-        info.put()
-      logging.info('User %s has changed interest (%s) in %s' %
-                 (user_entity.key().name(), expressed_interest, opp_id))
-    else:
-      logging.info('User %s has not changed interest (%s) in %s' %
-                 (user_entity.key().name(), expressed_interest, opp_id))
+    if not user_interest:
+      self.error(500)  # Server error.
+      return
 
-    self.response.out.write('ok')
+    # Populate VolunteerOpportunity table with (opp_id,base_url)
+    # TODO(paul): Populate this more cleanly and securely, not from URL params.
+    key = models.VolunteerOpportunity.DATASTORE_PREFIX + opp_id
+    info = models.VolunteerOpportunity.get_or_insert(key)
+    if info.base_url != base_url:
+      info.base_url = base_url
+      info.last_base_url_update = datetime.datetime.now()
+      info.base_url_failure_count = 0
+      info.put()
+
+    (unused_new_entity, deltas) = \
+      modelutils.set_entity_attributes(user_interest,
+                                 { models.USER_INTEREST_LIKED: new_value },
+                                 None)
+
+    if deltas is not None:  # Explicit check against None.
+      success = models.VolunteerOpportunityStats.increment(opp_id, deltas)
+      if success:
+        self.response.out.write('ok')
+        return
+
+    self.error(500)  # Server error.

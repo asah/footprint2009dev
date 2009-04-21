@@ -138,7 +138,6 @@ function toggleInterest(div, eventUrl, baseUrl) {
     newInterest = 0;
   }
 
-
   // TODO: This escaping code is unsafe!
   var path = '/action?type=star' +
                         '&i=' + newInterest +
