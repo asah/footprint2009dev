@@ -503,12 +503,14 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
   outstr = ""
   opp_id = xml_helpers.get_tag_val(opp, "volunteerOpportunityID")
   if (opp_id == ""):
-    print datetime.now(), "no opportunityID"
+    if PROGRESS:
+      print datetime.now(), "no opportunityID"
     return totrecs, ""
   org_id = xml_helpers.get_tag_val(opp, "sponsoringOrganizationID")
   if (org_id not in known_orgs):
-    print datetime.now(), "unknown sponsoringOrganizationID: " +\
-        org_id + ".  skipping opportunity " + opp_id
+    if PROGRESS:
+      print datetime.now(), "unknown sponsoringOrganizationID: " +\
+          org_id + ".  skipping opportunity " + opp_id
     return totrecs, ""
   org = known_orgs[org_id]
   opp_locations = opp.getElementsByTagName("location")
@@ -711,7 +713,8 @@ def convert_to_gbase_events_type(instr, do_fastparse, maxrecs, progress):
       if re.search("<VolunteerOpportunity>", chunk):
         opp = xml_helpers.simple_parser(chunk, None, False)
         if totrecs == 0:
-          outstr += output_header(feedinfo, node, example_org)
+          # reinitialize 
+          outstr = output_header(feedinfo, node, example_org)
         totrecs, spiece = output_opportunity(opp, feedinfo, known_orgs, totrecs)
         outstr += spiece
         if (maxrecs > 0 and totrecs > maxrecs):
