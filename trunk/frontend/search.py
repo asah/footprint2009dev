@@ -124,14 +124,17 @@ def fetch_result_set(args):
   args["lat"] = args["long"] = ""
   if api.PARAM_VOL_LOC in args:
     if re.match(r'[0-9.-]+\s*,\s*[0-9.-]+', args[api.PARAM_VOL_LOC]):
-      res = args[api.PARAM_VOL_LOC]
+      args["lat"], args["long"] = args[api.PARAM_VOL_LOC].split(",")
+      zoom = 5
+    elif re.match(r'[0-9.-]+\s*,\s*[0-9.-]+,\s*[0-9]+',
+                  args[api.PARAM_VOL_LOC]):
+      args["lat"], args["long"], zoom = args[api.PARAM_VOL_LOC].split(",")
     else:
       res = geocode.geocode(args[api.PARAM_VOL_LOC])
-    if res != "":
-      args["lat"], args["long"], zoom = res.split(",")
-      # don't break on spurious whitespace
-      args["lat"] = args["lat"].strip()
-      args["long"] = args["long"].strip()
+      if res != "":
+        args["lat"], args["long"], zoom = res.split(",")
+    args["lat"] = args["lat"].strip()
+    args["long"] = args["long"].strip()
     if api.PARAM_VOL_DIST not in args:
       zoom = int(zoom)
       if zoom == 1: # country
