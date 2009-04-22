@@ -210,6 +210,20 @@ class ApiTesting(object):
         "test_"+self.test_type+": expected non-empty results.")
     return True
   
+  def assert_empty_results(self, result_set):
+    """require that the results are valid (returns true/false).
+    Handles the fail() call internally, but not the success() call."""
+    if result_set is None:
+      return self.fail(
+        TestResultCode.INTERNAL_ERROR,
+        "test_"+self.test_type+": result_set invalid."
+        )
+    if len(result_set) == 0:
+      return True
+    return self.fail(
+      TestResultCode.DATA_MISMATCH,
+      "test_"+self.test_type+": expected empty results.")
+  
   def parse_raw_data(self, data):
     """wrapper for parse_TYPE()."""
     if self.response_type == 'rss':
@@ -273,7 +287,21 @@ class ApiTesting(object):
         str(len(result_set))+' results.')
     return self.success()
   
-  def test_query(self):
+  def int_test_bogus_query(self):
+    """ try a few bogus locations to make sure there's no weird data """
+    result = True
+    term = random_item(["fqzzqx"])
+   
+    result_set = self.get_result_set({'q':term})
+    if self.assert_empty_results(result_set):
+      return self.success()
+    else:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        'some item(s) found for search term <strong>' + term +
+        '</strong> or result set invalid')
+   
+  def int_test_valid_query(self):
     """run a hardcoded test query (q=)."""
     result = True
     term = random_item(["hospital", "walk", "help", "read", "children",
@@ -295,8 +323,26 @@ class ApiTesting(object):
         TestResultCode.DATA_MISMATCH,
         'some item(s) did not match search term <strong>' + term)
     return self.success()
+    
+  def test_query(self):
+    """run a set of query term tests."""
+    self.int_test_valid_query()
+    self.int_test_bogus_query()
   
-  def test_geo(self):
+  def int_test_bogus_geo(self):
+    """ try a few bogus locations to make sure there's no weird data """
+    location = random_item(["fqzzqx"])
+  
+    result_set = self.get_result_set({'vol_loc':location})
+    if self.assert_empty_results(result_set):
+      return self.success()
+    else:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        'some item(s) found for location <strong>' + location +
+        '</strong> or result set invalid')
+   
+  def int_test_valid_geo(self):
     """run a query and check the geo results."""
     loc = random_item(["37.8524741,-122.273895", "33.41502,-111.82298",
                        "33.76145285137889,-84.38941955566406",
@@ -319,6 +365,11 @@ class ApiTesting(object):
         'One or more items did not fall in the requested location/distance.')
     return self.success()
   
+  def test_geo(self):
+    """run a set of geo tests."""
+    self.int_test_valid_geo()
+    self.int_test_bogus_geo()
+    
   def test_provider(self):
     """run a hardcoded test query (&provider=)."""
     provider = "HandsOn Network"
@@ -381,3 +432,4 @@ class ApiTesting(object):
         TestResultCode.UNKNOWN_FAIL,
         'misc problem with /ui_snippets')
     return self.success()
+
