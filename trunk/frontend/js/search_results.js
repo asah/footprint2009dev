@@ -17,6 +17,7 @@ var map;
 var calendar;
 var NUM_PER_PAGE = 10;
 var lastSearchQuery;
+var searchResults = [];
 
 function initCalendar() {
   var element = el('calendar');
@@ -406,11 +407,15 @@ initMap = function() {
  * @param {Date} startdate a start date.
  * @param {Date} enddate an end date.
  */
-function SearchResult(url, title, location, snippet, startdate, enddate) {
+function SearchResult(url, title, location, snippet, startdate, enddate,
+                      itemId, baseUrl, liked) {
   this.url = url;
   this.title = title;
   this.location = location;
   this.snippet = snippet;
   this.startdate = startdate;
   this.enddate = enddate;
+  this.itemId = itemId;
+  this.baseUrl = baseUrl;
+  this.liked = liked;
 }

@@ -29,16 +29,10 @@
 {% endblock %}
 
 {% block subheader %}
-<h1>Find a volunteering event near you</h1>
 {% endblock subheader %}
 
 {% block content_left %}
-  <div class='top_search'>
-    Located near: <input style='margin-left: 5px;' id='location'
-                       onchange='submitForm("map"); return false;'
-                       type='text' size='15' value='{{ location }}'/>
-  </div>
-  <div id='map'></div>
+  {% include 'map_widget.html' %}
 
   <div id='calendar' class='top_search'>
     {% include 'calendar_widget.html' %}
@@ -46,16 +40,6 @@
 {% endblock content_left %}
 
 {% block content_right %}
-  <div id='keywords_bar' class='top_search'>
-    Matching keywords:
-    <nobr class='nobreak'>
-      <input type='text' id='keywords'
-             onchange='submitForm("keywords"); return false;'
-             size='40' value='{{ keywords }}' />
-      <input type=submit id='refine' value='Refine'
-             onclick='submitForm("keywords"); return false;' />
-    </nobr>
-  </div>
   <div id='no_results_message' style='display:none;'>
     <br><br><b>No results found.</b>
   </div>

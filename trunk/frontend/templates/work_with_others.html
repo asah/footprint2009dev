@@ -12,13 +12,12 @@ Work with others
 {% endblock %}
 
 {% block subheader %}
-<h1>See where your friends are volunteering</h1>
 {% endblock subheader %}
 
 {% block content_left %}
 
 {% if user %}
-  You know {{total_friends}} {% ifequal total_friends 1 %}person{% else %}people{% endifequal %} on Footprint <br />
+  You know {{total_friends}} {% ifequal total_friends 1 %}person{% else %}people{% endifequal %} on All For Good <br />
   They have starred {{friend_total_opp_count}} {{friend_total_opp_count|pluralize:"event,events"}}.
 
   <div style='clear:both;'></div>
@@ -29,10 +28,10 @@ Work with others
       <div class='friend_details'>
         <span class='friend_name'>{{friend.display_name}}</span> <br/>
         <span class='friend_stars'>
-        <img src="images/Event-StarredByOthers.png" alt="Starred"/> 
+        <img src="images/Event-StarredByOthers.png" alt="Starred"/>
         {{friend.interest_count}}
         {{friend.interest_count|pluralize:"event,events"}}
-        </span>       
+        </span>
       </div>
       <div style='clear:both;'></div>
     </div>
@@ -44,7 +43,7 @@ Work with others
 
 {% block content_right %}
 {% if not user %}
-  <br><br><b>Log in to see what your friends are doing on Footprint</b>
+  <br><br><b>Log in to see what your friends are doing on All For Good</b>
 {% endif %}
 
 <div id='no_results_message' style='display:none;'>

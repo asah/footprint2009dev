@@ -126,30 +126,29 @@ function addToCalendar(div, type, searchResult) {
   window.open(url, 'calendar');
 }
 
-function toggleInterest(div, eventUrl, baseUrl) {
+function toggleInterest(resultIndex, div) {
+  var result = searchResults[resultIndex];
   // TODO: First need to check if the user is logged in
   var newInterest;
-  var oldClassName = div.className;
-  if (div.className.indexOf('unstarred') >= 0) {
-    div.className = 'snippet_button starred';
-    newInterest = 1;
-  } else {
-    div.className = 'snippet_button unstarred';
+  if (result.liked) {
     newInterest = 0;
+  } else {
+    newInterest = 1;
   }
 
   // TODO: This escaping code is unsafe!
   var path = '/action?type=star' +
                         '&i=' + newInterest +
-                        '&oid=' + escape(eventUrl) +
-                        '&base_url=' + escape(baseUrl) +
+                        '&oid=' + escape(result.itemId) +
+                        '&base_url=' + escape(result.baseUrl) +
                         '&zx=' + Math.random();
 
   var success = function(data, textStatus) {
+    result.liked = newInterest;
+    div.innerHTML = result.liked ? 'Un-like' : 'Like';
   };
 
   var error = function(xhr, textStatus, errorThrown) {
-    div.className = oldClassName;
     if (xhr.status == 401) {
       // Unauthorized
       alert("Please log in first");

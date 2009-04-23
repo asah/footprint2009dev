@@ -61,6 +61,7 @@ DEFAULT_NUM_RESULTS = 10
 
 # Register custom Django templates
 template.register_template_library('templatetags.comparisonfilters')
+template.register_template_library('templatetags.stringutils')
 
 
 # TODO: not safe vs. spammers to checkin... but in our design,
@@ -216,12 +217,7 @@ class ui_snippets_view(webapp.RequestHandler):
     unique_args = get_unique_args_from_request(self.request)
     result_set = search.search(unique_args)
     # TODO: re-implement using django filters
-    # e.g. http://w.holeso.me/2008/08/a-simple-django-truncate-filter/ 
-    for res in result_set.results:
-      if len(res.snippet) > 117:
-        res.snippet120 = res.snippet[0:117] + "..."
-      else:
-        res.snippet120 = res.snippet
+    # e.g. http://w.holeso.me/2008/08/a-simple-django-truncate-filter/
 
     result_set.request_url = self.request.url
 

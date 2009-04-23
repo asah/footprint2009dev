@@ -9,9 +9,9 @@
   asyncLoadManager.addCallback('map', function(){
       map.map.clearOverlays();
   });
-  var searchResults = [];
+  searchResults = [];
 {% for result in result_set.clipped_results %}
-  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.latlong}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}')));
+  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}'), '{{result.item_id|escape}}', '{{result.base_url|escape}}', {{result.interest|yesno:"1,0"}}));
 {% endfor %}
 </script>
 
@@ -19,43 +19,6 @@
   <div class='snippet {% cycle row_highlight,row_plain %}'>
     <table>
     <tr>
-    <td valign='top'>
-    <div class='snippet_buttons'>
-      <div class='snippet_button pointer {{result.interest|yesno:"starred,unstarred"}}'
-           onmousedown='toggleInterest(this, "{{result.item_id|escape}}",
-                                       "{{result.base_url|escape}}")'>
-      </div>
-
-      <!-- TODO(doll): Add to calendar functions need dates in the right format -->
-      <div class='snippet_button' style='position: relative;'
-           onclick='popupModalElement("add_to_calendar{{ forloop.counter0 }}");return false;'>
-        <div id='add_to_calendar{{ forloop.counter0 }}'
-             class='add_to_calendar_floating'>
-          <div class='pointer popup_text'
-               onclick='addToCalendar(this, "GOOGLE", searchResults[{{ forloop.counter0 }}])'>
-            <!--img src='images/google.png' height="16px" alt='Google Calendar'/ -->
-            <a href='javascript:void(0)'>Add to Google Calendar</a>
-          </div>
-          <div class='pointer popup_text'
-               onclick='addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
-            <!-- img src='images/yahoo.gif' height="16px" alt='Google Calendar'/ -->
-            <a href='javascript:void(0)'>Add to Yahoo Calendar</a>
-          </div>
-        </div>
-        <img class='pointer' src='images/Event-AddToCalendar.png' height="16px" alt='Add to calendar'/>
-      </div>
-
-      <div class='snippet_button' id='addthis{{ forloop.counter0 }}'>
-        <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
-           onmouseout="hideShareWidget()"
-           onmouseover="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])"
-           onclick="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])" >
-          <img src="/images/Event-Share.png" width="16" height="16" alt="Bookmark and Share" style="border:0"/>
-        </a>
-      </div>
-
-    </div>
-    </td>
     <td valign='top'>
     <div>
       {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
@@ -108,12 +71,43 @@
 </div>
       {% endif %}
       <div class='snippet_text'>
-        {{ result.snippet120 }}
+        {{ result.snippet|truncate_chars:245 }}
       </div>
       <div class='snippet_url'>
         <a href='/url?q={{ result.url|urlencode }}'>{{ result.url_short }}</a>
       </div>
     </div>
+
+    <div class='interest_links'>
+      <span>
+        <a href='javascript:void(0)' id='like_{{forloop.counter0}}' onclick='toggleInterest({{forloop.counter0}}, this);return false;'>{{result.interest|yesno:"Un-like,Like"}}</a>
+      </span>|
+      <!-- TODO(doll): Add to calendar functions need dates in the right format -->
+      <span style='position: relative;'
+           onclick='popupModalElement("add_to_calendar{{ forloop.counter0 }}");return false;'>
+        <div id='add_to_calendar{{ forloop.counter0 }}'
+             class='add_to_calendar_floating'>
+          <div class='pointer popup_text'
+               onclick='addToCalendar(this, "GOOGLE", searchResults[{{ forloop.counter0 }}])'>
+            <a href='javascript:void(0)'>Add to Google Calendar</a>
+          </div>
+          <div class='pointer popup_text'
+               onclick='addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
+            <a href='javascript:void(0)'>Add to Yahoo Calendar</a>
+          </div>
+        </div>
+        Calendar
+      </span>|
+      <span class='snippet_button' id='addthis{{ forloop.counter0 }}'>
+        <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
+           onmouseout="hideShareWidget()"
+           onmouseover="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])"
+           onclick="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])" >
+          Share
+        </a>
+      </span>
+    </div>
+
     </td>
     </tr>
     </table>
