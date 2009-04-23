@@ -224,8 +224,6 @@ executeSearchFromHashParams = function() {
     hashParams = GetHashParams();
 
     var query = QueryFromUrlParams();
-    el('keywords').value = query.getKeywords();
-    el('location').value = query.getLocation();
     el('no_results_message').style.display = 'none';
     el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
     calendar.clearMarks();
@@ -241,6 +239,13 @@ executeSearchFromHashParams = function() {
     lastSearchQuery = query;
 
     var success = function(text, status) {
+      el('keywords').value = query.getKeywords();
+      var regexp = new RegExp('[a-zA-Z]')
+      if (regexp.exec(query.getLocation())) {
+        // Update location field in UI, but only if location text isn't
+        // just a latlon geocode.
+        el('location').value = query.getLocation();
+      }
       if (updateMap) {
         asyncLoadManager.addCallback('map', function() {
           map.setCenterGeocode(query.getLocation());
