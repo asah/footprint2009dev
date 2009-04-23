@@ -44,7 +44,7 @@ import dateutil.parser
 FIELDSEP = "\t"
 RECORDSEP = "\n"
 
-MAX_ABSTRACT_LEN = 250
+MAX_ABSTRACT_LEN = 300
 
 DEBUG = False
 PROGRESS = False
