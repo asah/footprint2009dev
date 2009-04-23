@@ -237,7 +237,7 @@ def query(query_url, args, cache):
     location = utils.xml_elem_text(entry, 'g:location_string', '')
     res = searchresult.SearchResult(url, title, snippet, location, item_id,
                                     base_url)
-                                    
+
     # TODO: escape?
     res.provider = utils.xml_elem_text(entry, 'g:feed_providername', '')
     res.orig_idx = i+1

@@ -11,7 +11,7 @@
   });
   var searchResults = [];
 {% for result in result_set.clipped_results %}
-  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}')));
+  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.latlong}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}')));
 {% endfor %}
 </script>
 
@@ -59,10 +59,11 @@
     <td valign='top'>
     <div>
       {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
-      {% if location %}
+      {% if result.latlong %}
         <script type='text/javascript'>
+           var coords = '{{result.latlong}}'.split(',')
            asyncLoadManager.addCallback('map', function(){
-               map.addMarkerGeocode("{{ result.location }}")});
+               map.addMarker(coords[0], coords[1])});
         </script>
       {% endif %}
       {# TODO(oansaldi): escape dates for extra-care (they are already safe) #}

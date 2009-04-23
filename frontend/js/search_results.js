@@ -232,17 +232,23 @@ executeSearchFromHashParams = function() {
     calendar.render();
 
     // TODO: eliminate the need for lastSearchQuery to be global
+
+    var updateMap = false;
+    if (!lastSearchQuery ||
+        lastSearchQuery.getLocation() != query.getLocation()) {
+      updateMap = true;
+    }
     lastSearchQuery = query;
 
     var success = function(text, status) {
-      if (false) { // TODO: only updateMap if necessary
+      if (updateMap) {
         asyncLoadManager.addCallback('map', function() {
           map.setCenterGeocode(query.getLocation());
         });
       }
       jQuery('#snippets_pane').html(text);
     };
-    
+
     var error = function (XMLHttpRequest, textStatus, errorThrown) {
       // TODO: handle error
     };
@@ -278,7 +284,6 @@ function submitForm(fromWhere) {
     location = getClientLocation();
   }
 
-  var updateMap = (fromWhere == "map");
   var query = new Query(keywords, location, 0, calendar.getDateRange());
   executeSearch(query);
 }
