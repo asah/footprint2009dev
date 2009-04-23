@@ -31,10 +31,20 @@
 <body onload='asyncLoadManager.doneLoading("bodyload");'>
   {% include 'header.html' %}
   {% block subheader %}{% endblock %}
+
   {% block content_layout %}{% endblock %}
+
   {% block prefooter %}{% endblock %}
   {% block footer %}
-  <div class='footer'>
+  <div id='footer'>
+    <div class='footer_right'>
+      <a href='/aboutus'>About Us</a> |
+      <a href='/privacypolicy'>Privacy Policy</a> |
+      <a href='/publishers'>Publishers</a>
+    </div>
+    <div class='footer_left'>
+      &copy; 2009
+    </div>
   </div>
   {% endblock %}
 </body>
