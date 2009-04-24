@@ -1434,30 +1434,35 @@ def RealMain(argv, data=None):
   return issue, patchset
 
 
+FPREVIEW_ADDR = "footprint2009reviews.appspot.com"
 def main():
   try:
-    if len(sys.argv) > 1:
-      args = [sys.argv[0], "-s", "footprint2009reviews.appspot.com"]
-      args.append("--cc=footprint-eng@googlegroups.com")
-      args.append("--description_editor")
-      args.append("--send_mail")
-      args.append("--min_pylint_score")
-      # we're starting with 9.0
-      args.append("9.0")
-      args.append("-r")
-      email = sys.argv[1]
-      if email.find("@") == -1:
-        email += "@gmail.com"
-        print >>sys.stderr, "*** sending to "+email+"@gmail.com for review.",\
-            " (note: @gmail.com)"
-      args.append(email)
-      sys.argv = args + sys.argv[2:]
-      if "PYLINTRC" not in os.environ:
-        cwd = os.getcwd()
-        path_to_pylint = re.sub(r'footprint2009dev/.+$', 'footprint2009dev/pylintrc', cwd)
-        os.environ['PYLINTRC'] = path_to_pylint
-        print "guessing", path_to_pylint, "as PYLINTRC path"
-    print " ".join(sys.argv)
+    if len(sys.argv) == 1:
+      print "Usage:", sys.argv[0], "<email address of primary reviewer>"
+      print "(automatically cc's", FPREVIEW_ADDR, ")"
+      sys.exit(1)
+
+    args = [sys.argv[0], "-s", "footprint2009reviews.appspot.com"]
+    args.append("--cc=footprint-eng@googlegroups.com")
+    args.append("--description_editor")
+    args.append("--send_mail")
+    args.append("--min_pylint_score")
+    # we're starting with 9.0
+    args.append("9.0")
+    args.append("-r")
+    email = sys.argv[1]
+    if email.find("@") == -1:
+      email += "@gmail.com"
+      print >>sys.stderr, "*** sending to "+email+"@gmail.com for review.",\
+          " (note: @gmail.com)"
+    args.append(email)
+    sys.argv = args + sys.argv[2:]
+    if "PYLINTRC" not in os.environ:
+      cwd = os.getcwd()
+      path_to_pylint = re.sub(r'footprint2009dev/.+$', 'footprint2009dev/pylintrc', cwd)
+      os.environ['PYLINTRC'] = path_to_pylint
+      print "guessing PYLINTRC="+path_to_pylint
+    print "running: ", " ".join(sys.argv)
     RealMain(sys.argv)
   except KeyboardInterrupt:
     print
