@@ -69,8 +69,9 @@ getClientLocation = function() {
   return function() {
     if (clientLocationString === undefined) {
       try {
-        lat = google.loader.ClientLocation.latitude;
-        lon = google.loader.ClientLocation.longitude;
+        var loc = google.loader.ClientLocation
+        lat = loc.latitude;
+        lon = loc.longitude;
         if (lat > 0) {
           lat = '+' + lat;
         }
@@ -78,6 +79,15 @@ getClientLocation = function() {
           lon = '+' + lon;
         }
         clientLocationString = lat + lon;
+
+        var address = '';
+        if (loc.address.city) {
+          address = loc.address.city;
+          if (loc.address.region) {
+            address += ', ' + loc.address.region;
+          }
+          el('location').value = address;
+        }
       } catch (err) {
         clientLocationString = '';
       }
