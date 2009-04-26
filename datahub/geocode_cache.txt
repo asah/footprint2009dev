@@ -23555,3 +23555,244 @@ juneau ak 99801|58.5524906,-134.2155285
 juneau ak 99812|58.4941430,-134.7690070
 skagway tx 99840|
 99840|59.5494402,-135.2690266
+new york city, new york, 10018, united states|40.7553220,-73.9932872
+rockville, maryland, 20878, united states|39.1048032,-77.2520101
+ukiah, california, 95482, united states|39.1499970,-123.2076350
+atlanta, georgia, 30302, united states|33.7486000,-84.3884000
+santa elena de uairn, estado bolvar, 8032, venezuela|
+municipalidad de jutiapa, atlantida, honduras|
+lusaka, zambia|-15.4081930,28.2871670
+colorado springs, canyon city, colorado, united states|38.9195070,-104.6914170
+anywhere in the world., czech republic|
+greeley, fort collins, lamar, colorado, united states|
+ottawa, ontario, canada|45.4234940,-75.6979330
+capital federal, buenos aires, argentina|-34.6117810,-58.4173090
+italy|41.8719400,12.5673800
+houston, texas, 77011, united states|29.7465252,-95.3050230
+chile|-35.6751470,-71.5429690
+clearwater, florida, 33765, united states|27.9740188,-82.7508963
+miami, florida, 33157, united states|25.6140835,-80.3324514
+little rock, arkansas, 72202, united states|34.7368427,-92.2482705
+wantagh, new york, 11501, united states|40.6729370,-73.5090980
+kimberton, pennsylvania, 19442, united states|40.1308000,-75.5728000
+mexico, distrito federal, 15400, mexico|19.4416560,-99.0965102
+cape coast, ghana|5.1050560,-1.2472340
+clearfield, utah, 84015, united states|41.1137960,-112.0255640
+cusco, urubamba, peru|-13.3111200,-72.1152420
+accra, gomoa, 46, ghana|
+silver spring, maryland, united states|39.0167100,-77.0238930
+chivay, peru|-15.6451800,-71.6054310
+new york, new york, 10001-4017, united states|40.7489381,-73.9918181
+ny, new york, 10010, united states|40.7388319,-73.9815337
+glens falls, new york, 12801, united states|43.3092280,-73.6446250
+aurora, colorado, 80011, united states|39.7340739,-104.7871004
+grand junction, colorado, 81501, united states|39.0791169,-108.5581899
+osa peninsula, piro beach, costa rica|
+appleton, wisconsin, 54911, united states|44.2839805,-88.3919026
+omaha , nebraska, 68114, united states|41.2674199,-96.0520363
+decatur, illinois, 62521, united states|39.8458030,-88.9545000
+des moines, iowa, 50325, united states|41.6063321,-93.7866915
+twin cities, minnesota, 55331, united states|44.8963961,-93.6116494
+somerville , massachusetts, 02143, united states|42.3798626,-71.0943459
+yorba linda, california, 92886, united states|33.9011405,-117.7959713
+los angeles, washington, united states|33.7127500,-117.7924710
+mysore, 98225, india|12.3374078,76.5907198
+el paso, texas, 79935, united states|31.7712111,-106.3287199
+villupuram, kanjanur village, tamilandu, 605203, india|
+gobabis, omaheke, 9000, namibia|
+charlotte, north carolina, 28210, united states|35.1274285,-80.8599193
+medford, massachusetts, united states|42.4248980,-71.1103260
+watertown, massachusetts, united states|42.3703260,-71.1792790
+las vegas, nevada, 89170, united states|36.1062000,-115.1374000
+nassau county/local libraries, new york, united states|
+deerfield beach, florida, 33442, united states|26.3042864,-80.1540226
+local libraries/ nassau county, new york, 11550, united states|
+anywhere in the world, massachusetts, any, united states|
+tulum, mexico|20.1048502,-87.4789476
+raleigh, north carolina, 27605-0490, united states|35.7927515,-78.6540576
+fort lee, new jersey, 07024, united states|40.8562383,-73.9653715
+london, london, ec1m 4ar, united kingdom|51.5205502,-0.1001961
+st augustine/jacksonville, florida, 32177, united states|30.0806477,-81.6911559
+rio de janeiro, rj, 20.240-130, brazil|-22.9189358,-43.1904547
+rio de janeiro and salvador, rj and ssa, 20.240-130, brazil|
+nong khai, nong khai, 43000, thailand|17.8780811,102.7412942
+sacramento, california, 95817, united states|38.5517469,-121.4541881
+gainesville, new jersey, 32606, united states|29.5309750,-82.8879170
+lake city, minnesota, 55041, united states|44.4424940,-92.2752580
+superior, wisconsin, 54880, united states|46.6849840,-92.0768610
+vientiane, laos|17.9689000,102.6137000
+kumbo, nord-west region, 237, cameroon|
+kumbo, north region, 237, cameroon|
+hendersonville, north carolina, 28791, united states|35.3212930,-82.4614400
+northern virginia, virginia, 22051, united states|37.3196720,-121.8900810
+naperville, illinois, united states|41.7859160,-88.1472850
+arlington, virginia, 22202, united states|38.8514018,-77.0506896
+sparta, new jersey, 07871, united states|41.0519890,-74.6283316
+san francisco , california, 94013, united states|37.7074000,-122.4587000
+baltimore, maryland, 21206, united states|39.3356402,-76.5430429
+new orleans , louisiana, 70112, united states|29.9595769,-90.0770127
+houston, texas, virtual (global|
+france|46.2276380,2.2137490
+yerevan,yeghegnadzor,vanadzor, armenia, armenia|
+washington, 20008, united states|38.9451658,-77.0622028
+wakiso district, busiro county, +256, uganda|
+taipei, taiwan, daan district, 106, taiwan|25.0345617,121.5423971
+ross, california, 94904, united states|37.9655320,-122.5606760
+muir beach, california, 94965, united states|37.8658100,-122.5870700
+larkspur, california, 94939, united states|37.9388180,-122.5344456
+sacramento, california, 95864, united states|38.5848773,-121.3827505
+tucson, arizona, 85712, 85719, united states|32.2316470,-110.9566570
+cambridge, minnesota, 55008, united states|45.5628130,-93.2249890
+seaside, california, 93955, united states|36.6216410,-121.8173030
+weston, missouri, 64098, virtual (global|
+portland, oregon, 97216, united states|45.5161585,-122.5566479
+milwaukee, wisconsin, 53217, united states|43.1652687,-87.9040571
+new york city, new york, 10003, united states|40.7322535,-73.9874105
+santa fe, new mexico, 87505, united states|35.6816220,-105.9380670
+jacksonville, florida, 32223, united states|30.1588305,-81.6582994
+nottingham, ng1 7dg, united kingdom|52.9524928,-1.1407251
+la esperie, pichincha, ecuador|-0.3471656,-78.8656641
+aflao, volta region, ghana|
+longbranch, washington, 98351, united states|47.2073262,-122.7684229
+toronto, ontario, m5r 2j6, canada|43.6768390,-79.3973160
+lyman, maine, 04002, united states|43.4850500,-70.7188170
+st. george, utah, 84780, united states|37.1758200,-113.5014213
+birmingham, alabama, 35064, united states|33.4732696,-86.9273532
+london, w11 4sf, united kingdom|51.5089210,-0.2019895
+chimaltenango, guatemala|14.5634787,-90.9820668
+anywhere in the us, california, 90209, united states|
+astoria, new york, 11102, united states|40.7704060,-73.9256948
+regions throughout chile, chile|
+california, 94117, united states|37.7717185,-122.4438929
+washington, district of columbia, 20035-5301, united states|38.9009000,-77.0075000
+high point, north carolina, 27263, united states|35.9017979,-79.8968798
+new york, new york, 10168-1898, united states|40.7524000,-73.9830000
+nashville, tennessee, 37212, united states|36.1281626,-86.7969244
+massachusetts bay chapter, massachusetts, 02142, united states|
+sacramento , california, 95816, united states|38.5800184,-121.4627576
+san francisco , california, 94112, united states|37.7225491,-122.4410618
+duluth, minnesota, 55812, united states|46.8089562,-92.0747944
+chicago, illinois, 60666, united states|41.9699968,-87.9040571
+belmont, massachusetts, 02478, united states|42.3958849,-71.1745579
+queenstown, maryland, 21658, united states|38.9907610,-76.1559550
+nungwi, zanzibar, tanzania|-5.7258560,39.2985684
+liverpool, new york, 13088, united states|43.1041950,-76.2076350
+kathmandu, pokhara, chitwan, , 00977, nepal|
+kunming, yunnan, china|25.0125259,102.7000129
+san francisco, california, 94121, united states|37.7813454,-122.4976680
+oregon city, oregon, 97045, united states|45.3519840,-122.5966960
+edmonton, alberta, t5h 2h6, canada|53.5491100,-113.4844400
+carnegie, pennsylvania, 15106, united states|40.4078830,-80.0837100
+oakdale, minnesota, 55128, united states|44.9894676,-92.9704523
+statewide, new jersey, 07732, united states|40.7918850,-74.0574540
+buffalo, new york, 14202, united states|42.8852457,-78.8793097
+westport, connecticut, 06880, united states|41.1431040,-73.3354993
+london, w1u 8jw, united kingdom|51.5152394,-0.1508954
+denver metro, colorado, 80204, united states|39.7380371,-105.0265195
+delray beach, florida, 33446, united states|26.4460317,-80.1763467
+lima, 11, peru|-12.0854330,-76.9310921
+farmington, minnesota, 55024, united states|44.6587290,-93.1642280
+pasadena, texas, 77087, united states|29.6514000,-95.1941500
+houston, texas, 77036, united states|29.7024650,-95.5354816
+springfield, oregon, 97477, united states|44.0599120,-123.0179348
+las vegas, nevada, 89101, united states|36.1697096,-115.1236952
+boston, lynn, massachusetts, 02111, united states|42.4661000,-70.9686600
+morrisville, vermont, 05661, united states|44.5617370,-72.5983510
+jaipur, rajasthan, india|26.9051090,75.8012770
+tamale, 00233, ghana|
+bellevue, washington, united states|47.5975430,-122.1508850
+rio de janeiro, rio de janeiro, 22420030, brazil|-22.9836448,-43.2049783
+palatka, florida, 32177, united states|29.6434560,-81.6445540
+new york, new york, 10024-1050, united states|40.7917182,-73.9800645
+baan pai noi, lamplaimat, buriram, thailand|
+los angeles, california, 90048-5104, united states|34.0741548,-118.3724915
+offinso, ashanti region, 00233, ghana|
+canoa, manabi, ecuador|-0.4617974,-80.4542312
+kathmandu, helambu, nepal|
+gangkharka, helambu, nepal|
+puerto vallarta, mexico|20.6135057,-105.2312577
+highland heights, kentucky, 41076, united states|39.0372440,-84.4526490
+st. paul, minnesota, 55108, united states|44.9792976,-93.1755241
+san antonio, texas, 78240, united states|29.5215784,-98.6050736
+kampala - uganda, mityana, 256, uganda|0.4010306,32.0411315
+ulaanbaatar, mn 210349 , mongolia|47.9166670,107.0000000
+san diego, california, 92109, united states|32.8063740,-117.2382163
+256, canada|-34.7103899,-58.4353177
+chantilly, virginia, 20151 , united states|38.8773450,-77.4087750
+medford, massachusetts, 02155, united states|42.4217386,-71.1032591
+rockland, massachusetts, 02370, united states|42.1314510,-70.9160310
+san luis obispo, california, 93401, united states|35.2695610,-120.6703800
+rochester, new york, 14611, united states|43.1516120,-77.6450215
+mathews, virginia, 23109, united states|37.4449914,-76.3289941
+bethesda, maryland, 20892, united states|39.0003000,-77.1056000
+glen echo, maryland, 20812, united states|38.9685700,-77.1385830
+any where in the world, nairobi, 00300, kenya|
+any, united states|40.7560540,-73.9869510
+kerala, south india, 682017, india|11.2702099,76.2176031
+toronto, ontario, m5h3h1, canada|43.6481190,-79.3884860
+holland/zeeland area, michigan, united states|42.8412440,-86.0813450
+jakarta and papua, java and papua, indonesia|
+philadelphia, pennsylvania, 19091, united states|39.9179530,-75.1369000
+houston, texas, 77074, united states|29.6917896,-95.5144930
+fairfax, virginia, 22030-4107, united states|38.8515310,-77.2981670
+siracusa, italy|37.0664837,15.2844417
+dharamsala, himachal pradesh, india|32.2206610,76.3188400
+kadapa, andhra pradesh, india|14.4702200,78.8205800
+carlsbad, california, united states|33.1229620,-117.3269000
+new york, new york, 10281, united states|40.7058000,-74.0186000
+staten island, new york, 10302, united states|40.6311567,-74.1386767
+baltimore, maryland, 21250, united states|39.2553811,-76.7076768
+san diego, california, 92591, united states|33.5102210,-117.1224040
+pocono summit, pennsylvania, 18346, united states|41.1109950,-75.3862310
+gainesville, florida, 32653, united states|29.7429556,-82.3777335
+segundo corral, los lagos, chile|
+bonn, 53113, germany|50.7194159,7.1221114
+new york , new york, 10036, united states|40.7598450,-73.9903489
+kharkov, ukraine|49.9918848,36.2570996
+huntington beach, california, 92649, united states|33.7210510,-118.0478826
+barcelona, catalunya, 08960, spain|41.3876262,2.0714223
+santa barbara, california, 93105, united states|34.4234030,-119.7044160
+huntington beach, california, 92648, united states|33.6847841,-118.0068979
+chebukwa, western province, kenya|
+munich, virtual (global|
+kampala, mityana, 256, uganda|0.4010306,32.0411315
+clark, new jersey, 07066, united states|40.6189813,-74.3176876
+roseau, dominica, dominica|15.2976060,-61.3900300
+maroua, north west province, 00237, cameroon|
+rutledge, georgia, 30663, united states|33.6262330,-83.6125880
+keramas, gianyar, bali, 80511, indonesia|-8.5733110,115.3270760
+point reyes, california, 94956, united states|38.0540037,-122.8874067
+fairfax, california, 94930, united states|37.9890640,-122.5915530
+novato, california, 94947, united states|38.1126702,-122.6390489
+san pedro, 77057, paraguay|-25.4372920,-56.4363760
+nassau county, new york, 11577, united states|40.7793075,-73.6359602
+san ignacio, belize|17.1500865,-89.0761318
+las delicias, san salvador, el salvador|13.6697556,-89.1865480
+urubamba, cusco, peru, peru|-13.3111200,-72.1152420
+nongkhai, thailand, th-43000, thailand|17.8780811,102.7412942
+pokhara, solukhumbu, dhulikhel, nepal|
+cusco and the sacred valley, peru|
+sullivans island sc 29482|32.7637162,-79.8380778
+hawai`i natl park hi 96718|
+king city ca 93930|36.2128830,-121.1263610
+fazier park ca 93225|34.8205870,-118.9454690
+national forests grasslands|
+bayfield co 81122|37.2325250,-107.5950480
+mackay id 83226|43.9031049,-113.7590804
+miami fl 33177-1402|25.5950580,-80.3992652
+north miami fl 33168|25.8807712,-80.2042436
+richmond al 23173|34.2086560,-86.1363910
+1120 glendale lane nashville tn 37204|36.0961540,-86.7952370
+1616 central avenue suite 200 (above wachovia bank) charlotte nc 28205|
+suite 200 (above wachovia bank) charlotte nc 28205|
+altadena and pasadena ca 91102|33.7311790,-117.8317550
+elverta ca 95628|38.7144230,-121.5594880
+3625/3627 fork shoals rd. po box 1332 simpsonville sc 29681|34.6528767,-82.3138663
+2313 shenandoah dr. phenix city al 36867|32.5079820,-85.0392310
+5001 american blvd. ste. 655 bloomington mn 55437|44.8575530,-93.3457500
+724 sibley st. ne st. paul mn 55413|44.9495230,-93.0888840
+boxford ma 01921|42.6693400,-70.9767400
+bridgewater ma 02324|41.9902200,-70.9754000
+st. petersburg fl 33712|27.7480089,-82.6645469
+jacksonville fl 00000|30.3263050,-81.6557480
+jacksonvile fl 32254|30.3476884,-81.7458845
