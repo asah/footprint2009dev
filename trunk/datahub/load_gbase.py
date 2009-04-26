@@ -74,8 +74,8 @@ def run_shell(command, silent_ok=False, universal_newlines=True,
 def load_gbase(name, url):
   """shutup pylint."""
   print datetime.now(), "loading", name, "from", url
-  run_shell(["./footprint_lib.py", "--ftpinfo", USERNAME+":"+PASSWORD, url],
-           silent_ok=True)
+  run_shell(["./footprint_lib.py", "--progress", "--ftpinfo", USERNAME+":"+PASSWORD, url],
+            silent_ok=True, print_output=True)
   print datetime.now(), "done."
 
 def main():
