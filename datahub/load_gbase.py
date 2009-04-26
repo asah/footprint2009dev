@@ -8,7 +8,7 @@ Usage: load_gbase.py username password
 import sys
 import logging
 import subprocess
-import datetime
+from datetime import datetime
 
 USERNAME = ""
 PASSWORD = ""
