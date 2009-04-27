@@ -129,12 +129,7 @@ function addToCalendar(div, type, searchResult) {
 function toggleInterest(resultIndex, div) {
   var result = searchResults[resultIndex];
   // TODO: First need to check if the user is logged in
-  var newInterest;
-  if (result.liked) {
-    newInterest = 0;
-  } else {
-    newInterest = 1;
-  }
+  var newInterest = result.liked ? 0 : 1;
 
   // TODO: This escaping code is unsafe!
   var path = '/action?type=star' +
