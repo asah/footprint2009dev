@@ -15,8 +15,7 @@
 """
 parser for usaservice.org
 """
-from xml.dom import minidom
-import xml_helpers
+import xml_helpers as xmlh
 import re
 from datetime import datetime
 
@@ -36,12 +35,13 @@ def parse(instr, maxrecs, progress):
   s += '<providerID>101</providerID>'
   s += '<providerName>usaservice.org</providerName>'
   s += '<feedID>1</feedID>'
-  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.current_ts()
+  s += '<createdDateTime>%s</createdDateTime>' % xmlh.current_ts()
   s += '<providerURL>http://www.usaservice.org/</providerURL>'
   s += '<description>Syndicated events</description>'
   # TODO: capture ts -- use now?!
   s += '</FeedInfo>'
 
+  numorgs = numopps = 0
   # hardcoded: Organization
   s += '<Organizations>'
   s += '<Organization>'
@@ -56,16 +56,17 @@ def parse(instr, maxrecs, progress):
   s += '<logoURL></logoURL>'
   s += '<detailURL></detailURL>'
   s += '</Organization>'
+  numorgs += 1
   s += '</Organizations>'
     
   s += '<VolunteerOpportunities>'
 
   instr = re.sub(r'<(/?db):', r'<\1_', instr)
-  for i,line in enumerate(instr.splitlines()):
+  for i, line in enumerate(instr.splitlines()):
     if (maxrecs>0 and i>maxrecs):
       break
-    xml_helpers.print_progress("opps", progress, i, maxrecs)
-    item = xml_helpers.simple_parser(line, known_elnames, progress=False)
+    xmlh.print_rps_progress("opps", progress, i, maxrecs)
+    item = xmlh.simple_parser(line, known_elnames, progress=False)
 
     # unmapped: db_rsvp  (seems to be same as link, but with #rsvp at end of url?)
     # unmapped: db_host  (no equivalent?)
@@ -74,13 +75,13 @@ def parse(instr, maxrecs, progress):
     # unmapped: guest_total
     # unmapped: db_title   (dup of title, above)
     s += '<VolunteerOpportunity>'
-    s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xml_helpers.get_tag_val(item, "guid"))
+    s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (xmlh.get_tag_val(item, "guid"))
     # hardcoded: sponsoringOrganizationID
     s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>0</sponsoringOrganizationID></sponsoringOrganizationIDs>'
     # hardcoded: volunteerHubOrganizationID
     s += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>0</volunteerHubOrganizationID></volunteerHubOrganizationIDs>'
-    s += '<title>%s</title>' % (xml_helpers.get_tag_val(item, "title"))
-    s += '<abstract>%s</abstract>' % (xml_helpers.get_tag_val(item, "abstract"))
+    s += '<title>%s</title>' % (xmlh.get_tag_val(item, "title"))
+    s += '<abstract>%s</abstract>' % (xmlh.get_tag_val(item, "abstract"))
     s += '<volunteersNeeded>-8888</volunteersNeeded>'
 
     dbscheduledTimes = item.getElementsByTagName("db_scheduledTime")
@@ -89,12 +90,12 @@ def parse(instr, maxrecs, progress):
       return None
     dbscheduledTime = dbscheduledTimes[0]
     s += '<dateTimeDurations><dateTimeDuration>'
-    length = xml_helpers.get_tag_val(dbscheduledTime, "db_length")
+    length = xmlh.get_tag_val(dbscheduledTime, "db_length")
     if length == "" or length == "-1":
       s += '<openEnded>Yes</openEnded>'
     else:
       s += '<openEnded>No</openEnded>'
-    date,time = xml_helpers.get_tag_val(dbscheduledTime, "db_dateTime").split(" ")
+    date, time = xmlh.get_tag_val(dbscheduledTime, "db_dateTime").split(" ")
     s += '<startDate>%s</startDate>' % (date)
     # TODO: timezone???
     s += '<startTime>%s</startTime>' % (time)
@@ -106,37 +107,33 @@ def parse(instr, maxrecs, progress):
       return None
     dbaddress = dbaddresses[0]
     s += '<locations><location>'
-    s += '<name>%s</name>' % (xml_helpers.get_tag_val(item, "db_venue_name"))
-    s += '<streetAddress1>%s</streetAddress1>' % (xml_helpers.get_tag_val(dbaddress, "db_street"))
-    s += '<city>%s</city>' % (xml_helpers.get_tag_val(dbaddress, "db_city"))
-    s += '<region>%s</region>' % (xml_helpers.get_tag_val(dbaddress, "db_state"))
-    s += '<country>%s</country>' % (xml_helpers.get_tag_val(dbaddress, "db_country"))
-    s += '<postalCode>%s</postalCode>' % (xml_helpers.get_tag_val(dbaddress, "db_zipcode"))
-    s += '<latitude>%s</latitude>' % (xml_helpers.get_tag_val(item, "db_latitude"))
-    s += '<longitude>%s</longitude>' % (xml_helpers.get_tag_val(item, "db_longitude"))
+    s += '<name>%s</name>' % (xmlh.get_tag_val(item, "db_venue_name"))
+    s += '<streetAddress1>%s</streetAddress1>' % (xmlh.get_tag_val(dbaddress, "db_street"))
+    s += '<city>%s</city>' % (xmlh.get_tag_val(dbaddress, "db_city"))
+    s += '<region>%s</region>' % (xmlh.get_tag_val(dbaddress, "db_state"))
+    s += '<country>%s</country>' % (xmlh.get_tag_val(dbaddress, "db_country"))
+    s += '<postalCode>%s</postalCode>' % (xmlh.get_tag_val(dbaddress, "db_zipcode"))
+    s += '<latitude>%s</latitude>' % (xmlh.get_tag_val(item, "db_latitude"))
+    s += '<longitude>%s</longitude>' % (xmlh.get_tag_val(item, "db_longitude"))
     s += '</location></locations>'
 
-    type = xml_helpers.get_tag_val(item, "db_eventType")
+    type = xmlh.get_tag_val(item, "db_eventType")
     s += '<categoryTags><categoryTag>%s</categoryTag></categoryTags>' % (type)
 
-    s += '<contactName>%s</contactName>' % xml_helpers.get_tag_val(item, "db_host")
-    s += '<detailURL>%s</detailURL>' % (xml_helpers.get_tag_val(item, "link"))
-    s += '<description>%s</description>' % (xml_helpers.get_tag_val(item, "description"))
-    pubdate = xml_helpers.get_tag_val(item, "pubDate")
+    s += '<contactName>%s</contactName>' % xmlh.get_tag_val(item, "db_host")
+    s += '<detailURL>%s</detailURL>' % (xmlh.get_tag_val(item, "link"))
+    s += '<description>%s</description>' % (xmlh.get_tag_val(item, "description"))
+    pubdate = xmlh.get_tag_val(item, "pubDate")
     if re.search("[0-9][0-9] [A-Z][a-z][a-z] [0-9][0-9][0-9][0-9]", pubdate):
       # TODO: parse() is ignoring timzone...
       ts = dateutil.parser.parse(pubdate)
       pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
     s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
-
     s += '</VolunteerOpportunity>'
+    numopps += 1
     
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
-
   #s = re.sub(r'><([^/])', r'>\n<\1', s)
-  return s
+  return s, numorgs, numopps
 
-if __name__ == "__main__":
-  sys = __import__('sys')
-  # tests go here
