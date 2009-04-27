@@ -123,12 +123,9 @@
   initMap();
 </script>
 
-<div style='margin-top:100px; color: #999; font-size: small;'>
-<hr>
-DEBUG INFO:<br>
- FP query=<a href='{{ view_url }}'>{{ view_url }}</a><br>
- Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded }}</a><br>
- num results: backend-estimated={{result_set.estimated_results}}  merged-estimated={{result_set.estimated_merged_results}}  backend={{result_set.num_results}}   merged={{result_set.num_merged_results}}  
-</div>
+<script>
+el('debug_snippets').style.display = '';
+el('debug_snippets').innerHTML = "DEBUG INFO:<br> FP query=<a href='{{ view_url }}'>{{ view_url }}</a><br> Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded }}</a><br> num results: backend-estimated={{result_set.estimated_results}}  merged-estimated={{result_set.estimated_merged_results}}  backend={{result_set.num_results}}   merged={{result_set.num_merged_results}}";
+</script>
 
 {% endif %}
