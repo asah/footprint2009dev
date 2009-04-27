@@ -681,7 +681,7 @@ def convert_to_gbase_events_type(instr, do_fastparse, maxrecs, progress):
       'missionStatement', 'name', 'nationalEIN', 'openEnded',
       'organizationID', 'organizationURL', 'paid', 'phone', 'postalCode',
       'providerID', 'providerName', 'providerURL', 'region', 'schemaVersion',
-      'sexRestrictedEnum', 'sexRestritedTo', 'skills',
+      'sexRestrictedEnum', 'sexRestrictedTo', 'skills',
       'sponsoringOrganizationID', 'startDate', 'startTime', 'streetAddress1',
       'streetAddress2', 'streetAddress3', 'title', 'tzOlsonPath', 'virtual',
       'volunteerHubOrganizationID', 'volunteerOpportunityID',
