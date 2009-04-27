@@ -2,10 +2,11 @@ html {
   font-family: arial;
   position: relative;
   font-size: 13px;
-  margin: 2px;
   background: #1155A0;
-  background-image: url('/images/background-gradient.png');
-  background-repeat: repeat-x
+}
+
+body {
+  margin: 0px;
 }
 
 h1 {
@@ -39,7 +40,7 @@ span {
 #header a:active { color: #fff }
 
 #footer {
-  margin: 15px;
+  margin: 15px 15px 15px 22px;
   width: 960px;
   overflow: hidden;
   color: white;
@@ -123,12 +124,9 @@ span {
 
 /** Content sections **/
 #content_outer {
-  margin-left: 15px;
-  margin-right: 15px;
-  margin-top: 15px;
-  width: 960px;
   overflow: hidden;
   background: white;
+  width: 960px;
 }
 
 #content {
@@ -322,6 +320,12 @@ span {
   width: 186px;
 }
 
+#login_bar_position {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+}
+
 #login_bar {
   float: right;
 }
@@ -333,8 +337,59 @@ span {
 
 #logo_flag {
   margin-right: 10px;
+  margin-left: 8px;
 }
 
 #logo_name {
   margin-right: 20px;
+}
+
+#background_top_gradient {
+  height: 70px;
+  width: 110%;
+  position: absolute;
+  z-index: -1;
+  float: left;
+}
+
+.glow_tl {
+  width: 23px;
+  height: 20px;
+}
+
+.glow_top {
+  background-image: url('../images/glow-top.gif');
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.glow_tr {
+  width: 23px;
+  height: 20px;
+}
+
+.glow_left {
+  background-image: url('../images/glow-left.gif');
+  background-repeat: repeat-y;
+}
+
+.glow_right {
+  background-image: url('../images/glow-right.gif');
+  background-repeat: repeat-y;
+}
+
+.glow_bl {
+  width: 23px;
+  height: 20px;
+}
+
+.glow_bottom {
+  background-image: url('../images/glow-bottom.gif');
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.glow_br {
+  width: 23px;
+  height: 20px;
 }
