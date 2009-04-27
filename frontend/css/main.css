@@ -9,12 +9,6 @@ body {
   margin: 0px;
 }
 
-h1 {
-  color: #2475B6;
-  margin: 10px 0px 5px 10px;
-  font-size: 24px;
-}
-
 div {
   font-size: 13px;
 }
@@ -31,7 +25,7 @@ span {
 
 #header {
   height: 40px;
-  padding: 0px 0px 20px 15px;
+  margin: 0px 0px 20px 15px;
 }
 
 #header a:link { color: #fff }
@@ -112,7 +106,6 @@ span {
 .sign_in {
   font-size: small;
   font-weight: bold;
-  margin-right: 5px;
   padding: 5px;
   color: white;
 }
@@ -346,7 +339,7 @@ span {
 
 #background_top_gradient {
   height: 70px;
-  width: 110%;
+  width: 100%;
   position: absolute;
   z-index: -1;
   float: left;
@@ -392,4 +385,12 @@ span {
 .glow_br {
   width: 23px;
   height: 20px;
+}
+
+#debug_snippets {
+  border: 1px solid silver;
+  width: 900px;
+  margin: 10px;
+  padding: 10px;
+  background: white;
 }
