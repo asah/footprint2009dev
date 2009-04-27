@@ -24,9 +24,9 @@ def append_log(outstr):
   outfh.close()
 
   outfh = open(LOG_FN, "a")
-  for line in outstr:
+  for line in outstr.split('\n'):
     if re.search(r'(STATUS|ERROR)', line):
-      outfh.write(line)
+      outfh.write(line+"\n")
   outfh.close()
 
 def error_exit(msg):
