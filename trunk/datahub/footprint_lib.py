@@ -1060,6 +1060,9 @@ def main():
   else:
     print outstr,
   elapsed = datetime.now() - start_time
+  # NOTE: if you change this, you also need to update datahub/load_gbase.py
+  # and frontend/views.py to avoid breaking the dashboard-- other status
+  # messages don't matter.
   xmlh.print_status("done parsing: output " + str(numorgs) + " organizations" +
                     " and " + str(numopps) + " opportunities" +
                     " (" + str(len(footprint_xmlstr)) + " bytes): " +
