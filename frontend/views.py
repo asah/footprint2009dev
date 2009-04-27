@@ -216,8 +216,6 @@ class ui_snippets_view(webapp.RequestHandler):
     """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
     result_set = search.search(unique_args)
-    # TODO: re-implement using django filters
-    # e.g. http://w.holeso.me/2008/08/a-simple-django-truncate-filter/
 
     result_set.request_url = self.request.url
 

@@ -5,12 +5,20 @@
 from google.appengine.ext import webapp
 
 def truncate_chars(value, max_length):
-    if len(value) > max_length:
-        truncd_val = value[:max_length]
-        if value[max_length+1] != " ":
-            truncd_val = truncd_val[:truncd_val.rfind(" ")]
-        return  truncd_val + " ..."
-    return value
+  if len(value) > max_length:
+    truncated_value = value[:max_length]
+    if value[max_length + 1] != ' ':
+      # TODO: Make sure that only whitespace in the data records
+      #     is ascii spaces.
+      right_index = truncated_value.rfind(' ')
+      ellipsis = ' ...'
+      MAX_CHARS_TO_CLIP = 40
+      if right_index < max_length - MAX_CHARS_TO_CLIP:
+        right_index = max_length - MAX_CHARS_TO_CLIP
+        ellipsis = '...'  # No separating space
+      truncated_value = truncated_value[:right_index]
+    return  truncated_value + ellipsis
+  return value
 
 register = webapp.template.create_template_register()
 register.filter('truncate_chars', truncate_chars)
