@@ -38,7 +38,7 @@ KNOWN_ELNAMES = [
   'missionStatement', 'name', 'nationalEIN', 'openEnded', 'organizationID',
   'organizationURL', 'paid', 'phone', 'postalCode', 'providerID',
   'providerName', 'providerURL', 'region', 'schemaVersion', 'sexRestrictedEnum',
-  'sexRestritedTo', 'skills', 'sponsoringOrganizationID', 'startDate',
+  'sexRestrictedTo', 'skills', 'sponsoringOrganizationID', 'startDate',
   'startTime', 'streetAddress1', 'streetAddress2', 'streetAddress3', 'title',
   'tzOlsonPath', 'virtual', 'volunteerHubOrganizationID',
   'volunteerOpportunityID', 'volunteersFilled', 'volunteersSlots',
