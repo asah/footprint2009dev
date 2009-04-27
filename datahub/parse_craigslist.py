@@ -74,25 +74,27 @@ from datetime import datetime
 
 import dateutil.parser
 
-craigslist_latlongs = None
+CL_LATLONGS = None
 
 def load_craigslist_latlongs():
-  global craigslist_latlongs
-  craigslist_latlongs = {}
+  """map of craigslist sub-metros to their latlongs."""
+  global CL_LATLONGS
+  CL_LATLONGS = {}
   latlongs_fh = open('craigslist-metro-latlongs.txt')
   for line in latlongs_fh:
     line = re.sub(r'\s*#.*$', '', line).strip()
     if line == "":
       continue
     try:
-      url, lat, long = line.strip().split("|")
+      url, lat, lng = line.strip().split("|")
     except:
       print "error parsing line", line
       sys.exit(1)
-    craigslist_latlongs[url] = lat + "," + long
+    CL_LATLONGS[url] = lat + "," + lng
   latlongs_fh.close()
 
 def extract(instr, rx):
+  """find the first instance of rx in instr and strip it of whitespace."""
   res = re.findall(rx, instr, re.DOTALL)
   if len(res) > 0:
     return res[0].strip()
@@ -101,14 +103,11 @@ def extract(instr, rx):
 # pylint: disable-msg=R0915
 def parse(instr, maxrecs, progress):
   """return FPXML given craigslist data"""
-  global craigslist_latlongs
-  if craigslist_latlongs == None:
+  if CL_LATLONGS == None:
     load_craigslist_latlongs()
-  if progress:
-    print datetime.now(), "loading craigslist crawler output..."
+  xmlh.print_progress("loading craigslist crawler output...")
   crawl_craigslist.parse_cache_file(instr, listings_only=True)
-  if progress:
-    print datetime.now(), "loaded", len(crawl_craigslist.pages), "pages."
+  xmlh.print_progress("loaded "+str(len(crawl_craigslist.pages))+" craigslist pages.")
 
   # convert to footprint format
   outstr = '<?xml version="1.0" ?>'
@@ -120,6 +119,8 @@ def parse(instr, maxrecs, progress):
   outstr += '<providerURL>http://www.craigslist.org/</providerURL>'
   outstr += '<createdDateTime>%s</createdDateTime>' % xmlh.current_ts()
   outstr += '</FeedInfo>'
+
+  numorgs = numopps = 0
 
   # no "organization" in craigslist postings
   outstr += '<Organizations>'
@@ -139,15 +140,16 @@ def parse(instr, maxrecs, progress):
   outstr += '<logoURL></logoURL>'
   outstr += '<detailURL></detailURL>'
   outstr += '</Organization>'
+  numorgs += 1
   outstr += '</Organizations>'
 
   skipped_listings = {}
   skipped_listings["body"] = skipped_listings["title"] = 0
   outstr += '<VolunteerOpportunities>'
-  for i,url in enumerate(crawl_craigslist.pages):
+  for i, url in enumerate(crawl_craigslist.pages):
     page = crawl_craigslist.pages[url]
 
-    id = extract(url, "/vol/(.+?)[.]html$")
+    item_id = extract(url, "/vol/(.+?)[.]html$")
     title = extract(page, "<title>(.+?)</title>")
     body = extract(page, '<div id="userbody">(.+?)<')
     locstr = extract(page, "Location: (.+?)<")
@@ -166,12 +168,12 @@ def parse(instr, maxrecs, progress):
 
     if (maxrecs>0 and i>maxrecs):
       break
-    xmlh.print_progress("opps", progress, i, maxrecs)
+    xmlh.print_rps_progress("opps", progress, i, maxrecs)
     if progress and i > 0 and i % 250 == 0:
-      print datetime.now(), ": skipped",
-      print skipped_listings["title"]+skipped_listings["body"], "listings (",
-      print skipped_listings["title"], "for no-title and",
-      print skipped_listings["body"], "for short body)"
+      msg = "skipped " + str(skipped_listings["title"]+skipped_listings["body"])
+      msg += " listings ("+str(skipped_listings["title"]) + " for no-title and "
+      msg += str(skipped_listings["body"]) + " for short body)"
+      xmlh.print_progress(msg)
       #print "---"
       #print "title:",title
       #print "loc:",locstr
@@ -179,7 +181,7 @@ def parse(instr, maxrecs, progress):
       #print "body:",body[0:100]
 
     outstr += '<VolunteerOpportunity>'
-    outstr += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (id)
+    outstr += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (item_id)
     outstr += '<sponsoringOrganizationIDs><sponsoringOrganizationID>0</sponsoringOrganizationID></sponsoringOrganizationIDs>'
     outstr += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>0</volunteerHubOrganizationID></volunteerHubOrganizationIDs>'
     outstr += '<title>%s</title>' % (title)
@@ -197,8 +199,8 @@ def parse(instr, maxrecs, progress):
     # what about the few that do geocode?
     lat, lng = "", ""
     try:
-      domain,unused = url.split("vol/")
-      lat,lng = craigslist_latlongs[domain].split(",")
+      domain, unused = url.split("vol/")
+      lat, lng = CL_LATLONGS[domain].split(",")
     except:
       # ignore for now
       #print url
@@ -221,14 +223,9 @@ def parse(instr, maxrecs, progress):
     # TODO: categories???
     #outstr += '<categoryTags>'
     outstr += '</VolunteerOpportunity>'
+    numopps += 1
   outstr += '</VolunteerOpportunities>'
   outstr += '</FootprintFeed>'
 
-  if progress:
-    print datetime.now(), "done generating footprint XML-- adding newlines..."
-  outstr = re.sub(r'><([^/])', r'>\n<\1', outstr)
-  return outstr
-
-if __name__ == "__main__":
-  sys = __import__('sys')
-  # tests go here
+  #outstr = re.sub(r'><([^/])', r'>\n<\1', outstr)
+  return outstr, numorgs, numopps

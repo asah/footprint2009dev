@@ -6,12 +6,28 @@ Usage: load_gbase.py username password
 """
 
 import sys
+import re
 import logging
 import subprocess
 from datetime import datetime
 
 USERNAME = ""
 PASSWORD = ""
+
+LOGPATH = "/home/footprint/public_html/datahub/dashboard/"
+LOG_FN = LOGPATH + "load_gbase.log"
+DETAILED_LOG_FN = LOGPATH + "load_gbase_detail.log"
+
+def append_log(outstr):
+  outfh = open(DETAILED_LOG_FN, "a")
+  outfh.write(outstr)
+  outfh.close()
+
+  outfh = open(LOG_FN, "a")
+  for line in outstr:
+    if re.search(r'(STATUS|ERROR)', line):
+      outfh.write(line)
+  outfh.close()
 
 def error_exit(msg):
   """Print an error message to stderr and exit."""
@@ -56,27 +72,38 @@ def run_shell_with_retcode(command, print_output=False,
     print >> sys.stderr, errout
   proc.stdout.close()
   proc.stderr.close()
-  return output, proc.returncode
+  append_log(output)
+  append_log(errout)
+  return output, errout, proc.returncode
 
 
 def run_shell(command, silent_ok=False, universal_newlines=True,
-             print_output=False):
+              print_output=False):
   """run a shell command."""
-  data, retcode = run_shell_with_retcode(command, print_output,
-                                         universal_newlines)
-  #TODO: handle errors
-  #if retcode:
-  #  error_exit("Got error status from %s:\n%s" % (command, data))
-  if not silent_ok and not data:
+  stdout, stderr, retcode = run_shell_with_retcode(command, print_output,
+                                                   universal_newlines)
+  #if retcode and retcode != 0:
+  #error_exit("Got error status from %s:\n%s\n%s" % (command, stdout, stderr))
+  if not silent_ok and not stdout:
     error_exit("No output from %s" % command)
-  return data
+  return stdout, stderr, retcode
+
 
 def load_gbase(name, url):
   """shutup pylint."""
-  print datetime.now(), "loading", name, "from", url
-  run_shell(["./footprint_lib.py", "--progress", "--ftpinfo", USERNAME+":"+PASSWORD, url],
-            silent_ok=True, print_output=True)
-  print datetime.now(), "done."
+  print str(datetime.now())+": loading", name, "from", url
+  # run as a subprocess so we can ignore failures and keep going
+  # later, we'll run these concurrently, but for now we're RAM-limited
+  # ignore retcode
+  stdout, stderr, retcode = run_shell(["./footprint_lib.py", "--progress",
+                                       "--ftpinfo", USERNAME+":"+PASSWORD, url],
+                                      silent_ok=True, print_output=False)
+  print stdout,
+  if stderr and stderr != "":
+    print name+":STDERR: ", re.sub(r'\n', '\n'+name+':STDERR: ', stderr)
+  if retcode and retcode != 0:
+    print name+":RETCODE: "+str(retcode)
+  print str(datetime.now())+": load_gbase: done."
 
 def main():
   """shutup pylint."""
@@ -86,14 +113,14 @@ def main():
     sys.exit(1)
   USERNAME = sys.argv[1]
   PASSWORD = sys.argv[2]
+  # TODO: run craigslist crawler
   load_gbase("extraordinaries", "http://whichoneis.com/opps/list/format/xml")
+  load_gbase("craigslist", "craigslist-cache.txt")
   load_gbase("americorps",
              "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
   load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
   load_gbase("handson",
              "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
-  # TODO: run craigslist crawler
-  load_gbase("craigslist", "craigslist-cache.txt")
   load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
              "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
              "en.open.atom.gz")

@@ -57,20 +57,29 @@ def get_children_by_tagname(elem, name):
       temp.append(child)
   return temp
 
-def print_progress(noun, progress, recno, maxrecs):
+def print_progress(msg, filename="", progress=True):
+  """print progress indicator."""
+  if progress:
+    print str(datetime.now())+":"+filename, msg
+
+def print_status(msg, filename="", progress=True):
+  """print status indicator, for stats collection."""
+  print_progress(msg, "STATUS:"+filename, progress)
+
+def print_rps_progress(noun, progress, recno, maxrecs):
   """print a progress indicator."""
   maxrecs_str = ""
   if maxrecs > 0:
     maxrecs_str = " of " + str(maxrecs)
   if progress and recno > 0 and recno % 250 == 0:
     now = datetime.now()
-    print now, ": ", recno, noun, "processed" + maxrecs_str,
     secs_since_start = now - PROGRESS_START_TS
     secs_elapsed = 3600*24.0*secs_since_start.days + \
         1.0*secs_since_start.seconds + \
         secs_since_start.microseconds / 1000000.0
     rps = recno / secs_elapsed
-    print "("+str(rps)+" recs/sec)"
+    print str(now)+": ", recno, noun, "processed" + maxrecs_str +\
+        " ("+str(int(rps))+" recs/sec)"
 
 def get_tag_val(entity, tag):
   """walk the DOM of entity looking for the first child named (tag)."""

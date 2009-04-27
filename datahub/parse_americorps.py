@@ -65,6 +65,8 @@ def parse(instr, maxrecs, progress):
     'StartDate', 'StateOrProvince', 'Title', 'VolunteerOpportunity',
     'ZipOrPostalCode' ]
 
+  numorgs = numopps = 0
+
   instr = re.sub(r'<(/?db):', r'<\1_', instr)
   opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>',
                     instr, re.DOTALL)
@@ -72,7 +74,7 @@ def parse(instr, maxrecs, progress):
   for i, oppstr in enumerate(opps):
     if (maxrecs > 0 and i > maxrecs):
       break
-    xmlh.print_progress("opps", progress, i, maxrecs)
+    xmlh.print_rps_progress("opps", progress, i, maxrecs)
 
     item = xmlh.simple_parser(oppstr, known_elnames, progress=False)
 
@@ -117,10 +119,9 @@ def parse(instr, maxrecs, progress):
       volopps += xmlh.output_node('postalCode', opploc, "ZipOrPostalCode")
       volopps += '</location>'
     volopps += '</locations>'
-
     volopps += '<categoryTags/>'
-
     volopps += '</VolunteerOpportunity>'
+    numopps += 1
     
   # convert to footprint format
   outstr = '<?xml version="1.0" ?>'
@@ -140,12 +141,14 @@ def parse(instr, maxrecs, progress):
   outstr += '<Organizations>'
   for key in ORGS:
     outstr += ORGS[key]
+    numorgs += 1
   outstr += '</Organizations>'
   outstr += '<VolunteerOpportunities>'
   outstr += volopps
   outstr += '</VolunteerOpportunities>'
   outstr += '</FootprintFeed>'
 
-  outstr = re.sub(r'><([^/])', r'>\n<\1', outstr)
-  return outstr
+  #outstr = re.sub(r'><([^/])', r'>\n<\1', outstr)
+  return outstr, numorgs, numopps
+
 

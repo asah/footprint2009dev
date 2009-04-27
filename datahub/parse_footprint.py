@@ -53,7 +53,7 @@ def set_default_time_elem(doc, entity, tagname, timest=xmlh.current_ts()):
 def parse_fast(instr, maxrecs, progress):
   """fast parser but doesn't check correctness,
   i.e. must be pre-checked by caller."""
-  totrecs = 0
+  numorgs = numopps = 0
   outstr = '<?xml version="1.0" ?>'
   outstr += '<FootprintFeed schemaVersion="0.1">'
   # note: preserves order, so diff works (vs. one sweep per element type)
@@ -66,12 +66,16 @@ def parse_fast(instr, maxrecs, progress):
     if node.firstChild.nodeName == "FeedInfo":
       xmlh.set_default_value(node, node.firstChild, "feedID", "0")
       set_default_time_elem(node, node.firstChild, "createdDateTime")
+    if node.firstChild.nodeName == "Organizations":
+      for opp in node.firstChild.childNodes:
+        if opp.nodeName == "Organization":
+          numorgs += 1
     if node.firstChild.nodeName == "VolunteerOpportunities":
-      totrecs += len(node.firstChild.childNodes)
-      if (maxrecs > 0 and totrecs > maxrecs):
+      numopps += len(node.firstChild.childNodes)
+      if (maxrecs > 0 and numopps > maxrecs):
         break
-      if progress and totrecs % 250 == 0:
-        print datetime.now(), ": ", totrecs, " records generated."
+      if progress and numopps % 250 == 0:
+        print datetime.now(), ": ", numopps, " records generated."
       for opp in node.firstChild.childNodes:
         if opp.nodeType == node.ELEMENT_NODE:
           xmlh.set_default_value(node, opp, "volunteersNeeded", -8888)
@@ -97,12 +101,9 @@ def parse_fast(instr, maxrecs, progress):
           time_elems += opp.getElementsByTagName("endTime")
           for el in time_elems:
             xmlh.set_default_attr(node, el, "olsonTZ", "America/Los_Angeles")
-            
     outstr += xmlh.prettyxml(node, True)
   outstr += '</FootprintFeed>'
-  if progress:
-    print datetime.now(), totrecs, "opportunities found."
-  return outstr
+  return outstr, numorgs, numopps
 
 def parse(instr, maxrecs, progress):
   """return python DOM object given FPXML"""

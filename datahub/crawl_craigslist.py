@@ -16,6 +16,8 @@
 # TODO: remove silly dependency on dapper.net-- thought I'd need
 # it for the full scrape, but ended up not going that way.
 
+"""crawler for craigslist until they provide a real feed."""
+
 from xml.dom import minidom
 import sys
 import urllib
@@ -89,10 +91,10 @@ def crawl(url, ignore):
   global crawlers, crawlers_lock, pages, page_lock, MAX_CRAWLERS
 
   if url in pages:
-      return
+    return
 
   while crawlers > MAX_CRAWLERS:
-      time.sleep(1)
+    time.sleep(1)
 
   # we don't care if several wake at once
   crawlers_lock.acquire()
@@ -105,34 +107,34 @@ def crawl(url, ignore):
   page = ""
   attempts = 0
   while attempts < 3 and page == "":
-      try:
-          fh = urllib.urlopen(proxied_url)
-          page = fh.read()
-          fh.close()
-      except:
-          page = ""   # in case close() threw exception
-          attempts = attempts + 1
-          print "open failed, retry after", attempts, "attempts"
-          time.sleep(1)
+    try:
+      fh = urllib.urlopen(proxied_url)
+      page = fh.read()
+      fh.close()
+    except:
+      page = ""   # in case close() threw exception
+      attempts = attempts + 1
+      print "open failed, retry after", attempts, "attempts"
+      time.sleep(1)
 
   if re.search(r'This IP has been automatically blocked', page, re.DOTALL):
-      print "uh oh: craiglist is blocking us (IP blocking).  exiting..."
-      sys.exit(1)
+    print "uh oh: craiglist is blocking us (IP blocking).  exiting..."
+    sys.exit(1)
 
   if (re.search(r'sorry.google.com/sorry/', page) or
       re.search(r'to automated requests from a computer virus or spyware', page, re.DOTALL)):
-      print "uh oh: google is blocking us (DOS detector).  exiting..."
-      sys.exit(1)
+    print "uh oh: google is blocking us (DOS detector).  exiting..."
+    sys.exit(1)
 
   if re.search(r'<TITLE>302 Moved</TITLE>"',page, re.DOTALL):
-      newlocstr = re.findall(r'The document has moved <A HREF="(.+?)"',page)          
-      print "being redirected to",newlocstr[0]
-      crawl(newlocstr[0], "foo")
-      return
-
+    newlocstr = re.findall(r'The document has moved <A HREF="(.+?)"',page)          
+    print "being redirected to",newlocstr[0]
+    crawl(newlocstr[0], "foo")
+    return
+  
   if attempts >= 3:
-      print "crawl failed after 3 attempts:",url
-      return
+    print "crawl failed after 3 attempts:",url
+    return
 
   page_lock.acquire()
   pages[url] = page
@@ -152,12 +154,12 @@ def crawl(url, ignore):
 def wait_for_page(url):
   res = ""
   while res == "":
-      page_lock.acquire()
-      if url in pages:
-          res = pages[url]
-      page_lock.release()
-      if res == "":
-          time.sleep(2)
+    page_lock.acquire()
+    if url in pages:
+      res = pages[url]
+    page_lock.release()
+    if res == "":
+      time.sleep(2)
   return res
 
 def sync_fetch(url):
@@ -170,8 +172,8 @@ def sync_fetch(url):
 
 progstart = time.time()
 def secs_since_progstart():
-    global progstart
-    return time.time() - progstart
+  global progstart
+  return time.time() - progstart
 
 def crawl_metro_page(url, unused):
   global crawlers, crawlers_lock, pages, page_lock
@@ -190,30 +192,30 @@ def crawl_metro_page(url, unused):
 def parse_cache_file(s, listings_only=False, printerrors=True):
   global pages
   for i,line in enumerate(s.splitlines()):
-      #print line[0:100]
-      res = re.findall(r'^(.+?)-Q-(.+)', line)
-      try:
-          url,page = res[0][0], res[0][1]
-          if (not listings_only or re.search(r'html$', url)):
-              pages[url] = page
-      except:
-          if printerrors:
-              print "error parsing cache file on line",i+1
-              print line
+    #print line[0:100]
+    res = re.findall(r'^(.+?)-Q-(.+)', line)
+    try:
+      url,page = res[0][0], res[0][1]
+      if (not listings_only or re.search(r'html$', url)):
+        pages[url] = page
+    except:
+      if printerrors:
+        print "error parsing cache file on line",i+1
+        print line
     
 def load_cache():
   global CACHE_FN
   try:
-      fh = open(CACHE_FN, "r")
-      instr = fh.read()
-      print "closing cache file", CACHE_FN
-      fh.close()
-      print "parsing cache data", len(instr), "bytes"
-      parse_cache_file(instr, False)
-      print "loaded", len(pages), "pages."
+    fh = open(CACHE_FN, "r")
+    instr = fh.read()
+    print "closing cache file", CACHE_FN
+    fh.close()
+    print "parsing cache data", len(instr), "bytes"
+    parse_cache_file(instr, False)
+    print "loaded", len(pages), "pages."
   except:
-      # ignore errors if file doesn't exist
-      pass
+    # ignore errors if file doesn't exist
+    pass
 
 def print_status():
   global pages, num_cached_pages, crawlers

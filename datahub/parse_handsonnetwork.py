@@ -102,6 +102,8 @@ def parse(instr, maxrecs, progress):
   # TODO: capture ts -- use now?!
   outstr += '</FeedInfo>'
 
+  numorgs = numopps = 0
+
   # hardcoded: Organization
   outstr += '<Organizations>'
   sponsor_ids = {}
@@ -109,7 +111,7 @@ def parse(instr, maxrecs, progress):
     r'<SponsoringOrganization>.+?</SponsoringOrganization>', instr, re.DOTALL)
   for i, orgstr in enumerate(sponsorstrs):
     if progress and i > 0 and i % 250 == 0:
-      print datetime.now(), ": ", i, " orgs processed."
+      print datetime.now()+": ", i, " orgs processed."
     org = xmlh.simple_parser(orgstr, known_elnames, False)
     #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
     #for i,org in enumerate(sponsors):
@@ -138,6 +140,7 @@ def parse(instr, maxrecs, progress):
     outstr += '<logoURL></logoURL>'
     outstr += '<detailURL></detailURL>'
     outstr += '</Organization>'
+    numorgs += 1
     sponsor_ids[name+desc] = i+1
     
   outstr += '</Organizations>'
@@ -151,11 +154,10 @@ def parse(instr, maxrecs, progress):
     print datetime.now(), "finding VolunteerOpportunities..."
   opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>',
                     instr, re.DOTALL)
-  totrecs = 0
   for i, oppstr in enumerate(opps):
     if (maxrecs > 0 and i > maxrecs):
       break
-    xmlh.print_progress("opps", progress, i, maxrecs)
+    xmlh.print_rps_progress("opps", progress, i, maxrecs)
     opp = xmlh.simple_parser(oppstr, known_elnames, False)
     orgs = opp.getElementsByTagName("SponsoringOrganization")
     name = xmlh.get_tag_val(orgs[0], "Name")
@@ -204,9 +206,8 @@ def parse(instr, maxrecs, progress):
       for oppdate in oppdates:
         oppcount = oppcount + 1
         if progress:
-          totrecs = totrecs + 1
-          if totrecs % 250 == 0:
-            print datetime.now(), ": ", totrecs, " records generated."
+          if numopps % 250 == 0:
+            print datetime.now(), ": ", numopps, " records generated."
   
         datetimedur += '<dateTimeDuration>'
         if oppdate == None:
@@ -233,13 +234,10 @@ def parse(instr, maxrecs, progress):
       outstr += '</dateTimeDurations>'
       outstr += datestr_post
       outstr += '</VolunteerOpportunity>'
+      numopps += 1
     
-  if progress:
-    print datetime.now(), "done with VolunteerOpportunities..."
   outstr += '</VolunteerOpportunities>'
   outstr += '</FootprintFeed>'
-  outstr = re.sub(r'><([^/])', r'>\n<\1', outstr)
-  if progress:
-    print datetime.now(), "parse_handsonnetwork.Parse: done."
-  return outstr
+  #outstr = re.sub(r'><([^/])', r'>\n<\1', outstr)
+  return outstr, numorgs, numopps
 

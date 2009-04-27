@@ -15,8 +15,7 @@
 """
 parser for idealist, which (IIRC) originates from Base?
 """
-from xml.dom import minidom
-import xml_helpers
+import xml_helpers as xmlh
 import re
 from datetime import datetime
 import xml.sax.saxutils
@@ -59,7 +58,7 @@ def ParseHelper(instr, maxrecs, progress):
   # TODO: progress
   known_elnames = ['feed', 'title', 'subtitle', 'div', 'span', 'updated', 'id', 'link', 'icon', 'logo', 'author', 'name', 'uri', 'email', 'rights', 'entry', 'published', 'gg_publish_date', 'gg_expiration_date', 'gg_event_date_range', 'gg_start', 'gg_end', 'updated', 'category', 'summary', 'content', 'awb_city', 'awb_country', 'awb_state', 'awb_postalcode', 'gg_location', 'gg_age_range', 'gg_employer', 'gg_job_type', 'gg_job_industry', 'awb_paid', ]
   # takes forever
-  #xmldoc = xml_helpers.simple_parser(s, known_elnames, progress)
+  #xmldoc = xmlh.simple_parser(s, known_elnames, progress)
 
   # convert to footprint format
   s = '<?xml version="1.0" ?>'
@@ -73,8 +72,10 @@ def ParseHelper(instr, maxrecs, progress):
   match = re.search(r'<title>(.+?)</title>', instr, re.DOTALL)
   if match:
     s += '<description>%s</description>' % (match.group(1))
-  s += '<createdDateTime>%s</createdDateTime>' % xml_helpers.current_ts()
+  s += '<createdDateTime>%s</createdDateTime>' % xmlh.current_ts()
   s += '</FeedInfo>'
+
+  numorgs = numopps = 0
 
   # hardcoded: Organization
   s += '<Organizations>'
@@ -84,22 +85,23 @@ def ParseHelper(instr, maxrecs, progress):
   for i, orgstr in enumerate(authors):
     if progress and i > 0 and i % 250 == 0:
       print datetime.now(), ": ", i, " orgs processed."
-    org = xml_helpers.simple_parser(orgstr, known_elnames, False)
+    org = xmlh.simple_parser(orgstr, known_elnames, False)
     s += '<Organization>'
     s += '<organizationID>%d</organizationID>' % (i+1)
     s += '<nationalEIN></nationalEIN>'
     s += '<guidestarID></guidestarID>'
-    name = xml_helpers.get_tag_val(org, "name")
+    name = xmlh.get_tag_val(org, "name")
     organizations[name] = i+1
     s += '<name>%s</name>' % (organizations[name])
     s += '<missionStatement></missionStatement>'
     s += '<description></description>'
     s += '<location><city></city><region></region><postalCode></postalCode></location>'
-    s += '<organizationURL>%s</organizationURL>' % (xml_helpers.get_tag_val(org, "uri"))
+    s += '<organizationURL>%s</organizationURL>' % (xmlh.get_tag_val(org, "uri"))
     s += '<donateURL></donateURL>'
     s += '<logoURL></logoURL>'
     s += '<detailURL></detailURL>'
     s += '</Organization>'
+    numorgs += 1
   s += '</Organizations>'
     
   s += '<VolunteerOpportunities>'
@@ -108,11 +110,11 @@ def ParseHelper(instr, maxrecs, progress):
   #if (maxrecs > entries.length):
   #  maxrecs = entries.length
   #for opp in entries[0:maxrecs-1]:
-  for i,oppstr in enumerate(entries):
+  for i, oppstr in enumerate(entries):
     if (maxrecs>0 and i>maxrecs):
       break
-    xml_helpers.print_progress("opps", progress, i, maxrecs)
-    opp = xml_helpers.simple_parser(oppstr, known_elnames, False)
+    xmlh.print_rps_progress("opps", progress, i, maxrecs)
+    opp = xmlh.simple_parser(oppstr, known_elnames, False)
     # unmapped: db:rsvp  (seems to be same as link, but with #rsvp at end of url?)
     # unmapped: db:host  (no equivalent?)
     # unmapped: db:county  (seems to be empty)
@@ -121,24 +123,24 @@ def ParseHelper(instr, maxrecs, progress):
     # unmapped: db:title   (dup of title, above)
     # unmapped: contactName
     s += '<VolunteerOpportunity>'
-    id_link = xml_helpers.get_tag_val(opp, "id")
+    id_link = xmlh.get_tag_val(opp, "id")
     s += '<volunteerOpportunityID>%s</volunteerOpportunityID>' % (id_link)
-    orgname = xml_helpers.get_tag_val(org, "name")  # ok to be lazy-- no other 'name's in this feed
+    orgname = xmlh.get_tag_val(org, "name")  # ok to be lazy-- no other 'name's in this feed
     s += '<sponsoringOrganizationIDs><sponsoringOrganizationID>%s</sponsoringOrganizationID></sponsoringOrganizationIDs>' % (organizations[orgname])
     # hardcoded: volunteerHubOrganizationID
     s += '<volunteerHubOrganizationIDs><volunteerHubOrganizationID>0</volunteerHubOrganizationID></volunteerHubOrganizationIDs>'
-    s += '<title>%s</title>' % (xml_helpers.get_tag_val(opp, "title"))
+    s += '<title>%s</title>' % (xmlh.get_tag_val(opp, "title"))
     # lazy: id is the same as the link field...
     s += '<detailURL>%s</detailURL>' % (id_link)
     # lazy: idealist stuffs a div in the content...
-    entry_content = xml_helpers.get_tag_val(opp, 'content')
+    entry_content = xmlh.get_tag_val(opp, 'content')
     s += '<description>%s</description>' % removeContentWrapperDiv(entry_content)
-    s += '<abstract>%s</abstract>' % (xml_helpers.get_tag_val(opp, "summary"))
-    pubdate = xml_helpers.get_tag_val(opp, "published")
+    s += '<abstract>%s</abstract>' % (xmlh.get_tag_val(opp, "summary"))
+    pubdate = xmlh.get_tag_val(opp, "published")
     ts = dateutil.parser.parse(pubdate)
     pubdate = ts.strftime("%Y-%m-%dT%H:%M:%S")
     s += '<lastUpdated>%s</lastUpdated>' % (pubdate)
-    s += '<expires>%sT23:59:59</expires>' % (xml_helpers.get_tag_val(opp, "gg_expiration_date"))
+    s += '<expires>%sT23:59:59</expires>' % (xmlh.get_tag_val(opp, "gg_expiration_date"))
     dbevents = opp.getElementsByTagName("gg_event_date_range")
     if (dbevents.length != 1):
       print datetime.now(), "parse_idealist: only 1 db:event supported."
@@ -147,7 +149,7 @@ def ParseHelper(instr, maxrecs, progress):
     # yucko: idealist is stored in Google Base, which only has 'location'
     # so we stuff it into the city field, knowing that it'll just get
     # concatenated down the line...
-    s += '<city>%s</city>' % (xml_helpers.get_tag_val(opp, "gg_location"))
+    s += '<city>%s</city>' % (xmlh.get_tag_val(opp, "gg_location"))
     s += '</location></locations>'
     dbscheduledTimes = opp.getElementsByTagName("gg_event_date_range")
     if (dbscheduledTimes.length != 1):
@@ -158,11 +160,11 @@ def ParseHelper(instr, maxrecs, progress):
     s += '<openEnded>No</openEnded>'
     # ignore duration
     # ignore commitmentHoursPerWeek
-    tempdate = xml_helpers.get_tag_val(dbscheduledTime, "gg_start")
+    tempdate = xmlh.get_tag_val(dbscheduledTime, "gg_start")
     ts = dateutil.parser.parse(tempdate)
     tempdate = ts.strftime("%Y-%m-%d")
     s += '<startDate>%s</startDate>' % (tempdate)
-    tempdate = xml_helpers.get_tag_val(dbscheduledTime, "gg_end")
+    tempdate = xmlh.get_tag_val(dbscheduledTime, "gg_end")
     ts = dateutil.parser.parse(tempdate)
     tempdate = ts.strftime("%Y-%m-%d")
     s += '<endDate>%s</endDate>' % (tempdate)
@@ -177,7 +179,7 @@ def ParseHelper(instr, maxrecs, progress):
     for cat in catstrs:
       s += "<categoryTag>" + xml.sax.saxutils.escape(cat) + "</categoryTag>"
     s += '</categoryTags>'
-    age_range = xml_helpers.get_tag_val(opp, "gg_age_range")
+    age_range = xmlh.get_tag_val(opp, "gg_age_range")
     if re.match(r'and under|Families', age_range):
       s += '<minimumAge>0</minimumAge>'
     elif re.match(r'Teens', age_range):
@@ -187,14 +189,13 @@ def ParseHelper(instr, maxrecs, progress):
     elif re.match(r'Seniors', age_range):
       s += '<minimumAge>65</minimumAge>'
     s += '</VolunteerOpportunity>'
+    numopps += 1
   s += '</VolunteerOpportunities>'
   s += '</FootprintFeed>'
 
-  if progress:
-    print datetime.now(), "done generating footprint XML-- adding newlines..."
-  s = re.sub(r'><([^/])', r'>\n<\1', s)
+  #s = re.sub(r'><([^/])', r'>\n<\1', s)
   #print s
-  return s
+  return s, numorgs, numopps
 
 # pylint: disable-msg=R0915
 def parse(s, maxrecs, progress):
@@ -204,6 +205,3 @@ def parse(s, maxrecs, progress):
   s = ParseHelper(s, maxrecs, progress)
   return s
 
-if __name__ == "__main__":
-  sys = __import__('sys')
-  # tests go here
