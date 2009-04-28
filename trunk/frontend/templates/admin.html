@@ -1,4 +1,100 @@
-Welcome to admin interface
+{% extends "base_min.html" %}
+{% block head %}
+  <link href='css/main.css' rel='stylesheet'/>
+  {% block css_files %}{% endblock %}
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 
-<br><br><br>
-<a href='{{ logout_link }}'>Logout</a>
+<style>
+h1 {
+  color: white;
+}
+h2 {
+  color: black;
+  font-size: 14px;
+}
+p {
+  color: white;
+  font-size: 14px;
+}
+.dash_column {
+  float: left;
+  text-align: center;
+  background: #eee;
+}
+</style>
+{% endblock %}
+
+
+{% block body %}
+<body>
+    <div id='header_top_spacer'></div>
+    <div>
+      <a class='no_underline' href='/'><img class='logo' src='/images/logo.png'>
+      <span class='header_title noselect pointer' style='vertical-align: middle;'><img class='logo' src='/images/title-transp.png' alt='All For Good'></span></a>
+    </div>
+  {# % include 'header.html' % #}
+
+<h1>Admin interface</h1>
+
+&nbsp;&nbsp;&nbsp; {{ msg }}
+<br/>
+<div style="width:1024px;background:#eee;padding:10px;text-align:left">
+  <h2>Main Menu:</h2>
+  <ul>
+  <li><a href='/admin?action=datahub_dashboard'>datahub dashboard</a></li>
+  <li><a href='/admin?action=flush_memcache'>flush memcache (i.e. after new server push)</a></li>
+  <li><a href='{{ logout_link }}'>Logout</a></li>
+  </ul>
+<p/>
+</div>
+
+<p/>
+  
+  {% ifequal action "datahub_dashboard" %}
+<div style="width:1024px;height:500px;background:#eee;padding:10px;text-align:left">
+  <div style="background:#eee">
+    <div class="dash_column">Provider<br/>
+      <div style="width:155px" id="provider_names"></div>
+    </div>
+    <div class="dash_column"># of Organizations<br/>
+      <div style="width:210px" id="organizations_chart"></div>
+    </div>
+    <div class="dash_column"># of Listings<br/>
+      <div style="width:210px" id="listings_chart"></div>
+    </div>
+    <div class="dash_column">Feed Size (bytes)<br/>
+      <div style="width:210px" id="bytes_chart"></div>
+    </div>
+    <div class="dash_column">Load Times (minutes)<br/>
+      <div style="width:210px" id="loadtimes_chart"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["imagesparkline"]});
+  google.setOnLoadCallback(drawChart);
+  var data;
+  function drawChart() {
+    {# django can't unpack complex data structures, and it would be too slow #}
+    {{ datahub_dashboard_js_data }}
+  }
+  </script>
+{% endifequal %}{# datahub_dashboard #}
+
+  {% block prefooter %}{% endblock %}
+  {% block footer %}
+  <div id='footer'>
+    <div class='footer_right'>
+      <a href='/aboutus'>About Us</a> |
+      <a href='/privacypolicy'>Privacy Policy</a> |
+      <a href='/publishers'>Publishers</a>
+    </div>
+    <div class='footer_left'>
+      &copy; 2009
+    </div>
+  </div>
+  {% endblock %}
+</body>
+{% endblock %}
+
