@@ -20,15 +20,17 @@ views in the app, in the MVC sense.
 # pylint: disable-msg=W0232
 # pylint: disable-msg=E1101
 # pylint: disable-msg=R0903
-import datetime
+from datetime import datetime
 import os
 import urllib
 import logging
+import re
 
 from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
+from google.appengine.api import urlfetch
 
 from fastpageviews import pagecount
 
@@ -56,6 +58,9 @@ POST_TEMPLATE = 'post.html'
 POST_RESULT_TEMPLATE = 'post_result.html'
 ADMIN_TEMPLATE = 'admin.html'
 MODERATE_TEMPLATE = 'moderate.html'
+
+DATAHUB_LOG = \
+    "http://google1.osuosl.org/~footprint/datahub/dashboard/load_gbase.log"
 
 DEFAULT_NUM_RESULTS = 10
 
@@ -99,7 +104,7 @@ def load_userinfo_into_dict(user, userdict):
   """populate the given dict with user info."""
   if user:
     userdict["user"] = user
-    userdict["user_days_since_joined"] = (datetime.datetime.now() -
+    userdict["user_days_since_joined"] = (datetime.now() -
                                           user.get_user_info().first_visit).days
   else:
     userdict["user"] = None
@@ -359,18 +364,140 @@ class admin_view(webapp.RequestHandler):
     """HTTP get method."""
     template_values = {
       'logout_link': users.create_logout_url('/'),
+      'msg': "",
+      'action': "",
     }
-
-    user = users.get_current_user()
-    if not user or not users.is_current_user_admin():
-      html = "<html><body><a href=\'%s\'>Sign in</a></body></html>"
-      self.response.out.write(html % (users.create_login_url(self.request.url)))
-      return
+    
+    if False:
+      user = users.get_current_user()
+      if not user or not users.is_current_user_admin():
+        html = "<html><body><a href=\'%s\'>Sign in</a></body></html>"
+        self.response.out.write(html %
+                                (users.create_login_url(self.request.url)))
+        return
 
     action = self.request.get('action')
-    if action == "flush_memcache":
+    if not action or action == "":
+      action = "mainmenu"
+    template_values['action'] = action
+
+    if action == "mainmenu":
+      template_values['msg'] = ""
+    elif action == "flush_memcache":
       memcache.flush_all()
-      logging.info("memcache flushed.")
+      template_values['msg'] = "memcached flushed"
+    elif action == "datahub_dashboard":
+      url = self.request.get('datahub_log')
+      if not url or url == "":
+        url = DATAHUB_LOG
+      fetch_result = urlfetch.fetch(url)
+      if fetch_result.status_code != 200:
+        template_values['msg'] = \
+            "error fetching dashboard data: code %d" % fetch_result.status_code
+      lines = fetch_result.content.split("\n")      
+      # typical line
+      # 2009-04-26 18:07:16.295996:STATUS:extraordinaries done parsing: output 
+      # 7 organizations and 7 opportunities (13202 bytes): 0 minutes.
+      statusrx = re.compile("(\d+-\d+-\d+ \d+:\d+:\d+)[.]\d+:STATUS:(.+?) "+
+                            "done parsing: output (\d+) organizations and "+
+                            "(\d+) opportunities .(\d+) bytes.: (\d+) minutes")
+      def parse_date(datestr):
+        """TODO: move to day granularity once we have a few weeks of data.
+        At N=10 providers, 5 values, 12 bytes each, 600B per record.
+        daily is reasonable for a year, hourly is not."""
+        return re.sub(':.+', '', datestr) + ":00"
+
+      js_data = ""
+      known_dates = {}
+      date_strings = []
+      known_providers = {}
+      provider_names = []
+      for line in lines:
+        match = re.search(statusrx, line)
+        if match:
+          hour = parse_date(match.group(1))
+          known_dates[hour] = 0
+          known_providers[match.group(2)] = 0
+          #js_data += "// hour="+hour+" provider="+match.group(2)+"\n"
+      template_values['provider_data'] = provider_data = []
+      sorted_providers = sorted(known_providers.keys())
+      for i, provider in enumerate(sorted_providers):
+        known_providers[provider] = i
+        provider_data.append([])
+        provider_names.append(provider)
+        #js_data += "// provider_names["+str(i)+"]="+provider_names[i]+"\n"
+      sorted_dates = sorted(known_dates.keys())
+      for i, hour in enumerate(sorted_dates):
+        for j, provider in enumerate(sorted_providers):
+          provider_data[j].append({})
+        known_dates[hour] = i
+        date_strings.append(hour)
+      #js_data += "// date_strings["+str(i)+"]="+date_strings[i]+"\n"
+      for line in lines:
+        match = re.search(statusrx, line)
+        if match:
+          #recordts = datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S")
+          hour = parse_date(match.group(1))
+          date_idx = known_dates[hour]
+          provider = match.group(2)
+          provider_idx = known_providers[provider]
+          #js_data += "// date_idx="+str(date_idx)
+          #js_data += " provider_idx="+str(provider_idx)+"\n"
+          rec = provider_data[provider_idx][date_idx]
+          rec['organizations'] = match.group(3)
+          rec['listings'] = match.group(4)
+          rec['bytes'] = match.group(5)
+          rec['loadtimes'] = match.group(6)
+      js_data += "function sv(row,col,val) {data.setValue(row,col,val);}\n"
+      js_data += "function ac(typ,key) {data.addColumn(typ,key);}\n"
+      js_data += "function acn(key) {data.addColumn('number',key);}\n"
+
+      js_data += "data = new google.visualization.DataTable();\n"
+      js_data += "data.addRows(1);"
+      for provider_idx, provider in enumerate(sorted_providers):
+        js_data += "acn('"+provider+"');"
+        js_data += "sv(0,"+str(provider_idx)+",0);"
+      js_data += "\n"
+      js_data += "var chart = new google.visualization.ImageSparkLine("
+      js_data += "  document.getElementById('provider_names'));\n"
+      js_data += "chart.draw(data,{width:150,height:50,showAxisLines:false,"
+      js_data += "  showValueLabels:false,labelPosition:'right'});\n"
+
+      for key in ['organizations', 'listings', 'bytes', 'loadtimes']:
+        js_data += "data = new google.visualization.DataTable();\n"
+        js_data += "data.addRows("+str(len(sorted_dates))+");\n"
+        colnum = 0
+        for provider_idx, provider in enumerate(sorted_providers):
+          try:
+            # ignore errors where there's no data for this key
+            #js_data += "//acn('str(provider_data["
+            #js_data += "str(provider_idx)+"][-1]["+key+"])');\n"
+            js_data += "acn('"+str(provider_data[provider_idx][-1][key])+"');"
+            #js_data += "acn('"+provider+" "+key
+            #js_data += " ("+str(provider_data[provider_idx][-1][key])+")');"
+            for date_idx, hour in enumerate(sorted_dates):
+              # doesn't work?!
+              #if date_idx in provider_data[provider_idx]:
+              val = ""
+              try:
+                rec = provider_data[provider_idx][date_idx]
+                val = "sv("+str(date_idx)+","+str(colnum)
+                val += ","+rec[key]+");"
+              except:
+                val = ""
+              js_data += val
+            colnum += 1
+          except:
+            # shutup pylint
+            js_data += ""
+        js_data += "\n"
+        js_data += "var chart = new google.visualization.ImageSparkLine("
+        js_data += "  document.getElementById('"+key+"_chart'));\n"
+        js_data += "chart.draw(data,{width:200,height:50,showAxisLines:false,"
+        js_data += "  showValueLabels:false,labelPosition:'right'});\n"
+      template_values['datahub_dashboard_js_data'] = js_data
+
+    logging.info("admin_view: "+template_values['msg'])
     self.response.out.write(render_template(ADMIN_TEMPLATE, template_values))
 
 class redirect_view(webapp.RequestHandler):
@@ -393,10 +520,10 @@ class moderate_view(webapp.RequestHandler):
     if action == "test":
       posting.createTestDatabase()
 
-    now = datetime.datetime.now()
+    now = datetime.now()
     nowstr = now.strftime("%Y-%m-%d %H:%M:%S")
     ts = self.request.get('ts', nowstr)
-    dt = datetime.datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+    dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
     delta = now - dt
     if delta.seconds < 3600:
       logging.info("processing changes...")
@@ -428,7 +555,6 @@ class moderate_view(webapp.RequestHandler):
       'result_set' : reslist,
     }
     self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))
-
 
 class action_view(webapp.RequestHandler):
   """vote/tag/etc on a listing.  TODO: rename to something more specific."""
@@ -475,7 +601,7 @@ class action_view(webapp.RequestHandler):
     info = models.VolunteerOpportunity.get_or_insert(key)
     if info.base_url != base_url:
       info.base_url = base_url
-      info.last_base_url_update = datetime.datetime.now()
+      info.last_base_url_update = datetime.now()
       info.base_url_failure_count = 0
       info.put()
 
