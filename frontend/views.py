@@ -67,6 +67,7 @@ DEFAULT_NUM_RESULTS = 10
 # Register custom Django templates
 template.register_template_library('templatetags.comparisonfilters')
 template.register_template_library('templatetags.stringutils')
+template.register_template_library('templatetags.dateutils')
 
 
 # TODO: not safe vs. spammers to checkin... but in our design,
@@ -605,6 +606,7 @@ class action_view(webapp.RequestHandler):
       info.base_url_failure_count = 0
       info.put()
 
+    # pylint: disable-msg=W0612
     (unused_new_entity, deltas) = \
       modelutils.set_entity_attributes(user_interest,
                                  { models.USER_INTEREST_LIKED: new_value },
