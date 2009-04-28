@@ -566,6 +566,22 @@
                         </xs:annotation>
                       </xs:element>
 
+                      <xs:element name="rsvpCount" type="xs:integer" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            <![CDATA[
+                              How many people have signed up for this event (through partner's website). Special codes: -8888 for unknown. Other than that exception, must be a non-negative integer. Optional. Default is -8888 to represent unknown number of rsvp's. Cannot be blank.
+                              May not be up-to-date as volunteers sign up.
+                              <p>Examples:
+                              <br><pcode>
+                              &lt;rsvpCount&gt;5&lt;/rsvpCount&gt;<br>
+                              &lt;rsvpCount&gt;-8888&lt;/rsvpCount&gt;<br>
+                              </pcode>
+                            ]]>
+                          </xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+
                       <xs:element name="dateTimeDurations">
                         <xs:annotation>
                           <xs:documentation>
