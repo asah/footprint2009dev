@@ -170,7 +170,7 @@ def prettyxml(doc, strip_header = False):
 
 def output_val(name, val):
   """return <name>val</name>."""
-  return "<" + name + ">" + val + "</" + name + ">"
+  return "<" + name + ">" + str(val) + "</" + name + ">"
 def output_node(name, node, nodename):
   """return <name>get_tag_val(node)</name>."""
   return output_val(name, get_tag_val(node, nodename))
@@ -197,3 +197,4 @@ def current_date(delta_secs=0):
   """Return a formatted date string for the current time, e.g. 2008-12-30"""
   return time.strftime("%Y-%m-%d",
                        time.gmtime(time.mktime(time.gmtime()) + delta_secs))
+

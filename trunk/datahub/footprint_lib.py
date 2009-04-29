@@ -23,6 +23,7 @@ import urllib
 import re
 from datetime import datetime
 import parse_footprint
+import parse_gspreadsheet
 import parse_usaservice
 import parse_handsonnetwork
 import parse_idealist
@@ -50,6 +51,8 @@ PROGRESS = False
 PRINTHEAD = False
 ABRIDGED = False
 OUTPUTFMT = "fpxml"
+
+HEADER_ALREADY_OUTPUT = False
 
 #BASE_PUB_URL = "http://change.gov/"
 BASE_PUB_URL = "http://adamsah.net/"
@@ -162,7 +165,10 @@ def convert_dt_to_gbase(datestr, timestr, timezone):
     tzinfo = dateutil.tz.tzstr(timezone)
   except:
     tzinfo = dateutil.tz.tzutc()
-  timestr = dateutil.parser.parse(datestr + " " + timestr)
+  try:
+    timestr = dateutil.parser.parse(datestr + " " + timestr)
+  except:
+    print "error parsing datetime: "+datestr+" "+timestr
   timestr = timestr.replace(tzinfo=tzinfo)
   pst = dateutil.tz.tzstr("PST8PDT")
   timestr = timestr.astimezone(pst)
@@ -620,7 +626,11 @@ def get_repeated_fields(feedinfo, opp, org):
 
 def output_header(feedinfo, opp, org):
   """fake opportunity printer, which prints the header line instead."""
-  global PRINTHEAD
+  global PRINTHEAD, HEADER_ALREADY_OUTPUT
+  # no matter what, only print the header once!
+  if HEADER_ALREADY_OUTPUT:
+    return ""
+  HEADER_ALREADY_OUTPUT = True
   PRINTHEAD = True
   outstr = output_field("id", "")
   repeated_fields = get_repeated_fields(feedinfo, opp, org)
@@ -654,7 +664,8 @@ def convert_to_footprint_xml(instr, do_fastparse, maxrecs, progress):
   #  outstr += '</FootprintFeed>'
   #  return outstr
   if do_fastparse:
-    return parse_footprint.parse_fast(instr, maxrecs, progress)
+    res, numorgs, numopps = parse_footprint.parse_fast(instr, maxrecs, progress)
+    return res
   else:
     # slow parse
     xmldoc = parse_footprint.parse(instr, maxrecs, progress)
@@ -713,9 +724,10 @@ def convert_to_gbase_events_type(instr, origname, fastparse, maxrecs, progress):
           example_org = org
         continue
       if re.search("<VolunteerOpportunity>", chunk):
+        global HEADER_ALREADY_OUTPUT
         opp = xmlh.simple_parser(chunk, None, False)
         if numopps == 0:
-          # reinitialize 
+          # reinitialize
           outstr = output_header(feedinfo, node, example_org)
         numopps, spiece = output_opportunity(opp, feedinfo, known_orgs, numopps)
         outstr += spiece
@@ -745,8 +757,7 @@ def convert_to_gbase_events_type(instr, origname, fastparse, maxrecs, progress):
     #      outstr += spiece
   else:
     # not fastparse
-    footprint_xml = parse_footprint.parse(instr, maxrecs, progress)
-    
+    footprint_xml = parse_footprint.parse(instr, maxrecs, progress)    
     feedinfos = footprint_xml.getElementsByTagName("FeedInfo")
     if (feedinfos.length != 1):
       print datetime.now(), "bad FeedInfo: should only be one section"
@@ -771,6 +782,8 @@ def guess_shortname(filename):
   """from the input filename, guess which feed this is."""
   if re.search("usa-?service", filename):
     return "usaservice"
+  if re.search("spreadsheets[.]google[.]com", filename):
+    return "gspreadsheet"
   if re.search("(handson|hot.footprint)", filename):
     return "handsonnetwork"
   if re.search("(volunteer[.]gov)", filename):
@@ -832,6 +845,10 @@ def guess_parse_func(inputfmt, filename):
   """from the filename and the --inputfmt,guess the input type and parse func"""
   if inputfmt == "fpxml" or re.search(r'fpxml', filename):
     return "fpxml", parse_footprint.parse
+  if (inputfmt == "gspreadsheet" or
+      (inputfmt == None and
+       re.search(r'spreadsheets[.]google[.]com', filename))):
+    return "gspreadsheet", parse_gspreadsheet.parse
   if (inputfmt == "usaservice" or inputfmt == "usasvc" or
       (inputfmt == None and re.search(r'usa-?service', filename))):
     return "usaservice", parse_usaservice.parse
@@ -897,7 +914,7 @@ def parse_options():
   parser.set_defaults(abridged=False)
   parser.set_defaults(progress=False)
   parser.set_defaults(debug_input=False)
-  parser.set_defaults(output="basetsv")
+  parser.set_defaults(outputfmt="basetsv")
   parser.set_defaults(test=False)
   parser.set_defaults(clean=True)
   parser.set_defaults(maxrecs=-1)
@@ -1000,11 +1017,9 @@ def test_parse(footprint_xmlstr, maxrecs):
     #  fromfile='(first output)', tofile='(second output)'):
     #print line
 
-def main():
-  """main function for cmdline execution."""
-  start_time = datetime.now()
-  options, args = parse_options()
-  filename = args[0]
+
+def process_file(filename, options, providerName="", providerID="",
+                 providerURL=""):
   shortname = guess_shortname(filename)
   inputfmt, parsefunc = guess_parse_func(options.inputfmt, filename)
   outfh = open_input_filename(filename)
@@ -1031,6 +1046,22 @@ def main():
     assert parsefunc != parse_footprint.parse
     footprint_xmlstr, numorgs, numopps = \
         parsefunc(instr, int(options.maxrecs), PROGRESS)
+
+  if (providerID != "" and
+      footprint_xmlstr.find('<providerID></providerID>')):
+    footprint_xmlstr = re.sub(
+      '<providerID></providerID>',
+      '<providerID>%s</providerID>' % providerID, footprint_xmlstr)
+  if (providerName != "" and
+      footprint_xmlstr.find('<providerName></providerName>')):
+    footprint_xmlstr = re.sub(
+      '<providerName></providerName>',
+      '<providerName>%s</providerName>' % providerName, footprint_xmlstr)
+  if (providerURL != "" and
+      footprint_xmlstr.find('<providerURL></providerURL>')):
+    footprint_xmlstr = re.sub(
+      '<providerURL></providerURL>',
+      '<providerURL>%s</providerURL>' % providerURL, footprint_xmlstr)
 
   if options.test:
     # free some RAM
@@ -1059,13 +1090,67 @@ def main():
     ftp_to_base(filename, options.ftpinfo, outstr)
   else:
     print outstr,
+  return len(footprint_xmlstr), numorgs, numopps
+
+def main():
+  """main function for cmdline execution."""
+  start_time = datetime.now()
+  options, args = parse_options()
+  filename = args[0]
+  if re.search("spreadsheets[.]google[.]com", filename):
+    match = re.search(r'key=([^& ]+)', filename)
+    url = "http://spreadsheets.google.com/feeds/cells/" + match.group(1)
+    url += "/1/public/basic"
+    # to avoid hitting 80 columns
+    pgs = parse_gspreadsheet
+    if OUTPUTFMT == "fpxml":
+      pgs.parser_fatal("FPXML format not supported for "+
+                       "spreadsheet-of-spreadsheets")
+
+    data = {}
+    updated = {}
+    if PROGRESS:
+      print "processing spreadsheet", url
+    maxrow, maxcol = pgs.read_gspreadsheet(url, data, updated, PROGRESS)
+    header_row, header_startcol = pgs.find_header_row(data, 'provider name')
+
+    # check to see if there's a header-description row
+    header_desc = pgs.cellval(data, header_row+1, header_startcol)
+    if not header_desc:
+      pgs.parser_fatal("blank row not allowed below header row")
+    header_desc = header_desc.lower()
+    data_startrow = header_row + 1
+    if header_desc.find("example") >= 0:
+      data_startrow += 1
+
+    bytes = numorgs = numopps = 0
+    for row in range(data_startrow, int(maxrow)+1):
+      providerName = pgs.cellval(data, row, header_startcol)
+      providerID = pgs.cellval(data, row, header_startcol+1)
+      providerURL = pgs.cellval(data, row, header_startcol+2)
+      if providerName == "" or providerID == "" or providerURL == "":
+        continue
+      match = re.search(r'key=([^& ]+)', providerURL)
+      providerURL = "http://spreadsheets.google.com/feeds/cells/"
+      providerURL += match.group(1)
+      providerURL += "/1/public/basic"
+      if PROGRESS:
+        print "processing spreadsheet", providerURL, "name="+providerName
+      providerBytes, providerNumorgs, providerNumopps = process_file(
+        providerURL, options, providerName, providerID, providerURL)
+      bytes += providerBytes
+      numorgs += providerNumorgs
+      numopps += providerNumopps
+  else:
+    bytes, numorgs, numopps = process_file(filename, options)
   elapsed = datetime.now() - start_time
   # NOTE: if you change this, you also need to update datahub/load_gbase.py
   # and frontend/views.py to avoid breaking the dashboard-- other status
   # messages don't matter.
+  shortname = guess_shortname(filename)
   xmlh.print_status("done parsing: output " + str(numorgs) + " organizations" +
                     " and " + str(numopps) + " opportunities" +
-                    " (" + str(len(footprint_xmlstr)) + " bytes): " +
+                    " (" + str(bytes) + " bytes): " +
                     str(int(elapsed.seconds/60)) + " minutes.",
                     shortname, PROGRESS)
 
