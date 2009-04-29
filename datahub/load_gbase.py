@@ -114,6 +114,8 @@ def main():
   USERNAME = sys.argv[1]
   PASSWORD = sys.argv[2]
   # TODO: run craigslist crawler
+  load_gbase("gspreadsheets",
+             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
   load_gbase("extraordinaries", "http://whichoneis.com/opps/list/format/xml")
   load_gbase("craigslist", "craigslist-cache.txt")
   load_gbase("americorps",
@@ -124,6 +126,5 @@ def main():
   load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
              "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
              "en.open.atom.gz")
-
 if __name__ == "__main__":
   main()
