@@ -27,3 +27,15 @@ URL_UI_SNIPPETS = '/ui_snippets'
 URL_REDIRECT = '/url'
 URL_ACTION = '/action'  # User actions like starring
 
+STATIC_CONTENT_LOCATION = 'http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/'
+
+# Mappings between appliation URLs (key) and static content
+# files to fetch (STATIC_CONTENT_LOCATION + value).
+# So, for example, the application URL '/about' maps to
+# the remote URL 'http://code.google.com/.../trunk/frontend/html/about_us.html'
+STATIC_CONTENT_FILES = {
+  '/about' : 'about_us.html',
+  '/privacypolicy' : 'privacy_policy.html',
+  '/publishers' : 'publishers.html',
+  '/help' : 'help.html',
+}

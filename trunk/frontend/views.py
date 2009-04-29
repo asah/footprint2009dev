@@ -27,6 +27,7 @@ import logging
 import re
 
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -41,10 +42,12 @@ import models
 import modelutils
 import posting
 import search
+import urls
 import userinfo
 import view_helper
 
 TEMPLATE_DIR = 'templates/'
+
 MAIN_PAGE_TEMPLATE = 'main_page.html'
 TEST_PAGEVIEWS_TEMPLATE = 'test_pageviews.html'
 SEARCH_RESULTS_TEMPLATE = 'search_results.html'
@@ -58,6 +61,7 @@ POST_TEMPLATE = 'post.html'
 POST_RESULT_TEMPLATE = 'post_result.html'
 ADMIN_TEMPLATE = 'admin.html'
 MODERATE_TEMPLATE = 'moderate.html'
+STATIC_CONTENT_TEMPLATE = 'static_content.html'
 
 DATAHUB_LOG = \
     "http://google1.osuosl.org/~footprint/datahub/dashboard/load_gbase.log"
@@ -619,3 +623,43 @@ class action_view(webapp.RequestHandler):
         return
 
     self.error(500)  # Server error.
+
+
+class static_content(webapp.RequestHandler):
+  """Handles static content like privacy policy and 'About Us'
+
+  The static content files are checked in SVN under /frontend/html.
+  We want to be able to update these files without having to push the
+  entire website.  The code here fetches the content directly from SVN,
+  memcaches it, and serves that.  So once a static content file is
+  submitted into SVN, it will go live on the site automatically (as soon
+  as memcache entry expires) without requiring a full site push.
+  """
+  def get(self):
+    """HTTP get method."""
+    remote_url = (urls.STATIC_CONTENT_LOCATION +
+        urls.STATIC_CONTENT_FILES[self.request.path])
+
+    STATIC_CONTENT_MEMCACHE_TIME = 60 * 60  # One hour.
+    STATIC_CONTENT_MEMCACHE_KEY = 'static_content:'
+
+    text = memcache.get(STATIC_CONTENT_MEMCACHE_KEY + remote_url)
+    if not text:
+      result = urlfetch.fetch(remote_url)
+      if result.status_code == 200:
+        text = result.content
+        memcache.set(STATIC_CONTENT_MEMCACHE_KEY + remote_url,
+                     text,
+                     STATIC_CONTENT_MEMCACHE_TIME)
+
+    if text:
+      user = userinfo.get_user(self.request)
+      template_values = {
+        'user' : user,
+        'path' : self.request.path,
+        'static_content' : text,
+      }
+      self.response.out.write(render_template(STATIC_CONTENT_TEMPLATE,
+                                              template_values))
+    else:
+      self.error(404)
