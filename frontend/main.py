@@ -35,7 +35,9 @@ APPLICATION = webapp.WSGIApplication(
      (urls.URL_POST, views.post_view),
      (urls.URL_REDIRECT, views.redirect_view),
      (urls.URL_MODERATE, views.moderate_view),
-    ],
+    ] +
+    [ (url, views.static_content) for url in
+         urls.STATIC_CONTENT_FILES.iterkeys() ],
     debug=True)
 
 def main():

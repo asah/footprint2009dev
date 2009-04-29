@@ -331,10 +331,14 @@ span {
 #logo_flag {
   margin-right: 10px;
   margin-left: 8px;
+  width: 70px;
+  height: 34px;
 }
 
 #logo_name {
   margin-right: 20px;
+  width: 243px;
+  height: 37px;
 }
 
 #background_top_gradient {
@@ -393,4 +397,21 @@ span {
   margin: 10px;
   padding: 10px;
   background: white;
+}
+
+#static_content_list {
+  font-weight: bold;
+  list-style-type: none;
+  margin-left: 10px;
+  padding: 0px;
+}
+
+#static_content_list a {
+  text-decoration: none;
+  font-weight: normal;
+  color: #039;
+}
+
+h1 {
+  font-size: 24pt;
 }

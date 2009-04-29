@@ -65,6 +65,14 @@
   {% endblock %}
 
   <div id='debug_snippets' style='display:none;'></div>
+  <script>
+    // Handle searches when in static content pages.
+    if (!('submitForm' in window)) {
+      function submitForm(fromWhere) {
+        window.location = '/#q=' + el('keywords').value;
+      }
+    }
+  </script>
 </body>
 {% endblock %}
 
