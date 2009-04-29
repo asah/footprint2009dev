@@ -104,15 +104,15 @@ getClientLocation = function() {
  * @param {string|GLatLng} location Location in either string form (address) or
  *      a GLatLng object.
  * @param {number} start The start index for results.  Must be integer.
- * @param {Array.<Date>} dateRange The date range for the search, as a two
- *     element array of dates.
+ * @param {Object} opt_filters Filters for this query.
+ *      Maps 'filtername':value.
  */
-function Query(keywords, location, pageNum, dateRange) {
+function Query(keywords, location, pageNum, opt_filters) {
   var me = this;
   me.keywords_ = keywords;
   me.location_ = location;
   me.pageNum_ = pageNum;
-  me.dateRange_ = dateRange;
+  me.filters_ = opt_filters || {};
 };
 
 Query.prototype.setPageNum = function(pageNum) {
@@ -130,6 +130,18 @@ Query.prototype.getKeywords = function() {
 Query.prototype.getLocation = function() {
   return this.location_;
 };
+
+Query.prototype.getFilter = function(name) {
+  if (name in this.filters_) {
+    return this.filters_[name];
+  } else {
+    return undefined;
+  }
+}
+
+Query.prototype.setFilter = function(name, value) {
+  this.filters_[name] = value;
+}
 
 Query.prototype.getUrlQuery = function() {
   var me = this;
@@ -152,11 +164,12 @@ Query.prototype.getUrlQuery = function() {
     addQueryParam('vol_loc', me.location_);
   }
 
-  if (me.dateRange_ && me.dateRange_.length == 2) {
+  var dateRange = me.getFilter('dateRange');
+  if (dateRange && dateRange.length == 2) {
     addQueryParam('vol_startdate',
-                  vol.Calendar.dateAsString(me.dateRange_[0]));
+                  vol.Calendar.dateAsString(dateRange[0]));
     addQueryParam('vol_enddate',
-                  vol.Calendar.dateAsString(me.dateRange_[1]));
+                  vol.Calendar.dateAsString(dateRange[1]));
   }
   return urlQuery;
 };
@@ -190,7 +203,8 @@ function QueryFromUrlParams() {
     endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
   }
 
-  return new Query(keywords, location, pageNum, [startDate, endDate]);
+  return new Query(keywords, location, pageNum,
+                   { 'dateRange': [startDate, endDate] });
 }
 
 
@@ -300,7 +314,8 @@ function submitForm(fromWhere) {
     location = getClientLocation();
   }
 
-  var query = new Query(keywords, location, 0, calendar.getDateRange());
+  var query = new Query(keywords, location, 0,
+                        { 'dateRange': calendar.getDateRange() });
   executeSearch(query);
 }
 
