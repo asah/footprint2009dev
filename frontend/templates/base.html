@@ -25,13 +25,21 @@
 
 {% endblock %}
 
-</head>
-
 {% block body %}
 <body onload='asyncLoadManager.doneLoading("bodyload");'>
+ <img id='background_top_gradient' src='/images/background-gradient.png'>
+ <div id='login_bar_position'>
+   <div id='login_bar'>
+     {% include "login_bar.html" %}
+   </div>
+ </div>
+
+ <center>
+ <div id='body_centered'>
   {% include 'header.html' %}
   {% block subheader %}{% endblock %}
 
+  <div>
   <table style='padding: 0px;' cellpadding='0' cellspacing='0'>
   <tr>
     <td class='glow_tl'><img src='../images/glow-tl.gif'></td>
@@ -49,6 +57,7 @@
     <td class='glow_br'><img src='../images/glow-br.gif'></td>
   </tr>
   </table>
+  </div>
 
   {% block prefooter %}{% endblock %}
   {% block footer %}
@@ -63,6 +72,8 @@
     </div>
   </div>
   {% endblock %}
+ </div>
+ </center>
 
   <div id='debug_snippets' style='display:none;'></div>
   <script>
@@ -76,4 +87,3 @@
 </body>
 {% endblock %}
 
-</html>
