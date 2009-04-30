@@ -16,7 +16,6 @@ limitations under the License.
 var map;
 var calendar;
 var NUM_PER_PAGE = 10;
-var lastSearchQuery;
 var searchResults = [];
 
 function initCalendar() {
@@ -115,6 +114,11 @@ function Query(keywords, location, pageNum, opt_filters) {
   me.filters_ = opt_filters || {};
 };
 
+Query.prototype.clone = function() {
+  var me = this;
+  return jQuery.extend(true, new Query(), me);
+};
+
 Query.prototype.setPageNum = function(pageNum) {
   this.pageNum_ = pageNum;
 };
@@ -174,7 +178,7 @@ Query.prototype.getUrlQuery = function() {
   return urlQuery;
 };
 
-function QueryFromUrlParams() {
+function NewQueryFromUrlParams() {
   var keywords = getHashOrQueryParam('q', '');
 
   var location = getHashOrQueryParam('vol_loc', getClientLocation());
@@ -211,7 +215,7 @@ function QueryFromUrlParams() {
 /** Perform a search using the current URL parameters and IP geolocation.
  */
 function onLoadSearch() {
-  executeSearch(QueryFromUrlParams());
+  executeSearch(NewQueryFromUrlParams());
   executeSearchFromHashParams();
   $(window).hashchange(executeSearchFromHashParams);
 }
@@ -248,7 +252,7 @@ executeSearchFromHashParams = function() {
     // (no need to refresh GET param cache.)
     hashParams = GetHashParams();
 
-    var query = QueryFromUrlParams();
+    var query = NewQueryFromUrlParams();
     el('no_results_message').style.display = 'none';
     el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
     calendar.clearMarks();
@@ -314,8 +318,11 @@ function submitForm(fromWhere) {
     location = getClientLocation();
   }
 
-  var query = new Query(keywords, location, 0,
-                        { 'dateRange': calendar.getDateRange() });
+  var query = lastSearchQuery.clone();
+  query.setKeywords(keywords);
+  query.setLocation(location);
+  query.setPageNum(0);
+  query.setFilter('dateRange', calendar.getDateRange());
   executeSearch(query);
 }
 
@@ -444,3 +451,5 @@ function SearchResult(url, title, location, snippet, startdate, enddate,
   this.baseUrl = baseUrl;
   this.liked = liked;
 }
+
+var lastSearchQuery = new Query('', '', 0, {});
