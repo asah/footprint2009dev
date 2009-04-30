@@ -126,8 +126,10 @@ function addToCalendar(div, type, searchResult) {
   window.open(url, 'calendar');
 }
 
-function toggleInterest(resultIndex, div) {
+function toggleInterest(resultIndex) {
   var result = searchResults[resultIndex];
+  var div = el('like_' + resultIndex);
+
   // TODO: First need to check if the user is logged in
   var newInterest = result.liked ? 0 : 1;
 
@@ -140,7 +142,9 @@ function toggleInterest(resultIndex, div) {
 
   var success = function(data, textStatus) {
     result.liked = newInterest;
-    div.innerHTML = result.liked ? 'Un-like' : 'Like';
+    div.style.display = result.liked ? 'none' : '';
+
+    updateInterestInfoDisplay(resultIndex);
   };
 
   var error = function(xhr, textStatus, errorThrown) {
@@ -159,4 +163,25 @@ function toggleInterest(resultIndex, div) {
     error: error,
     success: success
   });
+}
+
+/** Update the div displaying interest info for user and friends, for
+ *  a particular search result.
+ *  @param {number} resultIndex Index of result in searchResults global array.
+ */
+function updateInterestInfoDisplay(resultIndex) {
+  var result = searchResults[resultIndex];
+  var html = '';
+  if (result.liked) {
+    html += '<img class="like_icon" src="/images/like.gif">You think this is good (' +
+        '<a href="javascript:toggleInterest(' + resultIndex +
+        ');void(0);">undo</a>)';
+  }
+  var div = el('interest_info_' + resultIndex);
+  div.innerHTML = html;
+  if (html.length == 0) {
+    div.style.display = 'none';
+  } else {
+    div.style.display = '';
+  }
 }
