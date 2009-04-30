@@ -48,6 +48,11 @@ handlers:
 - url: /export/.*
   script: export/main.py
 
+# For Gadget
+- url: /gadget.xml
+  static_files: templates/gadget.xml
+  upload: templates/gadget.xml
+
 # Keep this last
 - url: /.*
   script: main.py
