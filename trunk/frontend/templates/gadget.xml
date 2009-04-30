@@ -35,7 +35,7 @@
         return {
           map: null,
           client_location: null,
-          footprint_search_url: 'http://footprint2009dev.appspot.com/api/volopps?',
+          footprint_search_url: 'http://footprint2009dev.appspot.com/api/volopps?key=fpgadget',
           items: null,
           display_type: DISPLAY_TYPE_MAP__MODULE_ID__, 
           
@@ -50,7 +50,7 @@
             
             for (var name in parms) {
               this.log(name + ': ' + parms[name]);
-              result += name + '=' + _esc(parms[name]) + '&';
+              result += '&' + name + '=' + _esc(parms[name]);
             }
             
             this.log(result);
