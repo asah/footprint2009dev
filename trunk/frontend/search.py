@@ -16,6 +16,8 @@
 high-level routines for querying backend datastores and processing the results.
 """
 
+import calendar
+import datetime
 import hashlib
 import logging
 import re
@@ -70,6 +72,43 @@ def search(args):
   if api.PARAM_CACHE in args and args[api.PARAM_CACHE] == '0':
     use_cache = False
     logging.info('Not using search cache')
+
+  if api.PARAM_TIMEPERIOD in args:
+    period = args[api.PARAM_TIMEPERIOD]
+    # No need to pass thru, just convert period to discrete date args.
+    del args[api.PARAM_TIMEPERIOD]
+    range = None
+    today = datetime.date.today()
+    if period == 'today':
+      range = (today, today)
+    elif period == 'this_weekend':
+      days_to_sat = 5 - today.weekday()
+      delta = datetime.timedelta(days=days_to_sat);
+      this_saturday = today + delta
+      this_sunday = this_saturday + datetime.timedelta(days=1)
+      range = (this_saturday, this_sunday)
+    elif period == 'this_week':
+      days_to_mon = 0 - today.weekday()
+      delta = datetime.timedelta(days=days_to_mon);
+      this_monday = today + delta
+      this_sunday = this_monday + datetime.timedelta(days=6)
+      range = (this_monday, this_sunday)
+    elif period == 'this_month':
+      days_to_first = 1 - today.day
+      delta = datetime.timedelta(days=days_to_first)
+      first_of_month = today + delta
+      days_to_month_end = calendar.monthrange(today.year, today.month)[1] - 1
+      delta = datetime.timedelta(days=days_to_month_end)
+      last_of_month = first_of_month + delta
+      range = (first_of_month, last_of_month)
+
+    
+    if range:
+      start_date = range[0].strftime("%Y-%m-%d")
+      end_date = range[1].strftime("%Y-%m-%d")
+      args[api.PARAM_VOL_STARTDATE] = start_date
+      args[api.PARAM_VOL_ENDDATE] = end_date
+      logging.info(start_date + '...' + end_date)
 
   # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
   # I (mblain) suggest using "zx", which is used at Google for most services.

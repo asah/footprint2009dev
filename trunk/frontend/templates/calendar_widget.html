@@ -1,25 +1,7 @@
-<form action="" method="POST">
-  <label>
-    What's going on
-    <select name="period">
-      <option value="month">this month</option>
-      <option value="week">this week</option>
-      <option value="weekend">this weekend</option>
-      <option value="today">today</option>
-    </select>
-  </label>
-</form>
-<table cellpadding="0" cellspacing="0"
-       class="noselect calendartable" style="display:none;">
-  <thead>
-    <tr>
-      <th class="calendar_month_previous pointer">&#171;</th>
-      <th colspan="5" class="calendar_month"></th>
-      <th class="calendar_month_next pointer">&#187;</th>
-    </tr>
-    <tr>
-      <th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th>
-    </tr>
-  </thead>
-  <tbody class="calendar_days"></tbody>
-</table>
+<select id="timeperiod" onchange="submitForm(); return false;">
+  <option value="everything">Everything</option>
+  <option value="this_month">This month</option>
+  <option value="this_week">This week</option>
+  <option value="this_weekend">This weekend</option>
+  <option value="today">Today</option>
+</select>

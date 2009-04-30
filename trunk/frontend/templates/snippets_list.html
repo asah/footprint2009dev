@@ -31,16 +31,6 @@
                map.addMarker(coords[0], coords[1])});
         </script>
       {% endif %}
-      {# TODO(oansaldi): escape dates for extra-care (they are already safe) #}
-      {% if result.startdate %}
-        <script>
-          asyncLoadManager.addCallback('bodyload', function() {
-            calendar.markRange(
-                new Date('{{ result.startdate|date:"r" }}'),
-                new Date('{{ result.enddate|date:"r" }}'));
-          });
-        </script>
-      {% endif %}
 
       <div class='snippet_title'>
         <a href='/url?q={{ result.url|urlencode }}'>{{ result.title }}</a>
@@ -123,9 +113,6 @@
 <div id='paginator'>
 </div>
 <script>
-  asyncLoadManager.addCallback('bodyload', function() {
-    calendar.render();
-  });
   renderPaginator(el('paginator'), {{result_set.estimated_merged_results}});
   initMap();
 </script>
