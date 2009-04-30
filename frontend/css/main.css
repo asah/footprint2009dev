@@ -200,45 +200,6 @@ span {
   height: 228px;
 }
 
-/** Search results - calendar **/
-#calendar {
-  margin-top: 20px;
-  width: 230px;
-  font-size: small;
-}
-
-#calendar table {
-  margin: 0 auto;
-  color: #2475B6;
-  background: #669FCC;
-  border-collapse: collapse;
-  border: 3px solid #669FCC;
-}
-
-#calendar td,
-#calendar th {
-  padding: 3px;
-  text-align: center;
-  font-size: small;
-}
-
-#calendar td {
-  width: 1.5em;
-  background: #a3bfdc;
-}
-
-#calendar td.calendar_days_weekend {
-  background: #b9cfe4;
-}
-
-#calendar td.calendar_days_today {
-  font-weight: bolder;
-}
-
-#calendar td.calendar_days_event {
-  background: #fff;
-}
-
 /** Work with others **/
 .friend {
   padding-top: 10px;

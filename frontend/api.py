@@ -24,6 +24,7 @@ PARAM_Q = 'q'
 PARAM_SORT = 'sort'
 PARAM_START = 'start'
 PARAM_CACHE = 'cache'
+PARAM_TIMEPERIOD = 'timeperiod' # e.g., 'today'
 
 # the ratio of actual results to request from the backend--
 # typical values range from 1.0 to 10.0, where larger numbers

@@ -14,49 +14,8 @@ limitations under the License.
 */
 
 var map;
-var calendar;
 var NUM_PER_PAGE = 10;
 var searchResults = [];
-
-function initCalendar() {
-  var element = el('calendar');
-  calendar = new vol.Calendar(element);
-  calendar.render();
-
-  function nextMonth() {
-    calendar.nextMonth();
-    submitForm('calendar');
-  }
-  function previousMonth() {
-    calendar.previousMonth();
-    submitForm('calendar');
-  }
-  function changePeriod() {
-    calendar.clearMarks();
-    submitForm('calendar');
-  }
-
-  forEachElementOfClass('calendar_month_previous', function(e) {
-    addListener(e, 'click', previousMonth);
-  }, element);
-  forEachElementOfClass('calendar_month_next', function(e) {
-    addListener(e, 'click', nextMonth);
-  }, element);
-  addListener(calendar.periodSelector, 'change', changePeriod);
-
-  function unregisterEventListeners() {
-    forEachElementOfClass('calendar_month_previous', function(e) {
-      removeListener(e, 'click', previousMonth);
-    }, element);
-    forEachElementOfClass('calendar_month_next', function(e) {
-      removeListener(e, 'click', nextMonth);
-    }, element);
-    removeListener(calendar.periodSelector, 'change', changePeriod);
-  }
-  onUnloadWorkQueue.addCallback(unregisterEventListeners);
-}
-asyncLoadManager.addCallback('bodyload', initCalendar);
-
 
 /** Get the IP geolocation given by the Common Ajax Loader.
  * Note: this function caches its own result.
@@ -68,7 +27,7 @@ getClientLocation = function() {
   return function() {
     if (clientLocationString === undefined) {
       try {
-        var loc = google.loader.ClientLocation
+        var loc = google.loader.ClientLocation;
         lat = loc.latitude;
         lon = loc.longitude;
         if (lat > 0) {
@@ -103,14 +62,16 @@ getClientLocation = function() {
  * @param {string|GLatLng} location Location in either string form (address) or
  *      a GLatLng object.
  * @param {number} start The start index for results.  Must be integer.
+ * @param {string} timePeriod The time period.
  * @param {Object} opt_filters Filters for this query.
  *      Maps 'filtername':value.
  */
-function Query(keywords, location, pageNum, opt_filters) {
+function Query(keywords, location, pageNum, timePeriod, opt_filters) {
   var me = this;
   me.keywords_ = keywords;
   me.location_ = location;
   me.pageNum_ = pageNum;
+  me.timePeriod_ = timePeriod;
   me.filters_ = opt_filters || {};
 };
 
@@ -131,8 +92,24 @@ Query.prototype.getKeywords = function() {
   return this.keywords_;
 };
 
+Query.prototype.setKeywords = function(keywords) {
+  this.keywords_ = keywords;
+};
+
 Query.prototype.getLocation = function() {
   return this.location_;
+};
+
+Query.prototype.setLocation = function(location) {
+  this.location_ = location;
+};
+
+Query.prototype.getTimePeriod = function() {
+  return this.timePeriod_;
+};
+
+Query.prototype.setTimePeriod = function(period) {
+  this.timePeriod_ = period;
 };
 
 Query.prototype.getFilter = function(name) {
@@ -157,24 +134,28 @@ Query.prototype.getUrlQuery = function() {
     urlQuery += name + '=' + escape(value);
   }
 
-  if (me.keywords_ && me.keywords_.length > 0) {
-    addQueryParam('q', me.keywords_);
+  // Keyword search
+  var keywords = me.getKeywords();
+  if (keywords && keywords.length > 0) {
+    addQueryParam('q', keywords);
   }
 
+  // Pagination
   addQueryParam('num', NUM_PER_PAGE)
-  addQueryParam('start', (me.pageNum_ * NUM_PER_PAGE));
+  addQueryParam('start', (me.getPageNum() * NUM_PER_PAGE));
 
-  if (me.location_ && me.location_.length > 0) {
-    addQueryParam('vol_loc', me.location_);
+  // Location
+  var location = me.getLocation();
+  if (location && location.length > 0) {
+    addQueryParam('vol_loc', location);
   }
 
-  var dateRange = me.getFilter('dateRange');
-  if (dateRange && dateRange.length == 2) {
-    addQueryParam('vol_startdate',
-                  vol.Calendar.dateAsString(dateRange[0]));
-    addQueryParam('vol_enddate',
-                  vol.Calendar.dateAsString(dateRange[1]));
+  // Time period
+  var period = me.getTimePeriod();
+  if (period) {
+    addQueryParam('timeperiod', period)
   }
+
   return urlQuery;
 };
 
@@ -191,24 +172,8 @@ function NewQueryFromUrlParams() {
 
   var pageNum = start / numPerPage;
 
-  var startDate = getHashOrQueryParam('vol_startdate');
-  if (startDate) {
-    startDate = vol.Calendar.dateFromString(startDate);
-  } else {
-    var today = new Date();
-    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-  }
-
-  var endDate = getHashOrQueryParam('vol_enddate');
-  if (endDate) {
-    endDate = vol.Calendar.dateFromString(endDate);
-  } else {
-    var today = new Date();
-    endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  }
-
-  return new Query(keywords, location, pageNum,
-                   { 'dateRange': [startDate, endDate] });
+  var timePeriod = getHashOrQueryParam('timeperiod');
+  return new Query(keywords, location, pageNum, timePeriod);
 }
 
 
@@ -255,9 +220,7 @@ executeSearchFromHashParams = function() {
     var query = NewQueryFromUrlParams();
     el('no_results_message').style.display = 'none';
     el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
-    calendar.clearMarks();
-    calendar.render();
-
+  
     // TODO: eliminate the need for lastSearchQuery to be global
 
     var updateMap = false;
@@ -269,6 +232,7 @@ executeSearchFromHashParams = function() {
 
     var success = function(text, status) {
       el('keywords').value = query.getKeywords();
+      el('timeperiod').value = query.getTimePeriod();
       var regexp = new RegExp('[a-zA-Z]')
       if (regexp.exec(query.getLocation())) {
         // Update location field in UI, but only if location text isn't
@@ -303,14 +267,13 @@ executeSearchFromHashParams = function() {
 }(); // executed inline to close over the 'currentXhr' variable.
 
 
-/** Called from the "Refine" button's onclick, and the main form onsubmit.
- *
- * @param {string} fromWhere One of "map", "calendar" or "keywords", indicating
- *     which input form triggered this search
+/** Called from the "Refine" button's onclick, the main form onsubmit,
+ * and the time period filter.
  */
-function submitForm(fromWhere) {
+function submitForm() {
   var keywords = el('keywords').value;
   var location = el('location').value;
+  var timePeriod = el('timeperiod').value;
 
   // TODO: strip leading/trailing whitespace.
 
@@ -322,7 +285,7 @@ function submitForm(fromWhere) {
   query.setKeywords(keywords);
   query.setLocation(location);
   query.setPageNum(0);
-  query.setFilter('dateRange', calendar.getDateRange());
+  query.setTimePeriod(timePeriod);
   executeSearch(query);
 }
 
