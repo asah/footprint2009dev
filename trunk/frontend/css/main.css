@@ -145,7 +145,7 @@ span {
 
 .snippet {
   margin-bottom: 20px;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 .snippet_title {
@@ -174,15 +174,6 @@ span {
 .snippet_sub_text A {
   color: #9999cc;
   text-decoration: underline;
-}
-
-.snippet_buttons {
-  float: left;
-  color: gray;
-}
-
-.snippet_button {
-  margin: 5px 0px;
 }
 
 .more_link {
@@ -417,4 +408,13 @@ span {
 
 h1 {
   font-size: 24pt;
+}
+
+.snippet_number {
+  padding-top: 3px;  /* Fix misalignment with table */
+  font-size: 16px;
+  color: #666;
+  font-weight: bold;
+  float: left;
+  margin-right: 8px;
 }
