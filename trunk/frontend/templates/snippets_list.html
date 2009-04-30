@@ -12,6 +12,7 @@
   searchResults = [];
 {% for result in result_set.clipped_results %}
   searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}'), '{{result.item_id|escape}}', '{{result.base_url|escape}}', {{result.interest|yesno:"1,0"}}));
+  updateInterestInfoDisplay({{forloop.counter0}});
 {% endfor %}
 </script>
 
@@ -72,41 +73,46 @@
 </div>
       {% endif %}
       <div class='snippet_text'>
-        {{ result.snippet|truncate_chars:245 }}
+        {{ result.snippet|truncate_chars:285 }}
       </div>
-      <div class='snippet_url'>
-        <a href='/url?q={{ result.url|urlencode }}'>{{ result.url_short }}</a>
-      </div>
-    </div>
 
-    <div class='interest_links'>
-      <span>
-        <a href='javascript:void(0)' id='like_{{forloop.counter0}}' onclick='toggleInterest({{forloop.counter0}}, this);return false;'>{{result.interest|yesno:"Un-like,Like"}}</a>
-      </span>|
-      <!-- TODO(doll): Add to calendar functions need dates in the right format -->
-      <span style='position: relative;'
-           onclick='popupModalElement("add_to_calendar{{ forloop.counter0 }}");return false;'>
-        <div id='add_to_calendar{{ forloop.counter0 }}'
-             class='add_to_calendar_floating'>
-          <div class='pointer popup_text'
-               onclick='addToCalendar(this, "GOOGLE", searchResults[{{ forloop.counter0 }}])'>
-            <a href='javascript:void(0)'>Add to Google Calendar</a>
-          </div>
-          <div class='pointer popup_text'
-               onclick='addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
-            <a href='javascript:void(0)'>Add to Yahoo Calendar</a>
-          </div>
+      <div class='snippet_bottom'>
+        <a class='snippet_url' href='/url?q={{ result.url|urlencode }}'>{{ result.url_short }}</a>
+
+        <div class='interest_links'>
+          <span style='display:{{result.interest|yesno:"none,"}};' id='like_{{forloop.counter0}}'><a href='javascript:void(0)' onclick='toggleInterest({{forloop.counter0}});return false;'>Good</a> |</a></span>
+          <!-- TODO(doll): Add to calendar functions need dates in the right format -->
+          <span style='position: relative;'
+               onclick='popupModalElement("add_to_calendar{{ forloop.counter0 }}");return false;'>
+            <div id='add_to_calendar{{ forloop.counter0 }}'
+                 class='add_to_calendar_floating'>
+              <div class='pointer popup_text'
+                   onclick='addToCalendar(this, "GOOGLE", searchResults[{{ forloop.counter0 }}])'>
+                <a href='javascript:void(0)'>Add to Google Calendar</a>
+              </div>
+              <div class='pointer popup_text'
+                   onclick='addToCalendar(this, "YAHOO", searchResults[{{ forloop.counter0 }}])'>
+                <a href='javascript:void(0)'>Add to Yahoo Calendar</a>
+              </div>
+            </div>
+            Calendar
+          </span>|
+          <span id='addthis{{ forloop.counter0 }}'>
+            <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
+               onmouseout="hideShareWidget()"
+               onmouseover="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])"
+               onclick="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])" >
+              Share
+            </a>
+          </span>
         </div>
-        Calendar
-      </span>|
-      <span id='addthis{{ forloop.counter0 }}'>
-        <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
-           onmouseout="hideShareWidget()"
-           onmouseover="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])"
-           onclick="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])" >
-          Share
-        </a>
-      </span>
+        <div class='snippet_interest_info' id='interest_info_{{forloop.counter0}}'></div>
+
+      </div>
+
+      {% if not forloop.last %}
+      <div class='snippet_bottom_border'></div>
+      {% endif %}
     </div>
 
     </td>

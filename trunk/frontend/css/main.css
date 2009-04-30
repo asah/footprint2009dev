@@ -144,8 +144,7 @@ span {
 /** Search results page **/
 
 .snippet {
-  margin-bottom: 20px;
-  padding-left: 10px;
+  margin-bottom: 10px;
 }
 
 .snippet_title {
@@ -157,8 +156,8 @@ span {
   text-decoration: none;
 }
 
-.snippet_url A {
-  color: #039;
+.snippet_url {
+  color: #666;
   text-decoration: none;
 }
 
@@ -174,6 +173,11 @@ span {
 .snippet_sub_text A {
   color: #9999cc;
   text-decoration: underline;
+}
+
+.snippet_bottom_border {
+  border-bottom: 1px solid silver;
+  height: 3px;
 }
 
 .more_link {
@@ -289,7 +293,28 @@ span {
 }
 
 .interest_links {
-  margin-top: 10px;
+  margin-left: 16px;
+  display: inline;
+}
+
+.interest_links A {
+  color: #039;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.snippet_interest_info {
+  padding-top: 8px;
+}
+
+.snippet_bottom {
+  padding-bottom: 8px;
+}
+
+.like_icon {
+  position: relative;
+  top: 2px;
+  margin-right: 6px;
 }
 
 .no_underline {
