@@ -17,6 +17,7 @@
 
 {% for result in result_set.clipped_results %}
   <div class='snippet'>
+    <div class='snippet_number'>{{ forloop.counter }}</div>
     <table>
     <tr>
     <td valign='top'>
@@ -98,7 +99,7 @@
         </div>
         Calendar
       </span>|
-      <span class='snippet_button' id='addthis{{ forloop.counter0 }}'>
+      <span id='addthis{{ forloop.counter0 }}'>
         <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
            onmouseout="hideShareWidget()"
            onmouseover="return showShareWidget(this, searchResults[{{ forloop.counter0 }}])"
