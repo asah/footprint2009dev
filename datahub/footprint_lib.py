@@ -782,6 +782,8 @@ def guess_shortname(filename):
   """from the input filename, guess which feed this is."""
   if re.search("usa-?service", filename):
     return "usaservice"
+  if re.search("habitat", filename):
+    return "habitat"
   if re.search("spreadsheets[.]google[.]com", filename):
     return "gspreadsheet"
   if re.search("(handson|hot.footprint)", filename):
@@ -863,6 +865,8 @@ def guess_parse_func(inputfmt, filename):
   if (inputfmt == None and re.search(r'(handson|hot.footprint)', filename)):
     # now using FPXML
     #parsefunc = parse_handsonnetwork.ParseFPXML
+    return "fpxml", parse_footprint.parse
+  if (inputfmt == None and re.search(r'habitat', filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'volunteer[.]gov', filename)):
     return "fpxml", parse_footprint.parse
