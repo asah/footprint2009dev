@@ -23796,12 +23796,131 @@ bridgewater ma 02324|41.9902200,-70.9754000
 st. petersburg fl 33712|27.7480089,-82.6645469
 jacksonville fl 00000|30.3263050,-81.6557480
 jacksonvile fl 32254|30.3476884,-81.7458845
+phoenix az 85023|33.6272938,-112.0893682
+phoenix az 85027-5205|33.6824366,-112.1072528
+phoenix az 85027-1021|33.6824366,-112.1072528
+phoenix az 85027|33.6824366,-112.1072528
+newark nj 07106|40.7432865,-74.2326058
+columbus ga 31903|32.4250408,-84.9505398
+north las vegas nv 89032|36.2137322,-115.1770586
+west lafayette, indiana, 47906-8861, united states|40.4481620,-86.9157560
+tulalip/marysville, washington, 98271, united states|48.0517280,-122.1776990
+lome, 8823, togo|
+lome, golfe, 8823, togo|
+gigante, rivas, nicaragua|11.3908400,-86.0285870
+greater accra region, greater accra, +23321, ghana|
+greater accra region, greater accra, +233, ghana|
+la primavera, managua, nicaragua|12.3671398,-86.2970998
+seattle , washington, 98106, united states|47.5476069,-122.3514653
+pomeroy, ohio, 45701, united states|39.2984590,-82.0978900
+crooksville, ohio, 45701, united states|39.7431120,-82.0939760
+glouster, ohio, 45701, united states|39.9645160,-83.7773910
+baltimore, maryland, 21217, united states|39.3056685,-76.6354952
+queens, new york, 11697, united states|40.5591088,-73.9095279
+new straitsville, ohio, 45701, united states|39.5538560,-82.2238890
+mineral city, ohio, 44709, united states|40.6042010,-81.3620100
+oakton, virginia, 22124, united states|38.8923513,-77.3266991
+las vegas, nevada, 89121, united states|36.1278609,-115.1059054
+henderson, nevada, 89014, united states|36.0633189,-115.0525302
+santrokofi- bume , volta region, ghana|
+brooklyn, new york, 11237, united states|40.7043156,-73.9212858
+atlanta, georgia, 30083, united states|33.8052935,-84.1962563
+kampala, nateete, 256, uganda|0.3029701,32.5424903
+pokhara, solukhumbu, lumbini, g.p.o box 89, nepal|
+miami fl 33142-7382|25.8127791,-80.2377078
+san diego ca 92123-1294|32.8102534,-117.1323579
+san diego ca 92129|32.9657005,-117.1147095
+memphis tn 38122-3509|35.1543524,-89.9206512
+garden grove ca 92844|33.7636344,-117.9688322
+north las vegas nv 89084|36.2913053,-115.1711298
+la venta d.c., f.m., honduras|14.3263737,-87.1981355
+san francisco, california, 94133, united states|37.8012256,-122.4099154
+california, 90063, united states|34.0458596,-118.1883290
+california, 90731, united states|33.7322884,-118.2935891
+knoxville, tennessee, 37915, united states|35.9723339,-83.8950042
+ham lake, minnesota, 55304, united states|45.2569860,-93.2040880
+mineola, new york, 11501, united states|40.7491730,-73.6410760
+salem, massachusetts, 01970, united states|42.5103338,-70.9011786
+maasai remote villages, kenya|
+london, nw10 6qh, united kingdom|51.5278844,-0.2500262
+dar es salaam, dar es salaam, tanzania|-6.8229210,39.2696610
+moshi, virtual (global|
+karagwe, dar es salaam, p.o.box 154, tanzania|
+karagwe, kagera region, p.o.box 154, tanzania|
+nazareth, israel|32.6975000,35.3069000
+yotvata wildlife preserve, israel|
+kibbutz beit oren, israel|
+marysville, washington, 98271, united states|48.0517280,-122.1776990
+accra, +23321, ghana|5.5515310,-0.1917670
+new york, new york, 10455, united states|40.8143608,-73.9051185
+new york, new york, 11432, united states|40.7142493,-73.8007340
+hagerman id 83332|42.8165270,-114.8983260
 65 third st treeborough ma 1776 usa|
 treeborough ma 1776 usa|
 1776 usa|41.1139940,-81.2420390
 63 fourth ave posterville virginia 22202 usa|
 posterville virginia 22202 usa|37.2176170,-77.4067330
 67 fifth st howard oh 34333 usa|38.7581930,-82.9767950
+n. miami fl 33181|25.9011491,-80.1596041
+san diego ca 92111-6502|32.8020115,-117.1676501
+tba memphis tn 38112|
+pensacola fl 32528|26.8758120,-82.2172890
+pensacola fl 32514|30.5331690,-87.2319753
+mae sod, tak, 63110, thailand|16.7030238,98.5421928
+virtual/anywhere, united states|
+everett (snohomish island co, washington, 98201, united states|
+wenatchee, washington, 98801, united states|47.4261780,-120.3247280
+work from your own home, united states|
+work from your home, virginia, 20180, united states|
+various, new york, united states|
+san francisco, california, 94104-2120, united states|37.7923058,-122.4021273
+newport beach, california, 92660, united states|33.6301328,-117.8721676
+esteli, nicaragua|13.2424713,-86.4996546
+10003, united states|40.7322535,-73.9874105
+colombo, sri lanka|6.9274680,79.8483580
+libertyville, illinois, 60048, united states|42.2830380,-87.9654090
+london , w1u 5nj, united kingdom|51.5152394,-0.1508954
+fredericton, new brunswick, canada|45.9592250,-66.6403510
+new brunswick, canada|46.5653163,-66.4619164
+bronx, new york, 10464, united states|40.8643180,-73.7977928
+tukwila, washington, 98178, united states|47.4996364,-122.2432632
+washington, district of columbia, 20013, united states|38.9008000,-77.0104000
+lome, golfe, 80470, togo|
+florida or nationwide, united states|
+lake powell ut 84533|37.6208000,-109.4797000
+diamond mo|36.9950110,-94.3159920
+beaverton or 97205|45.5205043,-122.7073490
+indian springs al 35124|33.2961461,-86.7919009
+san pablo, california, 94806, united states|37.9628280,-122.3453590
+pickering, ontario, l1v 2p9, canada|43.8374020,-79.1020950
+big bear, california, 92305, united states|34.1752565,-116.8674757
+pekin, illinois, 61554, united states|40.5677670,-89.6314060
+bloomington, illinois, 61701, united states|40.4777790,-88.9892448
+st. paul, minnesota, 55116, united states|44.9095374,-93.1679257
+new york , new york, 10013, united states|40.7217861,-74.0094471
+fort collins, colorado, 80527, united states|40.5854000,-105.0839000
+des plaines, illinois, 60074, united states|41.9912330,-87.9458830
+portland, oregon, 97070, united states|45.6536758,-122.5462872
+nong bua lamphu, nong bua lamphu, thailand|17.2062463,102.4366115
+buenos aires, c1425ahb, argentina|
+san diego, california, 92075, united states|32.9956666,-117.2646723
+calabasas, california, 91302, united states|34.1338970,-118.6647300
+hidden hills, california, 91302, united states|34.1630300,-118.6642000
+accra , 23321, ghana|5.5515310,-0.1917670
+minnneapolis, minnesota, 55418, united states|45.0196219,-93.2355522
+walnut creek, california, united states|37.9062570,-122.0643220
+mount rainier, maryland, 20712-1604, united states|38.9420620,-76.9619210
+venice, california, 90066, united states|33.9890290,-118.4624210
+san diego ca 92123-1870|32.8102534,-117.1323579
+hollywood fl 33314|26.0695412,-80.2265545
+savannah ga 31416|32.0836000,-81.1003000
+boquete, panama|8.7745660,-82.4319990
+muyuka , sw region, 0237, cameroon|
+bogota, 8, colombia|4.4974330,-74.1002950
+mozambique|-18.6656950,35.5295620
+st. francis, minnesota, 55070, united states|45.3991550,-93.3898360
+bloomington, indiana, united states|39.1642870,-86.5269040
+accra, greater accra, +233, ghana|5.5515310,-0.1917670
 poland|51.9194380,19.1451360
 paraguay|-23.4425030,-58.4438320
 mongolia|46.8624960,103.8466560
