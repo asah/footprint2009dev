@@ -5,6 +5,9 @@
 <pubDate>{{ result.pubDate|escape  }}</pubDate>
 <guid>{{ result.xml_url|escape }}</guid>
 <fp:id>{{ result.id|escape  }}</fp:id>
+{# groupid is a stable ID for the dedup'd set of results, #}
+{#   including same listing but different time/location #}
+<fp:groupid>{{ result.merge_key|escape  }}</fp:groupid>
 <fp:provider>{{ result.provider|escape  }}</fp:provider>
 <fp:startDate>{{ result.startdate|escape  }}</fp:startDate>
 <fp:endDate>{{ result.enddate|escape  }}</fp:endDate>
