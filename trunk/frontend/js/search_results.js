@@ -156,6 +156,14 @@ Query.prototype.getUrlQuery = function() {
     addQueryParam('timeperiod', period)
   }
 
+  // Add additional filters to query URL.
+  for (var name in me.filters_) {
+    var value = me.getFilter(name);
+    if (value) {
+      addQueryParam(name, value);
+    }
+  }
+
   return urlQuery;
 };
 
@@ -173,7 +181,18 @@ function NewQueryFromUrlParams() {
   var pageNum = start / numPerPage;
 
   var timePeriod = getHashOrQueryParam('timeperiod');
-  return new Query(keywords, location, pageNum, timePeriod);
+
+  var filters = {};
+
+  // Read in the other filters from the URL, and place them in
+  // 'filters' object.
+  function getNamedFilterFromUrl(name) {
+    filters[name] = getHashOrQueryParam(name, '');
+  }
+  getNamedFilterFromUrl('who_filter');
+  getNamedFilterFromUrl('activity_filter');
+
+  return new Query(keywords, location, pageNum, timePeriod, filters);
 }
 
 
@@ -220,7 +239,7 @@ executeSearchFromHashParams = function() {
     var query = NewQueryFromUrlParams();
     el('no_results_message').style.display = 'none';
     el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
-  
+
     // TODO: eliminate the need for lastSearchQuery to be global
 
     var updateMap = false;
@@ -254,7 +273,12 @@ executeSearchFromHashParams = function() {
     /* UI snippets URL.  We don't use '/api/search?' because the UI output
        contains application-specific formatting and inline JS, and has
        user-specific info. */
-    var url = '/ui_snippets?';
+    var url;
+    if (currentPageName == 'SEARCH') {
+      url = '/ui_snippets?';
+    } else if (currentPageName == 'PROFILE') {
+      // TODO(Tim)
+    }
 
     currentXhr = jQuery.ajax({
       url: url + query.getUrlQuery(),
