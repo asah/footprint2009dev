@@ -168,19 +168,27 @@ class ApiTesting(object):
     self.response_type = None
     self.test_type = ""
     
-  def success(self):
-    """report test success. returns True to make it easy on callers."""
-    res = TestResults(test_type=self.test_type, result_code=TestResultCode.PASS)
-    res.put()
+  def success(self, datastore_insert):
+    self.datastore_insert = datastore_insert
+
+    """test whether to insert entity into the Datastore"""
+    if self.datastore_insert:
+      """report test success. returns True to make it easy on callers."""
+      res = TestResults(test_type=self.test_type, result_code=TestResultCode.PASS)
+      res.put()
     self.web_app.response.set_status(200)
     self.output('<p class="result success">Passed</p>')
     return True
 
-  def fail(self, code, msg):
-    """report test failure. returns False to make it easy on callers."""
-    res = TestResults(test_type=self.test_type, result_code=code,
-                      result_string=msg)
-    res.put()
+  def fail(self, code, msg, datastore_insert):
+    self.datastore_insert = datastore_insert
+
+    """test whether to insert entity into the Datastore"""
+    if self.datastore_insert:
+      """report test failure. returns False to make it easy on callers."""
+      res = TestResults(test_type=self.test_type, result_code=code,
+                        result_string=msg)
+      res.put()
     self.web_app.response.set_status(500)
     self.output('<p class="result fail">Fail. <span>'+msg+'</span></p>')
     return False
@@ -207,7 +215,7 @@ class ApiTesting(object):
     if result_set is None or result_set == False or len(result_set) == 0:
       return self.fail(
         TestResultCode.DATA_MISMATCH,
-        "test_"+self.test_type+": expected non-empty results.")
+        "test_"+self.test_type+": expected non-empty results.", True)
     return True
   
   def assert_empty_results(self, result_set):
@@ -216,13 +224,12 @@ class ApiTesting(object):
     if result_set is None:
       return self.fail(
         TestResultCode.INTERNAL_ERROR,
-        "test_"+self.test_type+": result_set invalid."
-        )
+        "test_"+self.test_type+": result_set invalid.", True)
     if len(result_set) == 0:
       return True
     return self.fail(
       TestResultCode.DATA_MISMATCH,
-      "test_"+self.test_type+": expected empty results.")
+      "test_"+self.test_type+": expected empty results.", True)
   
   def parse_raw_data(self, data):
     """wrapper for parse_TYPE()."""
@@ -245,19 +252,64 @@ class ApiTesting(object):
       return test_func()
     return self.fail(
       TestResultCode.INTERNAL_ERROR,
-      'No such test <strong>'+self.test_type+'</strong> in suite.')
+      'No such test <strong>'+self.test_type+'</strong> in suite.', True)
+
+  def datastore_test_check(self, testresult, test_type):
+    """read the TestResult object and report success or failure"""
+    self.test_type = test_type
+    self.testresult = testresult
+    msg = 'test_type=' +self.test_type
+    datemsg = 'Date of last run: ' +str(self.testresult.timestamp)
+    if self.response_type != "rss":
+      msg += '&amp;output=' + self.response_type
+    self.output('<p class="test">Checking Datastore for <em>'+msg+'</em></p>'+datemsg)
+    if self.testresult.result_code == 0:
+	  return self.success(False)
+    elif self.testresult.result_code == 4:
+      return self.fail(
+        TestResultCode.DATA_MISMATCH,
+        self.testresult.result_string, False)
+    elif self.testresult.result_code == 3:
+      return self.fail(
+        TestResultCode.LOW_LEVEL_PARSE_FAIL,
+        self.testresult.result_string, False)
+    elif self.testresult.result_code == 2:
+      return self.fail(
+        TestResultCode.INTERNAL_ERROR,
+        self.testresult.result_string, False)
+    else:
+      return self.fail(
+        TestResultCode.UNKNOWN_FAIL,
+        self.testresult.result_string, False)
   
-  def run_tests(self, test_type, api_url, response_type):
+  def run_tests(self, test_type, api_url, response_type, read_from_cache):
     """run multiple tests (comma-separated).  beware of app engine timeouts!"""
     self.api_url = api_url
     self.response_type = response_type
+    self.read_from_cache = read_from_cache
     if test_type == 'all':
       test_type = ALL_TEST_TYPES
     test_types = test_type.split(',')
     res = True
+
     for test_type in test_types:
-      if not self.run_test(test_type):
-        res = False
+      test_type = test_type.strip()
+      if self.read_from_cache:
+        """query the Datastore for existing test data"""
+        testresults = db.GqlQuery("SELECT * FROM TestResults " +
+                                  "WHERE test_type = :1 " +
+                                  #"AND result_code = 0 " +
+                                  "ORDER BY timestamp DESC", test_type)
+        testresult = testresults.get()
+
+        if testresult:
+          res = self.datastore_test_check(testresult, test_type)
+        else:
+          if not self.run_test(test_type):
+            res = False
+      else:
+        if not self.run_test(test_type):
+            res = False
     return res
   
   def get_result_set(self, arg_list):
@@ -271,7 +323,7 @@ class ApiTesting(object):
       return self.parse_raw_data(data)
     except:
       self.fail(TestResultCode.LOW_LEVEL_PARSE_FAIL,
-                'parse_raw_data: unable to parse response.')
+                'parse_raw_data: unable to parse response.', True)
     return None
   
   def test_num(self):
@@ -284,8 +336,8 @@ class ApiTesting(object):
       return self.fail(
         TestResultCode.DATA_MISMATCH,
         'Requested num='+str(expected_count)+' but received '+
-        str(len(result_set))+' results.')
-    return self.success()
+        str(len(result_set))+' results.', True)
+    return self.success(True)
   
   def int_test_bogus_query(self):
     """ try a few bogus locations to make sure there's no weird data """
@@ -294,12 +346,12 @@ class ApiTesting(object):
    
     result_set = self.get_result_set({'q':term})
     if self.assert_empty_results(result_set):
-      return self.success()
+      return self.success(True)
     else:
       return self.fail(
         TestResultCode.DATA_MISMATCH,
         'some item(s) found for search term <strong>' + term +
-        '</strong> or result set invalid')
+        '</strong> or result set invalid', True)
    
   def int_test_valid_query(self):
     """run a hardcoded test query (q=)."""
@@ -321,8 +373,8 @@ class ApiTesting(object):
     if not result:
       return self.fail(
         TestResultCode.DATA_MISMATCH,
-        'some item(s) did not match search term <strong>' + term)
-    return self.success()
+        'some item(s) did not match search term <strong>' + term, True)
+    return self.success(True)
     
   def test_query(self):
     """run a set of query term tests."""
@@ -335,12 +387,12 @@ class ApiTesting(object):
   
     result_set = self.get_result_set({'vol_loc':location})
     if self.assert_empty_results(result_set):
-      return self.success()
+      return self.success(True)
     else:
       return self.fail(
         TestResultCode.DATA_MISMATCH,
         'some item(s) found for location <strong>' + location +
-        '</strong> or result set invalid')
+        '</strong> or result set invalid', True)
    
   def int_test_valid_geo(self):
     """run a query and check the geo results."""
@@ -362,8 +414,8 @@ class ApiTesting(object):
     if not result:
       return self.fail(
         TestResultCode.DATA_MISMATCH,
-        'One or more items did not fall in the requested location/distance.')
-    return self.success()
+        'One or more items did not fall in the requested location/distance.', True)
+    return self.success(True)
   
   def test_geo(self):
     """run a set of geo tests."""
@@ -386,9 +438,9 @@ class ApiTesting(object):
     if not result:
       return self.fail(
         TestResultCode.DATA_MISMATCH,
-        'One or more items did not match provider <strong>provider+</strong>')
+        'One or more items did not match provider <strong>provider+</strong>', True)
     
-    return self.success()
+    return self.success(True)
   
   def test_start(self):
     """
@@ -420,8 +472,8 @@ class ApiTesting(object):
     if not result:
       return self.fail(
         TestResultCode.DATA_MISMATCH,
-        'Start param returned non-overlapping results.')
-    return self.success()
+        'Start param returned non-overlapping results.', True)
+    return self.success(True)
 
   def test_snippets(self):
     """ensure that /ui_snippets returns something valid."""
@@ -430,6 +482,6 @@ class ApiTesting(object):
     if not data:
       return self.fail(
         TestResultCode.UNKNOWN_FAIL,
-        'misc problem with /ui_snippets')
-    return self.success()
+        'misc problem with /ui_snippets', True)
+    return self.success(True)
 
