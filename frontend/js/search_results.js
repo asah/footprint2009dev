@@ -80,6 +80,18 @@ Query.prototype.clone = function() {
   return jQuery.extend(true, new Query(), me);
 };
 
+/** Updates the location.hash with the given query, which then
+ * triggers the search.
+ */
+Query.prototype.execute = function() {
+  var urlQueryString = this.getUrlQuery();
+  // Set the URL hash, but only if the query string is not empty.
+  // Setting hash to an empty string causes a page reload.
+  if (urlQueryString.length > 0 && urlQueryString != window.location.hash) {
+    window.location.hash = urlQueryString;
+  }
+};
+
 Query.prototype.setPageNum = function(pageNum) {
   this.pageNum_ = pageNum;
 };
@@ -199,24 +211,11 @@ function NewQueryFromUrlParams() {
 /** Perform a search using the current URL parameters and IP geolocation.
  */
 function onLoadSearch() {
-  executeSearch(NewQueryFromUrlParams());
+  NewQueryFromUrlParams().execute();
   executeSearchFromHashParams();
   $(window).hashchange(executeSearchFromHashParams);
 }
 asyncLoadManager.addCallback('bodyload', onLoadSearch);
-
-/** Updates the location.hash with the given query.
- * @param {Query} query Query parameters.
- */
-function executeSearch(query) {
-  var urlQueryString = query.getUrlQuery();
-  // Set the URL hash, but only if the query string is not empty.
-  // Setting hash to an empty string causes a page reload.
-  if (urlQueryString.length > 0 && urlQueryString != window.location.hash) {
-    window.location.hash = urlQueryString;
-  }
-}
-
 
 /** Asynchronously execute a search based on the current parameters.
  */
@@ -310,7 +309,8 @@ function submitForm() {
   query.setLocation(location);
   query.setPageNum(0);
   query.setTimePeriod(timePeriod);
-  executeSearch(query);
+
+  query.execute();
 }
 
 
@@ -353,7 +353,7 @@ function goToPage(pageNum) {
   if (lastSearchQuery) {
     // Change page number, and re-do the last search.
     lastSearchQuery.setPageNum(pageNum);
-    executeSearch(lastSearchQuery);
+    lastSearchQuery.execute();
   }
 }
 
