@@ -48,6 +48,8 @@ class RunTests(webapp.RequestHandler):
         testapi.helpers.DEFAULT_RESPONSE_TYPES
     remoteUrl = self.request.get('url') or ''
     specialOutput = self.request.get('output') or ''
+    # cache=0: don't read from cache, else read from cache.
+    read_from_cache = not (self.request.get('cache') == '0')
     errors = ''
     
     if specialOutput == 'test_types':
@@ -73,7 +75,10 @@ class RunTests(webapp.RequestHandler):
     outstr += '.success {color: #008800;}'
     outstr += '.amplification {color: gray; margin-left: 16px;}'
     outstr += '</style>'
-    outstr += '<h1>Running test: ' + testType + '</h1>'
+    if read_from_cache:
+      outstr += '<h1>Reading test: ' + testType + ' from the datastore</h1>'
+    else:
+      outstr += '<h1>Running test: ' + testType + '</h1>'
     outstr += '<p class="error">' + errors + '</p>'
     outstr += '<p>Response types: ' + responseTypes + '</p>'
     outstr += '<p>API url: ' + apiUrl + '</p>'
@@ -82,7 +87,7 @@ class RunTests(webapp.RequestHandler):
     responseTypes = responseTypes.split(',')
     for responseType in responseTypes:
       api_testing = testapi.helpers.ApiTesting(self)
-      api_testing.run_tests(testType, apiUrl, responseType)
+      api_testing.run_tests(testType, apiUrl, responseType, read_from_cache)
     
 
 APP = webapp.WSGIApplication(
