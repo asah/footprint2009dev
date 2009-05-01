@@ -18,7 +18,7 @@
 
 {% for result in result_set.clipped_results %}
   <div class='snippet'>
-    <div class='snippet_number'>{{ forloop.counter }}</div>
+    <div class='snippet_number'>{{ forloop.counter0|as_letter }}</div>
     <table>
     <tr>
     <td valign='top'>
@@ -26,9 +26,11 @@
       {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
       {% if result.latlong %}
         <script type='text/javascript'>
-           var coords = '{{result.latlong}}'.split(',')
-           asyncLoadManager.addCallback('map', function(){
-               map.addMarker(coords[0], coords[1])});
+          var coords = '{{result.latlong}}'.split(',')
+          asyncLoadManager.addCallback('map', function() {
+            map.addMarker(
+                coords[0], coords[1], '{{ forloop.counter0|as_letter }}');
+          });
         </script>
       {% endif %}
 
