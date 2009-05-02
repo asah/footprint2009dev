@@ -144,27 +144,35 @@ def parse(instr, maxrecs, progress):
   outstr += '</Organizations>'
 
   skipped_listings = {}
-  skipped_listings["body"] = skipped_listings["title"] = 0
+  skipped_listings["body"] = skipped_listings["title"] = \
+      skipped_listings["not-ok"] = 0
   outstr += '<VolunteerOpportunities>'
   for i, url in enumerate(crawl_craigslist.pages):
     page = crawl_craigslist.pages[url]
 
-    item_id = extract(url, "/vol/(.+?)[.]html$")
+    ok = extract(page, "it's OK to distribute this "+
+                 "charitable volunteerism opportunity")
+    if ok == "":
+      skipped_listings["not-ok"] += 1
+      continue
+
     title = extract(page, "<title>(.+?)</title>")
+    if title == "":
+      skipped_listings["title"] += 1
+      continue
+
     body = extract(page, '<div id="userbody">(.+?)<')
+    if len(body) < 25:
+      skipped_listings["body"] += 1
+      continue
+
+    item_id = extract(url, "/vol/(.+?)[.]html$")
     locstr = extract(page, "Location: (.+?)<")
     datestr = extract(page, "Date: (.+?)<")
     ts = dateutil.parser.parse(datestr)
     datetimestr = ts.strftime("%Y-%m-%dT%H:%M:%S")
     datestr = ts.strftime("%Y-%m-%d")
 
-    # skip bogus listings
-    if title == "":
-      skipped_listings["title"] = skipped_listings["title"] + 1
-      continue
-    if len(body) < 25:
-      skipped_listings["body"] = skipped_listings["body"] + 1
-      continue
 
     if (maxrecs>0 and i>maxrecs):
       break
@@ -172,7 +180,8 @@ def parse(instr, maxrecs, progress):
     if progress and i > 0 and i % 250 == 0:
       msg = "skipped " + str(skipped_listings["title"]+skipped_listings["body"])
       msg += " listings ("+str(skipped_listings["title"]) + " for no-title and "
-      msg += str(skipped_listings["body"]) + " for short body)"
+      msg += str(skipped_listings["body"]) + " for short body and "
+      msg += str(skipped_listings["not-ok"]) + " for no-redistrib)"
       xmlh.print_progress(msg)
       #print "---"
       #print "title:",title

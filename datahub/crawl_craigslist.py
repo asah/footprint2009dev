@@ -20,6 +20,7 @@
 
 from xml.dom import minidom
 import sys
+import os
 import urllib
 import re
 import thread
@@ -114,7 +115,7 @@ def crawl(url, ignore):
     except:
       page = ""   # in case close() threw exception
       attempts = attempts + 1
-      print "open failed, retry after", attempts, "attempts"
+      print "open failed, retry after", attempts, "attempts (url="+url+")"
       time.sleep(1)
 
   if re.search(r'This IP has been automatically blocked', page, re.DOTALL):
@@ -219,26 +220,45 @@ def load_cache():
 
 def print_status():
   global pages, num_cached_pages, crawlers
+  samesame = 0
+  last_crawled_pages = 0
   while True:
     crawled_pages = len(pages) - num_cached_pages
     pages_per_sec = int(crawled_pages/secs_since_progstart())
-    print str(secs_since_progstart())+": main thread: waiting for", \
-        crawlers, "crawlers.",
-    print crawled_pages, "pages crawled so far ("+str(pages_per_sec)+ \
-        " pages/sec). ", len(pages), "total pages."
+    msg = str(secs_since_progstart())+": main thread: "
+    msg += "waiting for " + str(crawlers) + " crawlers.\n"
+    msg += str(crawled_pages) + " pages crawled so far"
+    msg += "(" + str(pages_per_sec) + " pages/sec). "
+    msg += str(len(pages)) + " total pages."
+    print msg
+    if last_crawled_pages == crawled_pages:
+      samesame += 1
+      if samesame >= 100:
+        print "done (waited long enough)."
+        break
+    else:
+      last_crawled_pages = crawled_pages
     time.sleep(2)
 
 from optparse import OptionParser
 if __name__ == "__main__":
-  sys = __import__('sys')
   parser = OptionParser("usage: %prog [options]...")
   parser.set_defaults(metros=False)
+  parser.set_defaults(load_cache=True)
   parser.add_option("--metros", action="store_true", dest="metros")
+  parser.add_option("--load_cache", action="store_true", dest="load_cache")
+  parser.add_option("--noload_cache", action="store_false", dest="load_cache")
   (options, args) = parser.parse_args(sys.argv[1:])
   if options.metros:
     crawl_metros()
   read_metros()
-  load_cache()
+  if options.load_cache:
+    load_cache()
+  else:
+    try:
+      os.unlink(CACHE_FN)
+    except:
+      pass
   num_cached_pages = len(pages)
 
   outstr = ""
