@@ -41,6 +41,7 @@ def get_user_interests(user, remove_no_interest):
     #logging.info('Found interests: %s' % user_interests)
   return user_interests
 
+
 def get_interest_for_opportunities(opp_ids):
   """Get the interest statistics for a set of volunteer opportunities.
 
@@ -119,7 +120,7 @@ def get_data_for_friends_view(user_info, is_debug):
   # Load details for the opportunities that the current user has starred.
   current_user_opps_ids = get_user_interests(user_info, True)
   current_user_opps_result_set = base_search.get_from_ids(current_user_opps_ids)
-  
+
   # Annotate each opportunity with its overall stars count (i.e., not
   # filtered by the current user's friends.
   others_interests = get_interest_for_opportunities(current_user_opps_ids)
@@ -127,7 +128,7 @@ def get_data_for_friends_view(user_info, is_debug):
     if result.item_id in others_interests:
       result.overall_interest_count = others_interests[result.item_id]
 
-  # Assemble the opportunities your friends have starred.        
+  # Assemble the opportunities your friends have starred.
   friends = user_info.load_friends()
   friend_opp_count = {}
   friend_interests_by_oid = {}
@@ -141,7 +142,7 @@ def get_data_for_friends_view(user_info, is_debug):
       friend_opp_ids = current_user_opps_ids
 
     friend.interest_count = len(friend_opp_ids)
-    
+
     # Assemble the per-opportunity friend-star count and total friend-star count
     for opp_id in friend_opp_ids:
       count = friend_opp_count.get(opp_id, 0)
@@ -170,5 +171,5 @@ def get_data_for_friends_view(user_info, is_debug):
     'friend_total_opp_count': friend_total_opp_count,
     'friend_interests_by_oid_js': friend_interests_by_oid_js,
   }
-  
+
   return view_vals

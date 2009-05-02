@@ -224,7 +224,7 @@ class SearchResultSet(object):
                 return '<a href="' + merged_result.url + '">' + text + '</a>'
               else:
                 return text
-  
+
             entry = ""
             if merged_result.location != location_was:
               location_was = merged_result.location
@@ -233,13 +233,13 @@ class SearchResultSet(object):
                + ' on ')
             elif more > 0:
               entry += ', '
-  
+
             entry += make_linkable(merged_result.month_day, merged_result, res)
             if more < 3:
               res.less_list.append(entry)
             else:
               res.more_list.append(entry)
-  
+
             more += 1
 
     # dedup() main code
@@ -253,5 +253,5 @@ class SearchResultSet(object):
     else:
       self.estimated_merged_results = int(self.estimated_results * \
           self.num_merged_results / len(self.results))
-      
+
 
