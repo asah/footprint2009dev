@@ -148,7 +148,7 @@ span {
 }
 
 .snippet_title {
-  font-weight: bold;
+  font-size: 18px;
 }
 
 .snippet_title A {
@@ -167,7 +167,6 @@ span {
 
 .snippet_sub_text {
   color: #666;
-  margin-bottom: 4px;
 }
 
 .snippet_sub_text A {
@@ -254,7 +253,6 @@ span {
 }
 
 .interest_links {
-  margin-left: 16px;
   display: inline;
 }
 
@@ -403,4 +401,8 @@ h1 {
   font-weight: bold;
   float: left;
   margin-right: 8px;
+}
+
+.undo_link {
+  color: #777;
 }

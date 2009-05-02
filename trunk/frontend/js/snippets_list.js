@@ -173,8 +173,8 @@ function updateInterestInfoDisplay(resultIndex) {
   var result = searchResults[resultIndex];
   var html = '';
   if (result.liked) {
-    html += '<img class="like_icon" src="/images/like.gif">You think this is good (' +
-        '<a href="javascript:toggleInterest(' + resultIndex +
+    html += '<img class="like_icon" src="/images/like.gif">You support this (' +
+        '<a class="undo_link" href="javascript:toggleInterest(' + resultIndex +
         ');void(0);">undo</a>)';
   }
   var div = el('interest_info_' + resultIndex);
