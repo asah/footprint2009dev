@@ -80,7 +80,6 @@ def get_children_by_tagname(elem, name):
       temp.append(child)
   return temp
   
-
 def get_tag_value(entity, tag):
   """within entity, find th first child with the given tagname, then
   return its value, processed to UTF-8 and with newlines escaped."""
@@ -383,7 +382,7 @@ class ApiTesting(object):
   
   def int_test_bogus_geo(self):
     """ try a few bogus locations to make sure there's no weird data """
-    location = random_item(["fqzzqx"])
+    location = random_item(["fqzvzqx"])
   
     result_set = self.get_result_set({'vol_loc':location})
     if self.assert_empty_results(result_set):
@@ -423,9 +422,9 @@ class ApiTesting(object):
     self.int_test_bogus_geo()
     
   def test_provider(self):
-    """run a hardcoded test query (&provider=)."""
+    """run a hardcoded test query (&vol_provider=)."""
     provider = "HandsOn Network"
-    result_set = self.get_result_set({'q':'hospital', 'provider':provider})
+    result_set = self.get_result_set({'q':'hospital', 'vol_provider':provider})
     if not self.assert_nonempty_results(result_set):
       return False
 

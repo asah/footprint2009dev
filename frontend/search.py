@@ -83,13 +83,13 @@ def search(args):
       range = (today, today)
     elif period == 'this_weekend':
       days_to_sat = 5 - today.weekday()
-      delta = datetime.timedelta(days=days_to_sat);
+      delta = datetime.timedelta(days=days_to_sat)
       this_saturday = today + delta
       this_sunday = this_saturday + datetime.timedelta(days=1)
       range = (this_saturday, this_sunday)
     elif period == 'this_week':
       days_to_mon = 0 - today.weekday()
-      delta = datetime.timedelta(days=days_to_mon);
+      delta = datetime.timedelta(days=days_to_mon)
       this_monday = today + delta
       this_sunday = this_monday + datetime.timedelta(days=6)
       range = (this_monday, this_sunday)
@@ -162,9 +162,9 @@ def fetch_result_set(args):
 
   args["lat"] = args["long"] = ""
   if api.PARAM_VOL_LOC in args:
+    zoom = 5
     if re.match(r'[0-9.-]+\s*,\s*[0-9.-]+', args[api.PARAM_VOL_LOC]):
       args["lat"], args["long"] = args[api.PARAM_VOL_LOC].split(",")
-      zoom = 5
     elif re.match(r'[0-9.-]+\s*,\s*[0-9.-]+,\s*[0-9]+',
                   args[api.PARAM_VOL_LOC]):
       args["lat"], args["long"], zoom = args[api.PARAM_VOL_LOC].split(",")

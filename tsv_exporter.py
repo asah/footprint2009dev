@@ -41,7 +41,7 @@ def PrintUsageExit(code):
   sys.stderr.flush()
   sys.exit(code)
 
-def Pull(filename, url, min_key, delim):
+def Pull(filename, url, min_key, delim, prefix):
   # get content from url and write to filename
   try:
     connection = urllib2.urlopen(url);
@@ -57,6 +57,10 @@ def Pull(filename, url, min_key, delim):
   except IOError:
     logging.error("I/O error({0}): {1}".format(errno, os.strerror(errno)))
     sys.exit(3)
+
+  if prefix:
+    lines = content.split("\n")
+    content = ("%s" % prefix) + ("\n%s" % prefix).join(lines)
 
   tsv_file.write(content)
   tsv_file.close()
@@ -78,14 +82,15 @@ def Pull(filename, url, min_key, delim):
 def ParseArguments(argv):
   opts, args = getopt.getopt(
     argv[1:],
-    'h',
+    'dh',
     ['debug', 'help', 
-     'url=', 'filename=', 'digsig=', 'batch_size='
+     'url=', 'filename=', 'prefix=', 'digsig=', 'batch_size='
     ])
 
   url = None
   filename = None
   digsig = ''
+  prefix = ''
   batch_size = 1000
 
   for option, value in opts:
@@ -97,6 +102,8 @@ def ParseArguments(argv):
       url = value
     if option == '--filename':
       filename = value
+    if option == '--prefix':
+      prefix = value
     if option == '--digsig':
       digsig = value
     if option == '--batch_size':
@@ -105,7 +112,7 @@ def ParseArguments(argv):
         print >>sys.stderr, 'batch_size must be 1 or larger'
         PrintUsageExit(1)
 
-  return (url, filename, batch_size, digsig)
+  return (url, filename, batch_size, prefix, digsig)
 
 def main(argv):
   logging.basicConfig(
@@ -117,7 +124,7 @@ def main(argv):
     print >>sys.stderr, 'Invalid arguments'
     PrintUsageExit(1)
 
-  url, filename, batch_size, digsig = args
+  url, filename, batch_size, prefix, digsig = args
 
   delim = "\t"
   min_key = ""
@@ -130,7 +137,7 @@ def main(argv):
     else:
       log_key = "[start]"
     t0 = datetime.datetime.now()
-    min_key, lines = Pull(filename, url_step, min_key, delim)
+    min_key, lines = Pull(filename, url_step, min_key, delim, prefix)
     diff = datetime.datetime.now() - t0
     secs = "%d.%d" % (diff.seconds, diff.microseconds/1000)
     logging.info('fetched %d in %s secs from %s', lines, secs, log_key)
