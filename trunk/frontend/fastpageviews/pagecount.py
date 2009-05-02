@@ -27,13 +27,20 @@ def Writeback(pagename, value):
   pc_writebacks = pc_writebacks + 1
   logging.debug("pagecount.Writeback(pagename='%s', value=%d" % (pagename, +value))
   record = PageCountShard(key_name=KeyName(pagename), count=value)
-  record.put()
+  try:
+    record.put()
+  except:
+    logging.warning("pagecount.Writeback(pagename='%s', value=%d" % (pagename, +value))
 
 def LoadPageCount(pagename):
   global pc_loads
   pc_loads = pc_loads + 1
   logging.debug("pagecount.LoadPageCount(pagename='"+pagename+"')")
-  record = PageCountShard.get_by_key_name(KeyName(pagename))
+  try:
+    record = PageCountShard.get_by_key_name(KeyName(pagename))
+  except:
+    record = None
+
   if record != None:
     return record.count
   db.run_in_transaction(Writeback, pagename, 0)

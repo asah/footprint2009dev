@@ -168,6 +168,28 @@ def form_base_query(args):
 # safe than sorry, and defense-in-depth.
 def search(args):
   """run a Google Base search."""
+  def have_valid_query(args):
+    """ make sure we were given a value for at least one of these arguments """
+    valid_query = False
+    api_list = [api.PARAM_Q,
+                api.PARAM_TIMEPERIOD,
+                api.PARAM_VOL_LOC,
+                api.PARAM_VOL_STARTDATE,
+                api.PARAM_VOL_ENDDATE,
+                api.PARAM_VOL_DURATION,
+                api.PARAM_VOL_PROVIDER,
+                api.PARAM_VOL_STARTDAYOFWEEK]
+
+    for param in api_list:
+      if param in args[param] and args[param]:
+         if arg == api.PARAM_VOL_LOC:
+           # vol_loc must render a lat, long pair
+           if not args["lat"] or not args["long"]:
+             continue
+         valid_query = True
+         break
+      
+    return valid_query
 
   base_query = form_base_query(args)
   query_url = args["backend"]
@@ -184,6 +206,20 @@ def search(args):
   query_url += "&orderby=" + base_orderby_arg(args)
   query_url += "&content=" + "all"
   query_url += "&bq=" + base_query
+
+  if not have_valid_query(args):
+    # no query + no location = no results
+    result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
+                                            query_url,
+                                            [])
+    logging.info("Base not called: no query given")
+    result_set.query_url = query_url
+    result_set.args = args
+    result_set.num_results = 0
+    result_set.estimated_results = 0
+    result_set.fetch_time = 0
+    result_set.parse_time = 0
+    return result_set
 
   logging.info("calling Base: "+query_url)
   results = query(query_url, args, False)
