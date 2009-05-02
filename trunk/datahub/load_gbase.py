@@ -116,7 +116,7 @@ def main():
   # TODO: run craigslist crawler
   load_gbase("gspreadsheets",
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
-  load_gbase("extraordinaries", "http://whichoneis.com/opps/list/format/xml")
+  load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
   load_gbase("craigslist", "craigslist-cache.txt")
   load_gbase("americorps",
              "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
