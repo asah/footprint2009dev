@@ -181,8 +181,8 @@ def search(args):
                 api.PARAM_VOL_STARTDAYOFWEEK]
 
     for param in api_list:
-      if param in args[param] and args[param]:
-         if arg == api.PARAM_VOL_LOC:
+      if param in args and args[param]:
+         if param == api.PARAM_VOL_LOC:
            # vol_loc must render a lat, long pair
            if not args["lat"] or not args["long"]:
              continue
