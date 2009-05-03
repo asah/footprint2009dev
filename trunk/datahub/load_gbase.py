@@ -113,18 +113,21 @@ def main():
     sys.exit(1)
   USERNAME = sys.argv[1]
   PASSWORD = sys.argv[2]
-  # TODO: run craigslist crawler
+  # old custom feed
+  #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
+  #           "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
+  #           "en.open.atom.gz")
+  load_gbase("idealist", "http://feeds.idealist.org/xml/"+
+             "footprint-volunteer-opportunities.xml")
   load_gbase("gspreadsheets",
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
   load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
+  # note: craiglist crawler is run async to this
   load_gbase("craigslist", "craigslist-cache.txt")
   load_gbase("americorps",
              "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
   load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
   load_gbase("handson",
              "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
-  load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
-             "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
-             "en.open.atom.gz")
 if __name__ == "__main__":
   main()
