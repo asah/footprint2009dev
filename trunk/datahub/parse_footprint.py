@@ -56,52 +56,64 @@ def parse_fast(instr, maxrecs, progress):
   numorgs = numopps = 0
   outstr = '<?xml version="1.0" ?>'
   outstr += '<FootprintFeed schemaVersion="0.1">'
-  # note: preserves order, so diff works (vs. one sweep per element type)
-  chunks = re.findall(
-    re.compile('<(?:Organizations|VolunteerOpportunities|FeedInfo)>.+?'+\
-                 '</(?:Organizations|VolunteerOpportunities|FeedInfo)>',
-               re.DOTALL), instr)
-  for chunk in chunks:
-    node = xmlh.simple_parser(chunk, KNOWN_ELNAMES, False)
-    if node.firstChild.nodeName == "FeedInfo":
-      xmlh.set_default_value(node, node.firstChild, "feedID", "0")
-      set_default_time_elem(node, node.firstChild, "createdDateTime")
-    if node.firstChild.nodeName == "Organizations":
-      for opp in node.firstChild.childNodes:
-        if opp.nodeName == "Organization":
-          numorgs += 1
-    if node.firstChild.nodeName == "VolunteerOpportunities":
-      numopps += len(node.firstChild.childNodes)
-      if (maxrecs > 0 and numopps > maxrecs):
-        break
-      if progress and numopps % 250 == 0:
-        print datetime.now(), ": ", numopps, " records generated."
-      for opp in node.firstChild.childNodes:
-        if opp.nodeType == node.ELEMENT_NODE:
-          xmlh.set_default_value(node, opp, "volunteersNeeded", -8888)
-          xmlh.set_default_value(node, opp, "paid", "No")
-          xmlh.set_default_value(node, opp, "sexRestrictedTo", "Neither")
-          xmlh.set_default_value(node, opp, "language", "English")
-          set_default_time_elem(node, opp, "lastUpdated")
-          set_default_time_elem(node, opp, "expires", 
-                                xmlh.current_ts(DEFAULT_EXPIRATION))
-          for loc in opp.getElementsByTagName("location"):
-            xmlh.set_default_value(node, loc, "virtual", "No")
-            xmlh.set_default_value(node, loc, "country", "US")
-          for dttm in opp.getElementsByTagName("dateTimeDurations"):
-            xmlh.set_default_value(node, dttm, "openEnded", "No")
-            xmlh.set_default_value(node, dttm, "iCalRecurrence", "")
-            if (dttm.getElementsByTagName("startTime") == None and
-                dttm.getElementsByTagName("endTime") == None):
-              set_default_time_elem(node, dttm, "timeFlexible", "Yes")
-            else:
-              set_default_time_elem(node, dttm, "timeFlexible", "No")
-            xmlh.set_default_value(node, dttm, "openEnded", "No")
-          time_elems = opp.getElementsByTagName("startTime")
-          time_elems += opp.getElementsByTagName("endTime")
-          for el in time_elems:
-            xmlh.set_default_attr(node, el, "olsonTZ", "America/Los_Angeles")
+
+  # note: processes Organizations first, so ID lookups work
+  feedchunks = re.findall(
+    re.compile('<FeedInfo>.+?</FeedInfo>', re.DOTALL), instr)
+  for feedchunk in feedchunks:
+    node = xmlh.simple_parser(feedchunk, KNOWN_ELNAMES, False)
+    xmlh.set_default_value(node, node.firstChild, "feedID", "0")
+    set_default_time_elem(node, node.firstChild, "createdDateTime")
     outstr += xmlh.prettyxml(node, True)
+
+  orgchunks = re.findall(
+    re.compile('<Organization>.+?</Organization>', re.DOTALL), instr)
+  outstr += '<Organizations>'
+  for orgchunk in orgchunks:
+    node = xmlh.simple_parser(orgchunk, KNOWN_ELNAMES, False)
+    numorgs += 1
+    outstr += xmlh.prettyxml(node, True)
+  outstr += '</Organizations>'
+               
+  oppchunks = re.findall(
+    re.compile('<VolunteerOpportunity>.+?</VolunteerOpportunity>',
+               re.DOTALL), instr)
+  outstr += '<VolunteerOpportunities>'
+  for oppchunk in oppchunks:
+    node = xmlh.simple_parser(oppchunk, KNOWN_ELNAMES, False)
+    numopps += 1
+    if (maxrecs > 0 and numopps > maxrecs):
+      break
+    if progress and numopps % 250 == 0:
+      print datetime.now(), ": ", numopps, " records generated."
+    for opp in node.firstChild.childNodes:
+      if opp.nodeType == node.ELEMENT_NODE:
+        xmlh.set_default_value(node, opp, "volunteersNeeded", -8888)
+        xmlh.set_default_value(node, opp, "paid", "No")
+        xmlh.set_default_value(node, opp, "sexRestrictedTo", "Neither")
+        xmlh.set_default_value(node, opp, "language", "English")
+        set_default_time_elem(node, opp, "lastUpdated")
+        set_default_time_elem(node, opp, "expires", 
+                              xmlh.current_ts(DEFAULT_EXPIRATION))
+        for loc in opp.getElementsByTagName("location"):
+          xmlh.set_default_value(node, loc, "virtual", "No")
+          xmlh.set_default_value(node, loc, "country", "US")
+        for dttm in opp.getElementsByTagName("dateTimeDurations"):
+          xmlh.set_default_value(node, dttm, "openEnded", "No")
+          xmlh.set_default_value(node, dttm, "iCalRecurrence", "")
+          if (dttm.getElementsByTagName("startTime") == None and
+              dttm.getElementsByTagName("endTime") == None):
+            set_default_time_elem(node, dttm, "timeFlexible", "Yes")
+          else:
+            set_default_time_elem(node, dttm, "timeFlexible", "No")
+          xmlh.set_default_value(node, dttm, "openEnded", "No")
+        time_elems = opp.getElementsByTagName("startTime")
+        time_elems += opp.getElementsByTagName("endTime")
+        for el in time_elems:
+          xmlh.set_default_attr(node, el, "olsonTZ", "America/Los_Angeles")
+    outstr += xmlh.prettyxml(node, True)
+  outstr += '</VolunteerOpportunities>'
+
   outstr += '</FootprintFeed>'
   return outstr, numorgs, numopps
 
