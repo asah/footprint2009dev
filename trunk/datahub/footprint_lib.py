@@ -146,13 +146,18 @@ FIELDTYPES = {
   "hidden_details":"string",
 }
 
-def print_progress(msg, filename="", progress=PROGRESS):
+def print_progress(msg, filename="", progress=None):
   """print progress indicator."""
-  xmlh.print_progress(msg, filename, progress)
+  # not allowed to say progress=PROGRESS as a default arg
+  if progress == None:
+    progress = PROGRESS
+  xmlh.print_progress(msg, filename, progress=progress)
 
-def print_status(msg, filename="", progress=PROGRESS):
+def print_status(msg, filename="", progress=None):
   """print status indicator, for stats collection."""
-  xmlh.print_status(msg, filename, progress)
+  if progress == None:
+    progress = PROGRESS
+  xmlh.print_status(msg, filename, progress=progress)
 
 # Google Base uses ISO8601... in PST -- I kid you not:
 # http://base.google.com/support/bin/answer.py?
@@ -702,37 +707,71 @@ def convert_to_gbase_events_type(instr, origname, fastparse, maxrecs, progress):
       'volunteersFilled', 'volunteersSlots', 'volunteersNeeded', 'yesNoEnum'
       ]
     numopps = 0
-    # note: preserves order, so diff works (vs. one sweep per element type)
-    chunks = re.findall(
-      re.compile('<(?:Organization|VolunteerOpportunity|FeedInfo)>.+?'+
-                 '</(?:Organization|VolunteerOpportunity|FeedInfo)>',
+
+    feedchunks = re.findall(
+      re.compile('<FeedInfo>.+?</FeedInfo>', re.DOTALL), instr)
+    for feedchunk in feedchunks:
+      print_progress("found FeedInfo.", progress=progress)
+      feedinfo = xmlh.simple_parser(feedchunk, known_elnames, False)
+
+    orgchunks = re.findall(
+      re.compile('<Organization>.+?</Organization>', re.DOTALL), instr)
+    for orgchunk in orgchunks:
+      if progress and len(known_orgs) % 250 == 0:
+        print_progress(str(len(known_orgs))+" organizations seen.")
+      org = xmlh.simple_parser(orgchunk, known_elnames, False)
+      org_id = xmlh.get_tag_val(org, "organizationID")
+      if (org_id != ""):
+        known_orgs[org_id] = org
+      if example_org == None:
+        example_org = org
+
+    oppchunks = re.findall(
+      re.compile('<VolunteerOpportunity>.+?</VolunteerOpportunity>',
                  re.DOTALL), instr)
-    for chunk in chunks:
-      node = xmlh.simple_parser(chunk, known_elnames, False)
-      if re.search("<FeedInfo>", chunk):
-        print_progress("found FeedInfo.", progress=progress)
-        feedinfo = xmlh.simple_parser(chunk, known_elnames, False)
-        continue
-      if re.search("<Organization>", chunk):
-        if progress and len(known_orgs) % 250 == 0:
-          print_progress(str(len(known_orgs))+" organizations seen.")
-        org = xmlh.simple_parser(chunk, known_elnames, False)
-        org_id = xmlh.get_tag_val(org, "organizationID")
-        if (org_id != ""):
-          known_orgs[org_id] = org
-        if example_org == None:
-          example_org = org
-        continue
-      if re.search("<VolunteerOpportunity>", chunk):
-        global HEADER_ALREADY_OUTPUT
-        opp = xmlh.simple_parser(chunk, None, False)
-        if numopps == 0:
-          # reinitialize
-          outstr = output_header(feedinfo, node, example_org)
-        numopps, spiece = output_opportunity(opp, feedinfo, known_orgs, numopps)
-        outstr += spiece
-        if (maxrecs > 0 and numopps > maxrecs):
-          break
+    for oppchunk in oppchunks:
+      global HEADER_ALREADY_OUTPUT
+      opp = xmlh.simple_parser(oppchunk, None, False)
+      if numopps == 0:
+        # reinitialize
+        outstr = output_header(feedinfo, opp, example_org)
+      numopps, spiece = output_opportunity(opp, feedinfo, known_orgs, numopps)
+      outstr += spiece
+      if (maxrecs > 0 and numopps > maxrecs):
+        break
+
+    ## note: preserves order, so diff works (vs. one sweep per element type)
+    #chunks = re.findall(
+    #  re.compile('<(?:Organization|VolunteerOpportunity|FeedInfo)>.+?'+
+    #             '</(?:Organization|VolunteerOpportunity|FeedInfo)>',
+    #             re.DOTALL), instr)
+    #for chunk in chunks:
+    #  node = xmlh.simple_parser(chunk, known_elnames, False)
+    #  if re.search("<FeedInfo>", chunk):
+    #    print_progress("found FeedInfo.", progress=progress)
+    #    feedinfo = xmlh.simple_parser(chunk, known_elnames, False)
+    #    continue
+    #  if re.search("<Organization>", chunk):
+    #    if progress and len(known_orgs) % 250 == 0:
+    #      print_progress(str(len(known_orgs))+" organizations seen.")
+    #    org = xmlh.simple_parser(chunk, known_elnames, False)
+    #    org_id = xmlh.get_tag_val(org, "organizationID")
+    #    if (org_id != ""):
+    #      known_orgs[org_id] = org
+    #    if example_org == None:
+    #      example_org = org
+    #    continue
+    #  if re.search("<VolunteerOpportunity>", chunk):
+    #    global HEADER_ALREADY_OUTPUT
+    #    opp = xmlh.simple_parser(chunk, None, False)
+    #    if numopps == 0:
+    #      # reinitialize
+    #      outstr = output_header(feedinfo, node, example_org)
+    #    numopps, spiece = output_opportunity(opp, feedinfo, known_orgs, numopps)
+    #    outstr += spiece
+    #    if (maxrecs > 0 and numopps > maxrecs):
+    #      break
+
     #numopps = 0
     #nodes = xml.dom.pulldom.parseString(instr)
     #example_org = None
@@ -873,10 +912,9 @@ def guess_parse_func(inputfmt, filename):
   if (inputfmt == None and re.search(r'(whichoneis[.]com|beextra[.]org)',
                                      filename)):
     return "fpxml", parse_footprint.parse
-  if (inputfmt == "idealist" or
-      (inputfmt == None and re.search(r'idealist', filename))):
-    # now using FPXML
-    #return "idealist", parse_idealist.parse
+  if inputfmt == "idealist":
+    return "idealist", parse_idealist.parse
+  if (inputfmt == None and re.search(r'idealist', filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == "fp_userpostings" or
       (inputfmt == None and re.search(r'(userpostings|/export/Posting)',
