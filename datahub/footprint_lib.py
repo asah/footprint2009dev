@@ -730,10 +730,8 @@ def convert_to_gbase_events_type(instr, origname, fastparse, maxrecs, progress):
       re.compile('<VolunteerOpportunity>.+?</VolunteerOpportunity>',
                  re.DOTALL), instr)
     for oppchunk in oppchunks:
-      global HEADER_ALREADY_OUTPUT
       opp = xmlh.simple_parser(oppchunk, None, False)
-      if numopps == 0:
-        # reinitialize
+      if not HEADER_ALREADY_OUTPUT:
         outstr = output_header(feedinfo, opp, example_org)
       numopps, spiece = output_opportunity(opp, feedinfo, known_orgs, numopps)
       outstr += spiece
