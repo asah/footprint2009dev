@@ -23938,3 +23938,1977 @@ mozambique|-18.6656950,35.5295620
 portugal|39.3998720,-8.2244540
 egypt|26.8205530,30.8024980
 papua new guinea|-6.3149930,143.9555500
+everett washington|47.9817970,-122.1895440
+mystic connecticut|41.3548500,-71.9619990
+austin texas|30.2687350,-97.7452090
+phoenix arizona|33.4482630,-112.0738210
+new york new york|40.7560540,-73.9869510
+tacoma washington|47.2445420,-122.4425630
+chestertown maryland|39.2233130,-76.0696990
+durham north carolina|35.9768050,-78.9068430
+dallas texas|32.7810780,-96.7971110
+dallas/garland texas|32.9088650,-96.6308900
+columbia maryland|39.2020160,-76.8593680
+butler county area ohio|41.1320296,-80.2990246
+newbedford massachusetts|41.6354490,-70.9491370
+bradenton/sarasota florida|27.3382490,-82.5268660
+medway massachusetts|42.1559342,-71.4180622
+near medway massachusetts|42.1401400,-71.3970300
+chicago illinois|41.8795350,-87.6243330
+walnut creek california|37.9062570,-122.0643220
+gladwyne pennsylvania|40.0396470,-75.2798160
+pottstown pennsylvania|40.2492350,-75.6466940
+jenkintown pennsylvania|40.0958560,-75.1257070
+philadelphia pennsylvania|39.9516390,-75.1638080
+east lansing michigan|42.7352300,-84.4837650
+northridge california|34.2283300,-118.5358300
+jacksonville florida|30.3262210,-81.6579290
+portland oregon|45.5238750,-122.6703990
+eureka, arcata, fortuna california|40.7861430,-124.1613090
+atlanta georgia|33.7544870,-84.3896630
+your own community michigan|
+your own community michigan michigan|
+pleasantville new jersey|39.3981200,-74.5168480
+reseda california|34.2010780,-118.5360420
+indianapolis indiana|39.7670160,-86.1562550
+new castle new hampshire|43.0714530,-70.7169790
+colorado springs colorado|38.8381140,-104.8213600
+columbus and area indiana|
+columbus and area indiana indiana|
+miami florida|25.7742520,-80.1902620
+any location pennsylvania|
+any location pennsylvania pennsylvania|
+san francisco california|37.7751960,-122.4192040
+landover maryland|38.9361500,-76.9014850
+jackson tennessee|35.6396250,-88.8277210
+redmond washington|47.6722290,-122.1156330
+los angeles california|34.0521870,-118.2434250
+oakland california|37.7723230,-122.2148970
+bay area california|37.8043507,-121.8107079
+dorchester massachusetts|42.3147400,-71.0600200
+winston-salem north carolina|36.0936550,-80.2432260
+richmond virginia|37.5407780,-77.4339280
+south orange county california|33.7174708,-117.8311428
+laguna woods california|33.6090940,-117.7294540
+md,dc,va|38.8676030,-77.0765230
+maryland|39.0457549,-76.6412712
+south bend indiana|41.6941590,-86.2506240
+northern hills area south dakota|
+northern hills area south dakota south dakota|
+cleveland ohio|41.4997130,-81.6937160
+fayetteville arkansas|36.0740170,-94.1544190
+orange or brea california|
+orange or brea california california|
+virginia beach virginia|36.8592200,-75.9787060
+visalia california|36.3301650,-119.2923640
+louisburg, north carolina|36.0986470,-78.3011840
+pierre south dakota|44.3776320,-100.3177480
+western cook county illinois|41.5717240,-87.6750010
+king and pierce counties washington|
+king and pierce counties washington washington|
+beaverton oregon|45.4868780,-122.8039970
+birmingham alabama|33.5188850,-86.8160680
+chapel hill north carolina|35.9296810,-79.0341650
+kent washington|47.4122170,-122.2494330
+orange county california|33.7174708,-117.8311428
+laplace louisiana|30.0713590,-90.4764300
+tri-cities tn/va region tennessee|
+tri-cities tn/va region tennessee tennessee|
+staley north carolina|35.7959020,-79.5514070
+new jersey|40.0583238,-74.4056612
+georgia|32.1574351,-82.9071230
+florida|27.6648274,-81.5157535
+massachusetts|42.4072107,-71.3824374
+delaware|38.9108325,-75.5276699
+virginia|37.4315734,-78.6568942
+rhode island|41.5800945,-71.4774291
+connecticut|41.6032207,-73.0877490
+pennsylvania|41.2033216,-77.1945247
+north carolina|35.7595731,-79.0192997
+maine|45.2537830,-69.4454689
+south carolina|33.8360810,-81.1637245
+new hampshire|43.1938516,-71.5723953
+west virginia|38.5976262,-80.4549026
+vermont|44.5588028,-72.5778415
+sacramento california|38.5736590,-121.4871470
+boston massachusetts|42.3589200,-71.0578100
+washington district of columbia|38.8920910,-77.0240550
+multiple cities in wa, or, id|
+seattle washington|47.6209730,-122.3472760
+new york (all 5 boroughs) new york|
+new york (all 5 boroughs) new york new york|
+kansas city missouri|39.0904320,-94.5836530
+columbus ohio|39.9622080,-83.0006760
+various massachusetts|
+various massachusetts massachusetts|
+various locations massachusetts|
+various locations massachusetts massachusetts|
+pearland texas|29.5442450,-95.3307490
+state-wide arizona|35.4192060,-109.4967830
+urbana illinois|40.1066490,-88.1956270
+lexington virginia|37.7829200,-79.4443260
+molalla oregon|45.1475280,-122.5770870
+detroit michigan|42.3301650,-83.0459130
+stevens point wisconsin|44.5234110,-89.5556210
+philadelphia area pennsylvania|39.9681810,-77.6354080
+philadelphia are pennsylvania|39.9642230,-75.1776330
+pocopson pennsylvania|39.9073234,-75.6615384
+raeford north carolina|34.9842100,-79.2267000
+fayetteville north carolina|35.0554770,-78.8867650
+leander texas|30.5688990,-97.8486770
+oceanside california|33.1835860,-117.3692390
+memphis tennessee|35.1428520,-90.0523500
+southfield michigan|42.4770850,-83.2609170
+carrollton texas|32.9685300,-96.9097510
+rockford illinois|42.2659730,-89.0866670
+pittsburgh pennsylvania|40.4384230,-80.0019330
+ojai california|34.4477050,-119.2471120
+minneapolis minnesota|44.9774820,-93.2643510
+bay area preferred california|
+bay area preferred california california|
+minneapolis-metro area minnesota|
+minneapolis-metro area minnesota minnesota|
+cincinnati ohio|39.0992330,-84.5174860
+miami-dade florida|25.5516034,-80.6326916
+stamford connecticut|41.0552230,-73.5310100
+houston texas|29.7599560,-95.3625340
+grand forks north dakota|47.9091560,-97.0556120
+gorham maine|43.6796920,-70.4429420
+morris plains new jersey|40.8360560,-74.4784000
+dallas county texas|32.8024682,-96.8350999
+mckinney, plano, collin county texas|33.0560120,-96.7703710
+greenville, quinlan texas|32.9062903,-96.1314928
+west saint paul minnesota|44.9015170,-93.0806070
+boulder colorado|40.0104920,-105.2768430
+cherry hill new jersey|39.8998780,-74.9892530
+glendale california|34.1649720,-118.2320060
+brooklyn new york|40.6752340,-73.9710430
+jamaica plain massachusetts|42.3112300,-71.1087900
+northern arizona arizona|35.2344660,-111.6644500
+prospect kentucky|38.3483520,-85.6146410
+eugene oregon|44.0455550,-123.1012760
+davie florida|26.0652840,-80.2521020
+ypsilanti-ann arbor michigan|42.2409630,-83.6189870
+new york city and long island new york|40.7623250,-73.9724840
+pomona new jersey|39.4638300,-74.5535180
+olathe kansas|38.8835620,-94.8182320
+manassas virginia|38.7509110,-77.4799970
+baltimore maryland|39.2942550,-76.6142750
+world wide|17.3677500,78.4856410
+worldwide|29.9918020,-95.3926780
+richmond california|37.9301840,-122.3448200
+california|36.7782610,-119.4179324
+5 boroughs of new york city new york|
+5 boroughs of new york city new york new york|
+lakewood colorado|39.7109670,-105.1097100
+new brunswick new jersey|40.4872060,-74.4398990
+new mexico|34.9727305,-105.0323635
+rochester new york|43.1541480,-77.6192820
+schenectady new york|42.8010160,-73.9273270
+on the web|44.5629140,-76.0253040
+lockport illinois|41.5826120,-88.0497270
+new orleans louisiana|29.9532380,-90.0690030
+throughout maryland|
+throughout maryland maryland|
+milwaukee wisconsin|43.0401820,-87.9144800
+santa fe new mexico|35.6816220,-105.9380670
+edmonds washington|47.8105040,-122.3669510
+greensboro north carolina|36.0734990,-79.7901600
+benton harbor michigan|42.1127900,-86.4513550
+grand rapids michigan|42.9704710,-85.6686480
+lansdale pennsylvania|40.2415630,-75.2837470
+can work from home|
+fairfax virginia|38.8515310,-77.2981670
+arlington virginia|38.8815790,-77.1033390
+santa ana california|33.7455300,-117.8676240
+southern california|32.5640921,-117.0441009
+tiffin ohio|41.1145670,-83.1765520
+albany oregon|44.6185950,-123.0903390
+on the internet|
+alexandria virginia|38.8272510,-77.0878900
+northbrook illinois|42.1274080,-87.8388820
+santa cruz california|36.9779050,-122.0333600
+gloversville new york|43.0505460,-74.3456310
+morgantown west virginia|39.6388120,-79.9487680
+st. louis missouri|38.6275220,-90.1984100
+incline village nevada|39.2513490,-119.9730330
+mountain view california|37.4004650,-122.0730030
+usa and canada pennsylvania|27.4191700,-82.5805570
+bronx new york|40.8268830,-73.9227510
+cape coral/ft myers florida|26.6231400,-81.8397890
+bucks county pennsylvania|40.4107964,-75.2479061
+hemet california|33.7386110,-116.9890830
+middletown connecticut|41.5473530,-72.6508720
+cromwell connecticut|41.6042039,-72.6505957
+old saybrook connecticut|41.2915709,-72.3903053
+east hampton connecticut|41.5676960,-72.4895060
+middlefield connecticut|41.5159990,-72.7122700
+durham connecticut|41.4779570,-72.6810480
+haddam connecticut|41.4772640,-72.5122920
+essex connecticut|41.3497459,-72.4198967
+killingworth connecticut|41.3584680,-72.5654730
+chester connecticut|41.4037088,-72.4849861
+deep river connecticut|41.3648171,-72.4849861
+stuart florida|27.1813290,-80.2362700
+burlington vermont|44.4759790,-73.2109530
+los angeles area california|34.0062958,-118.3722220
+palmdale area california|37.5791860,-122.0628100
+hollywood california|34.0980010,-118.3266450
+ann arbor michigan|42.2774160,-83.7332760
+loveland ohio|39.2717700,-84.2840500
+upper marlboro maryland|38.8163040,-76.7518350
+amityville new york|40.6710430,-73.4166380
+kernersville north carolina|36.1167170,-80.0770340
+salt lake city utah|40.7715920,-111.8881890
+indiana|40.5512165,-85.6023643
+new york|40.7560540,-73.9869510
+texas|31.9685988,-99.9018131
+kentucky|37.8393332,-84.2700179
+camden new jersey|39.9473760,-75.1234180
+palatine, crystal lake mchenry illinois|
+palatine, crystal lake mchenry illinois illinois|
+mchenry, palatine, cary illinois|
+mchenry, palatine, cary illinois illinois|
+spartanburg south carolina|34.9438550,-81.9286570
+northampton massachusetts|42.3299470,-72.6789400
+pleasant plain ohio|39.2796400,-84.1124190
+alameda california|37.7762610,-122.2767060
+media pennsylvania|39.9165920,-75.3878520
+charlotte north carolina|35.2314020,-80.8458410
+gainesville georgia|34.2940380,-83.8296880
+statewide connecticut|
+statewide connecticut connecticut|
+many nations california|39.7065080,-119.7468330
+redmond, bellevue, kirkland washington|47.6011555,-122.1636756
+worldwide georgia|34.3473260,-84.0471580
+eau claire wisconsin|44.8166050,-91.5006250
+broward county florida|26.1900960,-80.3658650
+silicon valley california|36.9374556,-121.3541631
+walla walla washington|46.0653910,-118.3337220
+chesterfield missouri|38.6602580,-90.5795490
+boca raton florida|26.3674810,-80.1147230
+throughout louisiana|
+throughout louisiana louisiana|
+any town arkansas|
+any town arkansas arkansas|
+savannah, georgia georgia|32.0823250,-81.0965150
+whippany new jersey|40.8244850,-74.4180210
+monsey new york|41.1158120,-74.0690480
+throgs neck new york|40.8230360,-73.8208580
+little ferry new jersey|40.8453210,-74.0423860
+eagle butte south dakota|44.9970290,-101.2332980
+suffolk virginia|36.7282050,-76.5831890
+boise idaho|43.5974040,-116.2997250
+bremerton washington|47.5650480,-122.6329360
+every town pennsylvania|
+every town pennsylvania pennsylvania|
+any town pennsylvania|
+any town pennsylvania pennsylvania|
+johnson city tennessee|36.3186370,-82.3520630
+chavies kentucky|37.3468350,-83.3543650
+anywhere in chapter missouri|
+anywhere in chapter missouri missouri|
+all of hamilton county ohio|39.2174830,-84.3581030
+international california|34.0976204,-117.2705509
+san mateo county california|37.4337342,-122.4014193
+fremont &amp; richmond california|38.5673540,-121.7283620
+phoenix &amp; manlius new york|
+phoenix &amp; manlius new york new york|
+winter park florida|28.5963340,-81.3409490
+louisville kentucky|38.2560650,-85.7515400
+shelbyville kentucky|38.2118440,-85.2281620
+brea california|33.9231040,-117.8639040
+orlando florida|28.5531540,-81.3644380
+fairfield and surrounding area california|
+fairfield and surrounding area california california|
+nationally district of columbia|38.9286720,-77.0487830
+honolulu hawaii|21.2919820,-157.8218560
+whitestown indiana|39.9971760,-86.3457970
+copake new york|42.1053970,-73.5401600
+olympia washington|47.0449300,-122.9016480
+anywhere online new york|
+anywhere online new york new york|
+throughout the state new york|
+throughout the state new york new york|
+gaithersburg maryland|39.1285770,-77.2375140
+highland park, pontiac, warren michigan|
+highland park, pontiac, warren michigan michigan|
+washington|38.8920910,-77.0240550
+oldwick new jersey|40.6726930,-74.7492550
+santa monica california|34.0079670,-118.4896810
+vancouver washington|45.6401890,-122.6713980
+new haven connecticut|41.3110530,-72.9304160
+capital district new york|39.1071610,-75.5021020
+bemidji&amp; park rapids minnesota|
+bemidji&amp; park rapids minnesota minnesota|
+woodland california|38.6774030,-121.7654040
+reno nevada|39.5303680,-119.8143900
+new orleans/ south east la louisiana|29.9532380,-90.0690030
+new orleans/ southeast la louisiana|29.9532380,-90.0690030
+san jose california|37.3200520,-121.8776360
+berkeley california|37.8722220,-122.2684030
+monterey park california|34.0624630,-118.1228470
+harwood maryland|39.3200976,-76.6116662
+annapolis maryland|38.9693400,-76.5196870
+compton california|33.8958750,-118.2240550
+council bluffs iowa|41.2395130,-95.8790600
+any town arizona|
+any town arizona arizona|
+scottsdale arizona|33.5819540,-111.8999360
+local beaches new hampshire|
+local beaches new hampshire new hampshire|
+anywhere on oregon coast oregon|
+anywhere on oregon coast oregon oregon|
+minnesota|46.7295530,-94.6858998
+north east maryland|39.6115560,-75.9388910
+troy new york|42.7330400,-73.6765610
+winfield (all dupage county) illinois|
+winfield (all dupage county) illinois illinois|
+chelsea massachusetts|42.3981700,-71.0308500
+estherville iowa|43.4020550,-94.8327170
+white plains new york|41.0192190,-73.7571610
+evans city pennsylvania|40.7674510,-80.0591450
+trenton new jersey|40.2201700,-74.7641790
+providence rhode island|41.8269560,-71.4087180
+jamaica new york|40.6919760,-73.8105450
+virginiaanddc maryland|
+virginiaanddc maryland maryland|
+hickory north carolina|35.7393920,-81.3236180
+golden colorado|39.7496370,-105.2159840
+buffalo grove illinois|42.1717620,-87.9650920
+newburyport massachusetts|42.8158500,-70.8974700
+burbank california|34.1554420,-118.3356310
+amesbury massachusetts|42.8572500,-70.9308700
+undisclosed/essex county massachusetts|
+undisclosed/essex county massachusetts massachusetts|
+newburyport / amesbury massachusetts|42.8525821,-70.9427914
+newburyport/amesbury massachusetts|42.8525821,-70.9427914
+roanoke virginia|37.2726210,-79.9423900
+any city, state or country|
+any city anywhere|
+any city, anywhere|
+new bedford massachusetts|41.6354490,-70.9491370
+stillwater minnesota|45.0548690,-92.8203580
+tustin california|33.7483560,-117.8119140
+santa barbara california|34.4234030,-119.7044160
+new york (could be virtual) new york|
+new york (could be virtual) new york new york|
+tempe arizona|33.4219480,-111.9399320
+chantilly virginia|38.8773450,-77.4087750
+silver spring maryland|39.0167100,-77.0238930
+takoma park maryland|38.9810340,-77.0103110
+pensacola florida|30.4734130,-87.2122610
+bellerose new york|40.7261020,-73.7183150
+little rock arkansas|34.7244250,-92.2788640
+south boston virginia|36.7064290,-78.9099700
+middle river maryland|39.3317970,-76.4375780
+folsom or fair oaks california|
+folsom or fair oaks california california|
+folsom california|38.6718010,-121.1503780
+folsom, fair oaks, and sac california|
+folsom, fair oaks, and sac california california|
+saint george utah|37.0742080,-113.5846150
+maricopa county arizona|33.2917968,-112.4291464
+closter new jersey|40.9729660,-73.9614870
+wayne michigan|42.2799680,-83.3843910
+lafayette california|37.8920250,-122.1187660
+san antonio texas|29.4250370,-98.4937220
+boise, nampa idaho|43.5812800,-116.5585470
+dunwoody georgia|33.9503870,-84.3194820
+san bernardino california|34.1359870,-117.2941610
+plainville connecticut|41.6744830,-72.8583600
+all developing countries|
+madera california|36.9664790,-120.0831810
+woodland hills california|34.1685010,-118.6059160
+fort myers florida|26.6231400,-81.8397890
+huntsville alabama|34.7403780,-86.6001390
+waterloo iowa|42.4905590,-92.3455720
+wichita kansas|37.6860240,-97.3355710
+riverview michigan|42.1703640,-83.1892080
+brattleboro vermont|42.8651960,-72.5680580
+oakland new jersey|41.0296370,-74.2366720
+ohio|40.4172871,-82.9071230
+various locations in jo co kansas|
+various locations in jo co kansas kansas|
+throughout johnson county kansas|
+throughout johnson county kansas kansas|
+location flexible kansas|
+location flexible kansas kansas|
+various locations kansas|
+various locations kansas kansas|
+metro new orleans area louisiana|
+metro new orleans area louisiana louisiana|
+denver colorado|39.7550920,-104.9881230
+erie pennsylvania|42.1235680,-80.0812980
+beachwood ohio|41.4736800,-81.4977870
+fairbanks alaska|64.8350540,-147.6465280
+charlottesville virginia|38.0377640,-78.4892600
+ft. walton beach florida|30.4199150,-86.6216750
+dayton ohio|39.7624450,-84.2052470
+tucson arizona|32.2278320,-110.9437840
+bay shore new york|40.7264930,-73.2500950
+newton new hampshire|42.8652314,-71.0438339
+southwestern pa pennsylvania|39.7862850,-76.9574410
+nashville tennessee|36.1588870,-86.7820560
+east hartford connecticut|41.7636140,-72.6154800
+bellevue washington|47.5975430,-122.1508850
+chamblee georgia|33.8891870,-84.3045540
+cambridge massachusetts|42.3753920,-71.1184870
+meriden new britain connecticut|
+meriden new britain connecticut connecticut|
+davidson / williamson co. tennessee|
+davidson / williamson co. tennessee tennessee|
+davidson county tennessee|36.1342563,-86.8220341
+davidson co. &amp; surrounding tennessee|
+davidson co. &amp; surrounding tennessee tennessee|
+epping new hampshire|43.0374870,-71.0830440
+west allis wisconsin|43.0093700,-88.0185010
+tewksbury massachusetts|42.6121760,-71.2336570
+san leandro california|37.7258370,-122.1568460
+union/middlexcounty new jersey|40.4393340,-74.1128080
+anderson and oconee counties south carolina|
+anderson and oconee counties south carolina south carolina|
+bloomingdale new jersey|41.0307450,-74.3290970
+belleville illinois|38.5259940,-90.0116620
+aurora colorado|39.6966850,-104.8097660
+bloomfield,hartford,new haven connecticut|41.4408292,-72.4583605
+washington d.c. district of columbia|38.8920910,-77.0240550
+northern virginia|37.2593338,-81.3619402
+central harlem new york|40.7994420,-73.9553270
+reno/las vegas nevada|36.0972400,-115.1723000
+saint louis missouri|38.6275220,-90.1984100
+south st. paul minnesota|44.8888100,-93.0424170
+st. paul minnesota|44.9446360,-93.1026570
+los angeles county california|34.3871821,-118.1122679
+quincy massachusetts|42.2516000,-71.0032300
+mount vernon kentucky|37.3662990,-84.3628270
+estes park colorado|40.3719060,-105.5274390
+lancaster pennsylvania|40.0415580,-76.3019230
+concord/merrimack county new hampshire|43.2313660,-71.5597160
+round rock texas|30.5183970,-97.6707280
+st. paul, minneapolis minnesota|44.9716692,-93.2806134
+gunnison colorado|38.5443980,-106.9269080
+zeeland michigan|42.8123400,-86.0120460
+allegan michigan|42.5322690,-85.8460280
+hastings michigan|42.6486300,-85.2906410
+holland michigan|42.7831000,-86.0972380
+marshall united states|35.4792517,-86.7818523
+hillsboro oregon|45.5326850,-122.9380470
+cook and lake counties illinois|
+cook and lake counties illinois illinois|
+boston and surrounding towns massachusetts|
+boston and surrounding towns massachusetts massachusetts|
+stony brook new york|40.9047670,-73.1320510
+albuquerque metro area new mexico|35.0823810,-106.5141040
+springfield massachusetts|42.1026090,-72.5851360
+augusta maine|44.3294360,-69.7322670
+coldwater ohio|40.4797820,-84.6287200
+waterbury vermont|44.3433210,-72.7527920
+cranston rhode island|41.7394280,-71.4785740
+camp hill pennsylvania|40.2404730,-76.9265620
+york pennsylvania|39.9612650,-76.7316120
+stroudsburg pennsylvania|40.9843710,-75.1978900
+bloomfield connecticut|41.8394458,-72.7333604
+lewiston maine|44.0892280,-70.1642040
+celina ohio|40.5529280,-84.5646700
+coventry rhode island|41.7040678,-71.6436028
+warwick rhode island|41.7032540,-71.4242480
+manchester new hampshire|42.9910070,-71.4630820
+scarborough maine|43.5978830,-70.3361990
+portland maine|43.6546700,-70.2624340
+williamsport pennsylvania|41.2392130,-77.0324190
+westminster vermont|43.0736230,-72.4521160
+concord new hampshire|43.2313660,-71.5597160
+berlin new hampshire|44.4913240,-71.2567940
+annville pennsylvania|40.3309670,-76.5099290
+scranton pennsylvania|41.4067440,-75.6649850
+rutland vermont|43.6086820,-72.9723100
+ohio city ohio|40.7714840,-84.6154410
+clarks summit pennsylvania|41.4946660,-75.7062340
+wilkes-barre pennsylvania|41.2469740,-75.8733650
+toledo ohio|41.6529200,-83.5777820
+lima ohio|40.7427390,-84.1133170
+van wert ohio|40.8648540,-84.5828140
+bangor maine|44.8362170,-68.7916520
+montpelier vermont|44.2627390,-72.5716060
+waterville maine|44.5427250,-69.6616240
+lewistown pennsylvania|40.5976650,-77.5741950
+freeport maine|43.8573250,-70.1027690
+randolph vermont|43.9423390,-72.6213015
+conway new hampshire|43.9787260,-71.1276830
+wilmington vermont|42.8684440,-72.8710320
+ellsworth maine|44.5818650,-68.4825400
+riverside rhode island|41.7672220,-71.3647220
+keene new hampshire|42.9474730,-72.3009580
+nashua new hampshire|42.7577750,-71.4639030
+worcester massachusetts|42.2714360,-71.7988260
+newton massachusetts|42.3308240,-71.2070140
+lowell massachusetts|42.6332950,-71.3090450
+norwich connecticut|41.5504960,-72.0935950
+hartford connecticut|41.7664670,-72.6731650
+waterbury connecticut|41.5559000,-73.0408000
+freedom pennsylvania|40.6855900,-80.2517300
+selingrove pennsylvania|40.7993720,-76.8619230
+great neck new york|40.8029530,-73.7360150
+madison wisconsin|43.0620710,-89.4008460
+manchester vermont|43.1610480,-73.0721930
+east stroudsburg pennsylvania|41.0028270,-75.1832290
+essex vermont|44.7682631,-71.7436155
+violet louisiana|29.9009130,-89.8909490
+new york city new york|40.7560540,-73.9869510
+chicago area illinois|40.4601540,-87.6873170
+chalmette louisiana|29.9424930,-89.9637000
+hayward california|37.6329380,-122.1102650
+bozeman montana|45.6792940,-111.0462310
+san diego california|32.7188340,-117.1638410
+maplewood minnesota|45.0116930,-93.0217810
+asheville north carolina|35.5817270,-82.5540990
+staten island new york|40.6066790,-74.1624180
+costa mesa california|33.6525260,-117.9189970
+inland empire california|34.9592083,-116.4193890
+poughkeepsie new york|41.6945250,-73.9220490
+metro washington dc-maryland maryland|38.8920910,-77.0240550
+prince george/montgomery cty maryland|
+prince george/montgomery cty maryland maryland|39.1063930,-76.8550040
+wisconsin|43.7844397,-88.7878678
+shawnee kansas|39.0091610,-94.8112690
+placerville -or- georgetown california|
+placerville -or- georgetown california california|
+weymouth massachusetts|42.1931850,-70.9500150
+braintree massachusetts|42.2071200,-71.0042000
+brockton massachusetts|42.0855510,-71.0200030
+lacey washington|47.0371390,-122.8038330
+brentwood new york|40.7812120,-73.2461400
+briarwood new york|40.7089491,-73.8154394
+van nuys california|34.1866600,-118.4487080
+hazleton pennsylvania|40.9526830,-75.9695040
+montrose pennsylvania|41.8328500,-75.8783570
+milford pennsylvania|41.3221430,-74.8035700
+wellsboro pennsylvania|41.7474480,-77.3019580
+bethlehem pennsylvania|40.6219830,-75.3602010
+allentown pennsylvania|40.6021500,-75.4717500
+carbondale pennsylvania|41.5708510,-75.5039650
+towanda pennsylvania|41.7683620,-76.4431570
+pittston pennsylvania|41.3258940,-75.7897840
+montoursville pennsylvania|41.2490000,-76.9220250
+paupack pennsylvania|41.4618356,-75.2712393
+bethesda maryland|38.9899770,-77.1213820
+greenwich connecticut|41.0392776,-73.6300729
+arizona|34.0489281,-111.0937311
+brick new jersey|40.0676092,-74.1122506
+camas washington|45.5962560,-122.4294670
+greater los angeles area california|33.5812790,-117.8511910
+ithaca new york|42.4445860,-76.4992590
+alfred new york|42.2632680,-77.7861120
+troy ohio|40.0465480,-84.2189040
+new philadelphia ohio|40.4882380,-81.4386280
+charleston west virginia|38.3532980,-81.6353750
+westerville ohio|40.1200810,-82.9177860
+foxboro massachusetts|42.0652780,-71.2483330
+mansfield massachusetts|42.0092584,-71.2280234
+doylestown pennsylvania|40.2997560,-75.1281630
+seneca pennsylvania|41.3774850,-79.7038070
+belafonte pennsylvania|40.9125590,-77.7687410
+huntington west virginia|38.4106080,-82.4284900
+elmont new york|40.7069080,-73.7098600
+manorville new york|40.8576280,-72.7918290
+barre vermont|44.2025290,-72.5078370
+white river junction vermont|43.6507430,-72.3234590
+woodstock vermont|43.6250650,-72.5184400
+bristol vermont|44.1605299,-73.0613776
+middlebury vermont|44.0069700,-73.1608540
+lebanon new hampshire|43.6428950,-72.2516240
+laconia new hampshire|43.5718180,-71.4774890
+exeter new hampshire|42.9804280,-70.9471410
+rochester new hampshire|43.3021570,-70.9739150
+franklin new hampshire|43.4560170,-71.6673410
+littleton new hampshire|44.3163950,-71.7592770
+bar harbor maine|44.3876250,-68.2043110
+madison maine|44.7977090,-69.8797150
+greenville maine|45.4594290,-69.5913510
+newport maine|44.8351850,-69.2764910
+brunswick maine|43.9076390,-69.9399910
+akron ohio|41.0848460,-81.5156030
+canton ohio|40.8093020,-81.3761130
+mansfield ohio|40.7613070,-82.5229640
+massillon ohio|40.7879640,-81.5220940
+medina ohio|41.1380400,-81.8640440
+maumee ohio|41.5679320,-83.6635820
+norwalk ohio|41.2445340,-82.6109360
+saint henry ohio|40.4213990,-84.6289690
+paulding ohio|41.1373450,-84.5808090
+tipp city ohio|39.9609290,-84.1893870
+west liberty ohio|40.2522470,-83.7559480
+kearny new jersey|40.7530340,-74.1188220
+verona new jersey|40.8314750,-74.2450930
+long valley new jersey|40.7845820,-74.7799740
+washington new jersey|40.7578580,-74.9823680
+medford new jersey|39.9009580,-74.8235200
+riverside new jersey|40.0352580,-74.9588702
+westville new jersey|39.8710140,-75.1292550
+erma new jersey|38.9977210,-74.8967060
+ocean view new jersey|39.1765150,-74.7336840
+pkainsboro new jersey|40.3335090,-74.6004880
+princeton junction new jersey|40.3201930,-74.6236150
+bridgewater new jersey|40.5989090,-74.6231930
+flemington new jersey|40.5059050,-74.8521810
+monmouth junction new jersey|40.3792270,-74.5464140
+morgan hill, gilroy california|37.1317680,-121.6338670
+morgan hill; gilroy california|37.1317680,-121.6338670
+orange and seminole counties florida|
+orange and seminole counties florida florida|
+oregon|43.8041334,-120.5542012
+west st. paul minnesota|44.9015170,-93.0806070
+st. michaels arizona|35.6566040,-109.0924950
+reading pennsylvania|40.3353540,-75.9278670
+colchester connecticut|41.5556862,-72.4021423
+alburits pennsylvania|40.5090680,-75.5998200
+chienne river sioux reservatio south dakota|
+chienne river sioux reservatio south dakota south dakota|
+kenosha wisconsin|42.5777910,-87.8226440
+solebury pennsylvania|40.3808340,-75.0081910
+richland pennsylvania|40.3564860,-76.2547420
+easton pennsylvania|40.6827220,-75.2186920
+westminster maryland|39.5822560,-77.0094990
+west palm beach florida|26.7286800,-80.0999460
+washingon district of columbia|38.8920910,-77.0240550
+malden massachusetts|42.4270300,-71.0594500
+bridgeport connecticut|41.1917410,-73.1969780
+westminster california|33.7592150,-117.9895160
+fort smith arkansas|35.3848240,-94.4216330
+brighton colorado|39.9868090,-104.8181690
+newbury ohio|41.4493390,-81.2739073
+st. augustine florida|29.9017320,-81.3202060
+tamarac florida|26.2083980,-80.2522930
+harrisburg pennsylvania|40.2739630,-76.8848550
+livonia michigan|42.3972850,-83.3737030
+palo alto california|37.4373280,-122.1599280
+shoreline washington|47.7559530,-122.3458260
+attleboro massachusetts|41.9313340,-71.2910900
+west point new york|41.3653880,-74.0334080
+bradenton florida|27.4881850,-82.5752520
+la crosse wisconsin|43.8117180,-91.2358750
+bainbridge ohio|39.2276520,-83.2701800
+marathon florida|24.7173740,-81.0713680
+columbia south carolina|34.0006880,-81.0353030
+baton rouge louisiana|30.4678800,-91.1296040
+stratham new hampshire|43.0134532,-70.8952337
+lewiston idaho|46.3913520,-116.9903780
+uniondale new york|40.7005950,-73.5931690
+kansas city kansas|39.1027460,-94.6262020
+falls church virginia|38.8822390,-77.1709830
+delray beach florida|26.4615150,-80.0853560
+santa ana heights california|33.6525970,-117.8959390
+nati massachusetts|42.2837830,-71.3472750
+newark new jersey|40.7355800,-74.1722470
+bohemia new york|40.7721330,-73.1191040
+laurel maryland|39.1017610,-76.8604890
+iowa|41.8780025,-93.0977020
+woodinville washington|47.7644130,-122.1426340
+omaha nebraska|41.2597510,-95.9423360
+brazoria texas|29.0490220,-95.5675890
+irving texas|32.8442230,-96.9590850
+north hollywood california|34.1721800,-118.3790140
+norristown pennsylvania|40.1238990,-75.3416360
+thompsonville illinois|37.9177360,-88.7624380
+ventura california|34.2659000,-119.2583660
+santa clara california|37.3523130,-121.9679820
+prescott arizona|34.5631600,-112.4444560
+passaic county new jersey|41.1231647,-74.3587473
+nyack new york|41.0909770,-73.9182490
+goshen new york|41.4021900,-74.3241050
+university city missouri|38.6644820,-90.3321910
+springdale arkansas|36.1782130,-94.1433710
+kanab utah|37.0264240,-112.5445250
+owings mills maryland|39.4120680,-76.7910930
+florida city florida|25.4477550,-80.4853290
+albany new york|42.6517250,-73.7550930
+lansing michigan|42.7336210,-84.5465820
+buffalo new york|42.8868750,-78.8778750
+st. marys georgia|30.7429310,-81.5541880
+meadville pennsylvania|41.6459410,-80.1496290
+encino california|34.1590990,-118.5013440
+athens ohio|39.3191170,-82.0910960
+newburgh new york|41.5007050,-74.0213520
+pacoima california|34.2629230,-118.4263450
+edwardsville illinois|38.7904470,-89.9794300
+pottsville pennsylvania|40.6798340,-76.2098910
+glenside pennsylvania|40.1032410,-75.1510790
+bryn mawr pennsylvania|40.0247350,-75.3189120
+nome alaska|64.5021180,-165.4067290
+monterey virginia|38.4120140,-79.5795180
+st paul minnesota|44.9446360,-93.1026570
+cape girardeau missouri|37.3131670,-89.5524210
+park ridge illinois|42.0108770,-87.8406870
+champaign illinois|40.1128000,-88.2710740
+st. petersburg florida|27.7670700,-82.6384580
+tallahassee florida|30.4381900,-84.2806340
+atkinson new hampshire|42.8327225,-71.1567344
+tenino washington|46.8589390,-122.8470670
+salem oregon|44.9370100,-123.0271650
+virtual|35.3123240,-80.7781130
+anywhere district of columbia|
+anywhere district of columbia district of columbia|
+napa california|38.2974360,-122.2933580
+plainfield new jersey|40.6149660,-74.4173280
+san diego (golden hill) california|32.7158740,-117.1337500
+lancaster california|34.6893750,-118.1352230
+oneonta new york|42.4529710,-75.0631570
+orange and sullivan county new york|
+orange and sullivan county new york new york|41.5378630,-74.4335560
+placentia california|33.8820200,-117.8631070
+somerville massachusetts|42.3891210,-71.0971450
+los angeles, lake huges california|34.6761960,-118.4441220
+mineola texas|32.6661510,-95.4872900
+clinton new jersey|40.6364300,-74.9097130
+salisbury maryland|38.3715280,-75.5867200
+redondo beach california|33.8381690,-118.3854110
+princeton new jersey|40.3496620,-74.6597080
+gainesville florida|29.6520700,-82.3393420
+stinson beach california|37.8984970,-122.6397650
+hanover new hampshire|43.7039260,-72.2823020
+americus georgia|32.0722030,-84.2325410
+montgomery county maryland|39.1547426,-77.2405153
+kure beach north carolina|33.9987320,-77.9090220
+soquel california|36.9839940,-121.9491090
+menlo park california|37.4841300,-122.1694720
+lorton virginia|38.7052620,-77.2366100
+moraga california|37.8339880,-122.1274390
+sheridan wyoming|44.7972430,-106.9559010
+fairfield california|38.2734860,-122.0340170
+bristol virginia|36.6151000,-82.1722900
+bellingham washington|48.7514480,-122.4725740
+santa clarita california|34.4332480,-118.5313970
+southern california california|32.5640921,-117.0441009
+spokane washington|47.6535440,-117.4112630
+mt. holly new jersey|39.9953830,-74.7880500
+whever you live|
+pasadena california|34.1458920,-118.1323510
+peninsula california|40.7968428,-124.2026812
+lincoln nebraska|40.8136280,-96.7026200
+wilmington delaware|39.7429610,-75.5384930
+issaquah washington|47.5301480,-122.0365270
+statewide maine|
+statewide maine maine|
+wheaton illinois|41.8588110,-88.1058340
+kalamazoo michigan|42.2909410,-85.5942280
+south lake tahoe california|38.9389770,-119.9771760
+racine wisconsin|42.7260500,-87.7883880
+agoura hills california|34.1461490,-118.7612650
+grafton wisconsin|43.3199410,-87.9517590
+rockville maryland|39.0839160,-77.1568230
+rochester pennsylvania|40.7015840,-80.2853350
+binghamton new york|42.0987020,-75.9125430
+santa rosa california|38.4456250,-122.7176920
+waveland mississippi|30.2835690,-89.3831960
+barnesville maryland|39.2208600,-77.3777710
+youngstown ohio|41.0983200,-80.6506480
+kailua kona hawaii|19.6499730,-155.9940280
+dedham massachusetts|42.2490400,-71.1765000
+throughout maine maine|
+throughout maine maine maine|
+boone north carolina|36.2056330,-81.6696560
+essex massachusetts|42.6306880,-70.7744010
+white bear lake minnesota|45.0647090,-93.0153920
+howell michigan|42.6094090,-83.9372370
+rancho cucamonga california|34.1065820,-117.6110240
+mount vernon washington|48.4210020,-122.3133480
+fredericksburg virginia|38.2955880,-77.4850040
+gillette wyoming|44.2816800,-105.5098910
+rockaway park new york|40.5785640,-73.8409670
+muskegon michigan|43.2271270,-86.2594080
+scottsville kentucky|36.7498350,-86.1950090
+norco california|33.9242750,-117.5563750
+highland heights kentucky|39.0372440,-84.4526490
+corpus christi texas|27.8020870,-97.3915150
+jacksonville north carolina|34.7549640,-77.4255140
+great barrington massachusetts|42.1958530,-73.3611950
+loveland colorado|40.4072880,-105.0969630
+kennewick washington|46.1995560,-119.1803300
+brighton michigan|42.5295880,-83.7803040
+marine city michigan|42.7124720,-82.5003570
+lake orion michigan|42.7845950,-83.2424460
+chelsea michigan|42.3143610,-84.0204160
+pinckney michigan|42.4569450,-83.9415840
+white lake michigan|42.6916500,-83.5542140
+monroe michigan|41.9152240,-83.3862080
+new hill north carolina|35.6809810,-78.9355940
+illinois|40.6331249,-89.3985283
+san francisco and east bay california|37.9660720,-122.5156850
+alabama|32.3182314,-86.9022980
+alaska|63.5887530,-154.4930619
+arkansas|35.2010500,-91.8318334
+colorado|39.5500507,-105.7820674
+district of columbia|38.9059849,-77.0334179
+hawaii|19.8986819,-155.6658568
+idaho|44.0682019,-114.7420408
+kansas|39.0119020,-98.4842465
+louisiana|31.2448234,-92.1450245
+michigan|44.3148443,-85.6023643
+mississippi|32.3546679,-89.3985283
+missouri|37.9642529,-91.8318334
+montana|46.8796822,-110.3625658
+nebraska|41.4925374,-99.9018131
+nevada|38.8026097,-116.4193890
+moorpark california|34.2964360,-118.8565280
+old lyme connecticut|41.3135670,-72.3368980
+roxbury massachusetts|42.3376200,-71.0954900
+watertown massachusetts|42.3703260,-71.1792790
+ruskin florida|27.7131440,-82.4341860
+aptos california|36.9915160,-121.8942200
+mesa arizona|33.4150200,-111.8229800
+arlington washington|48.1865940,-122.1352780
+iowa city iowa|41.6578850,-91.5330870
+north brunswick new jersey|40.4560290,-74.4795680
+lilburn georgia|33.8913500,-84.1424330
+alameda &amp; contra costa county california|37.9163400,-122.3153170
+jersey city new jersey|40.7208830,-74.0813650
+hazard kentucky|37.2539350,-83.1948370
+little switzerland north carolina|35.8491780,-82.0926270
+natick massachusetts|42.2837830,-71.3472750
+new brighton minnesota|45.0654580,-93.2023740
+gardner massachusetts|42.5838860,-71.9853590
+queens new york|40.7282239,-73.7948516
+salem connecticut|41.4944509,-72.2600655
+lawrence massachusetts|42.6993400,-71.1644200
+biloxi mississippi|30.4076260,-88.9335560
+overland missouri|38.6947110,-90.3693420
+hillsboro new hampshire|43.1174010,-71.8926090
+bainbridge island washington|47.6430980,-122.5294980
+raleigh north carolina|35.7797480,-78.6434140
+south beach oregon|44.6146080,-124.0500890
+sonoma california|38.2919420,-122.4577760
+tampa florida|27.9814100,-82.4511410
+florence arizona|33.0384420,-111.3661320
+quincy illinois|39.9355050,-91.3871270
+washington county minnesota|44.8896877,-92.8577105
+grand prairie texas|32.7460140,-96.9946330
+media,pa pennsylvania|39.9165920,-75.3878520
+san rafael california|37.9883950,-122.5269340
+metro atlanta georgia|33.8498184,-84.4382721
+highland park illinois|42.1816980,-87.8105630
+state college pennsylvania|40.7866970,-77.8582300
+columbus mississippi|33.5107450,-88.4113350
+bolingbrook illinois|41.6903750,-88.0985380
+martha's vineyard massachusetts|41.4191169,-70.6454730
+irvine california|33.6714280,-117.7914230
+lawrence kansas|38.9426100,-95.2606320
+inglewood california|33.9597990,-118.3439380
+college campuses nationwide united states|
+college campuses nationwide united states united states|
+falls church and annandale virginia|38.8888220,-77.1725950
+worldwide--all locations new york|
+worldwide--all locations new york new york|
+anchorage alaska|61.2165830,-149.8995970
+cuyahoga falls ohio|41.1664410,-81.5368580
+hudson ohio|41.2399700,-81.4404300
+stow ohio|41.1750670,-81.4338500
+macedonia ohio|41.3137050,-81.5003340
+northfield ohio|41.3452450,-81.5281090
+twinsburg ohio|41.3213460,-81.4527110
+barberton ohio|41.0121440,-81.6064830
+bath ohio|39.8077867,-84.0378894
+green ohio|40.9486420,-81.4654240
+kent ohio|41.1511940,-81.3627140
+streetsboro ohio|41.2393180,-81.3454780
+mogadore ohio|41.0510760,-81.4030190
+munroe falls ohio|41.1393040,-81.4392690
+peninsula ohio|41.2413750,-81.5550270
+tallmadge ohio|41.1010920,-81.4230850
+wadsworth ohio|41.0266410,-81.7296490
+richfield ohio|41.2294560,-81.6379280
+aurora ohio|41.3122030,-81.3455200
+garrettsville ohio|41.2852130,-81.0985980
+ravenna ohio|41.1602150,-81.2429820
+hiram ohio|41.3094230,-81.1435780
+mantua ohio|41.2819390,-81.2241970
+windham ohio|41.2350590,-81.0370790
+brunswick ohio|41.2382660,-81.8202260
+hinkley ohio|41.2429494,-81.7130522
+valley city ohio|41.2376510,-81.9304880
+baltimore (metro area) maryland|39.3014944,-76.5343721
+cranbury new jersey|40.3164860,-74.5141230
+st cloud minnesota|45.5443910,-94.1968810
+stonington connecticut|41.3352400,-71.9069320
+harwich massachusetts|41.6716498,-70.0622231
+sullivan ohio|41.0394988,-82.2365981
+wooster ohio|40.8212580,-81.9343150
+orrville ohio|40.8492100,-81.7639760
+rittman ohio|40.9701040,-81.7816700
+apple creed ohio|40.7478190,-81.8345150
+burbank ohio|40.9871270,-81.9941620
+congress ohio|40.9254780,-82.0596780
+creston ohio|40.9781020,-81.8995410
+dalton ohio|40.7987870,-81.6986400
+holmesville ohio|40.6298670,-81.9239660
+doylestown ohio|40.9704540,-81.6958330
+fredericksburg ohio|40.6766000,-81.8704440
+marshallville ohio|40.8998000,-81.7333320
+mount eaton ohio|40.6945500,-81.7027320
+shreve ohio|40.6814790,-82.0223320
+west salem ohio|40.9716360,-82.1096650
+smithville ohio|40.8653810,-81.8561200
+kidron ohio|40.7419210,-81.7459200
+oklahoma|35.0077519,-97.0928770
+clarence new york|43.0135306,-78.6341996
+brookline massachusetts|42.3264700,-71.1425700
+albuquerque new mexico|35.0803710,-106.6270850
+everywhere washington|
+everywhere washington washington|
+everywhere arizona|
+everywhere arizona arizona|
+fort collins colorado|40.5670950,-105.0770360
+frederick maryland|39.4285920,-77.4194550
+montesano washington|47.0072980,-123.5864360
+bothell washington|47.7599690,-122.2074040
+various pennsylvania|
+various pennsylvania pennsylvania|
+orange california|33.7881430,-117.8532200
+cities throughout wi wisconsin|
+cities throughout wi wisconsin wisconsin|
+wheaton-silver spring-olney maryland|
+wheaton-silver spring-olney maryland maryland|
+chatham county north carolina|35.6978371,-79.2902133
+various in minnesota|
+various in minnesota minnesota|
+saint paul minnesota|44.9446360,-93.1026570
+dupree south dakota|45.0529020,-101.6068000
+virtual opportunity new york|
+virtual opportunity new york new york|
+garden grove california|33.7739830,-117.9549480
+boston area massachusetts|42.3719520,-71.0591910
+durango colorado|37.2832490,-107.8691230
+bakersfield california|35.3734050,-119.0189110
+all over montana|48.2447580,-112.8038410
+ferndale michigan|42.4605820,-83.1345710
+tigard oregon|45.4257700,-122.7799900
+spartanburg united states|34.9438550,-81.9286570
+west roxbury massachusetts|42.2806900,-71.1581600
+forks washington|47.9518510,-124.3854100
+horsham pennsylvania|40.1833470,-75.1379410
+maplewood new jersey|40.7342790,-74.2692070
+monroe county indiana|39.1851445,-86.4996546
+warrenton virginia|38.7138420,-77.7955610
+wiilowbrook illinois|41.7686820,-87.9451050
+naperville illinois|41.7859160,-88.1472850
+greeley colorado|40.4060970,-104.6946360
+essington pennsylvania|39.8619440,-75.2975000
+crawford and erie counties pennsylvania|
+crawford and erie counties pennsylvania pennsylvania|
+arlington massachusetts|42.4179030,-71.1649750
+newtonville massachusetts|42.3270215,-71.2309935
+solon ohio|41.3850270,-81.4377490
+south boston massachusetts|42.3367100,-71.0439500
+south portland maine|43.6301340,-70.2921080
+bath maine|43.9334300,-69.8297160
+lithonia georgia|33.7120730,-84.1058020
+evanston illinois|42.0412870,-87.6883420
+stone mountain georgia|33.8028320,-84.1698450
+clearwater florida|27.9807880,-82.7461980
+eureka california|40.7861430,-124.1613090
+satellite beach united states|28.1745760,-80.5900650
+satellite beach florida|28.1745760,-80.5900650
+rancho mirage california|33.7578920,-116.4256660
+beverly massachusetts|42.5676800,-70.8604100
+durham new hampshire|43.1453210,-70.9193200
+winnemucca nevada|40.9705190,-117.7293270
+las vegas nevada|36.2330490,-115.2422880
+dover new jersey|40.8870470,-74.5617070
+north las vegas nevada|36.1958720,-115.1289270
+elko nevada|40.8353800,-115.7671780
+carson city nevada|39.1501350,-119.7518810
+boulder city nevada|35.8374650,-114.9351650
+fallon nevada|39.4749310,-118.7770420
+wayne new jersey|40.9484930,-74.2445020
+port hadlock washington|48.0455810,-122.7952230
+brinnon washington|47.6804950,-122.8992600
+long island new york|40.7560540,-73.9869510
+hershey pennsylvania|40.2820790,-76.6475400
+nassau county new york|40.6546145,-73.5594128
+easton maryland|38.7744890,-76.0762830
+lakewood california|33.8469750,-118.1130790
+whittier california|33.9657780,-118.0373960
+fall river massachusetts|41.6974260,-71.1310230
+lynn massachusetts|42.4697800,-70.9568900
+fargo north dakota|46.8750000,-96.7982630
+bismarck north dakota|46.8083690,-100.7693790
+appleton wisconsin|44.2618100,-88.4174450
+royal oak michigan|42.4993530,-83.1447550
+edmond oklahoma|35.6532110,-97.4815250
+sioux falls south dakota|43.5459900,-96.7312910
+bend oregon|44.0604800,-121.3125150
+helena montana|46.5910700,-112.0204580
+meridian idaho|43.6119600,-116.3915680
+hampton virginia|37.0596590,-76.3659220
+lexington kentucky|38.0489060,-84.4998380
+cheyenne wyoming|41.1388660,-104.8165440
+marietta georgia|33.9505270,-84.5358860
+irvine and africa california|
+irvine and africa california california|
+langhorne pennsylvania|40.1766630,-74.9174740
+dover new hampshire|43.1887230,-70.8861270
+chester pennsylvania|39.8483560,-75.3714160
+joliet illinois|41.5166710,-88.0812320
+new london new hampshire|43.4143220,-71.9848200
+paterson new jersey|40.9123490,-74.1726140
+pencascola florida|30.4734130,-87.2122610
+hermitage pennsylvania|41.2334940,-80.4441630
+smithtown new york|40.8565950,-73.2037340
+chattanooga tennessee|35.0636420,-85.2548240
+elgin illinois|42.0372520,-88.2810460
+humboldt county california|40.7450055,-123.8695086
+auburn &amp; orting washington|
+auburn &amp; orting washington washington|
+herndon virginia|38.9696570,-77.3861610
+proctor vermont|43.6558375,-73.0346244
+monroe new york|41.3236530,-74.1869260
+fort mitchell kentucky|39.0444130,-84.5530750
+biddeford maine|43.4720910,-70.4560790
+federal way washington|47.3152180,-122.3134690
+glen burnie maryland|39.1653830,-76.6044110
+quincy california|39.9367620,-120.9476560
+snoqualmie washington|47.5257770,-121.8223600
+east palo alto california|37.4599770,-122.1398840
+leominster massachusetts|42.5203600,-71.7683630
+vallejo california|38.1402010,-122.2315200
+plano texas|33.0560120,-96.7703710
+north dakota|47.5514926,-101.0020119
+south dakota|43.9695148,-99.9018131
+windsor california|38.5456440,-122.8049580
+kensington maryland|39.0274980,-77.0765990
+metairie louisiana|29.9934630,-90.1776710
+spring texas|30.0652610,-95.3884030
+san benito texas|26.1402220,-97.6372490
+fort lauderdale florida|26.1371960,-80.1286780
+ithaca (and nationally) new york|
+ithaca (and nationally) new york new york|
+rancho cordova and folsom california|38.5994050,-121.2820810
+redwood city california|37.4776520,-122.2233840
+wayne pennsylvania|41.6738865,-75.2479061
+steep falls maine|43.7940940,-70.6519340
+roslyn new york|40.8000360,-73.6501240
+merrifield virginia|38.8730320,-77.2460550
+des plaines illinois|42.0476960,-87.8860300
+peabody massachusetts|42.5310100,-70.9767820
+ketchum idaho|43.6806350,-114.3642370
+lunenburg massachusetts|42.5947520,-71.7251450
+st. george utah|37.0742080,-113.5846150
+hazlet new jersey|40.4113010,-74.1903630
+fort meade florida|27.7589080,-81.8013660
+ridgefield park new jersey|40.8539120,-74.0194110
+south pasadena california|34.1119250,-118.1573080
+burlington massachusetts|42.5034500,-71.2079850
+janesville and beloit wisconsin|
+janesville and beloit wisconsin wisconsin|
+anaheim california|33.8342680,-117.9194340
+athens georgia|33.9573540,-83.3768040
+plymouth meeting pennsylvania|40.1106140,-75.2798400
+decatur and metro atl georgia|
+decatur and metro atl georgia georgia|
+largo florida|27.9166470,-82.7876600
+greenboro north carolina|36.0734990,-79.7901600
+seminole county longwood area florida|
+seminole county longwood area florida florida|
+fitchburg massachusetts|42.5857030,-71.8128530
+altadena california|34.1912930,-118.1371270
+bristow virginia|38.7231040,-77.5365100
+buena park california|33.8467300,-117.9980340
+monterey massachusetts|42.1793230,-73.2124050
+middletown new york|41.4484140,-74.4258100
+various citites united states|
+various citites united states united states|
+englewood florida|26.9750540,-82.3682020
+johns island south carolina|32.7924590,-80.1079180
+des moines iowa|41.5888220,-93.6203090
+wyoming|43.0759678,-107.2902839
+utah|39.3209801,-111.0937311
+cary illinois|42.2129250,-88.2483660
+springfield illinois|39.8018070,-89.6532710
+crystal lake illinois|42.2317540,-88.3335340
+brainerd minnesota|46.3525610,-94.1897460
+pasco washington|46.2487550,-119.1169970
+na arizona|-23.2000000,16.0333330
+lumberton new mexico|36.9304120,-106.9360000
+fair lawn new jersey|40.9350120,-74.1169580
+plymouth minnesota|45.0082660,-93.4507800
+lauderhill florida|26.1646770,-80.2269960
+greenville south carolina|34.8551090,-82.3912400
+encinitas california|33.0517660,-117.2609300
+africa asia south america united states|
+africa asia south america united states united states|
+montana west virginia minnesota|
+montana west virginia minnesota minnesota|
+browning montana|48.5549230,-113.0098430
+long island city new york|40.7446840,-73.9485080
+beverly hills california|34.0751620,-118.3986320
+batavia illinois|41.8500590,-88.3044600
+virtual home office georgia|
+virtual home office georgia georgia|
+carlsbad california|33.1229620,-117.3269000
+everett &amp; other cities massachusetts|
+everett &amp; other cities massachusetts massachusetts|
+weston connecticut|41.2283790,-73.3826585
+elmhurst new york|40.7379750,-73.8801301
+state of utah utah|39.3209801,-111.0937311
+greencastle indiana|39.6456590,-86.8430360
+temple texas|31.1067560,-97.3763180
+throughout the us california|
+throughout the us california california|
+long beach california|33.7898580,-118.1518140
+utica new york|43.1001210,-75.2447020
+flushing new york|40.7646110,-73.8234620
+norwalk connecticut|41.1180120,-73.4209240
+idaho falls idaho|43.4908420,-112.0390870
+jericho new york|40.7894510,-73.5442250
+clifton new jersey|40.8625970,-74.1560270
+jerome idaho|42.7241370,-114.5184350
+greater manchester new hampshire|53.3992247,-2.6351489
+margate florida|26.2532490,-80.2134450
+shoreham new york|40.9557760,-72.9064660
+cortland new york|42.6012060,-76.1804730
+any where in the world united states|30.0827770,-95.1942290
+burbank illinois|41.7486190,-87.7684800
+mesquite texas|32.7668120,-96.5991600
+tulsa oklahoma|36.1333540,-95.9756630
+atherton california|37.4554390,-122.2048160
+san mateo california|37.5590900,-122.3218360
+longmont colorado|40.1639370,-105.1025160
+wakefield massachusetts|42.5028020,-71.0672930
+virtual office georgia|
+virtual office georgia georgia|
+virtual volunteer opportunity united states|
+virtual volunteer opportunity united states united states|
+fort worth texas|32.7549200,-97.3303350
+college park georgia|33.6395350,-84.4585800
+san franciso california|37.7751960,-122.4192040
+billings montana|45.7827030,-108.5044710
+charleston south carolina|32.7930530,-79.9412940
+garrison new york|41.3803050,-73.9403670
+tennessee|35.5174913,-86.5804473
+alamosa colorado|37.4681910,-105.8742930
+rockland maine|44.1276450,-69.1296480
+statewide indiana|
+statewide indiana indiana|
+morristown new jersey|40.7975360,-74.4779750
+pine knoll shores north carolina|34.6952510,-76.8219380
+san pedro california|33.7360430,-118.2879270
+nationally arizona|32.3682444,-111.0274120
+grants pass oregon|42.4406480,-123.3260730
+lederach pennsylvania|40.2618020,-75.4066890
+southern counties new jersey|
+southern counties new jersey new jersey|
+moorestown new jersey|39.9655150,-74.9422220
+santa clara county california|37.2938907,-121.7195459
+see above listing oregon|
+see above listing oregon oregon|
+dunn north carolina|35.3112300,-78.6154710
+jamaica plain/boston massachusetts|42.3112300,-71.1087900
+largo maryland|38.8894060,-76.8223380
+fresno california|36.7433130,-119.7893820
+readfield maine|44.3879240,-69.9665410
+cheltenham maryland|38.7355560,-76.8266670
+sylva north carolina|35.3739680,-83.2194210
+middle tennessee united states|36.0367980,-89.4334520
+georgetown delaware|38.6903070,-75.3855550
+lisbon ohio|40.7773450,-80.7679990
+woodstock new york|42.0409880,-74.1183400
+scarsdale new york|40.9888900,-73.7774980
+southeastern pennsylvania|39.7736188,-79.9864071
+kermit west virginia|37.8401460,-82.4077580
+rochester minnesota|44.0215700,-92.4659530
+sunnyvale california|37.3691950,-122.0368490
+warminster pennsylvania|40.2066230,-75.0997740
+palm beach &amp; broward counties florida|
+palm beach &amp; broward counties florida florida|
+san francisco bay area california|37.7751960,-122.4192040
+saint mary of the woods indiana|39.5078890,-87.4617080
+terre haute indiana|39.4664790,-87.4140450
+worldwide via internet colorado|
+worldwide via internet colorado colorado|
+rock hill south carolina|34.9363480,-81.0274180
+staten island zoo new york|41.0471890,-74.1999110
+canutillo texas|31.9151950,-106.6005310
+randallstown maryland|39.3719140,-76.8052780
+elkridge maryland|39.2047150,-76.7531570
+miami beach florida|25.8130990,-80.1229860
+san luis colorado|37.2001650,-105.4269660
+reston virginia|38.9518390,-77.3422850
+brevard county florida|28.2639330,-80.7214417
+dunellen new jersey|40.5883510,-74.4649580
+lawndale california|33.8873090,-118.3523630
+huntington park california|33.9816820,-118.2252340
+renton washington|47.4861760,-122.1855670
+shepherdstown west virginia|39.4320390,-77.8088900
+ceres california|37.5944960,-120.9601390
+salem west virginia|39.2859410,-80.5593710
+south pittsburg tennessee|35.0158750,-85.7136730
+minnneapolis minnesota|44.9774820,-93.2643510
+oak park illinois|41.8886010,-87.7943700
+marana arizona|32.4025320,-111.2337440
+virtual united states|35.3123240,-80.7781130
+port charlotte florida|26.9863890,-82.1046510
+willowbrook illinois|41.7686820,-87.9451050
+winfield illinois|41.8723880,-88.1501420
+burr ridge illinois|41.7637390,-87.9159430
+yuma arizona|32.6985580,-114.6246440
+holyoke massachusetts|42.2143670,-72.6368020
+washington pennsylvania|40.1739790,-80.2462890
+payson arizona|34.2408560,-111.3168510
+apache junction arizona|33.4130230,-111.5460700
+apache junction, prescott arizona|34.3093645,-112.0970760
+in your community illinois|
+in your community illinois illinois|
+burien/highline washington|47.5000260,-122.3288665
+amarillo/canyon texas|34.9798370,-101.9193310
+coupeville washington|48.2122760,-122.6821690
+pittsfield massachusetts|42.4497260,-73.2620000
+hillsborough new jersey|40.5125043,-74.6634640
+online ohio|39.8408410,-83.0838400
+perry point maryland|39.5601410,-76.0712710
+gardena california|33.8946670,-118.3091340
+des moines washington|47.3916510,-122.3115420
+burien washington|47.4703990,-122.3469730
+dobbs ferry new york|41.0154760,-73.8691130
+peoria arizona|33.6526080,-112.2549870
+west sacramento california|38.5511330,-121.5501580
+woburn massachusetts|42.4879650,-71.1522320
+various locations in queens new york|
+various locations in queens new york new york|
+clarkston georgia|33.8105920,-84.2391340
+carrollton georgia|33.5802970,-85.0842350
+cottage grove minnesota|44.8193300,-92.9303530
+bridgewater massachusetts|41.9902200,-70.9754000
+auburn washington|47.3074370,-122.2285720
+gloucester massachusetts|42.6254240,-70.6899020
+hillsborough north carolina|36.0745180,-79.0993620
+robbinsdale minnesota|45.0261270,-93.3331750
+mattapan massachusetts|42.2761200,-71.0934000
+new yor new york|40.7560540,-73.9869510
+east point georgia|33.6698450,-84.4634110
+west coast of fl florida|30.3932560,-81.7546550
+key west florida|24.5610460,-81.7789400
+albion new york|43.2451890,-78.1937690
+darien connecticut|41.0782100,-73.4691640
+norman oklahoma|35.1912130,-97.4413470
+richland washington|46.2930550,-119.2900200
+montgomery county pennsylvania|40.2290075,-75.3878525
+merrimac massachusetts|42.8460215,-71.0141180
+modesto california|37.6454920,-120.9887770
+los gatos california|37.2329020,-121.9643850
+idaho city idaho|43.8255380,-115.8319960
+downers grove illinois|41.7955430,-88.0104290
+south saint paul minnesota|44.8888100,-93.0424170
+concord massachusetts|42.4527187,-71.3705616
+oak park heights minnesota|45.0353010,-92.8075630
+bedminster new jersey|40.6804930,-74.6457300
+los altos california|37.3691100,-122.0960340
+mullens west virginia|37.5805220,-81.3848790
+hebron indiana|41.3212210,-87.2008250
+west haven connecticut|41.2736400,-72.9692410
+st petersburg, clearwater,etc florida|
+st petersburg, clearwater,etc florida florida|
+highland mills new york|41.3505030,-74.1236580
+hollywood florida|26.0117170,-80.1416930
+ipswich massachusetts|42.6826840,-70.8328260
+huntersville north carolina|35.4162040,-80.8568350
+seatac washington|47.4452720,-122.2962710
+alpine texas|30.3585260,-103.6616970
+ypsilanti michigan|42.2409630,-83.6189870
+venice california|33.9890290,-118.4624210
+pacific palisades california|34.0474010,-118.5257930
+north, central and south oc california|
+north, central and south oc california california|
+north, central and sounth oc!! california|
+north, central and sounth oc!! california california|
+aurora illinois|41.7605700,-88.3202090
+nyc new york|40.7560540,-73.9869510
+sheep ranch california|38.2093200,-120.4636830
+fairfield iowa|41.0066340,-91.9650490
+malibu california|34.0258020,-118.7650060
+virtual -- online phone california|
+virtual -- online phone california california|
+greeneville tennessee|36.1687390,-82.8132190
+east tn, n.w. nc, western va tennessee|
+east tn, n.w. nc, western va tennessee tennessee|
+in &amp; around somerville new jersey|
+in &amp; around somerville new jersey new jersey|
+douglas arizona|31.3444800,-109.5368140
+sausalito california|37.8563310,-122.4952220
+ringgold georgia|34.9156830,-85.1093350
+yreka california|41.7309000,-122.6328270
+laguna beach california|33.5414110,-117.7596550
+brentwood california|37.9325530,-121.7177320
+carol stream illinois|41.9189060,-88.1205690
+nashville or surrounding areas tennessee|
+nashville or surrounding areas tennessee tennessee|
+abilene texas|32.4508590,-99.7639500
+roseville california|38.7613750,-121.2941410
+kirkland washington|47.6793000,-122.1760340
+lynnwood washington|47.8212490,-122.3150130
+tukwila / southcenter washington|47.4651770,-122.2893940
+virtual opportunity california|
+virtual opportunity california california|
+tukwila washington|47.4742180,-122.2843510
+logan utah|41.7390530,-111.8347810
+cranford new jersey|40.6558130,-74.3056000
+everywhere new mexico|
+everywhere new mexico new mexico|
+everywhere nevada|
+everywhere nevada nevada|
+washington, dc district of columbia|38.8920910,-77.0240550
+new york and brooklyn new york|40.6617450,-73.9478270
+east chatham new york|42.4108830,-73.5249990
+bedford stuyvesant, brooklyn new york|40.6832420,-73.9438900
+fort lupton colorado|40.0802500,-104.8105120
+santa monica/lake hughes california|
+santa monica/lake hughes california california|
+larkspur california|37.9380510,-122.5347450
+waltham massachusetts|42.3897810,-71.2392470
+piscataway new jersey|40.5548870,-74.4642861
+highland park new jersey|40.5007490,-74.4233740
+minnetonka minnesota|44.9345770,-93.4569210
+edina minnesota|44.8897160,-93.3584800
+waialua hawaii|21.5737300,-158.1274730
+ripon wisconsin|43.8462690,-88.8409870
+marshall oklahoma|36.1549890,-97.6257510
+sterling virginia|39.0100375,-77.3927304
+bedford new hampshire|42.9457529,-71.5486562
+myrtle beach south carolina|33.6966490,-78.8941730
+greenbelt maryland|38.9958350,-76.8894070
+gulfport mississippi|30.3671990,-89.0939320
+acadia / lafayette / vermilion louisiana|30.2395901,-91.7538817
+livermore california|37.6820320,-121.7683630
+topanga california|34.0934160,-118.6020870
+winnetka illinois|42.1083080,-87.7417070
+egg harbor township new jersey|39.3911110,-74.5938890
+gladstone new jersey|40.7142160,-74.6717970
+upstate new york|40.7830603,-73.9712488
+sebastopol california|38.4020840,-122.8241910
+greenville north carolina|35.6060260,-77.3743160
+tishomingo oklahoma|34.2359110,-96.6794070
+blue ash ohio|39.2510840,-84.3799540
+southold new york|41.0584480,-72.4289560
+essex junction vermont|44.4905280,-73.1112370
+montrose california|34.2050160,-118.2252010
+greenwich new york|43.0903560,-73.4994950
+sylva ( all western nc) north carolina|
+sylva ( all western nc) north carolina north carolina|
+petersham massachusetts|42.4861078,-72.2126905
+sterling heights michigan|42.5653680,-83.0298460
+sterling heights united states|42.5653680,-83.0298460
+oxnard california|34.1977050,-119.1773360
+westfield massachusetts|42.1357480,-72.7393630
+hopkins minnesota|44.9228960,-93.4030810
+plaistow new hampshire|42.8360340,-71.0948550
+berrien springs michigan|41.9464040,-86.3386550
+port saint lucie florida|27.2740950,-80.3557350
+franklin tennessee|35.9295390,-86.8418730
+eagan minnesota|44.8334620,-93.1673640
+marion virginia|36.8379290,-81.5149370
+spartansburg pennsylvania|41.8242320,-79.6844750
+anywhere - with internet help. new york|
+anywhere - with internet help. new york new york|
+lambertville new jersey|40.3662740,-74.9418230
+nyc is best; virtual is ok too new york|
+nyc is best; virtual is ok too new york new york|
+lansdowne virginia|40.6242400,-80.5823730
+new paltz new york|41.7481240,-74.0850830
+hamden connecticut|41.3955860,-72.8967810
+anywhere you like rhode island|
+anywhere you like rhode island rhode island|
+shell beach california|35.1570250,-120.6705040
+acton massachusetts|42.4852600,-71.4340200
+wyandotte michigan|42.2080490,-83.1677010
+alpharetta georgia|34.0688330,-84.2719720
+sharon massachusetts|42.1169100,-71.1830400
+richardson texas|32.9753770,-96.7237120
+palm beach gardens florida|26.8520440,-80.1452060
+espanola new mexico|36.0068020,-106.0650530
+cedar park texas|30.5111640,-97.8239150
+pipe creek texas|29.7231260,-98.9346810
+pioneer california|41.2925000,-122.3091700
+longview washington|46.1475220,-122.9621580
+torrance california|33.8262200,-118.3599280
+san juan capistrano california|33.5035840,-117.6547580
+vernon hills illinois|42.2404180,-87.9621560
+setauket|40.9351520,-73.1184800
+mount vernon new york|40.9112260,-73.8288000
+belmont vermont|43.4157180,-72.8211520
+aberdeen north carolina|35.1425190,-79.4511980
+capitol hill district of columbia|38.8898010,-77.0005510
+hackettstown new jersey|40.8538110,-74.8292570
+chandler arizona|33.3061080,-111.8414750
+paramus new jersey|40.9494130,-74.0721400
+jacksonville oregon|42.3144940,-122.9686220
+waukegan illinois|42.3594640,-87.8749270
+clinton hill, brooklyn new york|40.6893665,-73.9639021
+tishomingo mississippi|34.6361850,-88.2320530
+towson maryland|39.3961050,-76.6195420
+hastings-on-hudson new york|40.9892860,-73.8792220
+independence missouri|39.0921550,-94.4156580
+wilmington north carolina|34.2259330,-77.9241720
+lawrenceville united states|33.9504760,-83.9898020
+santa barbara county california|34.6099379,-120.0665236
+norristown, pennsylvania|40.1238990,-75.3416360
+warrington pennsylvania|40.0760315,-76.9412601
+ozone park new york|40.6766700,-73.8441700
+michoacan mexico|19.5665192,-101.7068294
+hatfield massachusetts|42.3665600,-72.6054170
+you start in berkeley california|
+you start in berkeley california california|
+berwyn pennsylvania|40.0482650,-75.4390480
+ft. lauderdale florida|26.1371960,-80.1286780
+grandville michigan|42.9063100,-85.7556230
+west michigan (your residence) michigan|
+west michigan (your residence) michigan michigan|
+upper sandusky ohio|40.8272620,-83.2749250
+pikesville maryland|39.3880410,-76.7006720
+findlay ohio|41.0453930,-83.6413520
+ellicott city maryland|39.2729000,-76.8323060
+ciudad vieja united states|26.5159310,-99.1131580
+orange massachusetts|42.5907740,-72.3097530
+global opportunity california|
+global opportunity california california|
+homer alaska|59.6362980,-151.5193370
+wisconsin rapids wisconsin|44.3952290,-89.8281040
+rfd, dekalb, freeport, others illinois|
+rfd, dekalb, freeport, others illinois illinois|
+newaygo michigan|43.4192050,-85.8010580
+newark connecticut|42.2731440,-76.1526910
+brandenburg kentucky|37.9943490,-86.1795210
+hempstead new york|40.7057980,-73.6199190
+jackson heights new york|40.7555600,-73.8858300
+alameda county california|37.6016892,-121.7195459
+peoria illinois|40.6953250,-89.5957160
+lake forest illinois|42.2398950,-87.8623630
+mt. airy maryland|39.3786530,-77.1519050
+wilson wyoming|43.4981860,-110.8749810
+decatur georgia|33.7710620,-84.2926060
+floral park new york|40.7238800,-73.7023150
+concord california|37.9765120,-122.0287840
+moutain view california|37.4004650,-122.0730030
+hyannis massachusetts|41.6548700,-70.2792700
+newport rhode island|41.4775630,-71.3356110
+plainview new york|40.7831680,-73.4727400
+dumfries virginia|38.5660690,-77.3245030
+studio city california|34.1503640,-118.3964120
+syracuse new york|43.0508310,-76.1473750
+cookstown new jersey|40.0472500,-74.5628500
+various louisiana|
+various louisiana louisiana|
+warwick new york|41.2555700,-74.3600930
+mill valley california|37.9044680,-122.5424910
+allston massachusetts|42.3503400,-71.1309800
+all idaho|42.5585980,-114.4830700
+st. cloud minnesota|45.5443910,-94.1968810
+duluth minnesota|46.7791350,-92.1082430
+mankato minnesota|44.1669550,-93.9937240
+nassau delaware|38.7510170,-75.1895990
+nantucket massachusetts|41.2831840,-70.0992110
+vienna virginia|38.9005000,-77.2589540
+sagle idaho|48.2020520,-116.5459840
+south orange, newark, clark new jersey|40.7549630,-74.2556490
+montgomery alabama|32.3754090,-86.2996020
+elizabeth new jersey|40.6653570,-74.2147460
+ny (your choice) new york|
+ny (your choice) new york new york|
+saint louis park minnesota|44.9496060,-93.3605600
+bound brook new jersey|40.5676590,-74.5434310
+ny new york|40.7560540,-73.9869510
+lindenhurst illinois|42.4138820,-88.0387930
+los angeles and ventura county california|34.2808700,-119.1445990
+bowling green ohio|41.3749100,-83.6504010
+garfield heights ohio|41.4170770,-81.6060690
+bridgeton missouri|38.7627850,-90.4227000
+leawood kansas|38.9129110,-94.6254100
+sherman oaks california|34.1508400,-118.4487030
+orange new jersey|40.7703130,-74.2324370
+manhattan new york|40.7498840,-73.9879770
+monrovia california|34.1598440,-118.0011630
+glenmoore pennsylvania|40.0890100,-75.7724350
+lake success new york|40.7685480,-73.7077910
+port townsend washington|48.1201330,-122.7907280
+sammamish washington|47.6091850,-122.0354180
+several locations iowa|
+several locations iowa iowa|
+northern virginia virginia|37.2593338,-81.3619402
+great falls virginia|39.0123770,-77.2938170
+bernardsville new jersey|40.7277710,-74.5875920
+lawrenceville georgia|33.9504760,-83.9898020
+central oregon oregon|44.0262130,-123.0600600
+rural co, various locations colorado|
+rural co, various locations colorado colorado|
+pontiac michigan|42.6388200,-83.2926480
+milwaukee, madison, kenosha wisconsin|
+milwaukee, madison, kenosha wisconsin wisconsin|
+culver city california|34.0042080,-118.3934130
+willmar minnesota|45.1224080,-95.0498200
+manchester connecticut|41.7714337,-72.5441445
+marlton new jersey|39.9007120,-74.9331800
+fort wayne indiana|41.0769450,-85.1339660
+melbourne beach florida|28.0683800,-80.5607990
+truckee california|39.3452940,-120.1730030
+goose creek south carolina|32.9750740,-79.9865040
+coconut grove florida|25.7119010,-80.2610630
+daly city california|37.6844840,-122.4722930
+campbell california|37.2791320,-121.9562950
+calistoga california|38.5798550,-122.5783510
+college park maryland|38.9947060,-76.9322340
+spearfish south dakota|44.4820080,-103.8440790
+deschutes county oregon|43.8325100,-121.2616541
+shaw district of columbia|38.9111510,-77.0219230
+venice florida|27.0998570,-82.4334530
+santa maria california|34.9208910,-120.4359260
+union city new jersey|40.7701860,-74.0275680
+ewing new jersey|40.2637820,-74.8022280
+verona pennsylvania|40.5048790,-79.8431340
+siler city north carolina|35.7233990,-79.4622080
+meriden connecticut|41.5381590,-72.8026440
+darby pennsylvania|39.9212960,-75.2640150
+dekalb illinois|41.9312110,-88.7538330
+rosemont illinois|41.9843420,-87.8695030
+port clinton ohio|41.5105170,-82.9411010
+columbia missouri|38.9378410,-92.3342550
+redmond oregon|44.2631350,-121.1769430
+auburn california|38.8929910,-121.0764180
+zionsville indiana|39.9548640,-86.2669250
+seattle co washington|47.5368070,-122.3041990
+nueva york new york|40.7560540,-73.9869510
+florida or nationwide|
+boston (roxbury) massachusetts|42.3376200,-71.0954900
+berwyn illinois|41.8432030,-87.7931020
+wash., dc to harpers ferry wv district of columbia|
+wash., dc to harpers ferry wv district of columbia district of columbia|
+stanford california|37.4402210,-122.1632990
+mt. pleasant pennsylvania|40.1502870,-79.5449900
+east boston massachusetts|42.3788590,-71.0283120
+maysville kentucky|38.6398800,-83.7843300
+pagosa springs colorado|37.2725700,-107.0377210
+north charleston south carolina|32.8863250,-80.0100500
+davenport iowa|41.5202060,-90.5836240
+enfield connecticut|41.9719930,-72.5924910
+sarasota florida|27.3382490,-82.5268660
+lynchburg virginia|37.4042030,-79.1547190
+norfolk virginia|36.8546290,-76.2743950
+williston vermont|44.4374850,-73.0681840
+chatsworth california|34.2572370,-118.5973240
+santa monica, lake hughes california|
+santa monica, lake hughes california california|
+charlestown massachusetts|42.3791800,-71.0631400
+tiburon california|37.8903160,-122.4789950
+west boylston massachusetts|42.3679570,-71.7819180
+sugar land texas|29.6065330,-95.6132570
+osceola wisconsin|45.3212610,-92.6975450
+tampico illinois|41.6276560,-89.7859590
+hampton connecticut|41.7812955,-72.0586677
+lexington north carolina|35.8014640,-80.2630870
+11counties in twin cities area minnesota|
+11counties in twin cities area minnesota minnesota|
+kingsville missouri|38.7438840,-94.0696840
+anywhere - virtual board washington|
+anywhere - virtual board washington washington|
+old westbury new york|40.7828870,-73.5955570
+hawthorne new york|41.1032120,-73.7963170
+henderson north carolina|36.3216910,-78.4114400
+chicago--and statewide illinois|
+chicago--and statewide illinois illinois|
+hixson tennessee|35.1405560,-85.2327780
+la palma california|33.8463740,-118.0410910
+la mirada california|33.8985170,-118.0110270
+hendersonville north carolina|35.3212930,-82.4614400
+holmdel new jersey|40.3451480,-74.1844360
+pennington new jersey|40.3280880,-74.7910620
+virtual -- online california|
+virtual -- online california california|
+waverly iowa|42.7257550,-92.4719620
+anywhere|
+south san francisco california|37.6546600,-122.4078800
+arabi louisiana|29.9564570,-90.0009170
+germantown maryland|39.1749870,-77.2611760
+tarzana california|34.1734760,-118.5533770
+sharon hill pennsylvania|39.9103790,-75.2705720
+novato california|38.0921470,-122.5592770
+fremont california|37.5486150,-121.9884790
+fairfax california|37.9890640,-122.5915530
+point reyes california|33.2494720,-117.3233260
+hoyleton illinois|38.4420920,-89.2743240
+el sereno california|34.0859360,-118.1791990
+pueblo colorado|38.2655010,-104.6286290
+forest hills new york|40.7161100,-73.8505600
+byron illinois|42.1254480,-89.2559270
+hauppauge new york|40.8230210,-73.2085570
+harpers ferry west virginia|39.3257050,-77.7406360
+yosemite national park california|37.7449590,-119.5845310
+branford connecticut|41.2794780,-72.8152620
+capital heights maryland|14.6248163,121.0457754
+silverthorne colorado|39.6521970,-106.0803220
+wyomissing pennsylvania|40.3293380,-75.9632580
+hiawassee georgia|34.9479080,-83.7563810
+brighton massachusetts|42.3455450,-71.1528280
+oak ridge tennessee|36.0016090,-84.2433300
+rockaway beach new york|40.5717400,-73.8523960
+rensselaerville new york|42.5160440,-74.1377470
+fenton/petoskey michigan|
+fenton/petoskey michigan michigan|
+el monte california|34.0724910,-118.0328660
+north adams massachusetts|42.6876480,-73.1104100
+n/a|66.1358552,20.1974244
+new prague minnesota|44.5435900,-93.5755780
+vail colorado|39.6435960,-106.3784100
+pacifica california|37.6146690,-122.4861200
+revere massachusetts|42.4203230,-71.0052670
+galveston texas|29.2889010,-94.8381710
+multiple locations|
+runnemede new jersey|39.8488770,-75.0727340
+fullerton california|33.8703940,-117.9243020
+catskill new york|42.2176080,-73.8649090
+greenfield massachusetts|42.5878650,-72.6002680
+clinton iowa|41.8445080,-90.2397250
+muscatine iowa|41.4158730,-91.0711670
+cary north carolina|35.7914670,-78.7811340
+kew gardens new york|40.7056950,-73.8272029
+raleigh-durham north carolina|35.7797480,-78.6434140
+various concert locations delaware|
+various concert locations delaware delaware|
+cairo illinois|37.0253710,-89.1863220
+georgetown kentucky|38.2236930,-84.5667970
+riverdale park maryland|38.9594710,-76.9398560
+san francsico california|37.7751960,-122.4192040
+bedford virginia|37.3383340,-79.5215450
+littleton colorado|39.5961770,-105.0069800
+toledo oregon|44.6212590,-123.9342290
+dearborn michigan|42.3110160,-83.2146600
+framingham massachusetts|42.3093990,-71.4363580
+putnam county new york|41.4351069,-73.7948516
+toms river new jersey|39.9593440,-74.1903320
+bayboro north carolina|35.1428400,-76.7698130
+east hamptons new york|40.8849310,-72.5010620
+shrewsbury new jersey|40.3239080,-74.0614410
+bethpage new york|40.7489260,-73.4824310
+san jacinto california|33.7874150,-116.9893780
+layton utah|41.0892670,-111.9735090
+windham maine|43.7387840,-70.4260400
+riverside illinois|41.8354110,-87.8224380
+fallbrook california|33.3765450,-117.2381740
+timonium maryland|39.4369440,-76.6200000
+vanderbilt michigan|45.1425880,-84.6631830
+clinton massachusetts|42.4160600,-71.6849270
+newport kentucky|39.0861380,-84.4874770
+st. joseph minnesota|45.5651350,-94.3122120
+huntington beach california|33.6647050,-118.0125530
+worcester and surrounding area massachusetts|
+worcester and surrounding area massachusetts massachusetts|
+troy or pevely missouri|
+troy or pevely missouri missouri|
+national new york|40.6044880,-73.9086380
+danvers massachusetts|42.5723800,-70.9489800
+king county washington|47.5480339,-121.9836029
+glendale arizona|33.5530720,-112.1861320
+twin cities minnesota|45.2472601,-93.4553904
+wauconda illinois|42.2702400,-88.1544720
+deland florida|29.0138710,-81.2880300
+westfield new jersey|40.6505490,-74.3454110
+lakeland florida|28.0548800,-81.9573330
+west hartford connecticut|41.7596080,-72.7497900
+reisterstown maryland|39.4612120,-76.8142670
+coconut creek florida|26.2803460,-80.1864730
+overland park kansas|38.9275540,-94.6861110
+wellington colorado|40.7039570,-105.0003060
+chaparral new mexico|32.0273240,-106.3964540
+ft. lupton colorado|40.0802500,-104.8105120
+ridgewood new york|40.7108476,-73.8977693
+homestead florida|25.4626270,-80.4443360
+la grande oregon|45.3245650,-118.0879850
+garland maine|45.0629739,-69.1586139
+painesville ohio|41.7254000,-81.2483920
+college point new york|40.7875000,-73.8463900
+blacksburg virginia|37.2315020,-80.4288160
+conover north carolina|35.7116110,-81.2186070
+wauwatosa wisconsin|43.0604140,-88.0320430
+campbellsport wisconsin|43.5981280,-88.2851630
+germantown wisconsin|43.2362150,-88.1174800
+kewaskum wisconsin|43.5210280,-88.2289300
+west bend wisconsin|43.4195340,-88.1874520
+jackson wisconsin|43.3239050,-88.1619670
+slinger wisconsin|43.3343860,-88.2850940
+online project|
+boonville california|39.0089900,-123.3672260
+harford county maryland|39.5838964,-76.3637285
+puget sound area washington|
+puget sound area washington washington|
+accokeek maryland|38.6702980,-77.0116650
+san franicisco, oakland,merced california|37.6985478,-122.4764443
+san francisco, oakland, merced california|37.6985478,-122.4764443
+west chester pennsylvania|39.9604760,-75.6052710
+ossining new york|41.1619200,-73.8614300
+springfield virginia|38.7779180,-77.1797540
+bronx, brooklyn, queens new york|40.9590293,-74.0300122
+hanapepe hawaii|21.9093390,-159.5874230
+seguin texas|29.5745240,-97.9646770
+telluride colorado|37.9387460,-107.8134250
+east st. louis illinois|38.6162600,-90.1274440
+sahuarita arizona|31.9579330,-110.9952470
+moline illinois|41.4859300,-90.4996740
+austin, houston, san antonio texas|29.4962690,-98.4283540
+cochranville pennsylvania|39.8926390,-75.9201080
+anywhere, cyberspace new hampshire|
+anywhere, cyberspace new hampshire new hampshire|
+missoula montana|46.8744950,-114.0018530
+butte montana|46.0039170,-112.5344460
+kalispell montana|48.2021310,-114.3151050
+great falls montana|47.5064530,-111.3060190
+glendive montana|47.1104210,-104.7076310
+havre montana|48.5437790,-109.6770340
+san california|32.7319000,-117.1973120
+knoxville tennessee|35.9665720,-83.9243770
+online|40.4729550,-80.0781770
+greater los angeles california|34.3871821,-118.1122679
+moreno valley california|33.9173580,-117.2262280
+dillon montana|45.2196940,-112.6349790
+frankfort kentucky|38.1894080,-84.8714690
+baraboo wisconsin|43.4690150,-89.7443510
+stokesdale north carolina|36.2354180,-79.9811580
+bay village ohio|41.4850840,-81.9322770
+manhattan kansas|39.1929080,-96.5983930
+arcadia california|34.1402710,-118.0376090
+lake hughes california|34.6761960,-118.4441220
+washington (all are welcome) district of columbia|
+washington (all are welcome) district of columbia district of columbia|
+near denver colorado|39.7550920,-104.9881230
+st louis missouri|38.6275220,-90.1984100
+big lake minnesota|45.3385310,-93.7420130
+forest lake minnesota|45.2793260,-92.9929030
+ramsey minnesota|45.2586390,-93.4438210
+south bronx new york|40.8370495,-73.8654295
+kenosha pass colorado|39.4133208,-105.7566754
+magnolia texas|30.2072800,-95.7469920
+lost creek wilderness colorado|
+lost creek wilderness colorado colorado|
+clear creek colorado|39.6904464,-105.6412527
+cataract ridge colorado|
+cataract ridge colorado colorado|
+raspberry gulch colorado|37.9391645,-106.4819812
+boone iowa|42.0565750,-93.8799630
+near copper mtn colorado|39.5046000,-106.1412320
+glen ellyn illinois|41.8675290,-88.0607260
+newport news virginia|37.0324390,-76.4604430
+hamilton new jersey|40.2069440,-74.0816670
+freeport illinois|42.2874100,-89.6317460
+throughout new york state new york|
+throughout new york state new york new york|
+taunton massachusetts|41.9016960,-71.0926810
+gary indiana|41.5984040,-87.3371600
+frankfort illinois|41.4944480,-87.8415080
+across vermont vermont|
+across vermont vermont vermont|
+nothville new york|43.2234690,-74.1707230
+westminster and fort collins colorado|
+westminster and fort collins colorado colorado|
+durham, nc (and chapel hill, n north carolina|35.7920660,-78.7860360
+vanceburg kentucky|38.5939050,-83.3219250
+newton and surrounding towns massachusetts|
+newton and surrounding towns massachusetts massachusetts|
+lithia springs georgia|33.7971920,-84.6536230
+horseheads new york|42.1680210,-76.8322110
+boston area-can work from home massachusetts|
+boston area-can work from home massachusetts massachusetts|
+tallman new york|41.1110710,-74.1002620
+portage indiana|41.5842150,-87.1832520
+leadville colorado|39.2473150,-106.2913960
+grand lake colorado|40.2530960,-105.8349850
+silver city new mexico|32.7814160,-108.2733670
+silverton colorado|37.8107670,-107.6651510
+cuba new mexico|36.0208640,-106.9495280
+chama new mexico|36.8926700,-106.5824540
+breckenridge colorado|39.4981850,-106.0462250
+georgetown district of columbia|38.9047150,-77.0627720
+wallingford connecticut|41.4566710,-72.8240320
+any michigan|45.1677110,-87.1422590
+new york city|40.7560540,-73.9869510
+morganton north carolina|35.7394410,-81.6965790
+palatine illinois|42.1148320,-88.0485610
+elko minnesota|44.5656590,-93.3253170
+taos new mexico|36.4072350,-105.5733660
+union county/surrounding areas new jersey|
+union county/surrounding areas new jersey new jersey|
+newton center massachusetts|42.3182421,-71.2072321
+eden prairie minnesota|44.8488240,-93.4601100
+norwood new jersey|40.9941970,-73.9505240
+needham massachusetts|42.2801900,-71.2397800
+st. helena california|38.5031840,-122.4668600
+hercules california|38.0074330,-122.2563520
+harts west virginia|38.0378690,-82.1385660
+forest knolls california|38.0153040,-122.6878550
+mukilteo washington|47.9050760,-122.2931360
+anywhere maryland|
+anywhere maryland maryland|
+gig harbor washington|47.3270110,-122.5955720
+efland north carolina|36.0811950,-79.1689450
+blaine minnesota|45.1677920,-93.2119180
+burnsville minnesota|44.7770350,-93.2780740
+coon rapids minnesota|45.1845390,-93.3131190
+farmington minnesota|44.6587290,-93.1642280
+maple grove minnesota|45.1080970,-93.4661970
+owatonna minnesota|44.0899140,-93.2299050
+green bay wisconsin|44.5160170,-88.0078590
+beards fork west virginia|38.0645110,-81.2277010
+janesville wisconsin|42.6793670,-89.0316490
+corona new york|40.7469400,-73.8605600
+middle village new york|40.7173720,-73.8742500
+west windsor new jersey|40.2985928,-74.6283316
+lincroft new jersey|40.3457040,-74.1260780
+pennsauken new jersey|39.9644080,-75.0560670
+cape may new jersey|38.9401280,-74.9040540
+wawa pennsylvania|39.8947800,-75.4688820
+munster indiana|41.5464010,-87.5059730
+amesville ohio|39.4007330,-81.9541740
+fayetteville new york|43.0299670,-76.0045180
+east brunswick new jersey|40.4255120,-74.4162330
+hudson new york|42.2514310,-73.7857620
+bell california|33.9773050,-118.1802830
+annandale virginia|38.8344540,-77.2178710
+yonkers new york|40.9396160,-73.8957090
+el cajon california|32.7949570,-116.9623590
+springfield (and northampton) massachusetts|42.3594350,-72.6400000
+new castle pennsylvania|40.9956910,-80.3470280
+salem massachusetts|42.5111700,-70.9094200
+rutledge &amp; winder georgia|
+rutledge &amp; winder georgia georgia|
+mt. vernon washington|48.4210020,-122.3133480
+franconia new hampshire|44.2272400,-71.7478040
+warren new jersey|40.8841854,-74.9208772
+st. paul and statewide mn minnesota|
+st. paul and statewide mn minnesota minnesota|
+woodburn oregon|45.1494890,-122.8596200
+stayton oregon|44.8007270,-122.7943620
+cypress texas|33.0438610,-95.2687610
+jessup maryland|39.1598160,-76.7794830
+woodside new york|40.7452800,-73.9058300
+emeryville california|37.8381770,-122.2963890
+chicagoland illinois|41.7435073,-88.0118473
+geneva illinois|41.8891120,-88.3165460
+westhampton new york|40.8404280,-72.6625090
+union city california|37.6022190,-122.0156810
+livermore or local california|
+livermore or local california california|
+remote or bay area california|
+remote or bay area california california|
+livermore or bay area california|
+livermore or bay area california california|
+anywhere california|
+anywhere california california|
+orange county north carolina|36.0263022,-79.1096901
+key center washington|38.7723640,-83.0189890
+ymca camp seymour - key center washington|
+ymca camp seymour - key center washington washington|
+worldwide (remote|
+danville virginia|36.5829920,-79.4070860
+union new jersey|40.6954640,-74.2709690
+lake charles louisiana|30.2131920,-93.2044510
+atlanta/rutledge/winder georgia|33.8498184,-84.4382721
+mt. vernon new york|40.9112260,-73.8288000
+san francisco massachusetts|41.7082640,-71.2669040
+socorro new mexico|34.0514810,-106.9013310
+new canaan connecticut|41.1465090,-73.4954420
+winooski vermont|44.4913590,-73.1864840
+auburn alabama|32.5963130,-85.4817230
+langley washington|48.0364820,-122.4095450
+virtual opportunity|
+virtual opportunity minnesota|
+virtual opportunity minnesota minnesota|
+lyons illinois|41.8118200,-87.8192680
+northville michigan|42.4305720,-83.4831540
+troy michigan|42.5920060,-83.1688610
+santa monica/lake hughes, ca california|
+santa monica/lake hughes, ca california california|
+spring valley new york|41.1173060,-74.0459650
+rutledge georgia|33.6262330,-83.6125880
+winter park colorado|39.8886460,-105.7753690
+denver, keystone, breckenridge colorado|39.6032160,-105.9875380
+marin headlands near sausalito california|37.8772440,-122.5190680
+pittsbugh pennsylvania|40.4384230,-80.0019330
+clark new jersey|40.6217500,-74.3093950
+pocono summit pennsylvania|41.1109950,-75.3862310
+winnetka california|34.2131710,-118.5710220
+holland/zeeland area michigan|42.8412440,-86.0813450
+any|37.1586370,-98.0809755
+glen echo maryland|38.9685700,-77.1385830
+mathews virginia|37.3912302,-76.3174140
+san luis obispo california|35.2695610,-120.6703800
+rockland massachusetts|42.1314510,-70.9160310
+medford massachusetts|42.4248980,-71.1103260
+palatka florida|29.6434560,-81.6445540
+morrisville vermont|44.5617370,-72.5983510
+marlborough massachusetts|42.3501870,-71.5461510
+boston, lynn massachusetts|42.4697800,-70.9568900
+springfield oregon|44.0539880,-122.9767260
+pasadena texas|29.6814270,-95.1641130
+denver metro colorado|39.5142848,-104.8454619
+westport connecticut|41.1434900,-73.3515120
+liverpool new york|43.1041950,-76.2076350
+carnegie pennsylvania|40.4078830,-80.0837100
+oregon city oregon|45.3519840,-122.5966960
+belmont massachusetts|42.3964490,-71.1779580
+lake city minnesota|44.4424940,-92.2752580
+massachusetts bay chapter massachusetts|
+massachusetts bay chapter massachusetts massachusetts|
+durham, raliegh, chapel hill north carolina|35.8043670,-78.8054560
+high point north carolina|35.9538060,-80.0049090
+astoria new york|40.7719400,-73.9305600
+anywhere in the us california|
+anywhere in the us california california|
+longbranch washington|47.2029870,-122.7567430
+lyman maine|43.5005733,-70.6356658
+seaside california|36.6216410,-121.8173030
+cambridge minnesota|45.5628130,-93.2249890
+muir beach california|37.8658100,-122.5870700
+ross california|37.9655320,-122.5606760
+bentonville arkansas|36.3669390,-94.2103380
+sparta new jersey|41.0519890,-74.6283316
+superior wisconsin|46.6849840,-92.0768610
+gainesville new jersey|29.5309750,-82.8879170
+cazadero california|38.5332030,-123.0853230
+st augustine/jacksonville florida|29.9017320,-81.3202060
+fort lee new jersey|40.8511660,-73.9701470
+anywhere in the world massachusetts|
+anywhere in the world massachusetts massachusetts|
+local libraries/ nassau county new york|
+local libraries/ nassau county new york new york|
+nassau county/local libraries new york|
+nassau county/local libraries new york new york|
+kimberton pennsylvania|40.1257740,-75.5717070
+el paso texas|31.7632100,-106.4909690
+los angeles washington|23.1032893,-82.3890034
+decatur illinois|39.8458030,-88.9545000
+grand junction colorado|39.0918530,-108.5653250
+glens falls new york|43.3092280,-73.6446250
+clearfield utah|41.1137960,-112.0255640
+wantagh new york|40.6717170,-73.5103970
+ukiah california|39.1499970,-123.2076350
+henderson nevada|36.0329760,-115.0648590
+oakton virginia|38.8888290,-77.3033360
+mineral city ohio|40.6016820,-81.3615940
+new straitsville ohio|39.5787360,-82.2367590
+glouster ohio|39.5021300,-82.0861270
+crooksville ohio|39.7701370,-82.0974010
+pomeroy ohio|39.0277200,-82.0323530
+amherst massachusetts|42.3758270,-72.5198940
+marysville washington|48.0517280,-122.1776990
+west lafayette indiana|40.4481620,-86.9157560
+mineola new york|40.7491730,-73.6410760
+ham lake minnesota|45.2569860,-93.2040880
+libertyville illinois|42.2830380,-87.9654090
+newport beach california|33.6213390,-117.9306540
+work from your home virginia|
+work from your home virginia virginia|
+work from your own home|
+hidden hills california|34.1630300,-118.6642000
+calabasas california|34.1338970,-118.6647300
+big bear california|34.2204653,-116.9381434
+san pablo california|37.9628280,-122.3453590
+bloomington indiana|39.1642870,-86.5269040
+st. francis minnesota|45.3991550,-93.3898360
+everett massachusetts|42.4070430,-71.0555790
+tampa/ st. pete florida|27.7670700,-82.6384580
+denton texas|33.2063920,-97.1318100
+devens massachusetts|42.5518000,-71.6191200
