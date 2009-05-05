@@ -4,13 +4,16 @@
     <div>
       <a class='valign noselect no_underline' href='/'><img border='0' id='logo_flag' class='valign' src='/images/logo.png'>
       <img border='0' id='logo_name' class='valign' src='/images/title-transp.png' alt='All For Good'></a>
-      <input type='text' id='keywords' class='valign'
+      <input type='text' id='keywords' defaultValue='keywords' class='valign'
              onchange='submitForm("keywords"); return false;'
              size='40' value='{{ keywords }}' />
       <img class='search_button valign pointer'
            onclick='submitForm("keywords"); return false;'
            height='28' src='/images/red-search-button.png'>
     </div>
+    <script type='text/javascript'>
+      setInputFieldValue(el('keywords'), '');
+    </script>
 
     <div id='tabs' style='display:none;'>
     <div class='noselect pointer {% ifequal current_page "MY_EVENTS" %} tab_active {% else %} tab_inactive {% endifequal %}'

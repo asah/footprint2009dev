@@ -17,43 +17,6 @@ var map;
 var NUM_PER_PAGE = 10;
 var searchResults = [];
 
-/** Get the IP geolocation given by the Common Ajax Loader.
- * Note: this function caches its own result.
- * @return {string} the current geolocation of the client, if it is known,
- *     otherwise an empty string.
- */
-getClientLocation = function() {
-  var clientLocationString;
-  return function() {
-    if (clientLocationString === undefined) {
-      try {
-        var loc = google.loader.ClientLocation;
-        lat = loc.latitude;
-        lon = loc.longitude;
-        if (lat > 0) {
-          lat = '+' + lat;
-        }
-        if (lon > 0) {
-          lon = '+' + lon;
-        }
-        clientLocationString = lat + lon;
-
-        var address = '';
-        if (loc.address.city) {
-          address = loc.address.city;
-          if (loc.address.region) {
-            address += ', ' + loc.address.region;
-          }
-          el('location').value = address;
-        }
-      } catch (err) {
-        clientLocationString = '';
-      }
-    }
-    return clientLocationString;
-  };
-}(); // executed inline to close over the 'clientLocationString' variable.
-
 
 /** Query params for backend search, based on frontend parameters.
  *
@@ -182,7 +145,7 @@ Query.prototype.getUrlQuery = function() {
 function NewQueryFromUrlParams() {
   var keywords = getHashOrQueryParam('q', '');
 
-  var location = getHashOrQueryParam('vol_loc', getClientLocation());
+  var location = getHashOrQueryParam('vol_loc', getClientLocation().coords);
 
   var start = Number(getHashOrQueryParam('start', '0'));
   start = Math.max(start, 0);
@@ -211,6 +174,9 @@ function NewQueryFromUrlParams() {
 /** Perform a search using the current URL parameters and IP geolocation.
  */
 function onLoadSearch() {
+  if (el('location')) {
+    setInputFieldValue(el('location'), getClientLocation().address);
+  }
   NewQueryFromUrlParams().execute();
   executeSearchFromHashParams();
   $(window).hashchange(executeSearchFromHashParams);
@@ -249,13 +215,13 @@ executeSearchFromHashParams = function() {
     lastSearchQuery = query;
 
     var success = function(text, status) {
-      el('keywords').value = query.getKeywords();
-      el('timeperiod').value = query.getTimePeriod();
+      setInputFieldValue(el('keywords'), query.getKeywords());
+      setInputFieldValue(el('timeperiod'), query.getTimePeriod());
       var regexp = new RegExp('[a-zA-Z]')
       if (regexp.exec(query.getLocation())) {
         // Update location field in UI, but only if location text isn't
         // just a latlon geocode.
-        el('location').value = query.getLocation();
+        setInputFieldValue(el('location'), query.getLocation());
       }
       if (updateMap) {
         asyncLoadManager.addCallback('map', function() {
@@ -301,7 +267,7 @@ function submitForm() {
   // TODO: strip leading/trailing whitespace.
 
   if (location == '') {
-    location = getClientLocation();
+    location = getClientLocation().coords;
   }
 
   var query = lastSearchQuery.clone();

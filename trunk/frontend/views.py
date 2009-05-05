@@ -48,12 +48,13 @@ import view_helper
 
 TEMPLATE_DIR = 'templates/'
 
-MAIN_PAGE_TEMPLATE = 'main_page.html'
+HOMEPAGE_TEMPLATE = 'homepage.html'
 TEST_PAGEVIEWS_TEMPLATE = 'test_pageviews.html'
 SEARCH_RESULTS_TEMPLATE = 'search_results.html'
 SEARCH_RESULTS_DEBUG_TEMPLATE = 'search_results_debug.html'
 SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
+SNIPPETS_LIST_MINI_TEMPLATE = 'snippets_list_mini.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 MY_EVENTS_TEMPLATE = 'my_events.html'
 FRIENDS_TEMPLATE = 'work_with_others.html'
@@ -135,7 +136,17 @@ class test_page_views_view(webapp.RequestHandler):
     self.response.out.write(render_template(TEST_PAGEVIEWS_TEMPLATE,
                                            template_values))
 
-class main_page_view(webapp.RequestHandler):
+class home_page_view(webapp.RequestHandler):
+  """default homepage for consumer UI."""
+  def get(self):
+    user = userinfo.get_user(self.request)
+    template_values = {
+      'user' : user,
+    }
+    self.response.out.write(render_template(HOMEPAGE_TEMPLATE,
+                                           template_values))
+
+class consumer_ui_search_view(webapp.RequestHandler):
   """default homepage for consumer UI."""
   def get(self):
     """HTTP get method."""
@@ -147,8 +158,10 @@ class main_page_view(webapp.RequestHandler):
     # Retrieve the user-specific information for the search result set.
     user = userinfo.get_user(self.request)
     load_userinfo_into_dict(user, template_values)
+
     self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                             template_values))
+
 
 class legacy_search_view(webapp.RequestHandler):
   """legacy API -- OK to remove after 2009/06/01."""
@@ -241,8 +254,13 @@ class ui_snippets_view(webapp.RequestHandler):
         'has_results' : (result_set.num_merged_results > 0),  # For django.
         'view_url': self.request.url,
       }
-    self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
-                                            template_values))
+    if self.request.get('minimal_snippets_list'):
+      # Minimal results list for homepage.
+      self.response.out.write(render_template(SNIPPETS_LIST_MINI_TEMPLATE,
+                                              template_values))
+    else:
+      self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
+                                              template_values))
 
 
 class my_events_view(webapp.RequestHandler):
