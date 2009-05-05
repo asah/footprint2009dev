@@ -592,10 +592,10 @@ def RunShellWithReturnCode(command, print_output=False,
 
 
 def RunShell(command, silent_ok=False, universal_newlines=True,
-             print_output=False):
+             print_output=False, ignore_retcode=False):
   data, retcode = RunShellWithReturnCode(command, print_output,
                                          universal_newlines)
-  if retcode:
+  if retcode and not ignore_retcode:
     ErrorExit("Got error status from %s:\n%s" % (command, data))
   if not silent_ok and not data:
     ErrorExit("No output from %s" % command)
@@ -1310,7 +1310,7 @@ def RealMain(argv, data=None):
     for file in files:
       if re.search(r'[.]py$', file):
         print "pylinting "+file+"..."
-        res = RunShell(["pylint", file], silent_ok=True)
+        res = RunShell(["pylint", file], silent_ok=True, ignore_retcode=True)
         match = re.search(r'Your code has been rated at ([0-9.]*)', res)
         try:
           score = float(match.group(1))

@@ -53,6 +53,7 @@ TEST_PAGEVIEWS_TEMPLATE = 'test_pageviews.html'
 SEARCH_RESULTS_TEMPLATE = 'search_results.html'
 SEARCH_RESULTS_DEBUG_TEMPLATE = 'search_results_debug.html'
 SEARCH_RESULTS_RSS_TEMPLATE = 'search_results.rss'
+SEARCH_RESULTS_MISSING_KEY_TEMPLATE = 'search_results_missing_key.html'
 SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_MINI_TEMPLATE = 'snippets_list_mini.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
@@ -161,21 +162,18 @@ class consumer_ui_search_view(webapp.RequestHandler):
 
     self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                             template_values))
-
-
-class legacy_search_view(webapp.RequestHandler):
-  """legacy API -- OK to remove after 2009/06/01."""
-  def get(self):
-    """HTTP get method."""
-    self.response.out.write("<!DOCTYPE html><html><body>sorry!  " +
-                            "this API has changed-- try /api/volopps" +
-                            "</body></html>")
-
 class search_view(webapp.RequestHandler):
   """run a search.  note various output formats."""
   def get(self):
     """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
+    
+    if "key" not in unique_args:
+      tplresult = render_template(SEARCH_RESULTS_MISSING_KEY_TEMPLATE, {})
+      self.response.out.write(tplresult)
+      pagecount.IncrPageCount("key.missing", 1)
+      return
+    pagecount.IncrPageCount("key.%s.searches" % key, 1)
     result_set = search.search(unique_args)
 
     result_set.request_url = self.request.url
