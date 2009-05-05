@@ -24,9 +24,11 @@ import re
 import hashlib
 import random
 import math
+from urlparse import urlsplit
 from google.appengine.ext import db
 from urllib import urlencode
 
+DEFAULT_API_KEY = 'testkey'
 DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/volopps'
 DEFAULT_RESPONSE_TYPES = 'rss'
 LOCAL_STATIC_URL = 'http://localhost:8080/test/sampleData.xml'
@@ -36,6 +38,8 @@ ALL_TEST_TYPES = 'num, query, provider, start, geo, snippets'
 
 class TestResultCode(db.IntegerProperty):
   """success and failure types."""
+  # pylint: disable-msg=W0232
+  # pylint: disable-msg=R0903
   PASS = 0
   UNKNOWN_FAIL = 1
   INTERNAL_ERROR = 2
@@ -44,6 +48,8 @@ class TestResultCode(db.IntegerProperty):
 
 class TestResults(db.Model):
   """results of running tests."""
+  # pylint: disable-msg=W0232
+  # pylint: disable-msg=R0903
   timestamp = db.DateTimeProperty(auto_now=True)
   test_type = db.StringProperty()
   result_code = TestResultCode()
@@ -51,6 +57,7 @@ class TestResults(db.Model):
 
 class ApiResult(object):
   """result object used for testing."""
+  # pylint: disable-msg=R0903
   def __init__(self, item_id, title, description, url, provider, latlong):
     self.item_id = item_id
     self.title = title
@@ -129,6 +136,7 @@ def random_item(items):
     
 def retrieve_raw_data(full_uri):
   """call urlfetch and cache the results in memcache."""
+  print full_uri
   memcache_key = hashlib.md5('api_test_data:' + full_uri).hexdigest()
   result_content = memcache.get(memcache_key)
   if not result_content:
@@ -160,6 +168,7 @@ def in_location(opp, loc, radius):
   
 class ApiTesting(object):
   """class to hold testing methods."""
+  # pylint: disable-msg=R0904
   def __init__(self, wsfi_app):
     self.web_app = wsfi_app
     self.num_failures = 0
@@ -205,6 +214,7 @@ class ApiTesting(object):
   def make_uri(self, options):
     """generate an API call given args."""
     result = self.api_url + '?output=' + self.response_type + '&'
+    result += 'key=%s&' % DEFAULT_API_KEY
     result += urlencode(options)
     return result
   
@@ -340,7 +350,6 @@ class ApiTesting(object):
   
   def int_test_bogus_query(self):
     """ try a few bogus locations to make sure there's no weird data """
-    result = True
     term = random_item(["fqzzqx"])
    
     result_set = self.get_result_set({'q':term})
@@ -476,7 +485,8 @@ class ApiTesting(object):
 
   def test_snippets(self):
     """ensure that /ui_snippets returns something valid."""
-    domain = 'footprint2009dev.appspot.com'
+    pieces = urlsplit(self.api_url)
+    domain = pieces.netloc
     data = retrieve_raw_data('http://'+domain+'/ui_snippets?q=test')
     if not data:
       return self.fail(
