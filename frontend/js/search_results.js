@@ -260,9 +260,9 @@ executeSearchFromHashParams = function() {
  * and the time period filter.
  */
 function submitForm() {
-  var keywords = el('keywords').value;
-  var location = el('location').value;
-  var timePeriod = el('timeperiod').value;
+  var keywords = getInputFieldValue(el('keywords'));
+  var location = getInputFieldValue(el('location'));
+  var timePeriod = getInputFieldValue(el('timeperiod'));
 
   // TODO: strip leading/trailing whitespace.
 

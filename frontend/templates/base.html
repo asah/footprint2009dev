@@ -60,6 +60,7 @@
   </div>
 
   {% block prefooter %}{% endblock %}
+
   {% block footer %}
   <div id='footer'>
     <div id='footer_right'>
@@ -71,7 +72,8 @@
       &copy; 2009 AllForGood.org
     </div>
   </div>
-  {% endblock %}
+ {% endblock %}
+
  </div>
  </center>
 
@@ -79,8 +81,8 @@
   <script>
     // Handle searches when in static content pages.
     if (!('submitForm' in window)) {
-      function submitForm(fromWhere) {
-        window.location = '/search#q=' + el('keywords').value;
+      window.submitForm = function(fromWhere) {
+        window.location = '/search#q=' + getInputFieldValue(el('keywords'));
       }
     }
   </script>
