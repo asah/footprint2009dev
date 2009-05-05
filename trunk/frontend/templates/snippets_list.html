@@ -9,7 +9,18 @@
   asyncLoadManager.addCallback('map', function(){
       map.map.clearOverlays();
   });
-  searchResults = [];
+
+  var friendsByEventId = {{friends_by_event_id_js|default:"{}"}};
+
+  var friendsInfo = {};
+{% for friend in friends %}
+  friendsInfo['{{friend.user_id}}'] = {
+    'thumbnail_url': '{{friend.thumbnail_url}}',
+    'name': '{{friend.display_name}}'
+  };
+{% endfor %}
+
+  var searchResults = [];
 {% for result in result_set.clipped_results %}
   searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}'), '{{result.item_id|escape}}', '{{result.base_url|escape}}', {{result.interest|yesno:"1,0"}}, '{{result.url_short|escape}}'));
   updateInterestInfoDisplay({{forloop.counter0}});

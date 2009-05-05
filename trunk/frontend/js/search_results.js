@@ -17,7 +17,6 @@ var map;
 var NUM_PER_PAGE = 10;
 var searchResults = [];
 
-
 /** Query params for backend search, based on frontend parameters.
  *
  * @constructor
@@ -25,16 +24,16 @@ var searchResults = [];
  * @param {string|GLatLng} location Location in either string form (address) or
  *      a GLatLng object.
  * @param {number} start The start index for results.  Must be integer.
- * @param {string} timePeriod The time period.
+ * @param {string} opt_timePeriod The time period.
  * @param {Object} opt_filters Filters for this query.
  *      Maps 'filtername':value.
  */
-function Query(keywords, location, pageNum, timePeriod, opt_filters) {
+function Query(keywords, location, pageNum, opt_timePeriod, opt_filters) {
   var me = this;
   me.keywords_ = keywords;
   me.location_ = location;
   me.pageNum_ = pageNum;
-  me.timePeriod_ = timePeriod;
+  me.timePeriod_ = opt_timePeriod || 'everything';
   me.filters_ = opt_filters || {};
 };
 
@@ -241,8 +240,8 @@ executeSearchFromHashParams = function() {
     var url;
     if (currentPageName == 'SEARCH') {
       url = '/ui_snippets?';
-    } else if (currentPageName == 'PROFILE') {
-      // TODO(Tim)
+    } else if (currentPageName == 'MY_EVENTS') {
+      url = '/ui_my_snippets?';
     }
 
     currentXhr = jQuery.ajax({
@@ -279,6 +278,11 @@ function submitForm() {
   query.execute();
 }
 
+function setWhoFilter(value) {
+  var query = lastSearchQuery.clone();
+  query.setFilter('who_filter', value);
+  query.execute();
+}
 
 /** Called from the onclick in the "more" prompt of a snippet
  *
@@ -391,6 +395,9 @@ initMap = function() {
  * @param {string} snippet a snippet.
  * @param {Date} startdate a start date.
  * @param {Date} enddate an end date.
+ * @param {string} itemId the item id.
+ * @param {string} baseUrl the base url.
+ * @param {boolean} liked flag if liked.
  * @param {string} shortUrl the short version of the url.
  */
 function SearchResult(url, title, location, snippet, startdate, enddate,
