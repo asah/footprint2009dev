@@ -49,9 +49,9 @@
             {title: '{{user.display_name}} ' + fcString});
         opensocial.requestCreateActivity(activity, "HIGH");
       {% else %} {% ifequal user.account_type "facebook" %}
-        var templateId = '79242242909'; // Template of the format "<user> <description>" 
-        FB.Facebook.apiClient.feed_publishUserAction(templateId, {'description' : fbString}, 
-          [], '', 1, '', function(){});
+        var templateId = 79242242909; // Template of the format "<user> <description>" 
+        FB.Connect.showFeedDialog(templateId, {"description" : fbString}, 
+          [], '', 1, FB.RequireConnect.require, function(){});
       {% endifequal %}{% endifequal %} 
     }
 

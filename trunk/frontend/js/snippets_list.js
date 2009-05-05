@@ -154,6 +154,7 @@ function toggleInterest(resultIndex) {
     url: path,
     async: true,
     dataType: 'text',
+    data : {},
     error: error,
     success: success
   });
