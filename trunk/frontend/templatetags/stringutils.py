@@ -13,7 +13,7 @@ def truncate_chars(value, max_length):
   if len(value) > max_length:
     truncated_value = value[:max_length]
     ellipsis = ' ...'
-    if value[max_length + 1] != ' ':
+    if value[max_length] != ' ':
       # TODO: Make sure that only whitespace in the data records
       #     is ascii spaces.
       right_index = truncated_value.rfind(' ')
