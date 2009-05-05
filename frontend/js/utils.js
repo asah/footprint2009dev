@@ -263,6 +263,75 @@ AsyncLoadManager.prototype.isLoaded = function(eventName) {
           this.loadStatus_[eventName] == true);
 }
 
+/** Get the IP geolocation given by the Common Ajax Loader.
+ * Note: this function caches its own result.
+ * @return {string} the current geolocation of the client, if it is known,
+ *     otherwise an empty string.
+ */
+getClientLocation = function() {
+  var clientLocation;
+  return function() {
+    if (clientLocation === undefined) {
+      try {
+        var loc = google.loader.ClientLocation;
+        lat = loc.latitude;
+        lon = loc.longitude;
+        if (lat > 0) {
+          lat = '+' + lat;
+        }
+        if (lon > 0) {
+          lon = '+' + lon;
+        }
+        var clientLocationString = lat + lon;
+
+        clientLocation = { 'coords': clientLocationString, 'address': '',
+                           'city': '' };
+
+        if (loc.address.city) {
+          clientLocation.address = loc.address.city;
+          clientLocation.city = loc.address.city;
+          if (loc.address.region) {
+            clientLocation.address += ', ' + loc.address.region;
+          }
+        }
+      } catch (err) {
+        clientLocation = { 'coords': undefined, 'address': undefined,
+                           'city': undefined };
+      }
+    }
+    return clientLocation;
+  };
+}(); // executed inline to close over the 'clientLocationString' variable.
+
+/* Populate a text input field with a value, and revert to input.defaultValue
+ * when value is ''.
+ * @param {HTMLInputerElement} input Input element.
+ * @param {string} value Value to set Input field to.
+ */
+function setInputFieldValue(input, value) {
+  function set(valueToSet) {
+    if (!valueToSet || valueToSet == '') {
+      input.style.color = '#666';
+      input.value = input.getAttribute('defaultValue');
+
+      input.onfocus = function() {
+        input.value = '';
+        input.style.color = 'black';
+        input.onfocus = undefined;
+      }
+    } else {
+      input.style.color = 'black';
+      input.value = valueToSet;
+    }
+  }
+
+  input.onblur = function() {
+    set(input.value);
+  }
+
+  set(value);
+}
+
 // Globals
 var queryParams = GetQueryParams();
 var hashParams = GetHashParams();
@@ -287,3 +356,4 @@ try {
     }
   }
 } catch(err) {}
+

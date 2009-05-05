@@ -25,6 +25,11 @@ span {
   font-size: 13px;
 }
 
+form {
+  padding: 0px;
+  margin: 0px;
+}
+
 /** Header Styles **/
 
 #header_top_spacer {
@@ -41,7 +46,7 @@ span {
 #header a:active { color: #fff }
 
 #footer {
-  margin: 15px 15px 15px 22px;
+  margin: 0px 15px 15px 22px;
   width: 960px;
   overflow: hidden;
   color: white;
@@ -88,10 +93,10 @@ span {
 }
 
 .add_to_calendar_floating {
-  top: 21px;  /* Show popup below button */
+  top: 15px;  /* Show popup below button */
   position: absolute;
   z-index: 10;
-  width: 12em;
+  width: 15em;
   border: 1px solid silver;
   padding: 6px 6px 6px 12px;
   font-size: 12px;  /* To match AddThis widget */
@@ -128,10 +133,10 @@ span {
   overflow: hidden;
   background: white;
   width: 960px;
+  padding: 16px;
 }
 
 #content {
-  padding: 16px;
 }
 
 #content_left {
@@ -152,7 +157,20 @@ span {
 }
 
 .snippet_title A {
-  color: #018;
+  color: #039;
+  text-decoration: none;
+}
+
+.snippet_mini_title {
+  border-top: 1px solid silver;
+  margin-top: 10px;
+  padding-top: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.snippet_mini_title A {
+  color: #039;
   text-decoration: none;
 }
 

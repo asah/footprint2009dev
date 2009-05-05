@@ -16,6 +16,7 @@
 paths used in the app
 """
 URL_HOME = '/'
+URL_CONSUMER_UI_SEARCH = '/search'
 URL_API_SEARCH = '/api/volopps'
 URL_LEGACY_API_SEARCH = '/api/search'
 URL_MY_EVENTS = '/myevents'

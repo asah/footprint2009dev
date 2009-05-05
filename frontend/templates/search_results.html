@@ -1,6 +1,33 @@
 {% extends 'layout_two_column.html' %}
 
 {% block js_files %}
+{% endblock %}
+
+{% block subheader %}
+{% endblock subheader %}
+
+{% block content_left %}
+  {% include 'map_widget.html' %}
+
+  <div id='calendar'>
+    {% include 'calendar_widget.html' %}
+  </div>
+{% endblock content_left %}
+
+{% block content_right %}
+  <div id='no_results_message' style='display:none;'>
+    <br><br><b>No results found.</b>
+  </div>
+  <div id='snippets_pane'></div>
+{% endblock content_right %}
+
+{% block prefooter %}
+<center>
+  {%include 'paginator.html' %}
+</center>
+
+<script type='text/javascript' src='/js/snippets_list.js'></script>
+
   <script type='text/javascript' src='/js/map.js'></script>
   <script type='text/javascript' src='/js/search_results.js'></script>
   <script type='text/javascript' src='/js/calendar_widget.js'></script>
@@ -28,31 +55,5 @@
 
     var currentPageName = '{{ current_page }}';
   </script>
-{% endblock %}
-
-{% block subheader %}
-{% endblock subheader %}
-
-{% block content_left %}
-  {% include 'map_widget.html' %}
-
-  <div id='calendar'>
-    {% include 'calendar_widget.html' %}
-  </div>
-{% endblock content_left %}
-
-{% block content_right %}
-  <div id='no_results_message' style='display:none;'>
-    <br><br><b>No results found.</b>
-  </div>
-  <div id='snippets_pane'></div>
-{% endblock content_right %}
-
-{% block prefooter %}
-<center>
-  {%include 'paginator.html' %}
-</center>
-
-<script type='text/javascript' src='/js/snippets_list.js'></script>
 
 {% endblock prefooter %}
