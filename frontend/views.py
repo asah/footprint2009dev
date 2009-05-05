@@ -173,7 +173,7 @@ class search_view(webapp.RequestHandler):
       self.response.out.write(tplresult)
       pagecount.IncrPageCount("key.missing", 1)
       return
-    pagecount.IncrPageCount("key.%s.searches" % key, 1)
+    pagecount.IncrPageCount("key.%s.searches" % unique_args["key"], 1)
     result_set = search.search(unique_args)
 
     result_set.request_url = self.request.url
