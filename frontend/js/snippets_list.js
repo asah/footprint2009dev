@@ -168,15 +168,29 @@ function updateInterestInfoDisplay(resultIndex) {
   var result = searchResults[resultIndex];
   var html = '';
   if (result.liked) {
-    html += '<img class="like_icon" src="/images/like.gif">You support this (' +
-        '<a class="undo_link" href="javascript:toggleInterest(' + resultIndex +
-        ');void(0);">undo</a>)';
+    html += '<img class="like_icon" src="/images/like.gif">';
+    
+    var nameList = 'You';
+  
+    // Display friends' info, if any.
+    var friends = friendsByEventId[result.itemId];
+    if (friends) {
+      for (var i = 0; i < friends.length; i++) {
+        var friendId = friends[i];
+        var info = friendsInfo[friendId];
+        if (info) {
+          nameList += ', ' + info.name;
+        }
+      }
+    }
+
+    html += nameList + ' think this is good (' +
+        '<a href="javascript:toggleInterest(' + resultIndex +
+        ');void(0);">undo</a>)';  
   }
+
   var div = el('interest_info_' + resultIndex);
   div.innerHTML = html;
-  if (html.length == 0) {
-    div.style.display = 'none';
-  } else {
-    div.style.display = '';
-  }
+  div.style.display = html.length ? '' : 'none';
+
 }

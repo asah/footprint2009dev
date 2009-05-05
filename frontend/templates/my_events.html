@@ -1,4 +1,4 @@
-{% extends "layout_two_column.html" %}
+{% extends "search_results.html" %}
 
 {% block title %}
 My Events
@@ -8,28 +8,17 @@ My Events
 {% endblock subheader %}
 
 {% block content_left %}
-{% if user %}
-  Your events. <br/>
-{% endif %}
+  {% include 'map_widget.html' %}
 
+  <div id="calendar" style="display:none">
+    {% include 'calendar_widget.html' %}
+  </div>
+
+  <div>
+    <a href='javascript:setWhoFilter("me");'>Me</a><br/>
+    <a href='javascript:setWhoFilter("me_and_friends");'>Me + my friends</a>&nbsp;
+    <span style="font-size:9px"><em>Not implemented...</em></span><br/>
+  </div>
 {% endblock content_left %}
 
-{% block content_right %}
-{% if not user %}
-  <br><br><b>Log in to see your starred events</b>
-{% endif %}
 
-<div id='no_results_message' style='display:none;'>
-  <br><br><b>No results found.</b>
-</div>
-<div id='snippets_pane'>
-  {% include 'snippets_list.html' %}
-</div>
-{% endblock content_right %}
-
-
-{% block prefooter %}
-<center>
-  {%include 'paginator.html' %}
-</center>
-{% endblock prefooter %}

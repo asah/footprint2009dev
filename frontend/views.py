@@ -58,7 +58,6 @@ SNIPPETS_LIST_TEMPLATE = 'snippets_list.html'
 SNIPPETS_LIST_MINI_TEMPLATE = 'snippets_list_mini.html'
 SNIPPETS_LIST_RSS_TEMPLATE = 'snippets_list.rss'
 MY_EVENTS_TEMPLATE = 'my_events.html'
-FRIENDS_TEMPLATE = 'work_with_others.html'
 POST_TEMPLATE = 'post.html'
 POST_RESULT_TEMPLATE = 'post_result.html'
 ADMIN_TEMPLATE = 'admin.html'
@@ -260,9 +259,50 @@ class ui_snippets_view(webapp.RequestHandler):
       self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
                                               template_values))
 
+class ui_my_snippets_view(webapp.RequestHandler):
+  """The current spec for the My Events view (also known as "Profile")
+  defines the following filters:
+  * Filter on my own events
+  * Filter on my own + my friends's events
+  * Filter on various relative time periods
+  * Filter on events that are still open (not past their completion dates)
+
+  Furthermore the UI is spec'd such that each event displays a truncated list
+  of friend names, along with a total count of friends.
+  
+  In order to collect that info, we seem to be stuck with O(n2) because
+  I need to know *all* the events that *all* of my friends are interested in:
+  1. Get the list of all events that I like or am doing.
+  2. Get the list of all my friends.
+  3. For each of my friends, get the list of all events that that friend likes
+  or is doing.
+  4. For each of the events found in step (3), associate the list of all
+  interested users with that event.
+  """
+  def get(self):
+    """HTTP get method."""
+    unique_args = get_unique_args_from_request(self.request)
+    
+    user_info = userinfo.get_user(self.request)
+
+    view_data = view_helper.get_my_snippets_view_data(user_info)
+    result_set = view_data['result_set']
+    result_set.clipped_results = result_set.results
+
+    template_values = {
+        'current_page' : 'MY_EVENTS',
+        'view_url': self.request.url,
+        'user' : user_info,
+        'result_set': result_set,
+        'has_results' : view_data['has_results'],
+        'friends' : view_data['friends'],
+        'friends_by_event_id_js': view_data['friends_by_event_id_js'],
+      }
+    self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
+                                            template_values))
 
 class my_events_view(webapp.RequestHandler):
-  """TODO: implement and merge with friends_view"""
+  """Shows events that you and your friends like or are doing."""
   def get(self):
     """HTTP get method."""
     user_info = userinfo.get_user(self.request)
@@ -278,37 +318,6 @@ class my_events_view(webapp.RequestHandler):
     load_userinfo_into_dict(user_info, template_values)
 
     self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
-                                            template_values))
-
-class friends_view(webapp.RequestHandler):
-  """TODO: Merge this class with the my_events_view."""
-  def get(self):
-    """HTTP get method."""
-    user_info = userinfo.get_user(self.request)
-
-    if not user_info:
-      template_values = {
-        'current_page' : 'FRIENDS'
-      }
-      self.response.out.write(render_template(FRIENDS_TEMPLATE,
-                                              template_values))
-      return
-
-    is_debug = self.request.get('debug')
-    view_data = view_helper.get_data_for_friends_view(user_info, is_debug)
-    logging.info(repr(view_data))
-    template_values = {
-      'current_page' : 'FRIENDS',
-      'current_user_opps_result_set': view_data['current_user_opps_result_set'],
-      'has_results' : view_data['has_results'],
-      'friends' : view_data['friends'],
-      'total_friends' : user_info.total_friends,
-      'friend_total_opp_count': view_data['friend_total_opp_count'],
-      'friend_interests_by_oid_js': view_data['friend_interests_by_oid_js'],
-    }
-    load_userinfo_into_dict(user_info, template_values)
-
-    self.response.out.write(render_template(FRIENDS_TEMPLATE,
                                             template_values))
 
 class post_view(webapp.RequestHandler):
