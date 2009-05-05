@@ -4,9 +4,10 @@
     <div>
       <a class='valign noselect no_underline' href='/'><img border='0' id='logo_flag' class='valign' src='/images/logo.png'>
       <img border='0' id='logo_name' class='valign' src='/images/title-transp.png' alt='All For Good'></a>
-      <input type='text' id='keywords' defaultValue='keywords' class='valign'
-             onchange='submitForm("keywords"); return false;'
-             size='40' value='{{ keywords }}' />
+      <form onsubmit='submitForm("keywords"); return false;' class='valign'>
+        <input type='text' id='keywords' defaultValue='keywords' class='valign'
+               size='40' value='{{ keywords }}' />
+      </form>
       <img class='search_button valign pointer'
            onclick='submitForm("keywords"); return false;'
            height='28' src='/images/red-search-button.png'>

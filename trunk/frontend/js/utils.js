@@ -303,7 +303,8 @@ getClientLocation = function() {
   };
 }(); // executed inline to close over the 'clientLocationString' variable.
 
-/* Populate a text input field with a value, and revert to input.defaultValue
+/**
+ * Populate a text input field with a value, and revert to input.defaultValue
  * when value is ''.
  * @param {HTMLInputerElement} input Input element.
  * @param {string} value Value to set Input field to.
@@ -331,6 +332,19 @@ function setInputFieldValue(input, value) {
 
   set(value);
 }
+
+/**
+ * Retrieves the value of an inputfield, but returns '' if value==defaultValue
+ * @param {HTMLInputerElement} input Input element.
+ */
+function getInputFieldValue(input) {
+  if (input.value == input.getAttribute('defaultValue')) {
+    return '';
+  } else {
+    return input.value;
+  }
+}
+
 
 // Globals
 var queryParams = GetQueryParams();
