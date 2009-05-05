@@ -14,16 +14,6 @@ limitations under the License.
 */
 
 
-function broadcastEvent(div, eventUrl, eventTitle, eventSnippet) {
-  opensocial.requestCreateActivity(opensocial.newActivity(
-      {title: document.userDisplayName
-              + ' shared an event: <a href="' + eventUrl + '">' + eventTitle + '</a>',
-        body: eventSnippet}));
-  // TODO: This is a hack. We need to figure out the real ui here...
-  div.childNodes[1].src="images/broadcasticon-on.png";
-  div.setAttribute("onclick", "");
-}
-
 function shareEvent(div, eventUrl, eventTitle, eventSnippet) {
   google.friendconnect.requestInvite(document.userDisplayName +
                                      " wants you to check out this event! "
@@ -143,6 +133,10 @@ function toggleInterest(resultIndex) {
   var success = function(data, textStatus) {
     result.liked = newInterest;
     div.style.display = result.liked ? 'none' : '';
+
+    if (result.liked) {
+      createSupportsActivity(result.title, result.shortUrl, result.url);
+    }
 
     updateInterestInfoDisplay(resultIndex);
   };

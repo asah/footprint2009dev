@@ -6,7 +6,9 @@
   <a href='/myevents'>Your Events</a> |
 
   {% ifequal user.account_type "friendconnect"%}
-    <!--<a href="#" onclick="google.friendconnect.requestSettings()">Settings</a> |-->
+    <!-- Note: This link to Settings must be included. If it is not included the user has no way to adjust their privacy controls. -->
+    <!-- So things like their activities will never go anywhere. -->
+    <a href="#" onclick="google.friendconnect.requestSettings()">Settings</a> |
     <a href="#" onclick="google.friendconnect.requestInvite()">Invite</a> |
     <a href="#" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
   {% else %} {% ifequal user.account_type "facebook" %}
@@ -32,16 +34,37 @@
       dialog.setContentHeight(400);
       dialog.show();
     }
+
+    function createSupportsActivity(eventName, eventWebsite, eventUrl) {
+      var eventRedirectUrl = 'http://www.AllForGood.org/url?q=' + encodeURIComponent(eventUrl);
+      var fcString = 'supports <a href="' + eventRedirectUrl + '">' + eventName + ' on ' + eventWebsite;
+      var fbString = fcString + '</a> via <a href="http://www.AllForGood.org">AllForGood.org</a>';
+
+      createActivity(fbString, fcString);
+    }
+
+    function createActivity(fbString, fcString) {
+      {% ifequal user.account_type "friendconnect"%}
+        var activity = opensocial.newActivity(
+            {title: '{{user.display_name}} ' + fcString});
+        opensocial.requestCreateActivity(activity, "HIGH");
+      {% else %} {% ifequal user.account_type "facebook" %}
+        var templateId = '79242242909'; // Template of the format "<user> <description>" 
+        FB.Facebook.apiClient.feed_publishUserAction(templateId, {'description' : fbString}, 
+          [], '', 1, '', function(){});
+      {% endifequal %}{% endifequal %} 
+    }
+
 </script>
     {% else %}
 <div class='sign_in'>
   Sign in with <span id="signInProvider"></span> :
-  <img height='18px' width='18px' src="images/signin-yahoo.gif" alt="Yahoo!" title="Yahoo!" onclick="google.friendconnect.requestSignIn()"/>
-  <img height='18px' width='18px'  src="images/signin-google.gif" alt="Google" title="Google" onclick="google.friendconnect.requestSignIn()"/>
-  <img height='18px' width='18px' src="images/signin-aol.gif" alt="AOL" title="AOL" onclick="google.friendconnect.requestSignIn()"/>
+  <img height='18px' width='18px' src="images/signin-yahoo.gif" alt="Yahoo!" title="Yahoo!" onclick="google.friendconnect.requestSignIn('YAHOO')"/>
+  <img height='18px' width='18px'  src="images/signin-google.gif" alt="Google" title="Google" onclick="google.friendconnect.requestSignIn('GOOGLE')"/>
+  <img height='18px' width='18px' src="images/signin-aol.gif" alt="AOL" title="AOL" onclick="google.friendconnect.requestSignIn('AOL')"/>
   <img height='18px' width='18px' src="images/signin-facebook.gif" alt="Facebook" title="Facebook" onclick="requestFacebookSignIn()"/>
   <!--img height='18px' width='18px' src="images/signin-myspace.gif" alt="MySpace" title="MySpace" onclick="google.friendconnect.requestSignIn()"/-->
-  <img height='18px' width='18px' src="images/signin-openid.gif" alt="OpenID" title="OpenID" onclick="google.friendconnect.requestSignIn()"/>
+  <img height='18px' width='18px' src="images/signin-openid.gif" alt="OpenID" title="OpenID" onclick="google.friendconnect.requestSignIn('OPENID')"/>
 
   <script type="text/javascript">
     function requestFacebookSignIn() {
