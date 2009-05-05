@@ -819,6 +819,8 @@ def guess_shortname(filename):
   """from the input filename, guess which feed this is."""
   if re.search("usa-?service", filename):
     return "usaservice"
+  if re.search(r'meetup', filename):
+    return "meetup"
   if re.search("habitat", filename):
     return "habitat"
   if re.search("spreadsheets[.]google[.]com", filename):
@@ -913,6 +915,8 @@ def guess_parse_func(inputfmt, filename):
   if inputfmt == "idealist":
     return "idealist", parse_idealist.parse
   if (inputfmt == None and re.search(r'idealist', filename)):
+    return "fpxml", parse_footprint.parse
+  if (inputfmt == None and re.search(r'meetup', filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == "fp_userpostings" or
       (inputfmt == None and re.search(r'(userpostings|/export/Posting)',
