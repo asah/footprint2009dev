@@ -53,6 +53,10 @@ handlers:
   static_files: templates/gadget.xml
   upload: templates/gadget.xml
 
+# autocompleter for search
+- url: /autocomplete/.*
+  script: autocomplete/main.py
+
 # Keep this last
 - url: /.*
   script: main.py

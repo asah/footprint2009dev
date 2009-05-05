@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 #
 
-"""script for loading into googlebase.
+"""
+script for loading into googlebase.
 Usage: load_gbase.py username password
 """
 
@@ -10,6 +11,7 @@ import re
 import logging
 import subprocess
 from datetime import datetime
+import footprint_lib
 
 USERNAME = ""
 PASSWORD = ""
@@ -18,7 +20,91 @@ LOGPATH = "/home/footprint/public_html/datahub/dashboard/"
 LOG_FN = LOGPATH + "load_gbase.log"
 DETAILED_LOG_FN = LOGPATH + "load_gbase_detail.log"
 
+# this file needs to be copied over to frontend/autocomplete/
+POPULAR_WORDS_FN = "popular_words.txt"
+
+STOPWORDS = set([
+  'a', 'about', 'above', 'across', 'after', 'afterwards', 'again', 'against',
+  'all', 'almost', 'alone', 'along', 'already', 'also', 'although', 'always',
+  'am', 'among', 'amongst', 'amoungst', 'amount', 'an', 'and', 'another', 'any',
+  'anyhow', 'anyone', 'anything', 'anyway', 'anywhere', 'are', 'around', 'as',
+  'at', 'back', 'be', 'became', 'because', 'become', 'becomes', 'becoming',
+  'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside',
+  'besides', 'between', 'beyond', 'bill', 'both', 'bottom', 'but', 'by', 'call',
+  'can', 'cannot', 'cant', 'co', 'computer', 'con', 'could', 'couldnt', 'cry',
+  'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each',
+  'eg', 'eight', 'either', 'eleven', 'else', 'elsewhere', 'empty', 'enough',
+  'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere',
+  'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five',
+  'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front','full',
+  'further', 'get', 'give', 'go', 'had', 'has', 'hasnt', 'have', 'he', 'hence',
+  'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself',
+  'him', 'himself', 'his', 'how', 'however', 'hundred', 'i', 'ie', 'if', 'in',
+  'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep',
+  'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may',
+  'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most',
+  'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither',
+  'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone',
+  'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once',
+  'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours',
+  'ourselves', 'out', 'over', 'own', 'part', 'per', 'perhaps', 'please', 'put',
+  'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems',
+  'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere',
+  'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'sometime',
+  'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than',
+  'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there',
+  'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they',
+  'thick', 'thin', 'third', 'this', 'those', 'though', 'three', 'through',
+  'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward',
+  'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon',
+  'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when',
+  'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein',
+  'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who',
+  'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within',
+  'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves',
+  # custom stopwords for footprint
+  'url', 'amp', 'quot', 'help', 'http', 'search', 'nbsp', 'need', 'cache',
+  'vol', 'housingall', 'wantedall', 'personalsall', 'net', 'org', 'www',
+  'gov', 'yes', 'no', '999',
+  ])
+
+def print_progress(msg):
+  """print progress message-- shutup pylint"""
+  print str(datetime.now())+": "+msg
+
+KNOWN_WORDS = {}
+def process_popular_words(name, url):
+  """fetch this URL and update the dictionary of popular words."""
+  # TODO: handle phrases (via whitelist, then later do something smart.
+  print_progress("fetching %s from %s" % (name, url))
+  urlfh = footprint_lib.open_input_filename(url)
+  content = urlfh.read()
+  urlfh.close()
+  print_progress("cleaning content, %d bytes" % len(content))
+  cleaner_regexp = re.compile('<[^>]*>', re.DOTALL)
+  cleaned_content = re.sub(cleaner_regexp, '', content).lower()
+  print_progress("splitting words, %d bytes" % len(cleaned_content))
+  words = re.split(r'[^a-zA-Z0-9]+', cleaned_content)
+  print_progress("loading words")
+  for word in words:
+    # ignore common english words
+    if word in STOPWORDS:
+      continue
+    # ignore short words
+    if len(word) <= 2:
+      continue
+    if word not in KNOWN_WORDS:
+      KNOWN_WORDS[word] = 0
+    KNOWN_WORDS[word] += 1
+  print_progress("cleaning rare words from %d words" % len(KNOWN_WORDS))
+  # clean to reduce ram needs
+  for word in KNOWN_WORDS.keys():
+    if KNOWN_WORDS[word] < 2:
+      del KNOWN_WORDS[word]
+  print_progress("done: word dict size %d words" % len(KNOWN_WORDS))
+
 def append_log(outstr):
+  """append to the detailed and truncated log, for stats collection."""
   outfh = open(DETAILED_LOG_FN, "a")
   outfh.write(outstr)
   outfh.close()
@@ -91,7 +177,7 @@ def run_shell(command, silent_ok=False, universal_newlines=True,
 
 def load_gbase(name, url):
   """shutup pylint."""
-  print str(datetime.now())+": loading", name, "from", url
+  print_progress("loading "+name+" from "+url)
   # run as a subprocess so we can ignore failures and keep going
   # later, we'll run these concurrently, but for now we're RAM-limited
   # ignore retcode
@@ -103,7 +189,31 @@ def load_gbase(name, url):
     print name+":STDERR: ", re.sub(r'\n', '\n'+name+':STDERR: ', stderr)
   if retcode and retcode != 0:
     print name+":RETCODE: "+str(retcode)
-  print str(datetime.now())+": load_gbase: done."
+  print_progress("load_gbase: done.")
+
+  # TODO: this causes the URL to be downloaded twice-- once for popular
+  # words, and once for loading...
+  process_popular_words(name, url)
+
+
+def loaders():
+  """put all loaders in one function for easier testing."""
+  # old custom feed
+  #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
+  #           "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
+  #           "en.open.atom.gz")
+  load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
+  load_gbase("idealist", "http://feeds.idealist.org/xml/"+
+             "footprint-volunteer-opportunities.xml")
+  load_gbase("gspreadsheets",
+             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
+  # note: craiglist crawler is run async to this
+  load_gbase("craigslist", "craigslist-cache.txt")
+  load_gbase("americorps",
+             "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
+  load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
+  load_gbase("handson",
+             "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
 
 def main():
   """shutup pylint."""
@@ -113,21 +223,21 @@ def main():
     sys.exit(1)
   USERNAME = sys.argv[1]
   PASSWORD = sys.argv[2]
-  # old custom feed
-  #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
-  #           "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
-  #           "en.open.atom.gz")
-  load_gbase("idealist", "http://feeds.idealist.org/xml/"+
-             "footprint-volunteer-opportunities.xml")
-  load_gbase("gspreadsheets",
-             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
-  load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
-  # note: craiglist crawler is run async to this
-  load_gbase("craigslist", "craigslist-cache.txt")
-  load_gbase("americorps",
-             "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
-  load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
-  load_gbase("handson",
-             "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
+
+  loaders()
+
+  print_progress("final cleanse: keeping only words appearing 10 times")
+  for word in KNOWN_WORDS.keys():
+    if KNOWN_WORDS[word] < 10:
+      del KNOWN_WORDS[word]
+  sorted_words = list(KNOWN_WORDS.iteritems())
+  sorted_words.sort(cmp=lambda a, b: cmp(b[1], a[1]))
+
+  popfh = open("popular_words.txt", "w")
+  for word, freq in sorted_words:
+    popfh.write(str(freq)+"\t"+word+"\n")
+  popfh.close()
+  print_progress("done writing "+POPULAR_WORDS_FN)
+
 if __name__ == "__main__":
   main()

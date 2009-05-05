@@ -24,6 +24,15 @@
     </div>
   </div>
 
+  <!-- TODO: move this to the bottom of the page -->
+  <link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css" /> 
+  <script src='/js/jquery.autocomplete.js'></script>
+  <script type="text/javascript">
+    google.setOnLoadCallback(function() {
+      $("#keywords").autocomplete("/autocomplete/query");
+    });
+  </script>
+
 
   {% if not no_login %}
   <script src='http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' type='text/javascript'></script>
