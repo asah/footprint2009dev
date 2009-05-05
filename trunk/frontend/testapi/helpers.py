@@ -184,7 +184,6 @@ class ApiTesting(object):
       """report test success. returns True to make it easy on callers."""
       res = TestResults(test_type=self.test_type, result_code=TestResultCode.PASS)
       res.put()
-    self.web_app.response.set_status(200)
     self.output('<p class="result success">Passed</p>')
     return True
 
@@ -197,7 +196,7 @@ class ApiTesting(object):
       res = TestResults(test_type=self.test_type, result_code=code,
                         result_string=msg)
       res.put()
-    self.web_app.response.set_status(500)
+    self.num_failures += 1
     self.output('<p class="result fail">Fail. <span>'+msg+'</span></p>')
     return False
 
@@ -338,7 +337,7 @@ class ApiTesting(object):
   def test_num(self):
     """test whether the result set has a given number of results."""
     expected_count = int(random_item(['7', '14', '21', '28', '57']))
-    result_set = self.get_result_set({'num':expected_count})
+    result_set = self.get_result_set({'q':'in', 'num':expected_count})
     if not self.assert_nonempty_results(result_set):
       return False
     if len(result_set) != expected_count:
@@ -463,8 +462,10 @@ class ApiTesting(object):
     start1 = 1
     start2 = 5
     num_items = 10
-    result_set1 = self.get_result_set({'num': num_items, 'start': start1})
-    result_set2 = self.get_result_set({'num': num_items, 'start': start2})
+    result_set1 = self.get_result_set({'q':'in', 
+        'num': num_items, 'start': start1})
+    result_set2 = self.get_result_set({'q':'in', 
+        'num': num_items, 'start': start2})
     if (not self.assert_nonempty_results(result_set1) or
         not self.assert_nonempty_results(result_set2)):
       return False

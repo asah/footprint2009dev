@@ -84,10 +84,15 @@ class RunTests(webapp.RequestHandler):
     outstr += '<p>API url: ' + apiUrl + '</p>'
     self.response.out.write(outstr)
 
+    final_status = 200
     responseTypes = responseTypes.split(',')
     for responseType in responseTypes:
       api_testing = testapi.helpers.ApiTesting(self)
       api_testing.run_tests(testType, apiUrl, responseType, read_from_cache)
+      if api_testing.num_failures > 0 and final_status != 500:
+        final_status = 500
+
+    self.response.set_status(final_status)
     
 APP = webapp.WSGIApplication(
   [('/testapi/run', RunTests),
