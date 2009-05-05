@@ -425,9 +425,10 @@ initMap = function() {
  * @param {string} snippet a snippet.
  * @param {Date} startdate a start date.
  * @param {Date} enddate an end date.
+ * @param {string} shortUrl the short version of the url.
  */
 function SearchResult(url, title, location, snippet, startdate, enddate,
-                      itemId, baseUrl, liked) {
+                      itemId, baseUrl, liked, shortUrl) {
   this.url = url;
   this.title = title;
   this.location = location;
@@ -437,6 +438,7 @@ function SearchResult(url, title, location, snippet, startdate, enddate,
   this.itemId = itemId;
   this.baseUrl = baseUrl;
   this.liked = liked;
+  this.shortUrl = shortUrl;
 }
 
 var lastSearchQuery = new Query('', '', 0, {});
