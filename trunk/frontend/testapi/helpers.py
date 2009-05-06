@@ -196,6 +196,7 @@ class ApiTesting(object):
       res = TestResults(test_type=self.test_type, result_code=code,
                         result_string=msg)
       res.put()
+    self.web_app.response.set_status(500)
     self.num_failures += 1
     self.output('<p class="result fail">Fail. <span>'+msg+'</span></p>')
     return False
