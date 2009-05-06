@@ -198,7 +198,7 @@ def load_gbase(name, url):
 
 def loaders():
   """put all loaders in one function for easier testing."""
-  load_gbase("http://api.meetup.com/footprint?"+
+  load_gbase("meetup", "http://api.meetup.com/footprint?"+
              "key=2c24625a70343bb68451e337e714b22")
   # old custom feed
   #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
