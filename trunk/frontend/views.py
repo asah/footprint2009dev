@@ -77,7 +77,7 @@ template.register_template_library('templatetags.dateutils')
 
 # TODO: not safe vs. spammers to checkin... but in our design,
 # the worst that happens is a bit more spam in our moderation
-# queue, i.e. no real badness, just slightly longer review 
+# queue, i.e. no real badness, just slightly longer review
 # cycle until we can regen a new key.  Meanwhile, avoiding this
 # outright is a big pain for launch, regen is super easy and
 # it could be a year+ before anybody notices.  Note: the varname
