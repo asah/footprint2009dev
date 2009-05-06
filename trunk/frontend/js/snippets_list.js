@@ -135,7 +135,7 @@ function toggleInterest(resultIndex) {
     div.style.display = result.liked ? 'none' : '';
 
     if (result.liked) {
-      createSupportsActivity(result.title, result.shortUrl, result.url);
+      createSupportsActivity(result.title, result.hostWebsite, result.url);
     }
 
     updateInterestInfoDisplay(resultIndex);

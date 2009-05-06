@@ -402,10 +402,10 @@ initMap = function() {
  * @param {string} itemId the item id.
  * @param {string} baseUrl the base url.
  * @param {boolean} liked flag if liked.
- * @param {string} shortUrl the short version of the url.
+ * @param {string} hostWebsite the website hosting the event (volunteermatch.org etc)
  */
 function SearchResult(url, title, location, snippet, startdate, enddate,
-                      itemId, baseUrl, liked, shortUrl) {
+                      itemId, baseUrl, liked, hostWebsite) {
   this.url = url;
   this.title = title;
   this.location = location;
@@ -415,7 +415,7 @@ function SearchResult(url, title, location, snippet, startdate, enddate,
   this.itemId = itemId;
   this.baseUrl = baseUrl;
   this.liked = liked;
-  this.shortUrl = shortUrl;
+  this.hostWebsite = hostWebsite;
 }
 
 var lastSearchQuery = new Query('', '', 0, {});

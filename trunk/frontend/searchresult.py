@@ -63,6 +63,9 @@ class SearchResult(object):
     self.xml_url = escape(url) + "#" + self.item_id
     parsed_url = urlparse.urlparse(url)
     self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
+    self.host_website = parsed_url.netloc
+    if self.host_website.startswith("www."):
+      self.host_website = self.host_website[4:]
     # user's expressed interest
     self.interest = None
     # stats from other users.
@@ -262,5 +265,3 @@ class SearchResultSet(object):
     else:
       self.estimated_merged_results = int(self.estimated_results * \
           self.num_merged_results / len(self.results))
-
-
