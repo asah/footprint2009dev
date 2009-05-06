@@ -142,6 +142,7 @@ class home_page_view(webapp.RequestHandler):
     user = userinfo.get_user(self.request)
     template_values = {
       'user' : user,
+      'current_page' : 'HOMEPAGE',
     }
     self.response.out.write(render_template(HOMEPAGE_TEMPLATE,
                                            template_values))

@@ -424,3 +424,12 @@ h1 {
 .undo_link {
   color: #777;
 }
+
+#example_searches {
+  color: white;
+}
+
+#example_searches A {
+  text-decoration: none;
+  font-weight: bold;
+}
