@@ -139,6 +139,7 @@ class test_page_views_view(webapp.RequestHandler):
 class home_page_view(webapp.RequestHandler):
   """default homepage for consumer UI."""
   def get(self):
+    """HTTP get method."""
     user = userinfo.get_user(self.request)
     template_values = {
       'user' : user,
@@ -162,6 +163,8 @@ class consumer_ui_search_view(webapp.RequestHandler):
 
     self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                             template_values))
+
+
 class search_view(webapp.RequestHandler):
   """run a search.  note various output formats."""
   def get(self):
@@ -250,6 +253,9 @@ class ui_snippets_view(webapp.RequestHandler):
         'result_set': result_set,
         'current_page' : 'SEARCH',
         'has_results' : (result_set.num_merged_results > 0),  # For django.
+        'last_result_index' :
+            result_set.clip_start_index + len(result_set.clipped_results),
+        'display_nextpage_link' : result_set.has_more_results,
         'view_url': self.request.url,
       }
     if self.request.get('minimal_snippets_list'):
