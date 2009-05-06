@@ -3,7 +3,7 @@
 <div class='sign_in'>
   Hello, {{ user.display_name }} |
 
-  <a href='/myevents'>Your Events</a> |
+  <a href='/myevents'>Your Events</a> <a href='/myevents'><img border=0 src='/images/like.gif'></a> |
 
   {% ifequal user.account_type "friendconnect"%}
     <!-- Note: This link to Settings must be included. If it is not included the user has no way to adjust their privacy controls. -->
