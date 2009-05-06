@@ -1,6 +1,6 @@
    <nobr>
     {% if user %}
-<div class='sign_in'>
+<div id='sign_in'>
   Hello, {{ user.display_name }} |
 
   <a href='/myevents'>Your Events</a> <a href='/myevents'><img border=0 src='/images/like.gif'></a> |
@@ -57,7 +57,7 @@
 
 </script>
     {% else %}
-<div class='sign_in'>
+<div id='sign_in'>
   Sign in with <span id="signInProvider"></span> :
   <img height='18px' width='18px' src="images/signin-yahoo.gif" alt="Yahoo!" title="Yahoo!" onclick="google.friendconnect.requestSignIn('YAHOO')"/>
   <img height='18px' width='18px'  src="images/signin-google.gif" alt="Google" title="Google" onclick="google.friendconnect.requestSignIn('GOOGLE')"/>

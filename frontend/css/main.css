@@ -40,10 +40,10 @@ form {
   margin-bottom: 10px;
 }
 
-#header a:link { color: #fff }
-#header a:visited { color: #fff }
-#header a:hover { color: #fff }
-#header a:active { color: #fff }
+#header a:link { color: white }
+#header a:visited { color: white }
+#header a:hover { color: white }
+#header a:active { color: white }
 
 #footer {
   margin: 0px 15px 15px 22px;
@@ -116,17 +116,22 @@ form {
   padding: 3px 5px;
 }
 
-.sign_in {
+#sign_in {
   font-size: small;
   font-weight: bold;
   padding: 5px;
   color: white;
 }
 
-.sign_in img {
+#sign_in img {
   padding-right: 5px;
   margin-bottom: -5px;
 }
+
+#sign_in a:link { color: white }
+#sign_in a:visited { color: white }
+#sign_in a:hover { color: white }
+#sign_in a:active { color: white }
 
 /** Content sections **/
 #content_outer {
