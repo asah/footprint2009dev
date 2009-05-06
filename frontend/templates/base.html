@@ -20,6 +20,11 @@
 
     // ...and one to queue JS callbacks on body unload event.
     var onUnloadWorkQueue = new WorkQueue();
+
+    var currentPageName = '{{ current_page }}';
+
+    var popularSearches = [ 'Clean up', 'Education', 'Hunger', 'Tutor',
+      'Homeless', 'Seniors', 'Health', 'Animals', 'Hospital', 'Developer' ];
   </script>
 {% block js_files %}{% endblock %}
 

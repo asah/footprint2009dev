@@ -30,11 +30,9 @@ if (coords) {
 el('more_link').href = '/search?' + vol_loc_term;
 
 // Populate the popular searches list.
-var searches = [ 'Clean up', 'Education', 'Hunger', 'Tutor',
-    'Homeless', 'Seniors', 'Health', 'Animals', 'Hospital', 'Developer' ];
-for (var i = 0; i < searches.length; i++) {
-  var html = '<a href="/search?q=' + searches[i] + '">' +
-      searches[i] + '<' + '\a>';
+for (var i = 0; i < popularSearches.length; i++) {
+  var html = '<a href="/search?q=' + popularSearches[i] + '">' +
+      popularSearches[i] + '<' + '\a>';
   el('popular_list').innerHTML += html + '<br>';
 }
 
