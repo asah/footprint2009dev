@@ -871,14 +871,19 @@ def ftp_to_base(filename, ftpinfo, instr):
   print_progress("FTP server says: "+welcomestr, filename)
   ftp.login(user, passwd)
   print_progress("uploading filename "+dest_fn, filename)
-  for i in range(10):
+  success = False
+  while not success:
     try:
       ftp.storbinary("STOR " + dest_fn, data_fh, 8192)
+      success = True
     except:
       # probably ftplib.error_perm: 553: Permission denied on server. (Overwrite)
       print_progress("upload failed-- sleeping and retrying...")
       time.sleep(1)
-  print_progress("done uploading.")
+  if success:
+    print_progress("done uploading.")
+  else:
+    print_progress("giving up.")
   ftp.quit()
   data_fh.close()
 
@@ -906,7 +911,11 @@ def guess_parse_func(inputfmt, filename):
     #parsefunc = parse_handsonnetwork.ParseFPXML
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'habitat', filename)):
-    return "fpxml", parse_footprint.parse
+    def parse_habitat(instr, maxrecs, progress):
+      # fixup bad escaping
+      newstr = re.sub(r'&code=', '&amp;code=', instr)
+      return parse_footprint.parse_fast(newstr, maxrecs, progress)
+    return "badfpxml", parse_habitat
   if (inputfmt == None and re.search(r'volunteer[.]gov', filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'(whichoneis[.]com|beextra[.]org)',
