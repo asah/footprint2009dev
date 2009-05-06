@@ -116,7 +116,7 @@ Query.prototype.getUrlQuery = function() {
 
   // Pagination
   addQueryParam('num', NUM_PER_PAGE)
-  addQueryParam('start', (me.getPageNum() * NUM_PER_PAGE));
+  addQueryParam('start', me.getPageNum() * NUM_PER_PAGE + 1);  // 1-indexed.
 
   // Location
   var location = me.getLocation();
@@ -146,13 +146,13 @@ function NewQueryFromUrlParams() {
 
   var location = getHashOrQueryParam('vol_loc', getClientLocation().coords);
 
-  var start = Number(getHashOrQueryParam('start', '0'));
-  start = Math.max(start, 0);
+  var start = Number(getHashOrQueryParam('start', '1'));
+  start = Math.max(start, 1);
 
   var numPerPage = Number(getHashOrQueryParam('num', NUM_PER_PAGE));
   numPerPage = Math.max(numPerPage, 1);
 
-  var pageNum = start / numPerPage;
+  var pageNum = (start-1) / numPerPage;
 
   var timePeriod = getHashOrQueryParam('timeperiod');
 
@@ -327,13 +327,13 @@ function goToPage(pageNum) {
   }
 }
 
-function renderPaginator(div, totalNum) {
+function renderPaginator(div, totalNum, forceShowNextLink) {
   if (!lastSearchQuery || searchResults.length == 0 || totalNum == 0) {
     return;
   }
 
   var numPages = parseInt(Math.ceil(totalNum / NUM_PER_PAGE));
-  if (numPages == 1) {
+  if (numPages == 1 && !forceShowNextLink) {
     return;
   }
   if (numPages > 20) {
@@ -351,14 +351,18 @@ function renderPaginator(div, totalNum) {
   if (currentPageNum > 0) {
     renderLink(currentPageNum - 1, 'Previous');
   }
-  for (var i = 0; i < numPages; i++) {
-    if (i == currentPageNum) {
-      html.push('' + (i+1) + ' ');
-    } else {
-      renderLink(i, i+1);
+
+  if (numPages > 1) {
+    for (var i = 0; i < numPages; i++) {
+      if (i == currentPageNum) {
+        html.push('' + (i+1) + ' ');
+      } else {
+        renderLink(i, i+1);
+      }
     }
   }
-  if (currentPageNum != numPages - 1) {
+
+  if (currentPageNum != numPages - 1 || forceShowNextLink) {
     renderLink(currentPageNum + 1, 'Next');
   }
 

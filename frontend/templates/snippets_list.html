@@ -127,7 +127,7 @@
 <div id='paginator'>
 </div>
 <script>
-  renderPaginator(el('paginator'), {{result_set.estimated_merged_results}});
+renderPaginator(el('paginator'), {{last_result_index}}, {{display_nextpage_link|yesno:"true,false"}});
   initMap();
 </script>
 
