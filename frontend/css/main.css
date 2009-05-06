@@ -431,6 +431,8 @@ h1 {
   font-weight: bold;
   float: left;
   margin-right: 8px;
+  width: 1em;
+  text-align: right;
 }
 
 .undo_link {
