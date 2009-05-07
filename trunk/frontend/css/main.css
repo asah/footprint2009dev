@@ -271,11 +271,13 @@ form {
 }
 
 #loading {
-  width: 100%;
-  font-size: 24px;
-  color: #aaa;
   text-align: center;
-  padding-top: 60px;
+  background: #FFFDF1;
+  color: #333;
+  border: 1px solid #333;
+  margin: 0px 0px 0px 26px;
+  padding: 2px 8px;
+  font-size: 11px;
 }
 
 #paginator {
