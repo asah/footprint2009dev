@@ -167,24 +167,40 @@ function toggleInterest(resultIndex) {
 function updateInterestInfoDisplay(resultIndex) {
   var result = searchResults[resultIndex];
   var html = '';
-  if (result.liked) {
+
+  var friends = friendsByEventId[result.itemId] || [];
+
+  if (result.liked || friends.length) {
     html += '<img class="like_icon" src="/images/like.gif">';
     
-    var nameList = 'You';
+    var nameList = result.liked ? 'You, ' : '';
   
     // Display friends' info, if any.
-    var friends = friendsByEventId[result.itemId];
-    if (friends) {
+    if (friends.length) {
       for (var i = 0; i < friends.length; i++) {
         var friendId = friends[i];
         var info = friendsInfo[friendId];
         if (info) {
-          nameList += ', ' + info.name;
+          nameList += info.name;
+          if (i < friends.length - 1) {
+            nameList += ', ';
+          }
         }
       }
     }
 
-    html += nameList + ' think this is good (' +
+    var youAndFriendsCount = friends ? friends.length : 0 +
+        result.liked ? 1 : 0;
+
+    var strangerInterestCount = result.totalInterestCount - youAndFriendsCount;
+    if (strangerInterestCount > 0) {
+      nameList += ' and ' + strangerInterestCount + ' more';
+    }
+
+    html += nameList;
+    html += youAndFriendsCount + strangerInterestCount == 1 ?
+        ' thinks' : ' think';
+    html += ' this is good (' +
         '<a href="javascript:toggleInterest(' + resultIndex +
         ');void(0);">undo</a>)';  
   }

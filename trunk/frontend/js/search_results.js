@@ -284,12 +284,16 @@ executeSearchFromHashParams = function() {
 
     var success = function(text, status) {
       setInputFieldValue(el('keywords'), query.getKeywords());
-      whenFilterWidget.setValue(query.getTimePeriod());
+      if (whenFilterWidget) {
+        whenFilterWidget.setValue(query.getTimePeriod());
+      }
       var regexp = new RegExp('[a-zA-Z]')
       if (regexp.exec(query.getLocation())) {
         // Update location field in UI, but only if location text isn't
         // just a latlon geocode.
-        setInputFieldValue(el('location'), query.getLocation());
+        if (el('location')) {
+          setInputFieldValue(el('location'), query.getLocation());
+        }
       }
       if (updateMap) {
         asyncLoadManager.addCallback('map', function() {
@@ -470,10 +474,11 @@ initMap = function() {
  * @param {string} itemId the item id.
  * @param {string} baseUrl the base url.
  * @param {boolean} liked flag if liked.
- * @param {string} hostWebsite the website hosting the event (volunteermatch.org etc)
+ * @param {number} totalInterestCount total users who flagged interest.
+ * @param {string} hostWebsite the website hosting the event (volunteermatch.org etc).
  */
 function SearchResult(url, title, location, snippet, startdate, enddate,
-                      itemId, baseUrl, liked, hostWebsite) {
+                      itemId, baseUrl, liked, totalInterestCount, hostWebsite) {
   this.url = url;
   this.title = title;
   this.location = location;
@@ -483,6 +488,7 @@ function SearchResult(url, title, location, snippet, startdate, enddate,
   this.itemId = itemId;
   this.baseUrl = baseUrl;
   this.liked = liked;
+  this.totalInterestCount = totalInterestCount;
   this.hostWebsite = hostWebsite;
 }
 
