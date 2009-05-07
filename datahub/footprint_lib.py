@@ -823,6 +823,8 @@ def guess_shortname(filename):
     return "meetup"
   if re.search("habitat", filename):
     return "habitat"
+  if re.search("americansolutions", filename):
+    return "americansolutions"
   if re.search("spreadsheets[.]google[.]com", filename):
     return "gspreadsheet"
   if re.search("(handson|hot.footprint)", filename):
@@ -917,6 +919,8 @@ def guess_parse_func(inputfmt, filename):
       return parse_footprint.parse_fast(newstr, maxrecs, progress)
     return "badfpxml", parse_habitat
   if (inputfmt == None and re.search(r'volunteer[.]gov', filename)):
+    return "fpxml", parse_footprint.parse
+  if (inputfmt == None and re.search(r'americansolutions', filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'(whichoneis[.]com|beextra[.]org)',
                                      filename)):
