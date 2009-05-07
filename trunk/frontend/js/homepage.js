@@ -31,7 +31,7 @@ el('more_link').href = '/search?' + vol_loc_term;
 
 // Populate the popular searches list.
 for (var i = 0; i < popularSearches.length; i++) {
-  var html = '<a href="/search?q=' + popularSearches[i] + '">' +
+  var html = '<a href="/search#q=' + popularSearches[i] + '">' +
       popularSearches[i] + '<' + '\a>';
   el('popular_list').innerHTML += html + '<br>';
 }
