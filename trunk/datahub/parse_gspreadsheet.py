@@ -35,27 +35,49 @@ import xml_helpers as xmlh
 import re
 import urllib
 import sys
+import time
 from datetime import datetime
 
+CURRENT_ROW = None
+
 def parser_fatal(msg):
+  if CURRENT_ROW != None:
+    msg = "row "+str(CURRENT_ROW)+": "+msg
   print "parse_gspreadsheet FATAL ERROR: "+msg
   sys.exit(1)
+
+def parser_warn(msg):
+  if CURRENT_ROW != None:
+    msg = "row "+str(CURRENT_ROW)+": "+msg
+  print "parse_gspreadsheet WARNING: "+msg
 
 def recordval(record, key):
   if key in record:
     return str(record[key])
   return ""
 
-known_orgs = {}
+KNOWN_ORGS = {}
+
+def get_dtval(record, field_name):
+  val = recordval(record, field_name).strip()
+  if val != "" and not re.match(r'\d\d?/\d\d?/\d\d\d\d', val):
+    parser_fatal("bad value in "+field_name+": '"+val+"'-- try MM/DD/YYYY")
+  return val
+
+def get_tmval(record, field_name):
+  val = recordval(record, field_name).strip()
+  if val != "" and not re.match(r'\d?\d:\d\d(:\d\d)?', val):
+    parser_fatal("bad value in "+field_name+": '"+val+"'-- try HH:MM:SS")
+  return val
 
 def record_to_fpxml(record):
   fpxml = ""
   fpxml += '<VolunteerOpportunity>'
   fpxml += xmlh.output_val("volunteerOpportunityID", recordval(record, 'oppid'))
   orgname = recordval(record,'SponsoringOrganization')
-  if orgname not in known_orgs:
-    known_orgs[orgname] = len(known_orgs)
-  fpxml += xmlh.output_val("sponsoringOrganizationID", known_orgs[orgname])
+  if orgname not in KNOWN_ORGS:
+    KNOWN_ORGS[orgname] = len(KNOWN_ORGS)
+  fpxml += xmlh.output_val("sponsoringOrganizationID", KNOWN_ORGS[orgname])
   fpxml += xmlh.output_val("title", recordval(record,'OpportunityTitle'))
   fpxml += '<dateTimeDurations>'
   fpxml += '<dateTimeDuration>'
@@ -64,10 +86,18 @@ def record_to_fpxml(record):
     fpxml += xmlh.output_val('openEnded', 'Yes')
   else:
     fpxml += xmlh.output_val('openEnded', 'No')
-    fpxml += xmlh.output_val('startDate', recordval(record,'StartDate'))
-    fpxml += xmlh.output_val('startTime', recordval(record,'StartTime'))
-    fpxml += xmlh.output_val('endDate', recordval(record,'EndDate'))
-    fpxml += xmlh.output_val('endTime', recordval(record,'EndTime'))
+    startdtval = get_dtval(record, 'StartDate')
+    if startdtval != "":
+      fpxml += xmlh.output_val('startDate', startdtval)
+    starttmval = get_tmval(record, 'StartTime')
+    if starttmval != "":
+      fpxml += xmlh.output_val('startTime', starttmval)
+    enddtval = get_dtval(record, 'EndDate')
+    if enddtval != "":
+      fpxml += xmlh.output_val('endDate', enddtval)
+    endtmval = get_tmval(record, 'EndTime')
+    if endtmval != "":
+      fpxml += xmlh.output_val('endTime', endtmval)
   freq = recordval(record,'Frequency').lower()
   if freq == "" or freq.find("once") >= 0:
     fpxml += '<iCalRecurrence/>'
@@ -80,7 +110,7 @@ def record_to_fpxml(record):
   elif freq.find("monthly") >= 0:
     fpxml += '<iCalRecurrence>FREQ=MONTHLY</iCalRecurrence>'
   else:
-    parser_fatal("unsupported frequency: '"+recordval(record,'Frequency')+"'")
+    parser_warn("unsupported frequency: '"+recordval(record,'Frequency')+"'-- skipping")
   fpxml += xmlh.output_val('commitmentHoursPerWeek', recordval(record,'CommitmentHours'))
   fpxml += '</dateTimeDuration>'
   fpxml += '</dateTimeDurations>'
@@ -134,7 +164,7 @@ def parse_gspreadsheet(instr, data, updated, progress):
   maxrow = maxcol = 0
   for i, match in enumerate(re.finditer(regexp, instr)):
     if progress and i > 0 and i % 250 == 0:
-      print datetime.now()+": ", i, " cells processed."
+      print str(datetime.now())+": ", i, " cells processed."
     lastupd = re.sub(r'([.][0-9]+)?Z?$', '', match.group(4)).strip()
     #print "lastupd='"+lastupd+"'"
     updated[match.group(1)] = lastupd.strip("\r\n\t ")
@@ -243,11 +273,14 @@ def parse(instr, maxrecs, progress):
       field_name = "SeniorOnly"
     elif header_str.find("sex") >= 0 or header_str.find("gender") >= 0:
       field_name = "SexRestrictedTo"
+    elif header_str.find("volunteer appeal") >= 0:
+      field_name = None
     else:
       parser_fatal("couldn't map header '"+header_str+"' to a field name.")
-    header_colidx[field_name] = header_col
-    header_names[header_col] = field_name
-    #print header_str, "=>", field_name
+    if field_name != None:
+      header_colidx[field_name] = header_col
+      header_names[header_col] = field_name
+      #print header_str, "=>", field_name
     header_col += 1
 
   if len(header_names) < 10:
@@ -263,14 +296,15 @@ def parse(instr, maxrecs, progress):
     data_startrow += 1
 
   # find the data
-  row = data_startrow
+  global CURRENT_ROW
+  CURRENT_ROW = row = data_startrow
   blankrows = 0
   MAX_BLANKROWS = 2
   volopps = '<VolunteerOpportunities>'
   numorgs = numopps = 0
   while True:
     blankrow = True
-    rowstr = "row="+str(row)+"\n"
+    #rowstr = "row="+str(row)+"\n"
     record = {}
     record['LastUpdated'] = '0000-00-00'
     for field_name in header_colidx:
@@ -280,13 +314,12 @@ def parse(instr, maxrecs, progress):
         blankrow = False
       else:
         val = ""
-      rowstr += "  "+field_name+"="+val+"\n"
+      #rowstr += "  "+field_name+"="+val+"\n"
       record[field_name] = val
       key = 'R'+str(row)+'C'+str(col)
       if (key in updated and
           updated[key] > record['LastUpdated']):
         record['LastUpdated'] = updated[key]
-    row += 1
     if blankrow:
       blankrows += 1
       if blankrows > MAX_BLANKROWS:
@@ -296,6 +329,9 @@ def parse(instr, maxrecs, progress):
       blankrows = 0
       record['oppid'] = str(numopps)
       volopps += record_to_fpxml(record)
+    row += 1
+    CURRENT_ROW = row
+  CURRENT_ROW = None
   volopps += '</VolunteerOpportunities>'
 
   outstr = '<?xml version="1.0" ?>'
@@ -312,9 +348,9 @@ def parse(instr, maxrecs, progress):
   outstr += '<description></description>'
   outstr += '</FeedInfo>'
   outstr += "<Organizations>"
-  for orgname in known_orgs:
+  for orgname in KNOWN_ORGS:
     outstr += "<Organization>"
-    outstr += xmlh.output_val("organizationID", known_orgs[orgname])
+    outstr += xmlh.output_val("organizationID", KNOWN_ORGS[orgname])
     outstr += xmlh.output_val("name", orgname)
     outstr += "</Organization>"
   outstr += "</Organizations>"
