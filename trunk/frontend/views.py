@@ -248,6 +248,11 @@ class ui_snippets_view(webapp.RequestHandler):
     if user:
       result_set = view_helper.get_annotated_results(user, result_set)
       view_data = view_helper.get_my_snippets_view_data(user)
+    else:
+      view_data = {
+        'friends': [],
+        'friends_by_event_id_js': '{}',
+      }
 
     template_values = {
         'user' : user,

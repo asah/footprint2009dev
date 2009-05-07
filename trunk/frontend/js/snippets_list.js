@@ -173,7 +173,7 @@ function updateInterestInfoDisplay(resultIndex) {
   if (result.liked || friends.length) {
     html += '<img class="like_icon" src="/images/like.gif">';
     
-    var nameList = result.liked ? 'You, ' : '';
+    var nameList = result.liked ? 'You ' : '';
   
     // Display friends' info, if any.
     if (friends.length) {
@@ -181,6 +181,9 @@ function updateInterestInfoDisplay(resultIndex) {
         var friendId = friends[i];
         var info = friendsInfo[friendId];
         if (info) {
+          if (i == 0) {
+            nameList += ', ';
+          }
           nameList += info.name;
           if (i < friends.length - 1) {
             nameList += ', ';
@@ -189,17 +192,20 @@ function updateInterestInfoDisplay(resultIndex) {
       }
     }
 
-    var youAndFriendsCount = friends ? friends.length : 0 +
-        result.liked ? 1 : 0;
-
+    var youAndFriendsCount = (friends ? friends.length : 0) +
+        (result.liked ? 1 : 0);
     var strangerInterestCount = result.totalInterestCount - youAndFriendsCount;
     if (strangerInterestCount > 0) {
       nameList += ' and ' + strangerInterestCount + ' more';
     }
 
     html += nameList;
-    html += youAndFriendsCount + strangerInterestCount == 1 ?
-        ' thinks' : ' think';
+    if (youAndFriendsCount == 1 && strangerInterestCount == 0) {
+      html += ' think';
+    } else {
+      html += youAndFriendsCount + strangerInterestCount == 1 ?
+          ' thinks' : ' think';
+    }
     html += ' this is good (' +
         '<a href="javascript:toggleInterest(' + resultIndex +
         ');void(0);">undo</a>)';  
