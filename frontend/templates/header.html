@@ -11,7 +11,7 @@
         </form>
         <img class='search_button valign pointer'
              onclick='submitForm("keywords"); return false;'
-             height='28' src='/images/red-search-button.png'>
+             src='/images/red-search-button.png'>
         <br>
         <div id='example_searches'></div>
 <script>
@@ -51,9 +51,6 @@ if (currentPageName != 'HOMEPAGE') {
     </div>
   </div>
 
-  <!-- TODO: move this to the bottom of the page -->
-  <link rel="stylesheet" type="text/css" href="/css/jquery.autocomplete.css" /> 
-  <script src='/js/jquery.autocomplete.js'></script>
   <script type="text/javascript">
     google.setOnLoadCallback(function() {
       $("#keywords").autocomplete("/autocomplete/query");
