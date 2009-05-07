@@ -338,7 +338,7 @@ function setInputFieldValue(input, value) {
  * @param {HTMLInputerElement} input Input element.
  */
 function getInputFieldValue(input) {
-  if (input.value == input.getAttribute('defaultValue')) {
+  if (!input || input.value == input.getAttribute('defaultValue')) {
     return '';
   } else {
     return input.value;

@@ -54,7 +54,7 @@ SimpleMap.prototype.setCenter = function(latLng) {
 };
 
 SimpleMap.prototype.setCenterGeocode = function(locationString) {
-  if (!GBrowserIsCompatible()) {
+  if (!locationString || !GBrowserIsCompatible()) {
     return;
   }
   var me = this;

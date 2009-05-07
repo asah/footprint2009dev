@@ -117,16 +117,21 @@ def get_my_snippets_view_data(user_info):
   """
 
   # Get the list of all events that I like or am doing.
-  my_events_ids = get_user_interests(user_info, True)
-  my_events_result_set = base_search.get_from_ids(my_events_ids)
+  my_event_ids_and_interests = get_user_interests(user_info, True)
+  my_events_result_set = base_search.get_from_ids(my_event_ids_and_interests)
   # TODO: Handle the difference between liking and doing.
   # TODO: Reconcile with annotate functions above.
   for result in my_events_result_set.results:
-    result.interest = my_events_ids[result.item_id]
+    result.interest = my_event_ids_and_interests[result.item_id]
     
   # TODO: Handle pagination.
   my_events_result_set.clipped_results = my_events_result_set.results
 
+  # Get general interest numbers (i.e., not filtered to friends).
+  event_ids_and_interest_stats = \
+    get_interest_for_opportunities(my_event_ids_and_interests)
+  annotate_results(my_event_ids_and_interests, event_ids_and_interest_stats,
+                   my_events_result_set)
   # Get the list of all my friends.
   # Assemble the opportunities your friends have starred.
   friends = user_info.load_friends()

@@ -8,17 +8,19 @@ All For Good - My Events
 {% endblock subheader %}
 
 {% block content_left %}
-  {% include 'map_widget.html' %}
+  <div id='map'></div>
 
   <div id="calendar" style="display:none">
     {% include 'calendar_widget.html' %}
   </div>
 
+  <!--
   <div>
     <a href='javascript:setWhoFilter("me");'>Me</a><br/>
     <a href='javascript:setWhoFilter("me_and_friends");'>Me + my friends</a>&nbsp;
     <span style="font-size:9px"><em>Not implemented...</em></span><br/>
   </div>
+  -->
 {% endblock content_left %}
 
 

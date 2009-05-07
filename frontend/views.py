@@ -247,6 +247,7 @@ class ui_snippets_view(webapp.RequestHandler):
     user = userinfo.get_user(self.request)
     if user:
       result_set = view_helper.get_annotated_results(user, result_set)
+      view_data = view_helper.get_my_snippets_view_data(user)
 
     template_values = {
         'user' : user,
@@ -257,6 +258,8 @@ class ui_snippets_view(webapp.RequestHandler):
             result_set.clip_start_index + len(result_set.clipped_results),
         'display_nextpage_link' : result_set.has_more_results,
         'view_url': self.request.url,
+        'friends' : view_data['friends'],
+        'friends_by_event_id_js': view_data['friends_by_event_id_js'],
       }
     if self.request.get('minimal_snippets_list'):
       # Minimal results list for homepage.
@@ -292,19 +295,26 @@ class ui_my_snippets_view(webapp.RequestHandler):
     
     user_info = userinfo.get_user(self.request)
 
-    view_data = view_helper.get_my_snippets_view_data(user_info)
-    result_set = view_data['result_set']
-    result_set.clipped_results = result_set.results
-
-    template_values = {
-        'current_page' : 'MY_EVENTS',
-        'view_url': self.request.url,
-        'user' : user_info,
-        'result_set': result_set,
-        'has_results' : view_data['has_results'],
-        'friends' : view_data['friends'],
-        'friends_by_event_id_js': view_data['friends_by_event_id_js'],
+    if user_info:
+      view_data = view_helper.get_my_snippets_view_data(user_info)
+      result_set = view_data['result_set']
+      result_set.clipped_results = result_set.results
+      template_values = {
+          'current_page' : 'MY_EVENTS',
+          'view_url': self.request.url,
+          'user' : user_info,
+          'result_set': result_set,
+          'has_results' : view_data['has_results'],
+          'friends' : view_data['friends'],
+          'friends_by_event_id_js': view_data['friends_by_event_id_js'],
+        }
+    else:
+      template_values = {
+          'current_page' : 'MY_EVENTS',
+          'view_url': self.request.url,
+          'has_results' : False,
       }
+
     self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
                                             template_values))
 
