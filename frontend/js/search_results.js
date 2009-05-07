@@ -270,8 +270,9 @@ executeSearchFromHashParams = function() {
     hashParams = GetHashParams();
 
     var query = NewQueryFromUrlParams();
+
     el('no_results_message').style.display = 'none';
-    el('snippets_pane').innerHTML = '<div id="loading">Loading...</div>';
+    el('loading').style.display = '';
 
     // TODO: eliminate the need for lastSearchQuery to be global
 
@@ -301,6 +302,7 @@ executeSearchFromHashParams = function() {
         });
       }
       jQuery('#snippets_pane').html(text);
+      el('loading').style.display = 'none';
     };
 
     var error = function (XMLHttpRequest, textStatus, errorThrown) {
