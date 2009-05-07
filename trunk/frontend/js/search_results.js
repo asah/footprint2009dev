@@ -169,10 +169,80 @@ function NewQueryFromUrlParams() {
   return new Query(keywords, location, pageNum, timePeriod, filters);
 }
 
+/**
+ * @constructor
+ */
+function FilterWidget(div, title, entries, initialValue, callback) {
+  var me = this;
+
+  me.div_ = div;
+  me.title_ = title;
+  me.entries_ = entries;
+  me.value_ = initialValue;
+  me.callback_ = callback;
+
+  me.render();
+}
+
+FilterWidget.prototype.render = function() {
+  var me = this;
+  var titleDiv = document.createElement('div');
+  titleDiv.innerHTML = me.title_;
+  titleDiv.className = 'filterwidget_title';
+  me.div_.innerHTML = '';
+  me.div_.appendChild(titleDiv);
+
+  var clickCallback = function(index) {
+    return function() {
+      var newValue = me.entries_[index][1];
+      me.setValue(newValue);
+      me.callback_(newValue);
+    };
+  }
+
+  for (var i = 0; i < me.entries_.length; i++) {
+    var entryDiv = document.createElement('div');
+    entryDiv.className = 'filterwidget_entry';
+    me.div_.appendChild(entryDiv);
+
+    if (me.entries_[i][1] == me.value_) {
+      entryDiv.innerHTML = '<b>' + me.entries_[i][0] + '</b>';
+    } else {
+      var link = document.createElement('a');
+      link.innerHTML = me.entries_[i][0];
+      link.href = 'javascript:void(0)';
+      link.onclick = clickCallback(i);
+      entryDiv.appendChild(link);
+    }
+  }
+};
+
+FilterWidget.prototype.getValue = function() {
+  return this.value_;
+};
+
+FilterWidget.prototype.setValue = function(newValue) {
+  var me = this;
+  me.value_ = newValue;
+  me.render();
+};
 
 /** Perform a search using the current URL parameters and IP geolocation.
  */
 function onLoadSearch() {
+  if (el('when_filter_widget')) {
+    whenFilterWidget =
+        new FilterWidget(el('when_filter_widget'),
+                         'When',
+                         [ ['Today', 'today'],
+                           ['This weekend', 'this_weekend'],
+                           ['This week', 'this_week'],
+                           ['This month', 'this_month'],
+                           ['Everything', 'everything'] ],
+                         'everything',
+                         function(value) { submitForm(); });
+  }
+
   if (el('location')) {
     setInputFieldValue(el('location'), getClientLocation().address);
   }
@@ -180,7 +250,6 @@ function onLoadSearch() {
   executeSearchFromHashParams();
   $(window).hashchange(executeSearchFromHashParams);
 }
-asyncLoadManager.addCallback('bodyload', onLoadSearch);
 
 /** Asynchronously execute a search based on the current parameters.
  */
@@ -215,7 +284,7 @@ executeSearchFromHashParams = function() {
 
     var success = function(text, status) {
       setInputFieldValue(el('keywords'), query.getKeywords());
-      setInputFieldValue(el('timeperiod'), query.getTimePeriod());
+      whenFilterWidget.setValue(query.getTimePeriod());
       var regexp = new RegExp('[a-zA-Z]')
       if (regexp.exec(query.getLocation())) {
         // Update location field in UI, but only if location text isn't
@@ -261,7 +330,7 @@ executeSearchFromHashParams = function() {
 function submitForm() {
   var keywords = getInputFieldValue(el('keywords'));
   var location = getInputFieldValue(el('location'));
-  var timePeriod = getInputFieldValue(el('timeperiod'));
+  var timePeriod = whenFilterWidget.getValue();
 
   // TODO: strip leading/trailing whitespace.
 
@@ -369,7 +438,6 @@ function renderPaginator(div, totalNum, forceShowNextLink) {
   div.innerHTML = html.join('');
 }
 
-
 /** Loads the Maps API asynchronously and notifies the asynchronous load
  * manager on completion.
  */
@@ -419,3 +487,6 @@ function SearchResult(url, title, location, snippet, startdate, enddate,
 }
 
 var lastSearchQuery = new Query('', '', 0, {});
+var whenFilterWidget;
+
+asyncLoadManager.addCallback('bodyload', onLoadSearch);

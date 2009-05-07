@@ -151,6 +151,10 @@ form {
   padding-left: 10px;
 }
 
+.search_button {
+  height: 26px;
+}
+
 /** Search results page **/
 
 .snippet {
@@ -245,6 +249,9 @@ form {
   color: #999999;
 }
 
+#when_filter_widget {
+  margin-top: 30px;
+}
 
 /** Generic Styles **/
 
@@ -450,6 +457,26 @@ h1 {
 
 #example_searches A:hover {
   text-decoration: underline;
+}
+
+.filterwidget_title {
+  margin-top: 16px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #666;
+}
+
+.filterwidget_entry {
+  margin: 4px 0px 0px 0px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid silver;
+  width: 150px;
+}
+
+.filterwidget_entry A {
+  font-weight: bold;
+  color: #039;
+  text-decoration: none;
 }
 
 A:hover {  /* Keep this near end of file, after other A definitions */
