@@ -46,7 +46,7 @@
       {% endif %}
 
       <div class='snippet_title'>
-        <a href='/url?q={{ result.url|urlencode }}'>{{ result.title }}</a>
+        <a target='_fp_target' href='/url?q={{ result.url|urlencode }}'>{{ result.title }}</a>
       </div>
       {% if result.location or result.startdate or result.interest_count %}
         <div class='snippet_sub_text'>
