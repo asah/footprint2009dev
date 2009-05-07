@@ -37,3 +37,7 @@
   color: #039;
   text-decoration: none;
 }
+
+#home A:hover {
+  text-decoration: underline;
+}

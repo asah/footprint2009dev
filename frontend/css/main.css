@@ -447,3 +447,12 @@ h1 {
   text-decoration: none;
   font-weight: bold;
 }
+
+#example_searches A:hover {
+  text-decoration: underline;
+}
+
+A:hover {  /* Keep this near end of file, after other A definitions */
+  text-decoration: underline;
+}
+
