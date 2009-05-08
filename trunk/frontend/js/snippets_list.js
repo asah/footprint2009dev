@@ -135,7 +135,7 @@ function toggleInterest(resultIndex) {
     div.style.display = result.liked ? 'none' : '';
 
     if (result.liked) {
-      createSupportsActivity(result.title, result.hostWebsite, result.url);
+      createLikesActivity(result.title, result.hostWebsite, result.url);
     }
 
     updateInterestInfoDisplay(resultIndex);
@@ -200,13 +200,7 @@ function updateInterestInfoDisplay(resultIndex) {
     }
 
     html += nameList;
-    if (youAndFriendsCount == 1 && strangerInterestCount == 0) {
-      html += ' think';
-    } else {
-      html += youAndFriendsCount + strangerInterestCount == 1 ?
-          ' thinks' : ' think';
-    }
-    html += ' this is good (' +
+    html += ' like this (' +
         '<a href="javascript:toggleInterest(' + resultIndex +
         ');void(0);">undo</a>)';  
   }
