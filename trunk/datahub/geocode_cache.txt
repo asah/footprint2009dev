@@ -25814,3 +25814,3214 @@ zolfo springs fl 33890|27.4934650,-81.7963120
 zomba, 0000, malawi|-15.1666670,35.5000000
 zug, zug, 6340, switzerland|47.2003879,8.5267528
 zurich, zurich, 8001, switzerland|47.3741561,8.5396323
+district of columbia 20001 united states|38.9091757,-77.0161436
+iowa 52556 united states|41.0031450,-91.9294681
+virginia 20151 united states|38.8843392,-77.4415118
+minnesota 99999 united states|37.6042770,-97.3169411
+illinois 99999 united states|41.9555750,-87.8892310
+district of columbia 99999 united states|38.8897220,-77.0111110
+pennsylvania united states|41.2033216,-77.1945247
+new mexico united states|34.9727305,-105.0323635
+none specified canada|
+massachusetts 01701 united states|42.3240042,-71.4536835
+michigan 48202 united states|42.3664506,-83.0737195
+none specified 82120 thailand|
+82120 thailand|14.5566946,121.0188568
+district of columbia 20005 united states|38.9030927,-77.0305390
+illinois 60661 united states|41.8819283,-87.6445473
+illinois 60914 united states|41.1908177,-87.8647961
+georgia 30097 united states|34.0488408,-84.1751648
+washington 98168 united states|47.4826332,-122.2973219
+west virginia 26651 united states|38.3377456,-80.8543847
+west virginia 26101 united states|39.2440815,-81.5815776
+west virginia 24870 united states|37.7282263,-81.5486728
+west virginia 24874 united states|37.5689206,-81.5377013
+west virginia 25882 united states|37.6057533,-81.3894297
+west virginia 24882 united states|37.6169721,-81.7677645
+west virginia 26155 united states|39.6324050,-80.7436141
+west virginia 26570 united states|39.6331225,-80.2544350
+west virginia 24801 united states|37.3962824,-81.4937993
+west virginia 24847 united states|37.5736000,-81.4186000
+west virginia 25801 united states|37.7997808,-81.2298530
+tennessee 37743 united states|36.0941226,-82.8640623
+new jersey 76666 united states|37.6310500,-97.2907510
+new jersey 71020 united states|37.6310500,-97.2907510
+new jersey 74300 united states|37.6310500,-97.2907510
+district of columbia 20057 united states|38.9093896,-77.0751538
+district of columbia 20016 united states|38.9387704,-77.0967357
+connecticut 65180 united states|37.6346760,-97.2931940
+connecticut 64320 united states|37.6346760,-97.2931940
+connecticut 65110 united states|37.6346760,-97.2931940
+alabama 35254 united states|33.5141158,-86.8540302
+washington 98119 united states|47.6384586,-122.3674079
+washington 98122 united states|47.6087583,-122.2964235
+washington 98121 united states|47.6163159,-122.3463563
+washington 98103 united states|47.6600087,-122.3425575
+washington 98195 united states|47.6537802,-122.3013926
+washington 98416 united states|47.2627842,-122.4814616
+maryland 21801 united states|38.3795195,-75.6324470
+maryland 21210 united states|39.3566383,-76.6354952
+pennsylvania 15233 united states|40.4543466,-80.0283415
+pennsylvania 15108 united states|40.5118580,-80.1986649
+pennsylvania 15232 united states|40.4510960,-79.9332613
+pennsylvania 15260 united states|40.4355634,-79.9430537
+maine 41060 united states|43.0000000,-68.0000000
+maine 47690 united states|43.0000000,-68.0000000
+maine 41030 united states|43.0000000,-68.0000000
+maine 49380 united states|43.0000000,-68.0000000
+maine 41040 united states|43.0000000,-68.0000000
+maine 42100 united states|43.0000000,-68.0000000
+maine 42400 united states|43.0000000,-68.0000000
+maine 47430 united states|43.0000000,-68.0000000
+maine 49010 united states|43.0000000,-68.0000000
+maine 40840 united states|43.0000000,-68.0000000
+maine 44010 united states|43.0000000,-68.0000000
+maine 49880 united states|43.0000000,-68.0000000
+idaho 83725 united states|43.6038780,-116.2020443
+idaho 83814 united states|47.6416827,-116.5747083
+idaho 83844 united states|46.7328000,-116.9993000
+california 93704 united states|36.7757374,-119.8062912
+california 93257 united states|36.0329300,-119.0925356
+california 95211 united states|37.9801418,-121.3126990
+texas 78284 united states|29.5254000,-98.4252000
+washington 98106 united states|47.5476069,-122.3514653
+maine 46540 united states|43.0000000,-68.0000000
+maine 40050 united states|43.0000000,-68.0000000
+maine 46090 united states|43.0000000,-68.0000000
+maine 44730 united states|43.0000000,-68.0000000
+maine 40110 united states|43.0000000,-68.0000000
+new york 11001 united states|40.7204440,-73.7065940
+new york 10013 united states|40.7217861,-74.0094471
+new york 10021 united states|40.7686267,-73.9565551
+new york 10027 united states|40.8122190,-73.9506774
+new york 10012 united states|40.7250632,-73.9976946
+california 90032 united states|34.0795169,-118.1766294
+california 90089 united states|34.0202738,-118.2884738
+pennsylvania 19122 united states|39.9795244,-75.1457820
+pennsylvania 19038 united states|40.0958615,-75.1720488
+pennsylvania 19102 united states|39.9549008,-75.1640233
+california 90840 united states|33.7851231,-118.1166569
+pennsylvania 18711 united states|41.2474000,-75.8756000
+pennsylvania 17701 united states|41.2496241,-77.0794705
+pennsylvania 17870 united states|40.8318855,-76.8951551
+pennsylvania 17815 united states|41.0159555,-76.4331698
+pennsylvania 18766 united states|41.2476000,-75.8796000
+pennsylvania 18301 united states|41.0283444,-75.1895576
+pennsylvania 17837 united states|41.0014539,-76.9873477
+pennsylvania 19141 united states|40.0326222,-75.1487007
+ohio 44106 united states|41.5091257,-81.6089873
+ohio 44118 united states|41.4997292,-81.5486728
+ohio 44115 united states|41.4913739,-81.6719914
+illinois 62794 united states|39.8018000,-89.6436000
+illinois 61820 united states|40.1063691,-88.2412504
+illinois 62522 united states|39.8232949,-89.0657027
+minnesota 56563 united states|46.8669339,-96.7581208
+minnesota 55746 united states|47.3332794,-92.9310686
+minnesota 56716 united states|47.7728080,-96.5837718
+minnesota 56649 united states|48.5494209,-93.3763619
+minnesota 56562 united states|46.8650588,-96.7692390
+minnesota 55744 united states|47.1200814,-93.5584407
+minnesota 55811 united states|46.8231017,-92.2248438
+minnesota 55812 united states|46.8089562,-92.0747944
+minnesota 55792 united states|47.5995593,-92.4587531
+minnesota 56601 united states|47.5796497,-94.9187569
+minnesota 55720 united states|46.7576309,-92.5765501
+indiana 46556 united states|41.7020943,-86.2488732
+indiana 46383 united states|41.4428699,-87.0224442
+indiana 46250 united states|39.9043420,-86.0631561
+indiana 46962 united states|41.0006855,-85.7256372
+michigan 49307 united states|43.6833235,-85.4994192
+michigan 48334 united states|42.5049385,-83.3468784
+michigan 48331 united states|42.5086450,-83.4109834
+maryland 20742 united states|38.9908487,-76.9441410
+maryland 21727 united states|39.6836765,-77.3209555
+maryland 21532 united states|39.6382517,-78.9514510
+maryland 21701 united states|39.4241558,-77.3668965
+colorado 80016 united states|39.5961294,-104.6821048
+colorado 80030 united states|39.8300502,-105.0352855
+colorado 80221 united states|39.8042947,-105.0206757
+colorado 80523 united states|40.5732389,-105.0878917
+colorado 80309 united states|40.0066776,-105.2648301
+colorado 80217 united states|39.7393000,-104.9844000
+colorado 80003 united states|39.8182494,-105.0674317
+colorado 80208 united states|39.6769639,-104.9637102
+colorado 80228 united states|39.6907446,-105.1551352
+west virginia 26506 united states|39.6491164,-79.9563417
+west virginia 26074 united states|40.1729872,-80.5910567
+west virginia 26554 united states|39.4578735,-80.1205256
+west virginia 24712 united states|37.4416816,-80.9650023
+west virginia 26416 united states|39.1662417,-80.0758425
+west virginia 26201 united states|39.0125796,-80.2098219
+florida 33167 united states|25.8830363,-80.2377078
+florida 33124 united states|25.7213000,-80.2686000
+florida 33199 united states|25.7736000,-80.1937000
+florida 33161 united states|25.8909628,-80.1819268
+illinois 61761 united states|40.5386585,-88.9701082
+illinois 61702 united states|40.4845000,-88.9939000
+illinois 61625 united states|40.6981092,-89.6163359
+illinois 61265 united states|41.4902075,-90.4974359
+california 90045 united states|33.9560034,-118.4046264
+california 90275 united states|33.7456493,-118.3637264
+california 90263 united states|34.0371349,-118.7066804
+illinois 60655 united states|41.6931543,-87.7123355
+illinois 60616 united states|41.8456110,-87.6285099
+massachusetts 12670 united states|37.6325720,-97.2932080
+massachusetts 12470 united states|37.6325720,-97.2932080
+massachusetts 11090 united states|37.6325720,-97.2932080
+massachusetts 13010 united states|37.6325720,-97.2932080
+wisconsin 53201 united states|43.0386000,-87.9067000
+wisconsin 53215 united states|42.9913560,-87.9432837
+michigan 48221 united states|42.4349152,-83.1541796
+missouri 63103 united states|38.6291850,-90.2174318
+missouri 63122 united states|38.5787831,-90.4219444
+new york 13346 united states|42.8224077,-75.5393155
+new york 13617 united states|44.5971465,-75.2054607
+new york 13244 united states|43.0367909,-76.1334449
+new york 14478 united states|42.5784730,-77.1312586
+new york 14456 united states|42.8361156,-76.9873477
+kansas 67005 united states|37.0501923,-96.9638624
+kansas 67213 united states|37.6689444,-97.3678624
+indiana 46227 united states|39.6801674,-86.1242881
+indiana 46208 united states|39.8206062,-86.1700894
+indiana 46222 united states|39.7910937,-86.2107672
+louisiana 71134 united states|32.5253000,-93.7501000
+iowa 50677 united states|42.7992829,-92.4208713
+iowa 52314 united states|41.9302050,-91.4628042
+minnesota 56301 united states|45.5026850,-94.2571427
+minnesota 56321 united states|45.5947000,-94.3626000
+minnesota 56374 united states|45.5763030,-94.3102738
+minnesota 56267 united states|45.6362336,-95.9323980
+minnesota 56303 united states|45.5711784,-94.1936910
+ohio 44691 united states|40.8021600,-81.9971108
+ohio 44720 united states|40.9034426,-81.4498717
+ohio 44234 united states|41.3124462,-81.1747498
+ohio 44242 united states|41.1538000,-81.3582000
+ohio 44601 united states|40.9202113,-81.1416691
+ohio 44325 united states|41.0740301,-81.5123235
+north carolina 27410 united states|36.1172229,-79.8968798
+north carolina 27401 united states|36.0710170,-79.7652211
+north carolina 27244 united states|36.2443643,-79.5041322
+florida 34478 united states|29.1866000,-82.1404000
+florida 32611 united states|29.6410959,-82.3587511
+florida 32606 united states|29.6788293,-82.4644445
+washington 98273 united states|48.4094193,-122.3667585
+washington 98520 united states|47.1938958,-123.6973119
+washington 98225 united states|48.7606139,-122.4755221
+washington 98226 united states|48.7959658,-122.4523385
+washington 98531 united states|46.7417817,-122.9490589
+washington 98505 united states|47.0720002,-122.9769726
+rhode island 29170 united states|38.9072640,-77.0361190
+rhode island 28090 united states|38.9072640,-77.0361190
+rhode island 28650 united states|38.9072640,-77.0361190
+rhode island 29030 united states|38.9072640,-77.0361190
+rhode island 29080 united states|38.9072640,-77.0361190
+rhode island 28860 united states|38.9072640,-77.0361190
+rhode island 28400 united states|38.9072640,-77.0361190
+rhode island 29120 united states|38.9072640,-77.0361190
+rhode island 29180 united states|38.9072640,-77.0361190
+rhode island 28810 united states|38.9072640,-77.0361190
+nebraska 68124 united states|41.2332223,-96.0361574
+nebraska 68182 united states|41.2577886,-96.0090406
+michigan 49008 united states|42.2609411,-85.6126480
+michigan 49423 united states|42.7381514,-86.0733498
+michigan 49506 united states|42.9453416,-85.6126480
+michigan 49104 united states|41.9649412,-86.3592190
+michigan 49503 united states|42.9616689,-85.6588999
+michigan 49076 united states|42.4068786,-84.8672171
+michigan 49401 united states|42.9674954,-85.9508923
+michigan 49546 united states|42.9219281,-85.5097226
+massachusetts 21150 united states|37.6325720,-97.2932080
+massachusetts 21660 united states|37.6325720,-97.2932080
+massachusetts 21390 united states|37.6325720,-97.2932080
+massachusetts 21250 united states|37.6325720,-97.2932080
+montana 59417 united states|48.5699150,-113.0918002
+montana 59601 united states|46.5570751,-112.2285158
+montana 59043 united states|45.5836072,-106.4956553
+montana 59701 united states|45.9252697,-112.5609622
+montana 59102 united states|45.7712624,-108.5790294
+montana 59101 united states|45.5576428,-108.3942141
+montana 59855 united states|47.5956598,-114.1167750
+montana 59725 united states|45.0346471,-112.8378824
+montana 59901 united states|48.0961060,-113.7278251
+montana 59406 united states|47.5001000,-111.3003000
+montana 59405 united states|47.3016974,-111.3517910
+montana 59717 united states|45.6673182,-111.0483054
+florida 32802 united states|28.5383000,-81.3794000
+florida 32773 united states|28.7405957,-81.2739073
+florida 32922 united states|28.3758754,-80.7491563
+florida 32789 united states|28.5950986,-81.3509416
+florida 32816 united states|28.5383000,-81.3794000
+california 95064 united states|36.9955827,-122.0553349
+california 95053 united states|37.3494416,-121.9380672
+california 93955 united states|36.6343548,-121.8220980
+california 95192 united states|37.3360786,-121.8804535
+ohio 45810 united states|40.7735916,-83.8260884
+maryland 21217 united states|39.3056685,-76.6354952
+maryland 21339 united states|37.6330750,-97.2903020
+maryland 21250 united states|39.2553811,-76.7076768
+maryland 21218 united states|39.3322127,-76.6008334
+wisconsin 54935 united states|43.7602964,-88.3821989
+california 94112 united states|37.7225491,-122.4410618
+california 94132 united states|37.7181398,-122.4863492
+california 94117 united states|37.7717185,-122.4438929
+missouri 65804 united states|37.1565149,-93.2483058
+ohio 44805 united states|39.8743775,-83.4448510
+ohio 45840 united states|41.0060503,-83.6561215
+ohio 44883 united states|41.1209799,-83.2077645
+ohio 43606 united states|41.6735366,-83.6242010
+ohio 43512 united states|41.2650829,-84.3962535
+ohio 43560 united states|41.6992425,-83.7305392
+tennessee 37682 united states|36.3017000,-82.2994000
+tennessee 37760 united states|36.1055775,-83.4430118
+tennessee 37620 united states|36.5421738,-82.1060683
+tennessee 37614 united states|36.3030070,-82.3675650
+tennessee 37996 united states|35.9609000,-83.9206000
+tennessee 37804 united states|35.7830899,-83.9108968
+utah 84627 united states|39.3701959,-111.3560450
+utah 84501 united states|39.5640655,-110.8552919
+utah 84770 united states|37.1914618,-113.9060624
+utah 84322 united states|41.7426742,-111.8106530
+utah 84720 united states|38.0066337,-113.2870850
+oregon 97128 united states|45.1835082,-123.2842446
+oregon 97201 united states|45.5056030,-122.6882145
+oregon 97280 united states|45.5239000,-122.6751000
+oregon 97207 united states|45.5239000,-122.6751000
+oregon 97219 united states|45.4618086,-122.7181902
+oregon 97202 united states|45.4807521,-122.6427372
+oregon 97203 united states|45.6223897,-122.7427786
+ohio 44074 united states|41.2795429,-82.2365981
+ohio 44017 united states|41.3681574,-81.8606821
+pennsylvania 18104 united states|40.6176789,-75.5393155
+arkansas 72503 united states|35.7698000,-91.6409000
+kentucky 40205 united states|38.2214782,-85.6794434
+oregon 97116 united states|45.5701710,-123.1322300
+oregon 97301 united states|44.9464822,-123.0018941
+louisiana 70043 united states|29.9624820,-89.9533441
+louisiana 70122 united states|30.0549522,-90.0653341
+louisiana 70125 united states|29.9566647,-90.1073935
+louisiana 70118 united states|29.9450835,-90.1261013
+new mexico 87402 united states|36.7914962,-108.1310083
+new mexico 87301 united states|35.5556377,-108.7125791
+minnesota 55904 united states|43.9562492,-92.4208713
+minnesota 56001 united states|44.0660469,-93.9470396
+minnesota 56002 united states|44.1637000,-93.9993000
+minnesota 55912 united states|43.7138977,-92.9775558
+minnesota 55987 united states|43.9701221,-91.6372150
+minnesota 56258 united states|44.4422439,-95.7721204
+minnesota 55057 united states|44.4695372,-93.1378173
+minnesota 55110 united states|45.0911599,-93.0112457
+minnesota 56082 united states|44.3661998,-94.0286780
+massachusetts 27660 united states|37.6325720,-97.2932080
+massachusetts 20380 united states|38.8951000,-77.0369000
+massachusetts 23570 united states|37.6325720,-97.2932080
+massachusetts 23020 united states|37.6325720,-97.2932080
+massachusetts 23250 united states|37.6325720,-97.2932080
+massachusetts 16100 united states|37.6325720,-97.2932080
+massachusetts 16090 united states|37.6325720,-97.2932080
+massachusetts 16060 united states|37.6325720,-97.2932080
+massachusetts 18540 united states|37.6325720,-97.2932080
+massachusetts 27470 united states|37.6325720,-97.2932080
+washington 99258 united states|47.6588000,-117.4250000
+washington 99164 united states|46.7263575,-117.1507932
+washington 99004 united states|47.4589773,-117.6238334
+washington 99324 united states|46.0434035,-118.4006860
+washington 99362 united states|46.1550543,-118.4282239
+washington 99204 united states|47.6457534,-117.4253653
+washington 99217 united states|47.7315095,-117.2676857
+washington 99251 united states|47.7527529,-117.4176352
+washington 98926 united states|47.0797519,-120.3827898
+california 94613 united states|37.7808187,-122.1845382
+california 94720 united states|37.8737060,-122.2512089
+california 94542 united states|37.6561165,-122.0326019
+california 94612 united states|37.8065484,-122.2682245
+texas 79627 united states|29.8727910,-95.3183310
+ohio 45233 united states|39.1267753,-84.6792931
+ohio 45221 united states|39.1616000,-84.4569000
+ohio 45207 united states|39.1405079,-84.4723900
+iowa 50112 united states|41.7679201,-92.7381672
+iowa 50219 united states|41.4449050,-92.8976254
+michigan 49221 united states|41.8851765,-84.0590290
+michigan 48824 united states|42.7187289,-84.4776372
+michigan 48801 united states|43.3789816,-84.6688348
+michigan 48901 united states|42.7327000,-84.5558000
+new york 12308 united states|42.8238507,-73.9212858
+new york 12866 united states|43.0654516,-73.7713200
+arizona 85709 united states|32.2303416,-111.0147445
+arizona 85711 united states|32.2107257,-110.8850949
+california 95929 united states|39.7289000,-121.8365000
+virginia 24088 united states|36.9067123,-80.1205256
+virginia 22401 united states|38.3048885,-77.4816693
+michigan 49224 united states|42.2955980,-84.7942091
+michigan 49283 united states|42.1959178,-84.5536678
+michigan 48859 united states|43.5975000,-84.7675000
+michigan 48710 united states|43.5607826,-83.9797173
+michigan 49201 united states|42.3151209,-84.3752330
+michigan 48640 united states|43.5932134,-84.3331694
+virginia 24327 united states|36.7720699,-81.8197036
+oregon 99701 united states|42.3565840,-122.8597290
+california 93740 united states|36.8409000,-119.7988000
+florida 33431 united states|26.3767589,-80.1037721
+california 90802 united states|33.7686843,-118.1883290
+vermont 52010 united states|43.0722220,-89.7855560
+vermont 57530 united states|43.0722220,-89.7855560
+vermont 56670 united states|43.0722220,-89.7855560
+vermont 57350 united states|43.0722220,-89.7855560
+vermont 56630 united states|43.0722220,-89.7855560
+vermont 58510 united states|43.0722220,-89.7855560
+vermont 56560 united states|43.0722220,-89.7855560
+vermont 54390 united states|43.0722220,-89.7855560
+vermont 54050 united states|43.0722220,-89.7855560
+pennsylvania 18634 united states|41.1940762,-76.0275859
+pennsylvania 18510 united states|41.4089391,-75.6411750
+pennsylvania 18440 united states|41.5568000,-75.7545000
+missouri 65211 united states|38.9373940,-92.3160000
+mississippi 39406 united states|31.3281359,-89.3333680
+mississippi 39174 united states|32.4041488,-90.1612029
+arizona 85281 united states|33.4324361,-111.9343636
+arizona 85013 united states|33.5092076,-112.0804259
+arizona 85285 united states|33.4148000,-111.9088000
+arizona 85250 united states|33.5221565,-111.9105160
+arizona 86301 united states|34.7884000,-112.8659000
+arizona 85202 united states|33.3794240,-111.8747445
+arizona 85032 united states|33.6151653,-112.0118669
+new hampshire 34310 united states|37.6315770,-97.2928540
+new hampshire 34350 united states|37.6315770,-97.2928540
+new hampshire 32420 united states|37.6315770,-97.2928540
+new hampshire 32780 united states|37.6315770,-97.2928540
+new hampshire 32460 united states|37.6315770,-97.2928540
+new hampshire 32570 united states|37.6315770,-97.2928540
+arizona 85225 united states|33.3091946,-111.8210866
+arizona 85323 united states|33.3653556,-112.3218553
+arizona 85287 united states|33.4180433,-111.9328731
+new hampshire 33010 united states|37.6315770,-97.2928540
+new hampshire 37430 united states|37.6315770,-97.2928540
+new hampshire 30630 united states|37.6315770,-97.2928540
+new hampshire 31040 united states|37.6315770,-97.2928540
+new hampshire 31020 united states|37.6315770,-97.2928540
+new hampshire 31060 united states|37.6315770,-97.2928540
+new hampshire 37550 united states|37.6315770,-97.2928540
+new hampshire 31030 united states|37.6315770,-97.2928540
+new hampshire 38200 united states|37.6315770,-97.2928540
+new hampshire 35700 united states|37.6315770,-97.2928540
+new hampshire 38850 united states|37.6315770,-97.2928540
+new hampshire 38240 united states|37.6315770,-97.2928540
+pennsylvania 19607 united states|40.2879320,-75.9347113
+pennsylvania 18018 united states|40.6238902,-75.3936808
+pennsylvania 18020 united states|40.6702816,-75.3295570
+pennsylvania 19087 united states|40.0600713,-75.3995089
+pennsylvania 19612 united states|40.3357000,-75.9272000
+pennsylvania 19352 united states|39.7561779,-75.8650148
+minnesota 55102 united states|44.9343827,-93.1127413
+new hampshire 30360 united states|37.6315770,-97.2928540
+new hampshire 30600 united states|37.6315770,-97.2928540
+new hampshire 30870 united states|37.6315770,-97.2928540
+new hampshire 34610 united states|37.6315770,-97.2928540
+kentucky 41017 united states|39.0378871,-84.5536678
+kentucky 40906 united states|36.8515840,-83.9003022
+new york 14853 united states|42.4479087,-76.4779977
+new york 13820 united states|42.4788841,-75.0377502
+new york 14901 united states|42.0835528,-76.7451950
+new york 13753 united states|42.3061918,-74.8974925
+new york 13902 united states|42.0989000,-75.9184000
+new jersey 85440 united states|37.6310500,-97.2907510
+new jersey 82400 united states|37.6310500,-97.2907510
+pennsylvania 19081 united states|39.8975179,-75.3470480
+pennsylvania 18042 united states|40.6551234,-75.2128996
+pennsylvania 19063 united states|39.9223377,-75.4228190
+pennsylvania 19319 united states|39.9263462,-75.5233026
+pennsylvania 19383 united states|39.9370404,-75.6077147
+pennsylvania 19426 united states|40.1778735,-75.4577775
+pennsylvania 19010 united states|40.0267217,-75.3353875
+pennsylvania 19014 united states|39.8591267,-75.4402993
+pennsylvania 19131 united states|39.9830066,-75.2304038
+pennsylvania 19530 united states|40.5331450,-75.7371490
+pennsylvania 18015 united states|40.5967701,-75.3761952
+minnesota 56201 united states|45.0754295,-95.0509212
+minnesota 55454 united states|44.9668972,-93.2434698
+minnesota 55403 united states|44.9691279,-93.2878982
+minnesota 55445 united states|45.1231389,-93.3742564
+minnesota 55303 united states|45.3040230,-93.4417499
+minnesota 55375 united states|44.9059925,-93.7485874
+minnesota 55076 united states|44.8385950,-93.0275802
+minnesota 55455 united states|44.9752119,-93.2381039
+minnesota 56308 united states|45.8921793,-95.3714773
+minnesota 55431 united states|44.8308157,-93.3086778
+minnesota 55404 united states|44.9605503,-93.2616717
+ohio 43215 united states|39.9650459,-83.0039075
+ohio 43209 united states|39.9556925,-82.9340217
+ohio 43219 united states|40.0006818,-82.9178838
+ohio 43201 united states|39.9929821,-83.0012210
+ohio 43022 united states|40.3190848,-82.3234843
+ohio 43081 united states|40.1014036,-82.8963604
+tennessee 37235 united states|36.1649000,-86.7814000
+tennessee 37212 united states|36.1281626,-86.7969244
+tennessee 37132 united states|35.8480605,-86.3617528
+michigan 49006 united states|42.2959627,-85.6280697
+massachusetts 21380 united states|37.6325720,-97.2932080
+massachusetts 22150 united states|37.6325720,-97.2932080
+massachusetts 21140 united states|37.6325720,-97.2932080
+massachusetts 21550 united states|37.6325720,-97.2932080
+massachusetts 21670 united states|37.6325720,-97.2932080
+massachusetts 21160 united states|37.6325720,-97.2932080
+massachusetts 24520 united states|37.6325720,-97.2932080
+massachusetts 21590 united states|37.6325720,-97.2932080
+illinois 62846 united states|38.1529197,-88.8742918
+illinois 62901 united states|37.7318170,-89.2181911
+illinois 62254 united states|38.5899171,-89.8317729
+illinois 62026 united states|38.7930845,-89.9988343
+california 92110 united states|32.7519890,-117.2029363
+california 92182 united states|32.7759882,-117.0720530
+california 91702 united states|34.1395519,-117.9131832
+illinois 60566 united states|41.7855000,-88.1472000
+illinois 60137 united states|41.8735551,-88.0607565
+california 94305 united states|37.4264280,-122.1660901
+california 94022 united states|37.3694009,-122.1405413
+minnesota 55068 united states|44.7530325,-93.0776568
+minnesota 55104 united states|44.9516643,-93.1629063
+minnesota 55113 united states|45.0122826,-93.1640525
+minnesota 55112 united states|45.0772080,-93.1813503
+minnesota 55105 united states|44.9330076,-93.1629063
+minnesota 55106 united states|44.9687549,-93.0485951
+virginia 20109 united states|38.7855623,-77.5275463
+north carolina 28235 united states|35.2267000,-80.8434000
+north carolina 28754 united states|35.8998388,-82.5185837
+north carolina 28036 united states|35.4874459,-80.7990185
+georgia 30602 united states|33.9459319,-83.3749322
+georgia 30535 united states|34.5724159,-83.5816150
+georgia 30162 united states|34.2566000,-85.1649000
+california 94928 united states|38.3437823,-122.7011951
+california 95521 united states|40.8805372,-124.0874754
+california 94508 united states|38.5844169,-122.4580469
+texas 77251 united states|29.7632000,-95.3633000
+california 92634 united states|46.6172250,-64.8476310
+california 92666 united states|46.6172250,-64.8476310
+wisconsin 54022 united states|44.8589210,-92.5792482
+new york 14454 united states|42.8080280,-77.7680952
+new york 14109 united states|43.1380874,-79.0348416
+new york 14618 united states|43.1156031,-77.5562100
+new york 14420 united states|43.2108851,-77.9510209
+pennsylvania 17201 united states|39.9847065,-77.6650660
+pennsylvania 17604 united states|40.0376000,-76.3058000
+pennsylvania 17022 united states|40.1594511,-76.6181655
+pennsylvania 17257 united states|40.0570046,-77.4931403
+pennsylvania 17027 united states|40.1543207,-77.0039062
+pennsylvania 17110 united states|40.3208847,-76.8836261
+pennsylvania 17551 united states|39.9840373,-76.3695167
+pennsylvania 17057 united states|40.2017564,-76.7221082
+new york 11439 united states|40.6917000,-73.8061000
+colorado 80933 united states|38.8338000,-104.8205000
+colorado 81052 united states|37.9344716,-102.5757028
+colorado 80903 united states|38.8311113,-104.8162784
+colorado 80921 united states|39.0725078,-104.9622498
+colorado 81001 united states|38.2971659,-104.5305715
+colorado 81004 united states|37.9389510,-104.8465870
+colorado 81102 united states|37.4710505,-105.8796744
+pennsylvania 15301 united states|40.1627412,-80.2544350
+pennsylvania 16003 united states|40.8613000,-79.8958000
+pennsylvania 15705 united states|40.6151995,-79.1597917
+pennsylvania 15650 united states|40.2898280,-79.4028639
+pennsylvania 16125 united states|41.4143725,-80.3435908
+pennsylvania 15370 united states|39.8482724,-80.1428584
+pennsylvania 15419 united states|40.0576214,-79.8884819
+pennsylvania 16172 united states|41.1185285,-80.3310589
+florida 33712 united states|27.7480089,-82.6645469
+new jersey 89030 united states|37.6310500,-97.2907510
+michigan 48150 united states|42.3691884,-83.3682539
+michigan 48197 united states|42.1966292,-83.6135572
+michigan 48109 united states|42.2896266,-83.7185852
+michigan 48106 united states|42.2836000,-83.7455000
+ohio 43952 united states|40.4094475,-80.6659842
+ohio 45662 united states|38.7947324,-82.9286428
+ohio 43015 united states|40.3033098,-83.0361376
+ohio 45750 united states|39.4057549,-81.5377013
+ohio 43023 united states|40.0483940,-82.5402275
+ohio 45701 united states|39.3221839,-82.1060683
+ohio 45764 united states|39.4546308,-82.2365981
+ohio 43762 united states|40.0249905,-81.7458845
+virginia 23502 united states|36.8574869,-76.2073525
+california 92096 united states|33.1298912,-117.1588277
+california 92056 united states|33.1987552,-117.2970026
+indiana 47306 united states|40.2065270,-85.4078902
+indiana 47907 united states|40.4220971,-86.9160800
+indiana 46135 united states|39.6508501,-86.8621827
+indiana 47374 united states|39.8282551,-84.8984775
+indiana 46989 united states|40.4351155,-85.4891138
+georgia 30501 united states|34.3193790,-83.8154791
+illinois 60614 united states|41.9205483,-87.6531805
+illinois 60626 united states|42.0101318,-87.6729074
+illinois 60640 united states|41.9703133,-87.6630450
+illinois 60622 united states|41.9011099,-87.6729074
+massachusetts 17300 united states|37.6325720,-97.2932080
+massachusetts 21810 united states|37.6325720,-97.2932080
+massachusetts 24930 united states|37.6325720,-97.2932080
+kansas 66506 united states|39.1946274,-96.5810080
+kansas 66045 united states|38.9571012,-95.2514685
+vermont 58270 united states|43.0722220,-89.7855560
+utah 84058 united states|40.2693839,-111.7853143
+utah 84105 united states|40.7345053,-111.8628205
+utah 84111 united states|40.7569389,-111.8836874
+utah 84112 united states|40.7652201,-111.8419536
+utah 84408 united states|41.1910940,-111.9447968
+utah 84130 united states|40.7606000,-111.8903000
+vermont 56020 united states|43.0722220,-89.7855560
+vermont 56760 united states|43.0722220,-89.7855560
+vermont 53440 united states|43.0722220,-89.7855560
+vermont 57640 united states|43.0722220,-89.7855560
+vermont 50610 united states|43.0722220,-89.7855560
+vermont 50680 united states|43.0722220,-89.7855560
+vermont 54650 united states|43.0722220,-89.7855560
+south carolina 29733 united states|34.9379000,-81.0277000
+south carolina 29208 united states|33.9984284,-81.0278473
+virginia 23173 united states|37.5745428,-77.5433122
+virginia 22902 united states|37.9712810,-78.4865602
+virginia 22903 united states|38.0335948,-78.5887951
+california 91355 united states|34.4203026,-118.6089752
+california 93108 united states|34.4626936,-119.5223715
+california 93311 united states|35.1268513,-119.1855785
+california 93407 united states|35.3008698,-120.6616912
+california 93106 united states|34.4135868,-119.8496976
+hawaii 96744 united states|21.4772343,-157.8689014
+hawaii 96766 united states|22.0126751,-159.4069452
+hawaii 96762 united states|21.6290278,-157.9464013
+hawaii 96782 united states|21.4225987,-157.9225549
+hawaii 96813 united states|21.3232488,-157.8361137
+hawaii 96816 united states|21.2868901,-157.7973653
+hawaii 96817 united states|21.3433967,-157.8390944
+hawaii 96720 united states|19.6282771,-155.3332061
+hawaii 96822 united states|21.3159023,-157.8033266
+hawaii 96732 united states|20.8733133,-156.4628632
+michigan 48502 united states|43.0142978,-83.6893547
+indiana 47809 united states|39.4723898,-87.4015365
+indiana 47722 united states|37.9718530,-87.5315491
+indiana 47405 united states|39.1689044,-86.5211280
+indiana 47591 united states|38.6469154,-87.4802068
+florida 33606 united states|27.9386915,-82.4725680
+florida 34234 united states|27.3676005,-82.5348172
+florida 34242 united states|27.2752758,-82.5564559
+florida 33620 united states|28.0631667,-82.4075526
+pennsylvania 16335 united states|41.6151426,-80.1428584
+pennsylvania 16214 united states|41.2008687,-79.3916050
+pennsylvania 15940 united states|40.5273374,-78.6228504
+pennsylvania 16652 united states|40.5440172,-77.9053182
+pennsylvania 16444 united states|41.8734230,-80.1219215
+pennsylvania 16546 united states|42.1172000,-80.0703000
+pennsylvania 16802 united states|40.8133964,-77.8638835
+pennsylvania 16541 united states|42.1285000,-80.0860000
+illinois 61108 united states|42.2610481,-88.9509626
+missouri 64145 united states|38.8817227,-94.5985613
+texas 76798 united states|31.5477701,-97.1204596
+california 91208 united states|34.1980641,-118.2351192
+california 91330 united states|34.2412895,-118.5258067
+north carolina 28804 united states|35.6535604,-82.5726805
+north carolina 28815 united states|35.6006000,-82.5545000
+illinois 60030 united states|42.3279674,-88.0411993
+illinois 60208 united states|42.0584025,-87.6741400
+illinois 60016 united states|42.0492138,-87.9040571
+illinois 60123 united states|42.0361546,-88.3142120
+florida 32514 united states|30.5331690,-87.2319753
+florida 32446 united states|30.8320177,-85.2515482
+florida 32307 united states|30.4247706,-84.2871281
+florida 32306 united states|30.4426851,-84.3029177
+connecticut 60820 united states|37.6346760,-97.2931940
+connecticut 61060 united states|37.6346760,-97.2931940
+connecticut 63200 united states|37.6346760,-97.2931940
+connecticut 62260 united states|37.6346760,-97.2931940
+connecticut 62690 united states|37.6346760,-97.2931940
+connecticut 61050 united states|37.6346760,-97.2931940
+connecticut 64890 united states|37.6346760,-97.2931940
+connecticut 60320 united states|37.6346760,-97.2931940
+connecticut 64570 united states|37.6346760,-97.2931940
+connecticut 61170 united states|37.6346760,-97.2931940
+connecticut 63600 united states|37.6346760,-97.2931940
+florida 33825 united states|27.5854458,-81.3619402
+south carolina 29302 united states|34.8854115,-81.8333656
+south carolina 29303 united states|34.9803527,-81.9425701
+south carolina 29634 united states|34.6825000,-82.8161000
+arkansas 71998 united states|34.1272372,-93.0519860
+texas 75091 united states|33.6359000,-96.6087000
+florida 32115 united states|29.2107000,-81.0232000
+florida 32202 united states|30.3231932,-81.6309078
+florida 32224 united states|30.2781951,-81.4663475
+florida 32433 united states|30.8866166,-86.2158497
+florida 32211 united states|30.3318222,-81.5870604
+florida 32025 united states|30.1570881,-82.5834947
+florida 32720 united states|29.0236689,-81.3619402
+michigan 49783 united states|46.4335116,-84.3252733
+alaska 99801 united states|58.5524906,-134.2155285
+alaska 99508 united states|61.1995461,-149.8239740
+new jersey 88760 united states|37.6310500,-97.2907510
+new jersey 78400 united states|37.6310500,-97.2907510
+texas 75074 united states|33.0243206,-96.6745042
+new jersey 79400 united states|37.6310500,-97.2907510
+new jersey 70430 united states|37.6310500,-97.2907510
+massachusetts 18350 united states|37.6325720,-97.2932080
+massachusetts 19700 united states|37.6325720,-97.2932080
+massachusetts 18300 united states|37.6325720,-97.2932080
+massachusetts 14400 united states|37.6325720,-97.2932080
+massachusetts 14200 united states|37.6325720,-97.2932080
+massachusetts 18450 united states|37.6325720,-97.2932080
+california 94118 united states|37.7822891,-122.4637080
+california 90041 united states|34.1322469,-118.2117257
+california 90024 united states|34.0631451,-118.4367551
+california 90049 united states|34.0963058,-118.4980744
+new jersey 72020 united states|37.6310500,-97.2907510
+california 92373 united states|34.0127473,-117.1617685
+california 91750 united states|34.1124740,-117.7725200
+california 91711 united states|34.1502000,-117.7021480
+california 92515 united states|33.9533000,-117.3955000
+california 91768 united states|34.0648167,-117.7783831
+georgia 31061 united states|33.0975564,-83.2291862
+kansas 67456 united states|38.5897428,-97.6765157
+new york 10708 united states|40.9383349,-73.8330844
+new york 10976 united states|41.0251011,-73.9065883
+new york 12601 united states|41.7165144,-73.9242251
+new york 10801 united states|40.9196897,-73.7889689
+new york 10577 united states|41.0356491,-73.7065940
+new york 10570 united states|41.1277716,-73.8007340
+texas 79697 united states|32.4293423,-99.7490496
+california 95189 united states|46.6172250,-64.8476310
+california 95814 united states|38.5824933,-121.4941738
+oklahoma 74104 united states|36.1423240,-95.9568250
+north carolina 27707 united states|35.9763040,-78.9175088
+north carolina 27708 united states|36.0073000,-78.9206000
+north carolina 27599 united states|35.9134000,-79.0561000
+wisconsin 54115 united states|44.4025865,-88.1096118
+wisconsin 54912 united states|44.2617000,-88.4153000
+ohio 45469 united states|39.7361387,-84.1685722
+ohio 45501 united states|39.9242000,-83.8087000
+ohio 45177 united states|39.4457756,-83.8048680
+ohio 45402 united states|39.7590894,-84.1909841
+ohio 45387 united states|39.8097806,-83.8791074
+ohio 45435 united states|39.7777865,-84.0661385
+florida 34206 united states|27.4987000,-82.5752000
+florida 33314 united states|26.0695412,-80.2265545
+florida 33301 united states|26.1219240,-80.1372757
+colorado 81301 united states|37.4124391,-107.8110000
+colorado 80639 united states|40.4040755,-104.6981412
+colorado 80487 united states|40.4731921,-106.8650395
+colorado 81231 united states|38.5515445,-106.9063491
+texas 75243 united states|32.9087285,-96.7386946
+texas 75244 united states|32.9200304,-96.8404600
+georgia 30314 united states|33.7549449,-84.4330214
+illinois 62918 united states|37.7733667,-89.0847949
+kentucky 40404 united states|37.5687000,-84.2965000
+massachusetts 21290 united states|37.6325720,-97.2932080
+maine 49370 united states|43.0000000,-68.0000000
+maine 41010 united states|43.0000000,-68.0000000
+pennsylvania 19085 united states|40.0226776,-75.3820239
+tennessee 37406 united states|35.0675923,-85.2618987
+texas 75962 united states|31.6196074,-94.6463265
+texas 75202 united states|32.7844170,-96.8056276
+utah 84602 united states|40.2484946,-111.6496767
+vermont 54010 united states|43.0722220,-89.7855560
+pennsylvania 19104 united states|39.9583587,-75.1953934
+massachusetts 12010 united states|37.6325720,-97.2932080
+massachusetts 10750 united states|37.6325720,-97.2932080
+massachusetts 10020 united states|37.6325720,-97.2932080
+massachusetts 10030 united states|37.6325720,-97.2932080
+massachusetts 10400 united states|37.6325720,-97.2932080
+massachusetts 10130 united states|37.6325720,-97.2932080
+georgia 30322 united states|33.7932589,-84.3265943
+montana 59301 united states|46.3768227,-105.8754767
+montana 59812 united states|46.8612243,-113.9799875
+montana 59501 united states|48.6947876,-109.8709479
+california 95816 united states|38.5800184,-121.4627576
+north carolina 28147 united states|35.6970900,-80.5660657
+texas 78205 united states|29.4226580,-98.4869905
+florida 34237 united states|27.3430762,-82.5131717
+georgia 31402 united states|32.0836000,-81.1003000
+new york 12303 united states|42.7552682,-73.9242251
+oklahoma 74801 united states|35.3113187,-96.9531225
+north carolina 28150 united states|35.3380357,-81.5815776
+arkansas 72150 united states|34.3531352,-92.3418870
+north carolina 28461 united states|33.9899994,-78.0423683
+florida 32085 united states|29.8944000,-81.3144000
+florida 32091 united states|29.9428820,-82.0625052
+texas 79711 united states|31.9974000,-102.0778000
+georgia 30442 united states|32.7781246,-81.9971108
+florida 32570 united states|30.8139724,-86.9423801
+georgia 31776 united states|31.1797000,-83.7892000
+texas 75456 united states|33.1564000,-94.9684000
+texas 78130 united states|29.7049806,-98.0683430
+delaware 19720 united states|39.5752330,-75.5979880
+washington 98499 united states|47.1694350,-122.5118668
+georgia 30467 united states|32.7074673,-81.6035062
+georgia 31791 united states|31.5282489,-83.8897057
+florida 32308 united states|30.4805441,-84.2173403
+florida 33610 united states|28.0007147,-82.3831561
+alaska 99501 united states|61.2165305,-149.8669328
+georgia 31702 united states|31.5783000,-84.1556000
+pennsylvania 18105 united states|40.6059000,-75.4656000
+texas 77515 united states|29.1685304,-95.4358530
+north carolina 28802 united states|35.6006000,-82.5545000
+georgia 30309 united states|33.7971137,-84.3804888
+georgia 30903 united states|33.4667000,-82.0167000
+illinois 60507 united states|41.7606000,-88.3202000
+texas 78704 united states|30.2456728,-97.7688358
+texas 77521 united states|29.8000653,-94.9662608
+texas 77720 united states|30.0859000,-94.1014000
+north carolina 28712 united states|35.2190534,-82.7778579
+california 90746 united states|33.8521663,-118.2555860
+south carolina 29403 united states|32.7921216,-79.9472502
+north carolina 28202 united states|35.2272302,-80.8460822
+south carolina 29706 united states|34.7649635,-81.2078164
+illinois 60607 united states|41.8808639,-87.6531805
+south carolina 29202 united states|34.0236678,-81.0281925
+north carolina 28026 united states|35.4089000,-80.5794000
+arizona 85228 united states|32.9284226,-111.4991334
+texas 78463 united states|27.8006000,-97.3964000
+texas 75204 united states|32.7994750,-96.7868794
+georgia 30132 united states|33.9800711,-84.8776392
+south carolina 29532 united states|34.2860857,-79.8520818
+texas 76206 united states|33.2148000,-97.1329000
+michigan 48219 united states|42.4216997,-83.2613054
+georgia 30133 united states|33.7516000,-84.7478000
+north carolina 27701 united states|36.0016001,-78.9005333
+california 94303 united states|37.4561297,-122.1235054
+texas 79937 united states|31.7589000,-106.4866000
+oregon 97401 united states|44.0637173,-123.0847061
+connecticut 06432 united states|41.1935626,-73.2470486
+florida 32035 united states|30.6697000,-81.4629000
+georgia 31750 united states|31.7664035,-83.2077645
+arkansas 72335 united states|34.9921836,-90.7913227
+colorado 80525 united states|40.5417839,-105.0440520
+texas 76120 united states|32.7660707,-97.1844140
+georgia 30742 united states|34.9273185,-85.2593113
+texas 77553 united states|29.3258987,-94.8054142
+north carolina 27532 united states|35.3849000,-77.9931000
+north carolina 27402 united states|36.0726000,-79.7925000
+south carolina 29603 united states|34.8526000,-82.3943000
+north carolina 27858 united states|35.5132089,-77.2979782
+mississippi 38930 united states|33.5726622,-90.1869644
+georgia 30224 united states|33.2042944,-84.2384170
+texas 78550 united states|26.2378959,-97.6765157
+north carolina 28904 united states|35.0964003,-83.7199136
+north carolina 27944 united states|36.1942698,-76.3868797
+north carolina 27262 united states|35.9620797,-80.0367259
+north carolina 27278 united states|36.0887108,-79.0871005
+south carolina 29938 united states|32.2161000,-80.7525000
+texas 77008 united states|29.7995924,-95.4201377
+texas 77258 united states|29.7632000,-95.3633000
+maryland 20781 united states|38.9485011,-76.9326167
+tennessee 37605 united states|36.3136000,-82.3538000
+texas 76543 united states|31.1134103,-97.6873706
+georgia 30241 united states|33.0232808,-84.9817540
+florida 33460 united states|26.6188279,-80.0590804
+texas 78040 united states|27.5165805,-99.5117328
+north carolina 28645 united states|36.0092311,-81.5596427
+north carolina 27292 united states|35.7352485,-80.2321313
+north carolina 28092 united states|35.4902575,-81.2739073
+california 90017 united states|34.0543797,-118.2672801
+texas 79401 united states|33.5876805,-101.8492577
+north carolina 28359 united states|34.6181000,-79.0086000
+north carolina 28752 united states|35.6057705,-81.9971108
+texas 75671 united states|32.5449000,-94.3675000
+north carolina 28753 united states|35.9105019,-82.6915429
+north carolina 27027 united states|36.4370639,-79.9975916
+texas 78501 united states|26.2188442,-98.2322355
+georgia 30439 united states|32.4241804,-82.0842901
+louisiana 70129 united states|30.1126874,-89.8879304
+new york 10017 united states|40.7524020,-73.9727181
+new jersey 07102 united states|40.7350747,-74.1739057
+georgia 30263 united states|33.3786293,-84.8984775
+virginia 23607 united states|36.9749224,-76.4447397
+kansas 67114 united states|38.0697247,-97.2868680
+california 91343 united states|34.2386799,-118.4805569
+north carolina 28659 united states|36.1997309,-81.0644263
+oklahoma 77301 united states|35.5292350,-97.5671950
+florida 33334 united states|26.1803920,-80.1372757
+florida 34973 united states|27.2439000,-80.8302000
+florida 32887 united states|28.5382000,-81.3795000
+iowa 52501 united states|41.0543785,-92.4208713
+florida 32177 united states|29.7618374,-81.7349420
+texas 77504 united states|29.6526666,-95.1953554
+florida 32524 united states|30.4213000,-87.2168000
+virginia 23803 united states|37.1654700,-77.4931403
+pennsylvania 19146 united states|39.9388686,-75.1808035
+arizona 85016 united states|33.5213220,-112.0297520
+pennsylvania 15222 united states|40.4498036,-79.9906015
+new mexico 88130 united states|34.1776535,-103.3125299
+north carolina 27607 united states|35.8027072,-78.7306158
+washington 98055 united states|47.4424695,-122.1992495
+virginia 23234 united states|37.4485190,-77.4816693
+virginia 23241 united states|37.5537000,-77.4609000
+south carolina 29731 united states|34.9248000,-81.0256000
+georgia 30739 united states|34.8019287,-85.2204851
+maryland 20853 united states|39.1028683,-77.0967357
+north carolina 27804 united states|35.9791832,-77.8481628
+michigan 49286 united states|42.0075819,-83.9426698
+north carolina 27360 united states|35.8736458,-80.0758425
+georgia 31799 united states|30.8366000,-83.9787000
+georgia 31213 united states|32.8407000,-83.6325000
+georgia 30577 united states|34.5691239,-83.3148018
+kansas 67880 united states|37.5245985,-101.2523792
+pennsylvania 15401 united states|39.8762201,-79.7624177
+texas 76708 united states|31.6281133,-97.2437105
+hawaii 96797 united states|21.4066846,-158.0119801
+oregon 97146 united states|46.1514108,-123.9213784
+district of columbia 20002 united states|38.9052763,-76.9815877
+iowa 50704 united states|42.4929000,-92.3426000
+georgia 30830 united states|33.0468937,-81.9971108
+kansas 67202 united states|37.6843628,-97.3327530
+north carolina 28401 united states|34.3023653,-77.9852853
+florida 33186 united states|25.6653934,-80.3992652
+georgia 30357 united states|33.7486000,-84.3884000
+massachusetts 22019 united states|37.6325720,-97.2932080
+illinois 60606 united states|41.8817767,-87.6371461
+california 90065 united states|34.1088500,-118.2234229
+arizona 85015 united states|33.5079722,-112.1012912
+new york 10003 united states|40.7322535,-73.9874105
+pennsylvania 19110 united states|39.9514000,-75.1636000
+california 92101 united states|32.7217420,-117.1647094
+washington 98112 united states|47.6329523,-122.2891888
+north carolina 28205 united states|35.2263714,-80.7990185
+south carolina 29601 united states|34.8512337,-82.4048423
+tennessee 38104 united states|35.1323787,-90.0046630
+florida 33129 united states|25.7550772,-80.2070328
+tennessee 37204 united states|36.1003494,-86.7718017
+oregon 97208 united states|45.5239000,-122.6751000
+california 94104 united states|37.7923058,-122.4021273
+new jersey 07962 united states|40.7968000,-74.4816000
+kansas 66208 united states|38.9950997,-94.6295394
+maryland 21201 united states|39.2963369,-76.6210539
+michigan 48075 united states|42.4595697,-83.2398943
+alabama 35259 united states|33.5208000,-86.8027000
+nebraska 68102 united states|41.2634695,-95.9356872
+louisiana 70119 united states|29.9682422,-90.0886948
+california 94578 united states|37.7050703,-122.1235054
+texas 76015 united states|32.6905101,-97.1305536
+indiana 46176 united states|39.5321498,-85.7256372
+new mexico 88221 united states|32.4206000,-104.2286000
+massachusetts 01752 united states|42.3473720,-71.5367860
+connecticut 06105 united states|41.7721061,-72.7038047
+pennsylvania 19107 united states|39.9509036,-75.1574567
+new hampshire 03060 united states|42.7470311,-71.4596201
+new mexico 87571 united states|36.4122833,-105.4536718
+florida 32401 united states|30.1620620,-85.6486251
+new york 10023 united states|40.7769059,-73.9800645
+connecticut 06010 united states|41.6750889,-72.9224329
+massachusetts 01852 united states|42.6303002,-71.2992993
+california 93102 united states|34.4233000,-119.7035000
+tennessee 38103 united states|35.1653557,-90.0700051
+california 94501 united states|37.7807549,-122.2824021
+kentucky 42101 united states|37.1184213,-86.5400674
+virginia 24201 united states|36.6159085,-82.1659243
+tennessee 37404 united states|35.0293381,-85.2670732
+alabama 35232 united states|33.5208000,-86.8027000
+massachusetts 01201 united states|42.4634503,-73.3001233
+tennessee 37831 united states|36.0103000,-84.2698000
+tennessee 37815 united states|36.2137000,-83.2952000
+indiana 47250 united states|38.8554458,-85.3962769
+california 93013 united states|34.6066000,-119.5558000
+north carolina 27909 united states|36.2927068,-76.3174140
+texas 75092 united states|33.6805008,-96.7279918
+massachusetts 01041 united states|42.2043000,-72.6167000
+florida 33883 united states|28.0218000,-81.7332000
+tennessee 37662 united states|36.5486000,-82.5619000
+new york 13203 united states|43.0619897,-76.1348944
+georgia 31904 united states|32.5629968,-85.0129509
+colorado 80204 united states|39.7380371,-105.0265195
+missouri 63115 united states|38.6789517,-90.2385387
+florida 32207 united states|30.2949194,-81.6363869
+california 92085 united states|33.2003000,-117.2419000
+florida 33802 united states|28.0327000,-81.9518000
+new mexico 87501 united states|35.8534445,-105.8290298
+massachusetts 01109 united states|42.1141188,-72.5500596
+virginia 23670 united states|37.0308000,-76.3476000
+iowa 51103 united states|42.5171387,-96.4396888
+indiana 47404 united states|39.2189859,-86.5905371
+delaware 19801 united states|39.7124184,-75.5160235
+maryland 21740 united states|39.5951426,-77.7223162
+florida 34101 united states|26.1418000,-81.7950000
+maryland 21227 united states|39.2440444,-76.6759220
+virginia 23701 united states|36.8130915,-76.3695167
+indiana 46205 united states|39.8298750,-86.1395598
+nebraska 68104 united states|41.2954735,-95.9938339
+massachusetts 01902 united states|42.4719938,-70.9398192
+indiana 46131 united states|39.4810288,-86.0325629
+connecticut 06831 united states|41.0853864,-73.6771662
+alabama 36302 united states|31.2234000,-85.3906000
+texas 75235 united states|32.8296623,-96.8511814
+indiana 47274 united states|38.9572194,-85.8895551
+massachusetts 01830 united states|42.7935917,-71.0378909
+alabama 35810 united states|34.8043559,-86.6107106
+california 90230 united states|33.9933257,-118.3987842
+new mexico 87740 united states|36.8448799,-104.3791912
+new york 12307 united states|42.8065128,-73.9330429
+connecticut 06451 united states|41.5385097,-72.8220064
+connecticut 06702 united states|41.5562597,-73.0420036
+florida 33781 united states|27.8435655,-82.7077354
+georgia 30904 united states|33.4827989,-82.0080140
+indiana 47375 united states|39.8287000,-84.8903000
+massachusetts 01238 united states|42.2961625,-73.2057595
+massachusetts 01104 united states|42.1292582,-72.5855474
+massachusetts 02780 united states|41.9125011,-71.1092012
+massachusetts 01604 united states|42.2530794,-71.7741103
+north carolina 27702 united states|35.9939000,-78.8986000
+north carolina 27403 united states|36.0733691,-79.8240715
+north carolina 27620 united states|35.7719000,-78.6388000
+north carolina 27102 united states|36.0983000,-80.2466000
+south carolina 29602 united states|34.8526000,-82.3943000
+wisconsin 53210 united states|43.0671805,-87.9751299
+oregon 97405 united states|43.9412384,-123.1632160
+kentucky 42302 united states|37.7744000,-87.1134000
+south dakota 57709 united states|44.0806000,-103.2309000
+arkansas 72901 united states|35.3595120,-94.4130648
+arkansas 72303 united states|35.1467000,-90.1847000
+california 94804 united states|37.9158152,-122.3390936
+california 92627 united states|33.6496252,-117.9190418
+florida 33711 united states|27.7374908,-82.6861446
+florida 33056 united states|25.9540299,-80.2488596
+new york 10458 united states|40.8621792,-73.8860100
+south carolina 29613 united states|34.9274741,-82.4400679
+district of columbia 20052 united states|38.8993000,-77.0497000
+georgia 30303 united states|33.7557110,-84.3883717
+new jersey 08701 united states|40.0807404,-74.2061931
+pennsylvania 19041 united states|40.0065115,-75.3149796
+indiana 46408 united states|41.5412825,-87.3711477
+mississippi 39217 united states|32.2960495,-90.2101057
+kansas 66112 united states|39.1144764,-94.7639811
+new hampshire 03435 united states|42.9337000,-72.2794000
+south carolina 26949 united states|37.6289020,-97.2913890
+oklahoma 73050 united states|35.9246147,-97.2544973
+new york 10468 united states|40.8687887,-73.8977693
+vermont 05753 united states|43.9885857,-73.1658241
+tennessee 38704 united states|35.1105980,-90.0914620
+massachusetts 02115 united states|42.3404107,-71.0928603
+ohio 45056 united states|39.4717184,-84.7524482
+florida 33132 united states|25.7832250,-80.1902963
+illinois 60625 united states|41.9711068,-87.7024817
+kansas 66762 united states|37.3960411,-94.7070616
+missouri 63108 united states|38.6474590,-90.2573100
+virginia 23868 united states|36.6909632,-77.8138553
+pennsylvania 16057 united states|41.0330673,-80.0758425
+washington 98512 united states|47.0004826,-123.0213054
+missouri 63701 united states|37.3604270,-89.5308903
+texas 75275 united states|32.7835000,-96.8001000
+texas 78666 united states|29.8942825,-97.9810845
+california 91910 united states|32.6385134,-117.0617553
+maryland 20686 united states|38.1867000,-76.4348000
+vermont 05439 united states|44.5437000,-73.1485000
+virginia 24595 united states|37.5590958,-79.0842765
+maryland 21252 united states|39.3870053,-76.6174433
+california 92131 united states|32.9086009,-117.0911760
+ab t2n1n4 canada|51.0751540,-114.1284130
+illinois 61801 united states|40.1059233,-88.2120315
+iowa 52242 united states|41.6618875,-91.5462877
+massachusetts 01003 united states|42.3913464,-72.5249195
+nebraska 68588 united states|40.8184555,-96.7025796
+new mexico 87131 united states|35.0843966,-106.6217623
+north carolina 28403 united states|34.2253022,-77.8710285
+california 09237 united states|34.9561849,-118.1498923
+new york 14627 united states|43.1295933,-77.6292697
+texas 77006 united states|29.7431508,-95.3887200
+texas 78712 united states|30.2836757,-97.7321648
+wisconsin 53706 united states|43.0750347,-89.4115477
+wisconsin 53190 united states|42.7982610,-88.7301525
+florida 32811 united states|28.5141606,-81.4443790
+kansas 66621 united states|39.0501000,-95.6736000
+virginia 24450 united states|37.8062214,-79.5153773
+maryland 21620 united states|39.2074054,-76.1088001
+new york 13026 united states|42.7600442,-76.6643728
+illinois 61455 united states|40.4294973,-90.6393702
+maryland 21157 united states|39.5548610,-76.9873477
+massachusetts 02215 united states|42.3476181,-71.1002881
+massachusetts 01267 united states|42.6852841,-73.2529464
+connecticut 06520 united states|41.3083000,-72.9287000
+georgia 30582 united states|34.9503751,-83.8685072
+south carolina 29325 united states|34.4796903,-81.8442934
+new jersey 08542 united states|40.3542647,-74.6620003
+new jersey 08540 united states|40.3815302,-74.6517540
+new jersey 07430 united states|41.0887754,-74.1827119
+oregon 97527 united states|42.3819065,-123.4035943
+south carolina 29306 united states|34.8861458,-81.9261999
+new york 14215 united states|42.9301398,-78.8099472
+new hampshire 03755 united states|43.7260338,-72.1429172
+north carolina 28608 united states|36.2135541,-81.6791787
+kentucky 40390 united states|37.8690959,-84.6792931
+maine 04240 united states|44.0939499,-70.1582944
+georgia 30149 united states|34.2894920,-85.1868137
+massachusetts 02135 united states|42.3463503,-71.1626756
+massachusetts 02454 united states|42.3767000,-71.2363000
+massachusetts 02720 united states|41.7359452,-71.1151431
+california 92834 united states|33.8796000,-117.8978000
+new york 14208 united states|42.9126800,-78.8524199
+new york 13035 united states|42.9262799,-75.8301537
+ohio 45384 united states|39.7098251,-83.8817571
+kentucky 40422 united states|37.6322852,-84.8359395
+arizona 85203 united states|33.4566458,-111.8032005
+iowa 52001 united states|42.5292381,-90.6962853
+massachusetts 01610 united states|42.2379074,-71.8126593
+massachusetts 02111 united states|42.3514653,-71.0601767
+maine 04401 united states|44.8407327,-68.8118551
+maine 04104 united states|43.6615000,-70.2555000
+maine 04769 united states|46.7026897,-67.9899747
+maine 04841 united states|44.1210311,-69.1239068
+maine 04903 united states|44.5517000,-69.6322000
+michigan 49829 united states|45.7738752,-87.1630507
+michigan 49735 united states|44.9898127,-84.7110277
+michigan 49738 united states|44.6839926,-84.5641470
+michigan 49001 united states|42.2593625,-85.5715015
+nebraska 69360 united states|42.6842555,-102.4839212
+new hampshire 03570 united states|44.4767895,-71.2585539
+new hampshire 03301 united states|43.2086343,-71.5486562
+new hampshire 03431 united states|42.9561414,-72.3074326
+new hampshire 03766 united states|43.6217757,-72.2492351
+new hampshire 03108 united states|42.9956000,-71.4556000
+montana 59313 united states|46.1686619,-104.2166774
+montana 59104 united states|45.7834000,-108.5003000
+montana 58701 united states|23.1633473,-82.2955633
+montana 59330 united states|47.0547872,-104.6739105
+montana 59404 united states|47.5359809,-111.4124518
+north carolina 28806 united states|35.5692059,-82.6159271
+north carolina 28327 united states|35.4068700,-79.4253776
+north carolina 27514 united states|35.9722081,-79.0475559
+north carolina 28210 united states|35.1274285,-80.8599193
+north carolina 27703 united states|35.9657059,-78.8042828
+north carolina 27101 united states|36.1052320,-80.2042436
+north dakota 58501 united states|46.8198071,-100.7079442
+north dakota 58301 united states|48.1787862,-98.8392105
+north dakota 58601 united states|46.8457465,-102.8205861
+north dakota 58106 united states|46.8774000,-96.7895000
+massachusetts 01608 united states|42.2588857,-71.8022812
+maryland 21401 united states|38.9851115,-76.5603828
+maryland 21204 united states|39.4018027,-76.6297189
+new york 12953 united states|44.7751453,-74.2879487
+new york 12701 united states|41.6607514,-74.7102958
+new york 14865 united states|42.3465895,-76.8374995
+new york 10010 united states|40.7388319,-73.9815337
+new york 14301 united states|43.0984101,-79.0334288
+new york 13815 united states|42.5459769,-75.5509602
+new york 10977 united states|41.1041239,-74.0476378
+new york 12484 united states|41.8696338,-74.1827119
+new york 10605 united states|41.0112762,-73.7419017
+ohio 44320 united states|41.0827008,-81.5706109
+montana 59624 united states|46.5925000,-112.0355000
+montana 59802 united states|47.0232832,-113.8777406
+montana 59072 united states|46.4762754,-108.5570627
+montana 59201 united states|48.2276673,-105.5313629
+north carolina 27534 united states|35.3712582,-77.9053182
+north carolina 27546 united states|35.3816300,-78.9061921
+north carolina 27602 united states|35.7719000,-78.6388000
+north carolina 28786 united states|35.4731561,-83.0146526
+north carolina 28472 united states|34.3185672,-78.7249469
+north dakota 58701 united states|48.1240889,-101.2804953
+nebraska 69301 united states|42.2123006,-102.8975098
+nebraska 69337 united states|42.8301322,-102.8975098
+nebraska 68802 united states|40.9253000,-98.3418000
+nebraska 68848 united states|40.6996000,-99.0812000
+nebraska 68508 united states|40.8090928,-96.7119409
+oklahoma 73110 united states|35.4589774,-97.4056928
+oklahoma 74401 united states|35.7490769,-95.4358530
+oklahoma 73071 united states|35.2728494,-97.4165053
+oklahoma 74601 united states|36.6973961,-97.1359377
+oklahoma 74953 united states|35.0625491,-94.5830789
+oklahoma 73460 united states|34.3506923,-96.6424330
+oklahoma 74145 united states|36.0918289,-95.8828751
+oklahoma 73772 united states|35.8361638,-98.4403573
+oregon 97701 united states|44.1137409,-121.2630260
+oregon 97420 united states|43.3197483,-123.9975791
+oregon 97330 united states|44.6385045,-123.2929399
+north carolina 28563 united states|35.1084000,-77.0446000
+north carolina 28694 united states|36.3217158,-81.4059186
+north dakota 58107 united states|46.8774000,-96.7895000
+nebraska 68114 united states|41.2674199,-96.0520363
+new hampshire 03302 united states|43.2084000,-71.5381000
+new jersey 07003 united states|40.7989068,-74.1885825
+new mexico 87102 united states|35.0848894,-106.6468148
+alaska 99503 united states|61.1899785,-149.8901682
+oregon 97402 united states|44.0431493,-123.2259181
+oregon 97444 united states|42.4197804,-124.3521126
+oregon 97526 united states|42.5052649,-123.3273155
+oregon 97224 united states|45.4081316,-122.8033845
+oregon 97504 united states|42.3406991,-122.8063530
+oregon 97365 united states|44.6925705,-124.0360699
+oregon 97268 united states|45.4166000,-122.6386000
+oregon 97801 united states|45.6025697,-118.6393144
+oregon 97210 united states|45.5445025,-122.7063698
+oregon 97470 united states|43.1939907,-123.4082741
+oregon 97071 united states|45.1308865,-122.8348938
+pennsylvania 16823 united states|40.9240628,-77.7223162
+pennsylvania 16830 united states|41.0577326,-78.4297187
+pennsylvania 16501 united states|42.1241024,-80.0842224
+pennsylvania 17112 united states|40.3416765,-76.8028933
+west virginia 26037 united states|40.3415413,-80.5771737
+west virginia 26505 united states|39.6416004,-79.9360593
+west virginia 26102 united states|39.2667000,-81.5617000
+west virginia 24740 united states|37.3603075,-81.0092062
+west virginia 25177 united states|38.3789081,-81.8333656
+florida 32522 united states|30.4213000,-87.2168000
+florida 32304 united states|30.4649282,-84.3857442
+florida 33607 united states|27.9612863,-82.5131717
+georgia 30318 united states|33.7946333,-84.4487720
+georgia 30901 united states|33.4562843,-81.9425701
+georgia 30240 united states|33.0298380,-85.1479364
+georgia 31201 united states|32.8331213,-83.6401633
+georgia 31401 united states|32.0812590,-81.0809848
+georgia 31601 united states|30.7729189,-83.3789389
+iowa 50314 united states|41.6086627,-93.6369803
+iowa 52002 united states|42.5287528,-90.7722974
+iowa 50501 united states|42.5136902,-94.1923400
+iowa 51534 united states|41.0392443,-95.7089241
+iowa 51247 united states|43.1912526,-96.3651570
+iowa 50276 united states|41.8725525,-93.9266502
+california 94121 united states|37.7813454,-122.4976680
+california 95134 united states|37.4246679,-121.9416226
+california 94401 united states|37.5758867,-122.3277578
+california 93103 united states|34.4330940,-119.6817845
+california 95269 united states|37.9578000,-121.2899000
+colorado 80211 united states|39.7682702,-105.0265195
+colorado 81502 united states|39.0637000,-108.5500000
+colorado 81003 united states|38.2853738,-104.6238048
+colorado 81082 united states|37.2060784,-104.5189214
+connecticut 06604 united states|41.1787349,-73.1969108
+district of columbia 20020 united states|38.8628755,-76.9700669
+delaware 19901 united states|39.1616465,-75.4927278
+florida 33316 united states|26.1008816,-80.1289010
+florida 32641 united states|29.6336544,-82.2800546
+florida 32818 united states|28.5802998,-81.4828198
+florida 33410 united states|26.8598894,-80.0870155
+wyoming 82601 united states|43.1565673,-106.2522143
+wyoming 82009 united states|41.4269559,-104.8454619
+washington 98907 united states|46.6022000,-120.5048000
+wisconsin 54914 united states|44.2658438,-88.4500789
+wisconsin 54806 united states|46.5517439,-90.8354725
+wisconsin 53511 united states|42.5279286,-89.1134166
+texas 79901 united states|31.7597373,-106.4788714
+texas 77074 united states|29.6917896,-95.5144930
+texas 78041 united states|27.8806104,-99.4561550
+texas 79336 united states|33.6212592,-102.3463875
+texas 79409 united states|33.5818855,-101.8806177
+tennessee 37203 united states|36.1523805,-86.7893889
+texas 79605 united states|32.4389231,-99.7790227
+texas 79101 united states|35.2045402,-101.8407065
+texas 79720 united states|32.2386736,-101.4793500
+texas 77803 united states|30.6821782,-96.3757990
+south dakota 57350 united states|44.3703145,-98.1775638
+south dakota 57301 united states|43.7366903,-98.0465185
+south dakota 57501 united states|44.4968444,-100.3048897
+south dakota 57104 united states|43.6147244,-96.6851982
+south dakota 57783 united states|44.4815870,-103.9319295
+tennessee 37334 united states|35.1216698,-86.5400674
+tennessee 37066 united states|36.4051691,-86.4389740
+tennessee 38351 united states|35.6648364,-88.4210006
+tennessee 38173 united states|35.1497000,-90.0487000
+texas 77627 united states|29.9944882,-93.9980485
+texas 75460 united states|33.5358192,-95.6037465
+texas 79072 united states|34.1636756,-101.7523854
+texas 76904 united states|31.3349838,-100.4846227
+texas 78212 united states|29.4595699,-98.4952228
+texas 76877 united states|31.0995366,-98.7921836
+utah 84513 united states|39.2132632,-110.9268201
+utah 84041 united states|41.0661321,-112.0118669
+utah 84321 united states|41.6414535,-111.5706786
+utah 84532 united states|38.6046360,-109.2831531
+utah 84097 united states|40.3062695,-111.6720346
+utah 84701 united states|38.6348463,-111.7614661
+utah 84066 united states|40.6258361,-110.4262088
+utah 84190 united states|40.7606000,-111.8903000
+virginia 22314 united states|38.7999723,-77.0506896
+virginia 23606 united states|37.0672839,-76.5141380
+virginia 24301 united states|37.0883755,-80.7879407
+virginia 24141 united states|37.1248983,-80.5771737
+wisconsin 54304 united states|44.4866783,-88.0607565
+wisconsin 53143 united states|42.5647980,-87.8304145
+virginia 24038 united states|37.2709000,-79.9418000
+virginia 24651 united states|37.0561251,-81.4937993
+vermont 05641 united states|44.1886628,-72.4530944
+vermont 05201 united states|42.8918357,-73.1113560
+vermont 05301 united states|42.8571087,-72.6387700
+vermont 05401 united states|44.4848414,-73.2705490
+vermont 05701 united states|43.6225930,-72.9696779
+vermont 05156 united states|43.3172476,-72.4494848
+washington 98337 united states|47.5685263,-122.6397033
+washington 99336 united states|46.2138054,-119.1610410
+washington 98632 united states|46.1908382,-123.0552084
+washington 98275 united states|47.9020340,-122.3072458
+washington 98501 united states|46.9770179,-122.8584190
+washington 98382 united states|48.0217704,-123.1273844
+washington 99201 united states|47.6630464,-117.4303955
+washington 98409 united states|47.2096868,-122.4879149
+washington 98668 united states|45.6387000,-122.6606000
+washington 98801 united states|47.4061258,-120.3678981
+south dakota 57785 united states|44.4185729,-103.2108226
+south dakota 57274 united states|45.2799927,-97.4861544
+tennessee 38310 united states|35.2705031,-88.4210006
+tennessee 37402 united states|35.0449767,-85.3162066
+tennessee 38501 united states|36.2452673,-85.5406209
+tennessee 37322 united states|35.4774579,-84.8359395
+texas 78155 united states|29.5068941,-97.9157099
+texas 75090 united states|33.6005808,-96.5569882
+texas 75504 united states|33.4250000,-94.0478000
+texas 77591 united states|29.4061256,-94.9870491
+texas 75975 united states|31.8494923,-94.3770704
+ohio 44113 united states|41.4857101,-81.6966306
+ohio 44833 united states|40.7544057,-82.7994194
+ohio 45331 united states|40.0628524,-84.6479124
+ohio 45640 united states|39.0502377,-82.6915429
+ohio 43609 united states|41.6261708,-83.5762898
+oklahoma 73522 united states|34.6382000,-99.3336000
+oklahoma 74701 united states|34.0098799,-96.3864428
+oklahoma 73703 united states|36.4102920,-97.9374948
+oklahoma 73501 united states|34.5588751,-98.2869478
+oklahoma 73448 united states|33.9699395,-97.1144039
+ohio 44240 united states|41.1771308,-81.3619402
+ohio 44902 united states|40.7586639,-82.5104655
+ohio 44622 united states|40.5443195,-81.4937993
+ohio 45502 united states|39.8354706,-83.7836403
+pennsylvania 19149 united states|40.0390934,-75.0640350
+pennsylvania 19462 united states|40.1110194,-75.2887369
+pennsylvania 17901 united states|40.6702074,-76.2015572
+south carolina 29204 united states|34.0291227,-81.0036821
+south carolina 29835 united states|33.9334188,-82.2800546
+south carolina 29406 united states|32.9221152,-80.0367259
+south carolina 29730 united states|34.9037259,-81.0092062
+south carolina 29151 united states|33.9206000,-80.3418000
+south dakota 57401 united states|45.4742195,-98.4928586
+pennsylvania 15697 united states|40.2428621,-79.5800099
+pr 00936 united states|18.4683000,-66.1061000
+rhode island 02920 united states|41.7612384,-71.4655565
+rhode island 02914 united states|41.8164902,-71.3646236
+rhode island 02903 united states|41.8177282,-71.4150936
+south carolina 29802 united states|33.5606000,-81.7194000
+new hampshire 03801 united states|43.0719362,-70.8001028
+new jersey 07601 united states|40.8876273,-74.0476378
+new jersey 07960 united states|40.7793504,-74.5111720
+new jersey 07755 united states|40.2598423,-74.0241367
+new jersey 08068 united states|39.9531287,-74.6634640
+new jersey 08865 united states|40.6887441,-75.1662121
+new york 12222 united states|42.6525000,-73.7567000
+new york 12020 united states|43.0033171,-73.8654295
+new york 14020 united states|43.0100971,-78.2248291
+new york 14810 united states|42.3378553,-77.3554130
+new york 12414 united states|42.2078684,-73.9124674
+new york 13045 united states|42.5890797,-76.2015572
+pennsylvania 15767 united states|40.9743046,-78.9966888
+pennsylvania 15853 united states|41.3894451,-78.7702895
+pennsylvania 18503 united states|41.4087638,-75.6688104
+pennsylvania 16749 united states|41.7913964,-78.4524591
+pennsylvania 16365 united states|41.8322032,-79.0645056
+new jersey 08876 united states|40.5868114,-74.6985891
+new mexico 88001 united states|32.3001619,-106.7529514
+new mexico 87544 united states|35.7891820,-106.2992912
+new mexico 88201 united states|33.5193589,-104.1001326
+new mexico 88062 united states|32.7702000,-108.2797000
+new mexico 87901 united states|33.1871876,-106.7234639
+nevada 89701 united states|39.1297282,-119.6730939
+nevada 89101 united states|36.1697096,-115.1236952
+nevada 89503 united states|39.5424616,-119.8410174
+new york 14733 united states|42.1369206,-79.1774268
+new york 12801 united states|43.3163893,-73.6477342
+new york 10924 united states|41.3862816,-74.3470170
+new york 13357 united states|42.9712361,-75.0727956
+new york 14850 united states|42.4355110,-76.5257007
+new york 14760 united states|42.0609790,-78.4069732
+new york 13126 united states|43.4244918,-76.4794435
+new york 12974 united states|44.0623910,-73.4709252
+new york 14604 united states|43.1557339,-77.6063541
+new york 11787 united states|40.8507116,-73.2175571
+wisconsin 54601 united states|43.8041647,-91.1544963
+wisconsin 53705 united states|43.0716332,-89.4600369
+wisconsin 54481 united states|44.5871015,-89.5874819
+wisconsin 54880 united states|46.6118521,-92.1461155
+west virginia 25411 united states|39.5073361,-78.2476146
+west virginia 25301 united states|38.3513189,-81.6281681
+north dakota 58201 united states|47.8772694,-97.1580776
+nebraska 68310 united states|40.2371569,-96.7065914
+nebraska 69341 united states|41.7694332,-103.6825860
+new hampshire 03101 united states|42.9901899,-71.4625883
+new jersey 08401 united states|39.3626571,-74.4349761
+new jersey 08812 united states|40.6019636,-74.4818698
+new mexico 87533 united states|36.0007000,-106.0725000
+new mexico 87504 united states|35.6868000,-105.9372000
+kentucky 40621 united states|38.2009000,-84.8734000
+kentucky 40065 united states|38.2620560,-85.2308414
+kentucky 40220 united states|38.2191978,-85.6177891
+kentucky 40201 united states|38.2545000,-85.7595000
+kentucky 40214 united states|38.1459555,-85.7769164
+kentucky 42304 united states|37.7535000,-87.1497000
+nevada 89030 united states|36.2040034,-115.1296249
+nevada 89431 united states|39.5338040,-119.7541856
+virginia 24073 united states|37.1451383,-80.4326521
+virginia 22630 united states|38.9056005,-78.1792434
+virginia 22482 united states|37.7431700,-76.3753046
+virginia 20177 united states|39.1169000,-77.5564000
+virginia 20110 united states|38.7599863,-77.4816693
+virginia 24354 united states|36.8031001,-81.5377013
+alabama 36633 united states|30.6945000,-88.0431000
+alabama 36801 united states|32.7023999,-85.4169211
+alabama 35653 united states|34.5333869,-87.8156715
+alabama 35401 united states|33.1690726,-87.6383797
+mississippi 39437 united states|31.5802262,-89.2086773
+mississippi 39304 united states|32.3645000,-88.7039000
+mississippi 38655 united states|34.3741496,-89.4363910
+montana 59107 united states|45.7834000,-108.5003000
+montana 59403 united states|47.5001000,-111.3003000
+texas 76906 united states|31.4638000,-100.4368000
+utah 84401 united states|41.2172180,-112.0714835
+utah 84601 united states|40.2128559,-111.7256936
+virginia 24219 united states|36.8523035,-82.7670745
+virginia 23805 united states|37.1134236,-77.4013403
+virginia 23219 united states|37.5410261,-77.4386429
+virginia 24017 united states|37.2893078,-79.9975916
+michigan 49016 united states|42.3440426,-85.2903524
+michigan 48723 united states|43.4844321,-83.3789389
+michigan 48503 united states|43.0145534,-83.6720756
+michigan 48838 united states|43.1731842,-85.2515482
+michigan 48911 united states|42.6663024,-84.5536678
+michigan 48858 united states|43.6151255,-84.7942091
+michigan 49442 united states|43.2443300,-86.1141045
+michigan 49085 united states|42.0537084,-86.4693235
+michigan 49684 united states|44.7333208,-85.7256372
+minnesota 55734 united states|47.3634586,-92.4813722
+maine 04402 united states|44.8012000,-68.7783000
+maine 04102 united states|43.6654289,-70.3229825
+missouri 65203 united states|38.9004542,-92.4011124
+missouri 63440 united states|39.9784276,-91.7441475
+missouri 64037 united states|39.0326762,-93.7232005
+missouri 64106 united states|39.1015411,-94.5676009
+missouri 63801 united states|36.9103926,-89.5874819
+missouri 65802 united states|37.2260299,-93.4397386
+montana 59860 united states|47.6939842,-114.2196816
+north carolina 27420 united states|36.0726000,-79.7925000
+north carolina 28557 united states|34.7359124,-76.7625073
+north carolina 28655 united states|35.7616931,-81.7349420
+north carolina 28151 united states|35.2923000,-81.5356000
+north dakota 58504 united states|46.7359015,-100.6637567
+arkansas 71841 united states|34.1765505,-94.3462373
+tennessee 37040 united states|36.5155060,-87.3612205
+tennessee 38340 united states|35.4053803,-88.6916315
+arkansas 72203 united states|34.7465000,-92.2894000
+arkansas 71655 united states|33.6946684,-91.7538817
+arkansas 72301 united states|35.1377497,-90.1775946
+arizona 86011 united states|35.1984000,-111.6508000
+arizona 85345 united states|33.5704697,-112.2503239
+tennessee 37950 united states|35.9648000,-83.9196000
+tennessee 38107 united states|35.1653736,-90.0233208
+texas 78711 united states|30.2669000,-97.7428000
+oklahoma 73075 united states|34.7857151,-97.1359377
+oklahoma 74465 united states|35.9155000,-94.9699000
+oregon 97212 united states|45.5419699,-122.6486134
+oregon 97310 united states|44.9394000,-123.0298000
+pennsylvania 19401 united states|40.1270723,-75.3353875
+pennsylvania 15230 united states|40.4409000,-79.9963000
+pennsylvania 19601 united states|40.3537241,-75.9405178
+pennsylvania 17403 united states|39.9196170,-76.7221082
+rhode island 02909 united states|41.8131441,-71.4596201
+rhode island 02893 united states|41.6882735,-71.5189800
+south carolina 29402 united states|32.7765000,-79.9312000
+south carolina 29556 united states|33.6608948,-79.7624177
+arizona 86515 united states|35.6830044,-109.0334318
+california 95003 united states|36.9953306,-121.8790306
+california 95431 united states|38.3486805,-122.5167657
+california 93721 united states|36.7345987,-119.7860302
+washington 98504 united states|47.0442000,-122.9007000
+wisconsin 53533 united states|42.9805541,-90.1120696
+wisconsin 54538 united states|45.9420053,-89.9614320
+wisconsin 53707 united states|43.0733000,-89.4012000
+pennsylvania 18505 united states|41.3879567,-75.6499025
+pennsylvania 17404 united states|40.0057180,-76.7682775
+south dakota 57117 united states|43.5503000,-96.7002000
+west virginia 25305 united states|38.3365000,-81.6104000
+west virginia 26241 united states|38.9365739,-79.8072611
+west virginia 24895 united states|37.3807100,-81.5630704
+california 94904 united states|37.9543148,-122.5457592
+california 90057 united states|34.0617061,-118.2789735
+california 93258 united states|36.0653000,-119.0158000
+california 96001 united states|40.5441948,-122.4617007
+california 95821 united states|38.6258567,-121.3884671
+pennsylvania 19130 united states|39.9682609,-75.1749671
+new york 12229 united states|42.6525000,-73.7567000
+new york 13224 united states|43.0413792,-76.1030007
+ohio 45202 united states|39.1031971,-84.5064881
+new mexico 87020 united states|35.2439974,-107.7162500
+ohio 45439 united states|39.6990151,-84.2226102
+oklahoma 74354 united states|36.8948595,-94.9350929
+oklahoma 73146 united states|35.4678000,-97.5164000
+oklahoma 74135 united states|36.1005816,-95.9251211
+wyoming 82003 united states|41.1335000,-104.8169000
+wyoming 82443 united states|43.6587340,-108.3267840
+alabama 35602 united states|34.6056000,-86.9833000
+alabama 36604 united states|30.6804215,-88.0656445
+arkansas 71901 united states|34.5166906,-92.9775558
+arkansas 72119 united states|34.7563000,-92.2656000
+arizona 85003 united states|33.4554362,-112.0759547
+california 93701 united states|36.7493498,-119.7860302
+california 92410 united states|34.1111824,-117.2999415
+california 95128 united states|37.3189149,-121.9416226
+colorado 80203 united states|39.7312095,-104.9826965
+district of columbia 20009 united states|38.9191485,-77.0362967
+delaware 19947 united states|38.6706584,-75.4111644
+florida 33901 united states|26.6173811,-81.8716058
+florida 33128 united states|25.7767549,-80.2028489
+florida 32804 united states|28.5747416,-81.3949264
+florida 32399 united states|30.4367709,-84.2825220
+florida 33604 united states|28.0110173,-82.4644445
+georgia 30460 united states|32.4352000,-81.7835000
+new york 14203 united states|42.8667771,-78.8750644
+new york 10523 united states|41.0587171,-73.8154394
+new york 14701 united states|42.0672390,-79.2676668
+new york 14489 united states|43.1040114,-76.9873477
+new york 14510 united states|42.7023500,-77.8595963
+new york 14605 united states|43.1704607,-77.5991921
+new york 13440 united states|43.2052870,-75.4810786
+new york 13204 united states|43.0499441,-76.1725774
+new york 12180 united states|42.7455088,-73.5947459
+ohio 44104 united states|41.4809312,-81.6309078
+ohio 43624 united states|41.6568138,-83.5469927
+oklahoma 73533 united states|34.4846410,-97.7416703
+florida 34112 united states|26.1237525,-81.7458845
+florida 32803 united states|28.5542151,-81.3454417
+florida 33870 united states|27.4949876,-81.4059186
+florida 32084 united states|29.8987637,-81.3619402
+florida 34995 united states|27.1974000,-80.2532000
+florida 33602 united states|27.9552692,-82.4563199
+georgia 30503 united states|34.2975000,-83.8242000
+hawaii 96779 united states|20.8994915,-156.3735841
+iowa 52601 united states|40.8522544,-91.1161166
+iowa 51503 united states|41.2567691,-95.7721204
+iowa 52808 united states|41.5236000,-90.5777000
+iowa 52101 united states|43.3540745,-91.7928402
+texas 78516 united states|26.1781474,-98.1229329
+texas 78469 united states|27.7986000,-97.4013000
+texas 76202 united states|33.2148000,-97.1329000
+texas 77096 united states|29.6699914,-95.4830243
+texas 78229 united states|29.5060908,-98.5775960
+utah 84606 united states|40.2166923,-111.6064513
+virginia 24085 united states|37.6617618,-79.7848422
+washington 99301 united states|46.4761728,-118.7788006
+wisconsin 53547 united states|42.6825000,-89.0188000
+alabama 35631 united states|34.7999000,-87.6774000
+alabama 35901 united states|34.0530094,-85.9406745
+alabama 35976 united states|34.3424511,-86.3173920
+alabama 35805 united states|34.7160612,-86.6107106
+alabama 36265 united states|33.8363538,-85.7871663
+alabama 36104 united states|32.3986364,-86.3123197
+wisconsin 53203 united states|43.0418635,-87.9163191
+wyoming 82501 united states|43.2844846,-108.3326648
+alabama 35010 united states|32.8791075,-85.9713220
+alabama 36202 united states|33.6594000,-85.8317000
+alabama 35612 united states|34.7957000,-86.9705000
+alabama 36507 united states|30.9220263,-87.7369607
+alabama 36427 united states|31.1052000,-87.0725000
+alabama 36303 united states|31.2483723,-85.3756249
+arkansas 72903 united states|35.3447622,-94.3667907
+arkansas 71611 united states|34.2286000,-92.0034000
+arkansas 72757 united states|36.3317000,-94.1183000
+arkansas 75504 united states|33.4250000,-94.0478000
+arizona 85014 united states|33.5062242,-112.0535987
+arizona 85273 united states|33.2284418,-111.1414226
+arizona 85282 united states|33.3939900,-111.9403254
+arizona 85364 united states|32.7024917,-114.6430427
+california 93304 united states|35.3441080,-119.0285355
+california 95501 united states|40.7928217,-124.1511916
+california 93726 united states|36.7949518,-119.7541856
+california 95945 united states|39.1901619,-120.9187827
+california 90022 united states|34.0238187,-118.1532280
+california 92260 united states|33.6917281,-116.4075854
+alabama 36360 united states|31.4396352,-85.6229296
+alabama 36702 united states|32.4074000,-87.0213000
+alabama 36081 united states|31.9057786,-85.9508923
+arkansas 71730 united states|33.1855789,-92.6586401
+california 92123 united states|32.8102534,-117.1323579
+iowa 51101 united states|42.4927928,-96.3944268
+illinois 62220 united states|38.4744782,-89.9906734
+illinois 60611 united states|41.8926105,-87.6211061
+illinois 60901 united states|41.1213147,-87.9138670
+indiana 46402 united states|41.5997880,-87.3115530
+indiana 46202 united states|39.7794767,-86.1700894
+kansas 67601 united states|38.8233416,-99.3229213
+kansas 67203 united states|37.6957345,-97.3624598
+kentucky 40601 united states|38.2481018,-84.8984775
+kentucky 40202 united states|38.2556928,-85.7512830
+louisiana 70808 united states|30.4192451,-91.1448981
+louisiana 70571 united states|30.5336000,-92.0817000
+massachusetts 02201 united states|42.3586000,-71.0603000
+massachusetts 01020 united states|42.1657788,-72.5737187
+massachusetts 01609 united states|42.2971508,-71.8393443
+maine 04469 united states|45.0868000,-68.6498000
+michigan 49707 united states|45.0765963,-83.4909320
+missouri 63857 united states|36.2196795,-90.0373201
+missouri 63104 united states|38.6160670,-90.2197765
+mississippi 39501 united states|30.3750806,-89.1038783
+mississippi 38751 united states|33.4811362,-90.7152749
+indiana 47202 united states|39.2016000,-85.9214000
+indiana 47713 united states|37.9584319,-87.5544182
+indiana 46802 united states|41.0644747,-85.1738576
+indiana 46634 united states|41.6833000,-86.2503000
+kansas 67002 united states|37.7003980,-97.1144039
+iowa 50436 united states|43.2510405,-93.6826080
+iowa 52627 united states|40.6471631,-91.3469247
+michigan 49440 united states|43.2369094,-86.2539519
+michigan 48182 united states|41.7994895,-83.5709640
+michigan 49685 united states|44.7632000,-85.6206000
+minnesota 56430 united states|47.0788000,-94.5672000
+minnesota 56401 united states|46.3259522,-94.1442531
+minnesota 56502 united states|46.8175000,-95.8450000
+minnesota 55802 united states|46.7600369,-92.1025078
+minnesota 56531 united states|45.9952966,-95.9853640
+minnesota 55101 united states|44.9514539,-93.0851728
+minnesota 56187 united states|43.6335801,-95.6247670
+missouri 63740 united states|37.1897356,-89.6816208
+missouri 64735 united states|38.3820458,-93.7841503
+missouri 63845 united states|36.7367083,-89.2847251
+missouri 65251 united states|38.8461702,-91.9490210
+missouri 64801 united states|37.1034245,-94.5418141
+missouri 64105 united states|39.1045785,-94.5895294
+missouri 63501 united states|40.1557975,-92.6586401
+missouri 64085 united states|39.3568887,-93.9674371
+missouri 65401 united states|37.9236296,-91.7149580
+missouri 65302 united states|38.7044000,-93.2281000
+mississippi 39704 united states|33.6929819,-88.3263603
+mississippi 39502 united states|30.3672000,-89.0926000
+mississippi 39202 united states|32.3163152,-90.1635442
+mississippi 39090 united states|33.0101740,-89.4553088
+mississippi 39440 united states|31.6824697,-89.1420182
+mississippi 39114 united states|31.9699508,-89.8317729
+mississippi 39302 united states|32.3645000,-88.7039000
+mississippi 39120 united states|31.5758013,-91.3276422
+mississippi 38802 united states|34.2577000,-88.7034000
+iowa 52240 united states|41.6578850,-91.5330870
+iowa 52641 united states|40.9885488,-91.5596117
+iowa 51301 united states|43.1735854,-95.1849219
+iowa 50248 united states|42.1995997,-93.6015207
+iowa 52361 united states|41.6435634,-92.0077316
+idaho 83705 united states|43.5698551,-116.2249298
+idaho 83405 united states|43.4667000,-112.0335000
+kansas 66071 united states|38.5945886,-94.8520636
+kansas 66604 united states|39.0401557,-95.7247169
+kentucky 40403 united states|37.5626974,-84.2489525
+kentucky 42102 united states|36.9906000,-86.4437000
+louisiana 70896 united states|30.4506000,-91.1547000
+louisiana 70726 united states|30.4097215,-90.8865834
+louisiana 70360 united states|29.5779003,-90.8103570
+louisiana 70508 united states|30.1547410,-92.0371160
+louisiana 71109 united states|32.4683753,-93.8146526
+massachusetts 02143 united states|42.3798626,-71.0943459
+maryland 21209 united states|39.3708590,-76.6701475
+idaho 83221 united states|43.3843255,-112.6193088
+idaho 83702 united states|43.6624385,-116.1630431
+illinois 62002 united states|38.9354092,-90.1401381
+illinois 61605 united states|40.6696506,-89.6392863
+massachusetts 02724 united states|41.6883098,-71.1745579
+massachusetts 02740 united states|41.6381659,-70.9368469
+massachusetts 01060 united states|42.3281968,-72.6328569
+illinois 62321 united states|40.4260745,-91.0969400
+illinois 61920 united states|39.5140550,-88.2071598
+illinois 62521 united states|39.8319859,-88.8838834
+illinois 62401 united states|39.1043046,-88.5951751
+illinois 61530 united states|40.6932486,-89.2657266
+illinois 61032 united states|42.3539891,-89.6628111
+illinois 61603 united states|40.7100017,-89.5733416
+illinois 62301 united states|39.9420653,-91.3951694
+illinois 60171 united states|41.9242073,-87.8402405
+illinois 61101 united states|42.3316674,-89.1515476
+idaho 83201 united states|42.8945981,-112.3540741
+illinois 60005 united states|42.0556473,-87.9873724
+illinois 62702 united states|39.8264687,-89.6345796
+illinois 62288 united states|37.9992109,-89.6816208
+illinois 60085 united states|42.3641878,-87.8647961
+indiana 46016 united states|40.0961970,-85.6948458
+indiana 46516 united states|41.6792072,-85.9406745
+indiana 46807 united states|41.0434924,-85.1531216
+indiana 47546 united states|38.4031859,-86.9423801
+indiana 47025 united states|39.1460289,-84.8776392
+indiana 47305 united states|40.1940698,-85.3833703
+indiana 47501 united states|38.6610959,-87.1821709
+kansas 66720 united states|37.6374332,-95.5197394
+kansas 67801 united states|37.6772416,-100.0359661
+kansas 67846 united states|38.0332535,-100.7548851
+kansas 67530 united states|38.3648887,-98.7921836
+kansas 67501 united states|37.9237219,-97.9157099
+kansas 66117 united states|39.1222000,-94.6287000
+kansas 66508 united states|39.8528438,-96.6424330
+kansas 67401 united states|38.8619254,-97.6548110
+kansas 67201 united states|37.6923000,-97.3374000
+kentucky 42701 united states|37.7139412,-85.8281458
+kentucky 40503 united states|38.0103355,-84.5327038
+kentucky 41056 united states|38.5929170,-83.7836403
+indiana 47150 united states|38.2651542,-85.8690933
+indiana 46601 united states|41.6724038,-86.2539519
+indiana 47586 united states|38.0593248,-86.7013894
+indiana 46384 united states|41.4732000,-87.0611000
+kentucky 40351 united states|38.2563616,-83.3789389
+kentucky 42301 united states|37.7327263,-87.1821709
+louisiana 71301 united states|31.2043048,-92.4900943
+louisiana 70070 united states|29.9214944,-90.3701276
+louisiana 70448 united states|30.3550725,-90.0466559
+louisiana 71203 united states|32.5662435,-92.0273190
+louisiana 70560 united states|29.9145873,-91.8708613
+massachusetts 02027 united states|42.2472000,-71.1664000
+massachusetts 01840 united states|42.7073383,-71.1611903
+massachusetts 02148 united states|42.4326041,-71.0557196
+massachusetts 02660 united states|41.7020781,-70.1515342
+california 94109 united states|37.7929789,-122.4212424
+california 93401 united states|35.2326620,-120.6429991
+california 92705 united states|33.7532358,-117.7901088
+california 93101 united states|34.4201172,-119.7020606
+california 95060 united states|37.0291805,-122.1518970
+california 90401 united states|34.0126379,-118.4951550
+california 95482 united states|39.1411970,-123.2138510
+california 93291 united states|36.3820844,-119.3482646
+california 93277 united states|36.3033521,-119.3831026
+california 94596 united states|37.8854525,-122.0326019
+colorado 80301 united states|40.0406506,-105.2077798
+colorado 81416 united states|38.7450038,-108.1903059
+colorado 80212 united states|39.7752563,-105.0498966
+colorado 81631 united states|39.5431321,-106.6762920
+colorado 80260 united states|39.8720245,-105.0031457
+colorado 80815 united states|39.2873463,-103.0356940
+colorado 80524 united states|40.6358803,-105.0089888
+colorado 81601 united states|39.6189547,-107.2429976
+colorado 81050 united states|37.9143802,-103.4974258
+colorado 81144 united states|37.5667756,-106.2051484
+connecticut 06120 united states|41.7859336,-72.6683333
+connecticut 06050 united states|41.6612000,-72.7801000
+connecticut 06360 united states|41.5532772,-72.0823688
+connecticut 06516 united states|41.2818969,-72.9578676
+delaware 19904 united states|39.1850643,-75.5975296
+florida 33426 united states|26.5386936,-80.0814292
+florida 34601 united states|28.5750310,-82.3668870
+florida 32110 united states|29.4633008,-81.3839326
+florida 33306 united states|26.1640451,-80.1121493
+florida 32548 united states|30.4214002,-86.6359159
+florida 32795 united states|28.7587000,-81.3184000
+florida 34639 united states|28.2180339,-82.4211025
+minnesota 55413 united states|44.9956414,-93.2580950
+minnesota 55051 united states|45.8937554,-93.3255093
+minnesota 56278 united states|45.4334715,-96.5248954
+minnesota 55971 united states|43.8345015,-91.7733566
+florida 34461 united states|28.8263661,-82.5077593
+idaho 83501 united states|46.0691469,-116.8652574
+new jersey 07666 united states|40.8924932,-74.0123851
+florida 33330 united states|26.0591495,-80.3324514
+california 93278 united states|36.3303000,-119.2911000
+ohio 43302 united states|40.5518645,-83.1220074
+ohio 44875 united states|40.9073141,-82.6699470
+ohio 44077 united states|41.6838938,-81.2298530
+arizona 85308 united states|33.6690037,-112.1787896
+california 94519 united states|37.9876914,-122.0098642
+california 94517 united states|37.9038355,-121.9245556
+kentucky 42341 united states|38.0933190,-85.6130190
+kentucky 42431 united states|37.3346228,-87.4802068
+new york 10002 united states|40.7184530,-73.9859414
+new york 11215 united states|40.6632194,-73.9800645
+missouri 64110 united states|39.0362552,-94.5753394
+missouri 64108 united states|39.0799450,-94.5882392
+missouri 64141 united states|39.0997000,-94.5784000
+missouri 64111 united states|39.0587452,-94.5985613
+64111 united states|39.0587452,-94.5985613
+missouri 64109 united states|39.0703574,-94.5676009
+connecticut 06704 united states|41.5903353,-73.0346244
+missouri 64112 united states|39.0379444,-94.5985613
+missouri 64113 united states|39.0171368,-94.5985613
+missouri 94108 united states|38.4065060,-92.3551390
+missouri 64133 united states|39.0169330,-94.4696765
+kansas 66201 united states|39.0276000,-94.6559000
+kansas 66204 united states|38.9930421,-94.6812086
+kansas 66061 united states|38.9071042,-94.8728093
+kansas 66062 united states|38.8271089,-94.7898731
+64114 united states|38.9546734,-94.5985613
+66205 united states|39.0313154,-94.6347041
+kansas 66205 united states|39.0313154,-94.6347041
+64113 united states|39.0171368,-94.5985613
+66215 united states|38.9647235,-94.7381013
+kansas 66215 united states|38.9647235,-94.7381013
+66030 united states|38.7801995,-94.9143239
+66207 united states|38.9530417,-94.6398693
+kansas 66203 united states|39.0234301,-94.7018900
+66061 united states|38.9071042,-94.8728093
+64105 united states|39.1045785,-94.5895294
+kansas 66212 united states|38.9463930,-94.6760395
+64112 united states|39.0379444,-94.5985613
+66062 united states|38.8271089,-94.7898731
+64131 united states|38.9558868,-94.5676009
+66219 united states|38.9630378,-94.7795149
+64108 united states|39.0799450,-94.5882392
+kansas 66052 united states|39.0141289,-95.0494602
+kansas 66202 united states|39.0246739,-94.6708709
+kansas 66213 united states|38.8984667,-94.7018900
+60137 united states|41.8735551,-88.0607565
+kansas 66101 united states|39.1198831,-94.6295394
+kansas 66106 united states|39.0704366,-94.6967189
+kansas 66102 united states|39.1174086,-94.6915484
+66101 united states|39.1198831,-94.6295394
+kansas 66105 united states|39.0858044,-94.6372866
+kansas 66103 united states|39.0575219,-94.6295394
+kansas 66160 united states|39.0563122,-94.6108213
+ohio 45356 united states|40.1458908,-84.2489525
+ohio 43420 united states|41.3559092,-83.1220074
+pennsylvania 17102 united states|40.2698222,-76.8980371
+pennsylvania 18064 united states|40.7581175,-75.3178952
+pennsylvania 16686 united states|40.6174720,-78.2248291
+rhode island 02842 united states|41.5173565,-71.2755422
+rhode island 02828 united states|41.8789400,-71.5664607
+texas 77843 united states|30.6062847,-96.3465379
+texas 75201 united states|32.7849986,-96.7949137
+texas 76541 united states|31.1168297,-97.7253760
+vermont 05101 united states|43.1744949,-72.4968189
+virginia 24060 united states|37.2300605,-80.4326521
+virginia 23851 united states|36.6398355,-76.9412601
+virginia 24504 united states|37.3204447,-79.0419053
+virginia 23669 united states|37.0517234,-76.3347838
+virginia 23220 united states|37.5464259,-77.4644607
+virginia 22980 united states|38.1060336,-78.9061921
+wisconsin 53188 united states|43.0165459,-88.2947675
+virginia 22150 united states|38.7742151,-77.1887747
+california 95113 united states|37.3335177,-121.8889908
+california 94708 united states|37.9020612,-122.2597170
+texas 77901 united states|28.8066384,-96.9960925
+pennsylvania 19380 united states|39.9948630,-75.5975296
+nebraska 68111 united states|41.2918458,-95.9673967
+mississippi 39648 united states|31.2391441,-90.3936722
+alabama 35758 united states|34.7091114,-86.7617490
+texas 76307 united states|33.9136000,-98.4933000
+new york 10001 united states|40.7489381,-73.9918181
+new york 14221 united states|42.9757102,-78.7362845
+alabama 35233 united states|33.5065561,-86.8044586
+virginia 20124 united states|38.7912116,-77.3898602
+florida 33846 united states|27.9652000,-81.8793000
+michigan 48104 united states|42.2660881,-83.7146001
+massachusetts 02118 united states|42.3377967,-71.0705763
+virginia 23509 united states|36.8854128,-76.2652909
+texas 78721 united states|30.2737366,-97.6819430
+california 91331 united states|34.2570374,-118.4279933
+indiana 47106 united states|38.4768528,-85.9100089
+indiana 47201 united states|39.1265636,-85.9713220
+california 93940 united states|36.5701116,-121.7765309
+north carolina 27713 united states|35.8902310,-78.9175088
+michigan 48910 united states|42.7043124,-84.5327038
+georgia 30521 united states|34.3483648,-83.3148018
+georgia 30513 united states|34.8869359,-84.3752330
+georgia 30534 united states|34.4129120,-84.1435136
+georgia 30540 united states|34.6973008,-84.5641470
+georgia 30643 united states|34.3708514,-82.9286428
+georgia 30547 united states|34.3552978,-83.4430118
+georgia 30680 united states|34.0142667,-83.6986568
+georgia 30120 united states|34.1577811,-84.8776392
+georgia 30736 united states|34.8981727,-85.1479364
+georgia 30747 united states|34.4861783,-85.3342973
+georgia 30114 united states|34.2321024,-84.5431867
+georgia 30601 united states|34.0068450,-83.3468784
+georgia 30006 united states|33.9527000,-84.5502000
+georgia 30752 united states|34.8911615,-85.5406209
+georgia 30635 united states|34.0744980,-82.7778579
+georgia 30161 united states|34.2566577,-85.1271907
+georgia 30040 united states|34.2041173,-84.1751648
+georgia 30549 united states|34.0963975,-83.5709640
+georgia 30533 united states|34.5813972,-83.9744262
+georgia 30662 united states|34.2480349,-83.1005505
+georgia 30553 united states|34.4352660,-83.0898194
+georgia 30043 united states|33.9963181,-84.0061661
+georgia 30531 united states|34.5282943,-83.5816150
+georgia 30705 united states|34.7046413,-84.7315563
+georgia 30655 united states|33.7803626,-83.6880257
+georgia 30545 united states|34.7365959,-83.7730237
+georgia 30528 united states|34.5685770,-83.7199136
+georgia 30720 united states|34.7486859,-84.9921549
+georgia 30514 united states|34.8786000,-84.0317000
+georgia 30082 united states|33.8598323,-84.5379455
+georgia 30701 united states|34.5156085,-84.9609464
+georgia 30642 united states|33.5656060,-83.2077645
+georgia 30182 united states|33.6715937,-85.2411958
+georgia 30633 united states|34.1666687,-83.2291862
+georgia 30650 united states|33.6028346,-83.4856913
+georgia 30015 united states|33.5515000,-83.8961000
+georgia 30677 united states|33.7530498,-83.3789389
+georgia 30143 united states|34.4285521,-84.4802606
+georgia 30153 united states|33.9868753,-85.0441304
+georgia 30525 united states|34.8795950,-83.3575670
+georgia 30012 united states|33.7177663,-83.9955879
+pennsylvania 15237 united states|40.5588535,-80.0423151
+california 94128 united states|37.6191318,-122.3815924
+massachusetts 94121 united states|37.6325720,-97.2932080
+illinois 62707 united states|39.8676825,-89.6534029
+illinois 60411 united states|41.5154536,-87.5593613
+utah 84116 united states|40.7915452,-111.9403254
+california 93454 united states|34.9339263,-120.2051096
+new york 10025 united states|40.7949848,-73.9683102
+illinois 60174 united states|41.9169525,-88.2947675
+california 90293 united states|33.9541669,-118.4425960
+virginia 23841 united states|37.0436480,-77.5390127
+california 94103 united states|37.7726402,-122.4099154
+washington 98052 united states|47.6701193,-122.1182370
+new york 12847 united states|43.9928998,-74.6209694
+new hampshire 03603 united states|43.2347143,-72.4021423
+massachusetts 01460 united states|42.5295344,-71.4893013
+kentucky 40206 united states|38.2647327,-85.7102437
+indiana 46260 united states|39.8878841,-86.1853474
+california 90037 united states|34.0020580,-118.2818967
+utah 84101 united states|40.7563925,-111.8985922
+alabama 36502 united states|31.1010770,-87.5000082
+illinois 60660 united states|41.9901263,-87.6630450
+washington 98503 united states|47.0240824,-122.7965770
+illinois 60104 united states|41.8850709,-87.8697056
+pennsylvania 16603 united states|40.5188000,-78.3952000
+california 90801 united states|33.7668000,-118.1886000
+california 90025 united states|34.0448583,-118.4484367
+maine 04043 united states|43.4027203,-70.5571056
+massachusetts 01102 united states|42.1015000,-72.5905000
+california 95018 united states|37.0435289,-122.0723816
+north carolina 28801 united states|35.5927461,-82.5564559
+california 95353 united states|37.6395000,-120.9956000
+california 91402 united states|34.2270879,-118.4455164
+california 94566 united states|37.6504632,-121.8448745
+california 91766 united states|34.0360078,-117.7490656
+california 92517 united states|33.9533000,-117.3955000
+california 92408 united states|34.0868517,-117.2617329
+alaska 99524 united states|61.2181000,-149.9003000
+massachusetts 02116 united states|42.3530680,-71.0765188
+south carolina 29679 united states|34.6856000,-82.9534000
+new york 14851 united states|42.4407000,-76.4966000
+illinois 60603 united states|41.8809409,-87.6266591
+colorado 80015 united states|39.6202211,-104.7695962
+colorado 81224 united states|38.9354478,-106.9594723
+colorado 80419 united states|39.7559000,-105.2207000
+colorado 80215 united states|39.7458102,-105.1200482
+colorado 80911 united states|38.7465970,-104.7170954
+colorado 81611 united states|39.1255979,-106.7706458
+colorado 80819 united states|38.9514032,-104.9914601
+colorado 80209 united states|39.7053961,-104.9680914
+massachusetts 01842 united states|42.7069000,-71.1660000
+illinois 60099 united states|42.4624571,-87.8647961
+colorado 80022 united states|39.8665930,-104.7754307
+mississippi 39309 united states|32.3645000,-88.7039000
+new york 10005 united states|40.7062324,-74.0087126
+new york 13210 united states|43.0251714,-76.1261969
+connecticut 06405 united states|41.2956385,-72.7924612
+texas 78752 united states|30.3297767,-97.7036561
+ohio 43231 united states|40.0782156,-82.9340217
+massachusetts 02636 united states|41.6376000,-70.3318000
+texas 78237 united states|29.4146706,-98.5666077
+florida 33481 united states|26.3583000,-80.0835000
+california 90095 united states|34.0709981,-118.4411358
+tennessee 37923 united states|35.9270857,-84.0748789
+california 94590 united states|38.0957479,-122.2483726
+connecticut 06108 united states|41.7785885,-72.6210303
+illinois 60499 united states|41.7516000,-87.7305000
+new hampshire 03867 united states|43.3104064,-70.9903438
+new york 13613 united states|44.8559860,-74.7341907
+arizona 85064 united states|33.4486000,-112.0733000
+california 94524 united states|37.9784000,-122.0302000
+nevada 89106 united states|36.1821091,-115.1592718
+virginia 23464 united states|36.7946114,-76.1667807
+washington 98383 united states|47.6580500,-122.7120272
+california 91911 united states|32.6059744,-117.0441009
+california 90407 united states|34.0195000,-118.4906000
+california 94709 united states|37.8780279,-122.2682245
+texas 78217 united states|29.5389660,-98.4239055
+massachusetts 02142 united states|42.3635847,-71.0824613
+utah 84603 united states|40.2337000,-111.6579000
+new jersey 08234 united states|39.3822537,-74.6166192
+new jersey 08850 united states|40.4494047,-74.4379073
+new jersey 08060 united states|40.0205975,-74.7922202
+pennsylvania 18017 united states|40.6564328,-75.3761952
+pennsylvania 16912 united states|41.6487475,-77.1255055
+pennsylvania 17013 united states|40.2368864,-77.2060241
+north carolina 27511 united states|35.7698044,-78.7816219
+pennsylvania 17325 united states|39.8066145,-77.2405153
+maine 04364 united states|44.3207053,-69.9383008
+alabama 35603 united states|34.5363567,-86.9223432
+alabama 36101 united states|32.3667000,-86.3002000
+alabama 36103 united states|32.3667000,-86.3002000
+california 94110 united states|37.7581148,-122.4184108
+california 94301 united states|37.4459832,-122.1490582
+alaska 99707 united states|64.8379000,-147.7166000
+california 94111 united states|37.7983181,-122.4000032
+california 90731 united states|33.7322884,-118.2935891
+georgia 30308 united states|33.7719400,-84.3778610
+illinois 62523 united states|39.8403484,-88.9533563
+illinois 60431 united states|41.5218061,-88.1730427
+illinois 60563 united states|41.7953629,-88.1388989
+illinois 60062 united states|42.1272261,-87.8451527
+illinois 60564 united states|41.7166953,-88.1974148
+indiana 46307 united states|41.3901576,-87.3214908
+iowa 51360 united states|43.4288442,-95.0806918
+iowa 50701 united states|42.4285686,-92.3616203
+kentucky 40208 united states|38.2142969,-85.7717907
+maine 04609 united states|44.3394561,-68.2295835
+maryland 21502 united states|39.6570823,-78.7249469
+maryland 21601 united states|38.7925171,-76.0623979
+massachusetts 02139 united states|42.3647559,-71.1032591
+massachusetts 01420 united states|42.5768698,-71.8334145
+massachusetts 02158 united states|37.6325720,-97.2932080
+massachusetts 02169 united states|42.2363996,-71.0200613
+massachusetts 01085 united states|42.1318779,-72.7570024
+michigan 49437 united states|43.4464349,-86.3984793
+minnesota 55902 united states|43.9731715,-92.5197932
+mississippi 39564 united states|30.4069394,-88.7686382
+missouri 65340 united states|39.0684813,-93.2181477
+missouri 65065 united states|38.1280947,-92.6685736
+nebraska 68008 united states|41.5541889,-96.1951320
+nebraska 68144 united states|41.2340369,-96.1155932
+new hampshire 03054 united states|42.8550380,-71.5130445
+new jersey 07825 united states|40.9860816,-74.9442585
+pennsylvania 18328 united states|41.2286852,-74.9910112
+new york 12725 united states|41.9525109,-74.5697617
+new jersey 08755 united states|40.0207099,-74.2061931
+new jersey 07450 united states|40.9845896,-74.1063776
+new york 12874 united states|43.6814114,-73.5476338
+new york 10940 united states|41.4334745,-74.4760088
+new york 12205 united states|42.7226610,-73.8301437
+north carolina 28697 united states|36.1201055,-81.1526976
+north carolina 28677 united states|35.7678029,-80.9207737
+north carolina 27983 united states|36.0245185,-76.9643060
+washington 98107 united states|47.6683603,-122.3769582
+wisconsin 53012 united states|43.3224055,-88.0411993
+alaska 99506 united states|61.2551163,-149.8137806
+alaska 99507 united states|61.1487690,-149.8010811
+arizona 85701 united states|32.2147915,-110.9715269
+arkansas 71913 united states|34.4477710,-93.0776568
+california 91502 united states|34.1772371,-118.3082034
+california 90809 united states|33.7668000,-118.1886000
+tennessee 37901 united states|35.9646000,-83.9197000
+texas 75862 united states|31.0145530,-95.3520876
+wisconsin 53033 united states|43.2283247,-88.1974148
+colorado 80135 united states|39.2685181,-105.1726816
+colorado 80433 united states|39.4758238,-105.2897042
+new york 12746 united states|41.4282071,-74.6517540
+california 96097 united states|41.7655266,-122.6651519
+california 91723 united states|34.0870296,-117.8868171
+connecticut 06412 united states|41.4037088,-72.4849861
+connecticut 06804 united states|41.4626015,-73.3826585
+florida 33021 united states|26.0204621,-80.1930859
+florida 34616 united states|23.1280272,-82.3606619
+florida 32303 united states|30.5090337,-84.3436881
+florida 33672 united states|27.9473000,-82.4588000
+georgia 30371 united states|33.7486000,-84.3884000
+georgia 31204 united states|32.8400862,-83.6667580
+iowa 52403 united states|41.9781094,-91.5886966
+iowa 50319 united states|41.6006000,-93.6087000
+kansas 66046 united states|38.9027081,-95.2162283
+kansas 66044 united states|39.0176677,-95.2057909
+kansas 66601 united states|39.0486000,-95.6778000
+louisiana 70806 united states|30.4482550,-91.1209121
+louisiana 70505 united states|30.2236000,-92.0198000
+louisiana 71201 united states|32.5312001,-92.0959429
+michigan 49017 united states|42.3939905,-85.2515482
+michigan 48226 united states|42.3331454,-83.0495622
+michigan 48336 united states|42.4658351,-83.3468784
+michigan 49007 united states|42.3042239,-85.5869352
+missouri 63101 united states|38.6305392,-90.1928216
+nebraska 69361 united states|41.9534021,-103.6131203
+nevada 89505 united states|39.5297000,-119.8129000
+new jersey 08079 united states|39.5330699,-75.4577775
+new jersey 08625 united states|40.2070107,-74.7567489
+new york 13601 united states|43.9585887,-75.9230976
+north carolina 28607 united states|36.2081106,-81.6254283
+north carolina 27405 united states|36.1135939,-79.7287703
+ohio 45406 united states|39.7871223,-84.2384170
+ohio 43604 united states|41.6541814,-83.5443287
+tennessee 37405 united states|35.1503998,-85.4169211
+tennessee 37664 united states|36.4539332,-82.5726805
+texas 78404 united states|27.7678740,-97.4002872
+texas 77027 united states|29.7405820,-95.4515725
+texas 79411 united states|33.5730587,-101.8578095
+texas 75023 united states|33.0603809,-96.7333430
+virginia 22301 united states|38.8189466,-77.0593246
+virginia 22030 united states|38.8479545,-77.3439283
+virginia 23069 united states|37.7757835,-77.3094674
+new york 11756 united states|40.7226698,-73.5181833
+kentucky 40444 united states|37.6635090,-84.5850997
+kentucky 40446 united states|37.6194000,-84.5781000
+vermont 05730 united states|43.4269320,-72.8220064
+california 90016 united states|34.0255188,-118.3520389
+massachusetts 01103 united states|42.1023568,-72.5899830
+georgia 31310 united states|31.8475000,-81.5964000
+new york 12518 united states|41.3987393,-74.0182610
+new york 14607 united states|43.1480375,-77.5905970
+florida 32763 united states|28.9392593,-81.3069315
+idaho 83422 united states|43.6787274,-111.2493211
+new york 11367 united states|40.7275066,-73.8242621
+connecticut 06106 united states|41.7527778,-72.7038047
+idaho 83704 united states|43.6320897,-116.2863998
+colorado 80526 united states|40.5293254,-105.1375908
+pennsylvania 18337 united states|41.3277635,-74.8507131
+virginia 22932 united states|38.1677192,-78.6795836
+washington 98208 united states|47.9101918,-122.1935049
+illinois 60604 united states|41.8789910,-87.6223402
+kansas 67460 united states|38.3611897,-97.6548110
+georgia 31709 united states|32.0179314,-84.1646163
+washington 98311 united states|47.6355461,-122.6447815
+illinois 60516 united states|41.7585167,-88.0167406
+washington 98351 united states|47.2073262,-122.7684229
+california 94536 united states|37.5641425,-122.0041790
+california 95032 united states|37.2195368,-121.9359339
+california 94115 united states|37.7877522,-122.4382307
+california 95136 united states|37.2692142,-121.8505679
+california 95070 united states|37.2623310,-122.0496521
+california 94306 united states|37.4177563,-122.1235054
+california 95014 united states|37.3063020,-122.0951062
+california 94123 united states|37.8020405,-122.4382307
+california 95129 united states|37.3052272,-121.9871217
+california 95051 united states|37.3598283,-121.9814354
+massachusetts 01915 united states|42.5761704,-70.8714528
+california 90406 united states|34.0195000,-118.4906000
+california 90028 united states|34.1012181,-118.3257390
+california 90291 united states|33.9962144,-118.4688776
+georgia 31107 united states|33.7488000,-84.3883000
+west virginia 25637 united states|37.8413494,-82.0352647
+maryland 20915 united states|38.9909000,-77.0267000
+massachusetts 02110 united states|42.3552011,-71.0542339
+massachusetts 02210 united states|42.3460420,-71.0423481
+new jersey 07039 united states|40.7930239,-74.3235539
+connecticut 06902 united states|41.0740074,-73.5653021
+new york 10960 united states|41.0857384,-73.9183464
+new york 10032 united states|40.8360500,-73.9447994
+california 93308 united states|35.5497101,-118.9528645
+maryland 20855 united states|39.1329803,-77.1370115
+florida 33617 united states|28.0307138,-82.3994214
+new york 10006 united states|40.7080929,-74.0131196
+new york 10019 united states|40.7686973,-73.9918181
+north carolina 27104 united states|36.0937141,-80.3268812
+california 90248 united states|33.8658064,-118.2935891
+colorado 80308 united states|40.0153000,-105.2702000
+oklahoma 73834 united states|36.7884868,-99.5006143
+texas 77573 united states|29.4947986,-95.0911062
+new york 10455 united states|40.8143608,-73.9051185
+ohio 45418 united states|39.7080562,-84.3016021
+illinois 62898 united states|38.3761476,-89.0752499
+florida 34233 united states|27.2823268,-82.4698603
+oregon 97707 united states|43.8235527,-121.4886380
+florida 32310 united states|30.3894308,-84.5012435
+north carolina 27565 united states|36.3655298,-78.6114999
+california 94606 united states|37.7944092,-122.2455364
+pennsylvania 19134 united states|39.9863531,-75.1019942
+florida 33134 united states|25.7564662,-80.2711588
+florida 33710 united states|27.7919590,-82.7239240
+colorado 80012 united states|39.7020217,-104.8396248
+colorado 80011 united states|39.7340739,-104.7871004
+nevada 89119 united states|36.0765176,-115.1533426
+alabama 36532 united states|30.4876375,-87.8746146
+alabama 36533 united states|30.5229000,-87.9033000
+alabama 36606 united states|30.6694984,-88.1047287
+south dakota 57105 united states|43.5114097,-96.7333430
+north carolina 28462 united states|34.0604897,-78.3159411
+kentucky 42420 united states|37.8247997,-87.5000082
+alabama 36111 united states|32.3408666,-86.2717231
+alabama 36130 united states|32.3667000,-86.3002000
+new hampshire 03102 united states|43.0054135,-71.4833652
+arkansas 71701 united states|33.5408717,-92.8178291
+illinois 60178 united states|42.0113554,-88.6916315
+pennsylvania 15074 united states|40.7195572,-80.2153998
+missouri 64502 united states|39.7689000,-94.8467000
+california 95632 united states|38.2855625,-121.2855249
+california 94903 united states|38.0270044,-122.5485873
+california 92701 united states|33.7463915,-117.8604472
+california 95062 united states|36.9774519,-121.9871217
+california 96156 united states|38.9467000,-119.9676000
+california 95204 united states|37.9727529,-121.3255688
+california 90501 united states|33.8357761,-118.3111262
+california 92393 united states|34.5362000,-117.2905000
+california 92392 united states|34.4854334,-117.4203974
+connecticut 06457 united states|41.5496971,-72.6742455
+florida 34471 united states|29.1742007,-82.1169550
+florida 32501 united states|30.4237240,-87.2269973
+florida 33037 united states|25.1877642,-80.3602970
+florida 34742 united states|28.2917000,-81.4079000
+florida 33801 united states|28.0486111,-81.8989080
+florida 34748 united states|28.7898508,-81.8770671
+florida 33050 united states|24.7584586,-80.9622388
+florida 32459 united states|30.3681850,-86.1650024
+florida 34230 united states|27.3364000,-82.5308000
+florida 34994 united states|27.1916272,-80.2488596
+florida 33042 united states|24.6803879,-81.4883097
+florida 33680 united states|27.9473000,-82.4588000
+florida 33469 united states|26.9717887,-80.1037721
+florida 32805 united states|28.5352472,-81.4114142
+florida 32178 united states|29.6484000,-81.6378000
+florida 32135 united states|29.4748000,-81.1274000
+florida 32402 united states|30.1588000,-85.6603000
+florida 32591 united states|30.4213000,-87.2168000
+florida 32348 united states|29.9550724,-83.5496566
+florida 33949 united states|26.9756000,-82.0909000
+florida 32353 united states|30.5866000,-84.5836000
+florida 33733 united states|27.7709000,-82.6795000
+florida 32447 united states|30.7602807,-85.2489603
+florida 33256 united states|25.6789000,-80.3175000
+florida 33903 united states|26.7468361,-81.9862060
+florida 34113 united states|26.0520988,-81.7239979
+florida 34656 united states|28.2437000,-82.7197000
+florida 32170 united states|29.0257000,-80.9273000
+florida 34760 united states|28.5534114,-81.6322776
+florida 32067 united states|30.1658000,-81.7068000
+florida 32781 united states|28.6118000,-80.8078000
+florida 34293 united states|27.0481869,-82.3560389
+florida 32960 united states|27.6499311,-80.3992652
+florida 32912 united states|28.0343000,-80.5888000
+florida 33401 united states|26.7129478,-80.0702555
+florida 34785 united states|28.8356269,-82.0625052
+florida 32790 united states|28.5998000,-81.3397000
+georgia 31707 united states|31.5766377,-84.1962563
+georgia 30014 united states|33.5756821,-83.8260884
+georgia 30028 united states|34.2937266,-84.1962563
+georgia 31740 united states|31.7476241,-84.7315563
+georgia 30722 united states|34.7698000,-84.9703000
+georgia 31742 united states|31.7370079,-84.4802606
+georgia 30919 united states|33.4667000,-82.0167000
+georgia 31718 united states|30.9045000,-84.5727000
+georgia 30204 united states|33.0531651,-84.1224036
+georgia 31723 united states|31.3021309,-84.9817540
+georgia 31521 united states|31.1497000,-81.4917000
+georgia 30117 united states|33.5906460,-85.1686743
+georgia 30523 united states|34.6687924,-83.5283420
+georgia 31014 united states|32.4087854,-83.3789389
+georgia 31902 united states|32.4608000,-84.9876000
+georgia 30629 united states|34.0732887,-83.1434573
+georgia 30529 united states|34.1805506,-83.4856913
+georgia 31010 united states|31.9639000,-83.7828000
+washington 99352 united states|46.2626837,-119.2849572
+washington 98109 united states|47.6288591,-122.3456919
+washington 98584 united states|47.2803577,-123.2351758
+washington 99202 united states|47.6568696,-117.3719973
+washington 98407 united states|47.2887352,-122.5134478
+washington 98855 united states|48.6660131,-119.2229501
+washington 98663 united states|45.6571750,-122.6508104
+washington 98909 united states|46.6022000,-120.5048000
+west virginia 26704 united states|39.3166638,-78.5887951
+west virginia 25802 united states|37.7782000,-81.1884000
+west virginia 24701 united states|37.2920644,-81.2298530
+west virginia 26302 united states|39.2636580,-80.3105166
+west virginia 26555 united states|39.4850000,-80.1426000
+west virginia 26807 united states|38.6104055,-79.4028639
+west virginia 25726 united states|38.4195000,-82.4455000
+west virginia 26537 united states|39.5046949,-79.7175517
+west virginia 24901 united states|37.8216979,-80.4326521
+west virginia 25402 united states|39.4573000,-77.9685000
+west virginia 26836 united states|39.0231763,-78.9514510
+west virginia 26847 united states|38.9620600,-79.1774268
+west virginia 26261 united states|38.1647838,-80.5216184
+west virginia 26291 united states|38.3784927,-80.0758425
+west virginia 25303 united states|38.3632688,-81.6856808
+west virginia 25570 united states|38.2186589,-82.4102628
+west virginia 26456 united states|39.2662448,-80.7879407
+west virginia 26452 united states|39.0384704,-80.5216184
+west virginia 26003 united states|40.1553514,-80.6548882
+wisconsin 54701 united states|44.7275290,-91.5596117
+wisconsin 54210 united states|45.2518254,-87.0426822
+wisconsin 54936 united states|43.7734000,-88.4469000
+wisconsin 54305 united states|44.5195000,-88.0199000
+wisconsin 54128 united states|44.8630478,-88.8070886
+wisconsin 54843 united states|46.0108650,-91.2958423
+wisconsin 53147 united states|42.5602523,-88.4597673
+wisconsin 53551 united states|43.0726982,-88.9222277
+wisconsin 53725 united states|43.0733000,-89.4012000
+wisconsin 54221 united states|44.0888000,-87.6578000
+wisconsin 54143 united states|45.1077917,-87.7068310
+wisconsin 54449 united states|44.6252443,-90.2244662
+wisconsin 53052 united states|43.1789000,-88.1174000
+wisconsin 54452 united states|45.2243330,-89.9247362
+wisconsin 53208 united states|43.0499798,-87.9628840
+wisconsin 54548 united states|45.8657941,-89.8072970
+wisconsin 53566 united states|42.5896728,-89.6628111
+wisconsin 54957 united states|44.1859000,-88.4626000
+wisconsin 54903 united states|44.0247000,-88.5426000
+wisconsin 53403 united states|42.6916480,-87.8107561
+wisconsin 54868 united states|45.5495929,-91.7489720
+wisconsin 53082 united states|43.7506000,-87.7146000
+wisconsin 54872 united states|45.7841011,-92.3886059
+wisconsin 54656 united states|44.0169153,-90.8294002
+wisconsin 54801 united states|45.9243167,-92.0141340
+wisconsin 54891 united states|46.7048044,-91.0018958
+wisconsin 54981 united states|44.3582045,-89.1324866
+wisconsin 54402 united states|44.9595000,-89.6303000
+wisconsin 54982 united states|44.0748991,-89.3037147
+wisconsin 53095 united states|43.3724402,-88.1486570
+wisconsin 54495 united states|44.3803784,-89.9440061
+wyoming 82602 united states|42.8667000,-106.3126000
+wyoming 82001 united states|41.1455491,-104.7812654
+wyoming 82717 united states|44.4579630,-105.4067071
+wyoming 83001 united states|43.4686966,-110.6724168
+wyoming 82073 united states|41.3136000,-105.5806000
+wyoming 82435 united states|44.8328735,-109.0123904
+wyoming 82801 united states|44.9019472,-106.6767049
+alabama 35011 united states|32.9394000,-85.9466000
+alabama 36831 united states|32.6099000,-85.4809000
+alabama 35056 united states|34.2028000,-86.8483000
+alabama 36072 united states|31.8913000,-85.1459000
+alabama 35064 united states|33.4732696,-86.9273532
+georgia 30603 united states|33.9605000,-83.3784000
+georgia 30312 united states|33.7440941,-84.3778610
+georgia 30011 united states|34.0323557,-83.8366958
+colorado 81645 united states|39.4095210,-106.4877072
+colorado 81402 united states|38.4784000,-107.8759000
+colorado 81147 united states|37.1604318,-107.0067031
+colorado 81240 united states|38.4521634,-105.0089888
+colorado 81002 united states|38.2630000,-104.6085000
+colorado 80477 united states|40.4850000,-106.8312000
+colorado 80751 united states|40.6391761,-103.2201828
+colorado 80550 united states|40.4891031,-104.9155243
+colorado 80866 united states|39.1082798,-105.2311827
+colorado 80517 united states|40.4111363,-105.6412527
+colorado 80437 united states|39.6339000,-105.3177000
+colorado 80522 united states|40.5854000,-105.0839000
+colorado 80701 united states|40.0466571,-103.8216261
+colorado 80446 united states|40.0658258,-105.8290298
+colorado 80631 united states|40.4398216,-104.6821048
+colorado 81230 united states|38.6153474,-107.1957203
+colorado 80501 united states|40.1764387,-105.0908147
+colorado 80539 united states|40.3979000,-105.0747000
+california 95370 united states|37.9768028,-120.3666099
+california 95202 united states|37.9621731,-121.2883857
+california 93279 united states|36.3303000,-119.2911000
+california 96094 united states|41.4552361,-122.4968143
+california 95695 united states|38.6651725,-121.8562610
+california 95992 united states|39.1408000,-121.6159000
+colorado 81101 united states|37.4526296,-105.8290298
+colorado 80513 united states|40.2985802,-105.1492869
+colorado 80302 united states|40.0386290,-105.3716684
+colorado 80424 united states|39.4768450,-106.0169971
+colorado 81623 united states|39.2165648,-107.2429976
+colorado 80932 united states|38.8338000,-104.8205000
+colorado 81321 united states|37.3683086,-108.7363370
+colorado 81302 united states|37.2754000,-107.8795000
+district of columbia 20030 united states|38.8950000,-77.0367000
+florida 32704 united states|28.6804000,-81.5099000
+connecticut 06492 united states|41.4593039,-72.7806422
+connecticut 06226 united states|41.7037038,-72.2067681
+delaware 19903 united states|39.1581000,-75.5248000
+connecticut 06610 united states|41.2007682,-73.1644628
+connecticut 06239 united states|41.7891492,-71.8689917
+connecticut 06144 united states|41.7638000,-72.6859000
+connecticut 6511 united states|37.6346760,-97.2931940
+connecticut 06320 united states|41.3631426,-72.1060680
+connecticut 06776 united states|41.5908094,-73.3944466
+connecticut 06877 united states|41.2928979,-73.4887288
+connecticut 06068 united states|42.0236770,-73.4415929
+florida 34613 united states|28.5492688,-82.5294065
+florida 32428 united states|30.5905520,-85.5612100
+florida 32327 united states|30.1743910,-84.3121264
+florida 34423 united states|28.9023000,-82.5928000
+florida 33526 united states|28.3647000,-82.1964000
+florida 32114 united states|29.1987957,-81.0423429
+florida 32721 united states|29.0275000,-81.3052000
+florida 32728 united states|28.9005000,-81.2639000
+florida 33308 united states|26.1843132,-80.1093570
+florida 34950 united states|27.4422244,-80.3380213
+florida 32547 united states|30.4735732,-86.6510329
+florida 32608 united states|29.5950852,-82.4102628
+florida 32206 united states|30.3467910,-81.6418656
+florida 32240 united states|30.3318000,-81.6555000
+georgia 30075 united states|34.0586259,-84.3857442
+georgia 31558 united states|30.8654010,-81.4498717
+georgia 31082 united states|33.0148881,-82.9501558
+georgia 30456 united states|32.9641099,-81.7568253
+georgia 31416 united states|32.0836000,-81.1003000
+maine 04212 united states|44.0976000,-70.2319000
+maine 04011 united states|43.9009373,-69.9822280
+maine 04843 united states|44.2304605,-69.0965731
+maine 04605 united states|44.7071071,-68.4266614
+maine 04350 united states|44.1682133,-69.9387817
+maryland 21001 united states|39.5123182,-76.1899661
+california 92402 united states|34.1216000,-117.3022000
+california 92581 united states|33.7837000,-116.9578000
+california 95112 united states|37.3456227,-121.8847222
+california 93406 united states|35.2828000,-120.6587000
+california 94901 united states|37.9770596,-122.5259596
+california 93111 united states|34.2499795,-118.5990065
+california 93456 united states|34.9532000,-120.4348000
+california 95403 united states|38.4810285,-122.7294309
+maryland 21012 united states|39.0442322,-76.4967919
+maryland 21811 united states|38.3176139,-75.2245693
+maryland 21044 united states|39.2066580,-76.8836261
+texas 76667 united states|31.6674190,-96.5143087
+texas 79702 united states|31.9601000,-102.0812000
+texas 75963 united states|31.6033000,-94.6555000
+texas 77868 united states|30.3432656,-96.0255738
+texas 78131 united states|29.7026000,-98.1245000
+texas 79760 united states|31.8458000,-102.3673000
+texas 77631 united states|30.0926000,-93.7365000
+texas 75686 united states|33.0265895,-94.9350929
+texas 78578 united states|26.0231982,-97.2868680
+texas 75087 united states|32.9340566,-96.4716580
+texas 76903 united states|31.4846812,-100.4508956
+texas 78204 united states|29.4043236,-98.5034561
+texas 78667 united states|29.8834000,-97.9412000
+texas 78156 united states|29.5687000,-97.9644000
+texas 77477 united states|29.6202873,-95.5669786
+texas 76401 united states|32.2455329,-98.2431747
+texas 76505 united states|31.0982000,-97.3427000
+texas 75501 united states|33.3460845,-94.1718542
+texas 75711 united states|32.3511000,-95.3009000
+texas 77902 united states|28.8051000,-97.0033000
+texas 76707 united states|31.5505206,-97.1601715
+texas 75693 united states|32.5227251,-94.8624355
+texas 76308 united states|33.8519246,-98.5336525
+texas 78676 united states|30.0214026,-98.1557066
+utah 84302 united states|41.4847397,-112.0714835
+arkansas 72315 united states|35.9369591,-89.9066314
+arkansas 72032 united states|35.0819701,-92.3616203
+arkansas 71731 united states|33.2077000,-92.6663000
+arkansas 72702 united states|36.0625000,-94.1573000
+arkansas 72703 united states|36.1192532,-94.0388918
+arkansas 72902 united states|35.3856000,-94.3984000
+arkansas 71801 united states|33.6095043,-93.6217802
+arkansas 71902 united states|34.5038000,-93.0552000
+arkansas 72402 united states|35.8425000,-90.7044000
+arkansas 71753 united states|33.2642766,-93.1378173
+arkansas 72451 united states|36.0584000,-90.5003000
+arkansas 71603 united states|34.1132994,-92.0861330
+arkansas 72756 united states|36.3464078,-94.0491077
+california 92307 united states|34.5869607,-117.1264753
+california 95001 united states|36.9774000,-121.8985000
+california 95301 united states|37.3048210,-120.6545022
+california 95604 united states|39.2432000,-120.0714000
+california 93385 united states|35.3736000,-119.0176000
+california 92315 united states|34.2504069,-116.9204787
+california 95927 united states|39.7289000,-121.8365000
+california 95531 united states|41.7978892,-123.9862325
+california 92244 united states|32.7919000,-115.5622000
+california 95502 united states|40.8145762,-124.0805314
+california 94533 united states|38.2889263,-122.0041790
+california 95437 united states|39.4513714,-123.6846987
+california 93712 united states|36.7475000,-119.7716000
+california 92202 united states|33.7206000,-116.2144000
+california 91945 united states|32.7381191,-117.0382158
+texas 78654 united states|30.5657288,-98.2431747
+texas 75070 united states|33.1799688,-96.6958939
+arizona 86326 united states|34.6682686,-112.0953297
+arizona 85925 united states|33.8794014,-109.3307345
+arizona 86003 united states|35.1984000,-111.6508000
+arizona 85210 united states|33.3902569,-111.8449346
+arizona 85628 united states|31.3404000,-110.9339000
+arizona 85547 united states|34.2306000,-111.3245000
+arizona 85036 united states|33.4486000,-112.0733000
+arizona 86303 united states|34.4946002,-112.4529878
+arizona 85548 united states|32.8337000,-109.7069000
+arizona 85636 united states|31.5545000,-110.3031000
+arizona 85372 united states|33.5977000,-112.2713000
+arizona 85713 united states|32.1919440,-110.9625854
+arizona 85358 united states|33.9689000,-112.7286000
+arizona 85366 united states|32.6847980,-114.4983245
+arkansas 72018 united states|34.5644000,-92.5864000
+arkansas 72712 united states|36.3512181,-94.2230836
+alabama 36854 united states|32.7381769,-85.1686743
+alaska 99514 united states|61.2181000,-149.9003000
+alaska 99701 united states|64.4670270,-147.5411136
+alaska 99802 united states|58.3016000,-134.4194000
+alaska 99611 united states|60.8238296,-150.6322454
+alaska 99615 united states|57.4912463,-153.4950220
+alaska 99687 united states|61.3472179,-150.0326694
+arizona 85532 united states|33.4077000,-110.8144000
+california 94025 united states|37.4484914,-122.1802812
+california 95358 united states|37.6107909,-121.1022942
+california 92564 united states|33.5539000,-117.2132000
+california 91601 united states|34.1658804,-118.3637264
+california 93030 united states|34.2023849,-119.1797650
+california 91107 united states|34.1539943,-118.0830047
+alabama 36536 united states|30.4064000,-87.6838000
+alabama 35563 united states|34.0016370,-87.8942451
+alabama 35080 united states|33.2767477,-86.9123217
+alabama 35816 united states|34.7333197,-86.6359159
+alabama 35502 united states|33.8311000,-87.2775000
+alabama 36616 united states|30.7006000,-88.0455000
+alabama 36461 united states|31.5276000,-87.3244000
+alabama 36351 united states|31.4490931,-85.9100089
+alabama 35125 united states|33.6288538,-86.2767995
+alabama 36066 united states|32.4754941,-86.4288534
+alabama 35906 united states|33.9247303,-86.1039189
+alabama 35768 united states|34.7330950,-86.0733498
+alabama 35150 united states|33.1796342,-86.2361744
+alabama 35160 united states|33.3310004,-86.0529604
+alabama 36078 united states|32.5182315,-85.9713220
+alabama 36083 united states|32.4169386,-85.6434870
+georgia 30031 united states|33.7749000,-84.2965000
+georgia 30030 united states|33.7709887,-84.2963392
+georgia 31040 united states|32.5404000,-82.9038000
+georgia 31023 united states|32.2191202,-83.2077645
+georgia 31024 united states|33.3069978,-83.3789389
+georgia 31029 united states|33.0685419,-83.9744262
+georgia 31030 united states|32.5934272,-83.9108968
+georgia 30222 united states|33.0164819,-84.8150781
+georgia 30354 united states|33.6580771,-84.3857442
+georgia 31042 united states|32.7362277,-83.1863358
+georgia 31545 united states|31.5813903,-81.9752995
+georgia 30236 united states|33.5213067,-84.3226488
+georgia 31211 united states|32.9031302,-83.5816150
+georgia 30067 united states|33.9290987,-84.4697663
+georgia 30731 united states|34.5792768,-85.4581859
+georgia 31063 united states|32.3247541,-83.9532571
+georgia 30264 united states|33.3807000,-84.7999000
+georgia 31822 united states|32.8634088,-84.9193082
+georgia 31329 united states|32.3960941,-81.3179364
+georgia 30459 united states|32.4486000,-81.7833000
+georgia 30087 united states|33.8023029,-84.1329595
+georgia 30286 united states|32.9047684,-84.3121264
+georgia 30824 united states|33.5258626,-82.5185837
+georgia 31793 united states|31.4443895,-83.5709640
+georgia 31603 united states|30.8327000,-83.2785000
+georgia 30475 united states|32.2148000,-82.4107000
+georgia 31092 united states|32.0904261,-83.7836403
+georgia 31095 united states|32.6205000,-83.6002000
+georgia 31502 united states|31.2135000,-82.3543000
+georgia 31836 united states|32.8026100,-84.5431867
+georgia 30188 united states|34.1280759,-84.4487720
+gu 96923 united states|46.5671150,-87.6693410
+hawaii 96703 united states|22.1414527,-159.3056330
+hawaii 96729 united states|21.1675034,-157.1060353
+hawaii 96733 united states|20.8944000,-156.4700000
+idaho 83707 united states|43.6139000,-116.2025000
+idaho 83805 united states|48.7987617,-116.5627065
+idaho 99403 united states|46.3688681,-117.3049476
+idaho 83338 united states|42.7547779,-114.3090133
+idaho 83837 united states|47.7287134,-116.0495127
+idaho 83843 united states|46.7251492,-116.9667226
+idaho 83347 united states|42.7778881,-113.8688482
+idaho 83205 united states|42.8714000,-112.4447000
+idaho 83864 united states|48.4193918,-116.5300267
+idaho 83303 united states|42.5632000,-114.4600000
+illinois 62812 united states|37.9947221,-88.9222277
+illinois 62914 united states|37.0272086,-89.2942210
+illinois 61520 united states|40.5330589,-90.0186555
+illinois 62903 united states|37.6684862,-89.2942210
+illinois 62801 united states|38.5029540,-89.1515476
+illinois 61824 united states|40.1165000,-88.2434000
+illinois 60608 united states|41.8464166,-87.6679765
+illinois 60624 united states|41.8822489,-87.7221872
+illinois 61727 united states|40.0998293,-88.9796776
+illinois 61834 united states|40.2243587,-87.6778378
+illinois 62525 united states|39.8406000,-88.9548000
+illinois 60115 united states|41.8932200,-88.7686382
+illinois 61021 united states|41.8192126,-89.4931176
+illinois 62203 united states|38.6057530,-90.0793488
+illinois 61402 united states|40.9478000,-90.3713000
+illinois 62946 united states|37.7359885,-88.5371958
+illinois 60944 united states|41.0633000,-87.6250000
+illinois 62651 united states|39.7339000,-90.2286000
+illinois 60435 united states|41.5359304,-88.1193763
+illinois 61301 united states|41.3774560,-89.0752499
+illinois 61540 united states|41.0175715,-89.3795835
+illinois 62656 united states|40.1025480,-89.3606298
+illinois 61111 united states|42.3256407,-89.0131532
+illinois 62959 united states|37.6975961,-88.9222277
+illinois 60153 united states|41.8745965,-87.8402405
+illinois 61462 united states|40.9165220,-90.6393702
+illinois 60450 united states|41.3906653,-88.4403883
+illinois 62864 united states|38.3327161,-88.9222277
+illinois 61764 united states|40.9106741,-88.6723578
+illinois 62454 united states|39.0075219,-87.7369607
+illinois 62286 united states|38.1051586,-89.7379958
+illinois 62703 united states|39.7646820,-89.6345796
+illinois 61081 united states|41.8796431,-89.7379958
+illinois 61951 united states|39.6020543,-88.5951751
+illinois 62471 united states|38.8596984,-89.2086773
+illinois 60118 united states|42.0955139,-88.3142120
+illinois 60187 united states|41.8445754,-88.1096118
+illinois 60098 united states|42.3439139,-88.4403883
+indiana 46015 united states|40.1056000,-85.6805000
+indiana 46703 united states|41.6323583,-85.0025539
+indiana 47918 united states|40.2955652,-87.2020990
+indiana 46706 united states|41.3548101,-85.0441304
+indiana 47001 united states|39.0249789,-84.9609464
+indiana 47402 united states|39.1652000,-86.5292000
+indiana 46714 united states|40.7163045,-85.1686743
+indiana 47834 united states|39.4938012,-87.1821709
+indiana 47131 united states|38.2901000,-85.7514000
+indiana 46725 united states|41.1521887,-85.4788065
+indiana 47331 united states|39.5920377,-85.1479364
+indiana 47933 united states|40.0619549,-86.8621827
+indiana 46122 united states|39.7865213,-86.5602614
+indiana 46733 united states|40.8094110,-84.9817540
+indiana 46923 united states|40.6063002,-86.6409554
+indiana 46312 united states|41.6428269,-87.4504888
+indiana 47118 united states|38.3271151,-86.4794359
+indiana 46041 united states|40.2981184,-86.5400674
+indiana 46527 united states|41.5827000,-85.8348000
+indiana 46325 united states|41.5835000,-87.5003000
+indiana 46750 united states|40.8299278,-85.4788065
+indiana 46206 united states|39.7683000,-86.1582000
+indiana 47547 united states|38.3917000,-86.9313000
+indiana 46534 united states|41.2715616,-86.6207943
+indiana 46903 united states|40.4864000,-86.1336000
+indiana 46350 united states|41.5939193,-86.7013894
+indiana 47905 united states|40.4064351,-86.7617490
+indiana 46761 united states|41.6479501,-85.3756249
+indiana 47550 united states|38.0493126,-86.9173327
+indiana 46052 united states|40.0503732,-86.4592091
+indiana 47441 united states|39.0788092,-87.1821709
+indiana 46947 united states|40.7807397,-86.3782198
+indiana 46952 united states|40.6128584,-85.6229296
+indiana 46151 united states|39.3913252,-86.4592091
+indiana 46361 united states|41.7114000,-86.8714000
+indiana 47308 united states|40.1934000,-85.3866000
+indiana 47448 united states|39.1373405,-86.2970998
+indiana 47151 united states|38.2856000,-85.8245000
+indiana 47362 united states|39.9311289,-85.3962769
+indiana 47629 united states|37.9445000,-87.4053000
+indiana 46061 united states|40.0560000,-86.0237000
+indiana 47452 united states|38.6618417,-86.4389740
+indiana 46970 united states|40.7700990,-86.0529604
+indiana 46563 united states|41.3443814,-86.3782198
+indiana 47371 united states|40.4040725,-84.9817540
+indiana 47670 united states|38.3338249,-87.5791287
+indiana 47978 united states|40.9627687,-87.1023746
+indiana 46975 united states|41.0983022,-86.2158497
+indiana 46173 united states|39.6053598,-85.4788065
+indiana 47460 united states|39.2976009,-86.8019473
+indiana 47807 united states|39.4627869,-87.4058761
+indiana 46072 united states|40.2853114,-86.1344697
+indiana 47390 united states|40.2143461,-84.8359395
+indiana 46581 united states|41.2394000,-85.8505000
+indiana 46794 united states|41.4622267,-85.4684971
+indiana 47597 united states|38.6853085,-87.3214908
+iowa 50010 united states|42.0416255,-93.6015207
+iowa 52722 united states|41.5802621,-90.4691097
+illinois 52722 united states|41.5802621,-90.4691097
+iowa 52406 united states|42.0083000,-91.6437000
+iowa 50616 united states|43.0275603,-92.6586401
+iowa 51502 united states|41.2724357,-95.7964952
+iowa 50311 united states|41.6046408,-93.6851440
+iowa 52004 united states|42.5006000,-90.6647000
+iowa 50644 united states|42.4965069,-91.8708613
+iowa 50125 united states|41.3443814,-93.6217802
+iowa 52245 united states|41.6761201,-91.5063405
+iowa 52632 united states|40.4428940,-91.4241426
+iowa 50138 united states|41.2783751,-93.1378173
+iowa 51455 united states|41.9255126,-95.1015225
+iowa 50158 united states|42.0812762,-92.8976254
+iowa 50402 united states|43.1501000,-93.1021000
+iowa 52761 united states|41.4774192,-90.9438468
+iowa 50208 united states|41.6802825,-93.0576199
+iowa 52646 united states|41.0552310,-91.0011902
+iowa 50212 united states|42.0267419,-94.0491077
+iowa 50461 united states|43.2542388,-92.8976254
+iowa 52577 united states|41.2707939,-92.6387795
+iowa 50220 united states|41.8859644,-94.1104449
+iowa 51601 united states|40.7347774,-95.3311652
+iowa 51102 united states|42.5000000,-96.4000000
+iowa 50588 united states|42.6296202,-95.1849219
+iowa 52353 united states|41.3082706,-91.7149580
+kansas 66002 united states|39.5167357,-95.1640605
+kansas 66406 united states|39.9058363,-96.4290360
+kansas 66801 united states|38.3636133,-96.1951320
+kansas 67301 united states|37.1996252,-95.7721204
+kansas 66505 united states|39.1967000,-96.5956000
+kansas 67107 united states|38.1990675,-97.5680595
+kansas 66067 united states|38.5766138,-95.2684437
+kansas 67357 united states|37.3306966,-95.2475518
+kansas 67133 united states|37.5732990,-97.1144039
+kansas 67665 united states|38.8579730,-98.8803925
+kansas 67402 united states|38.8406000,-97.6112000
+kansas 66611 united states|39.0105228,-95.6931356
+kansas 67156 united states|37.2208916,-96.9638624
+california 90807 united states|33.8332465,-118.1766294
+california 95667 united states|38.7370339,-120.8498944
+california 96002 united states|40.5229147,-122.3221947
+california 92516 united states|33.9533000,-117.3955000
+california 95817 united states|38.5517469,-121.4541881
+california 95249 united states|38.1672685,-120.6084832
+minnesota 56031 united states|43.5899468,-94.4387900
+minnesota 56538 united states|46.2834000,-96.0772000
+michigan 48658 united states|43.9932892,-83.9532571
+michigan 48764 united states|44.2697000,-83.5148000
+michigan 49696 united states|44.7408000,-85.5949000
+michigan 48768 united states|43.3610042,-83.5709640
+michigan 49968 united states|46.4777080,-89.8819950
+minnesota 56619 united states|47.4739000,-94.8801000
+minnesota 55008 united states|45.5729980,-93.2678304
+michigan 48661 united states|44.2914755,-84.2278796
+michigan 48895 united states|42.7022770,-84.2910759
+minnesota 56431 united states|46.3802370,-93.6802938
+mississippi 38614 united states|34.1960298,-90.6393702
+mississippi 38732 united states|33.7714713,-90.8103570
+mississippi 39060 united states|32.3522666,-90.2696336
+mississippi 38821 united states|33.9872081,-88.4210006
+mississippi 39520 united states|30.3195102,-89.4931176
+mississippi 39530 united states|30.4022490,-88.8886784
+mississippi 39602 united states|31.5828000,-90.4435000
+mississippi 39046 united states|32.6729459,-89.9626799
+minnesota 55414 united states|44.9781750,-93.2157342
+minnesota 56073 united states|44.2722287,-94.5211935
+minnesota 56567 united states|46.5047354,-95.3990133
+minnesota 55060 united states|44.0888533,-93.2181477
+minnesota 55066 united states|44.5027689,-92.5594214
+minnesota 55903 united states|44.0217000,-92.4694000
+minnesota 56302 united states|45.5605000,-94.1622000
+minnesota 56081 united states|43.9654662,-94.6037231
+minnesota 55350 united states|44.8797909,-94.3565130
+minnesota 56345 united states|46.0117046,-94.3550300
+mississippi 38860 united states|33.9911608,-88.7686382
+mississippi 39350 united states|32.8057157,-89.1705998
+mississippi 39466 united states|30.4811954,-89.5874819
+mississippi 38863 united states|34.1934648,-88.9796776
+mississippi 38666 united states|34.3976229,-89.9440061
+mississippi 38668 united states|34.6192688,-89.9813445
+mississippi 39760 united states|33.4584000,-88.8167000
+mississippi 39169 united states|33.1460842,-90.2807868
+mississippi 38676 united states|34.6630123,-90.3560076
+mississippi 39654 united states|31.5140950,-90.1307797
+mississippi 39121 united states|31.5604000,-91.4032000
+mississippi 38652 united states|34.4605576,-89.0561532
+mississippi 38941 united states|33.3928119,-90.4125181
+mississippi 39296 united states|32.2986000,-90.1849000
+mississippi 38639 united states|34.3025647,-90.4172310
+mississippi 39441 united states|31.6937000,-89.1308000
+mississippi 38756 united states|33.4801686,-90.8675134
+mississippi 39339 united states|33.1197471,-88.9796776
+mississippi 39452 united states|30.7959493,-88.5565310
+mississippi 38702 united states|33.4100000,-91.0619000
+mississippi 39404 united states|31.3268000,-89.2905000
+mississippi 38632 united states|34.7961707,-90.0186555
+mississippi 38635 united states|34.7289034,-89.5120084
+mississippi 38851 united states|33.9261914,-88.9796776
+mississippi 39327 united states|32.4209694,-89.1134166
+mississippi 38736 united states|33.6387621,-90.5446912
+mississippi 38630 united states|34.2238509,-90.6346310
+mississippi 39074 united states|32.4001651,-89.4363910
+mississippi 38843 united states|34.2757210,-88.3627850
+mississippi 38617 united states|34.3523470,-90.4691097
+mississippi 39429 united states|31.2165811,-89.7379958
+mississippi 39705 united states|33.5851639,-88.4210006
+mississippi 38835 united states|34.9357000,-88.5157000
+mississippi 38967 united states|33.4605370,-89.7567693
+missouri 64013 united states|39.0167000,-94.2817000
+missouri 65233 united states|38.9139378,-92.7381672
+missouri 65201 united states|38.9035809,-92.2433487
+missouri 63019 united states|38.2263151,-90.3795438
+missouri 63640 united states|37.7658012,-90.3371889
+massachusetts 01202 united states|42.4501000,-73.2456000
+massachusetts 01101 united states|42.1015000,-72.5905000
+massachusetts 02568 united states|41.4266935,-70.6335763
+massachusetts 02571 united states|41.7662580,-70.7049520
+massachusetts 02673 united states|41.6615751,-70.2467852
+massachusetts 01086 united states|42.1253000,-72.7501000
+massachusetts 01930 united states|42.6228524,-70.7049520
+massachusetts 02130 united states|42.3097365,-71.1151431
+massachusetts 01853 united states|42.6435000,-71.3101000
+massachusetts 01904 united states|42.4902967,-70.9635962
+massachusetts 01247 united states|42.7020056,-73.1113560
+missouri 65615 united states|36.6436000,-93.2185000
+missouri 65622 united states|37.5566207,-93.0576199
+missouri 64730 united states|38.2810842,-94.2743628
+missouri 63702 united states|37.3059000,-89.5183000
+missouri 64601 united states|39.8040617,-93.5407909
+mississippi 38963 united states|34.0191226,-90.3371889
+mississippi 39175 united states|32.1275776,-90.6393702
+mississippi 39181 united states|32.3526000,-90.8778000
+mississippi 38965 united states|34.1082186,-89.6628111
+mississippi 39773 united states|33.7462187,-88.8263006
+kentucky 40508 united states|38.0488113,-84.5091102
+kentucky 40743 united states|37.1286000,-84.0834000
+kentucky 40203 united states|38.2429908,-85.7641013
+kentucky 42064 united states|37.3252457,-88.1291387
+kentucky 42066 united states|36.7314748,-88.6723578
+kentucky 41544 united states|37.5972447,-82.1768018
+montana 59771 united states|45.6799000,-111.0378000
+montana 59903 united states|48.1956000,-114.3117000
+montana 59457 united states|46.9333613,-109.3938873
+montana 59923 united states|48.3100263,-115.3921499
+montana 59047 united states|45.4788485,-110.6082522
+north carolina 28502 united states|35.2625000,-77.5817000
+north carolina 28352 united states|34.7776407,-79.4478858
+north carolina 27293 united states|35.8238000,-80.2538000
+north carolina 28465 united states|33.9137129,-78.1051246
+north carolina 27549 united states|36.0730279,-78.2476146
+vermont 05702 united states|43.6106000,-72.9731000
+vermont 05001 united states|43.6782802,-72.3698471
+vi 00821 united states|17.7488000,-64.7039000
+virginia 24212 united states|36.7084000,-81.9688000
+virginia 24517 united states|37.1583348,-79.2338370
+virginia 24521 united states|37.6619619,-79.0871005
+virginia 24522 united states|37.4024890,-78.7929530
+new york 12804 united states|43.3467322,-73.6300729
+new york 12977 united states|44.3000000,-74.0856000
+new york 14609 united states|43.1770344,-77.5504779
+new york 11778 united states|40.9398120,-72.9283391
+michigan 48875 united states|42.8486784,-84.9193082
+michigan 49677 united states|43.9140678,-85.5406209
+michigan 49779 united states|45.4025316,-83.9419933
+michigan 48653 united states|44.4626923,-84.6479124
+michigan 48607 united states|43.4313247,-83.9347281
+michigan 49781 united states|46.0696083,-84.7483259
+michigan 48880 united states|43.4701735,-84.5641470
+michigan 49090 united states|42.4291411,-86.1955169
+michigan 49446 united states|43.5524853,-86.4086061
+michigan 49868 united states|46.5025918,-85.4386459
+michigan 49120 united states|41.8177914,-86.2158497
+michigan 49953 united states|46.7849844,-89.4001021
+michigan 48465 united states|43.6105789,-82.6267345
+michigan 49079 united states|42.2226787,-85.9100089
+michigan 49770 united states|45.3540431,-84.8782707
+michigan 48342 united states|42.6423810,-83.2773590
+michigan 48061 united states|42.9755000,-82.4243000
+michigan 49946 united states|46.6972377,-88.3445010
+michigan 49651 united states|44.4061307,-85.0649071
+michigan 48849 united states|42.8187890,-85.1271907
+michigan 48153 united states|42.3685000,-83.3529000
+michigan 49431 united states|43.9823555,-86.3984793
+michigan 49660 united states|44.2232875,-86.2158497
+michigan 49854 united states|46.2272979,-86.3393485
+michigan 49855 united states|46.5066212,-87.4250844
+michigan 49070 united states|42.5365662,-85.6332093
+michigan 49332 united states|43.6350166,-85.2515482
+michigan 48642 united states|43.7016600,-84.2067992
+michigan 48161 united states|41.9134130,-83.4856913
+michigan 48043 united states|42.5988654,-82.8802133
+new york 13827 united states|42.1253494,-76.2015572
+new york 14527 united states|42.6492000,-77.0334179
+new york 12901 united states|44.7478666,-73.4416721
+new york 13809 united states|42.4013687,-75.3995089
+new york 12551 united states|41.5036000,-74.0105000
+new york 14302 united states|43.0936000,-79.0565000
+new york 13667 united states|44.8400829,-74.8971361
+new york 14517 united states|42.5998920,-77.8938895
+new york 14502 united states|43.0968034,-77.3439283
+new york 11030 united states|40.8017841,-73.6889378
+new york 14103 united states|43.2156425,-78.3614672
+new york 12524 united states|41.5380659,-73.9007090
+new york 12078 united states|43.1145329,-74.3822058
+new york 13073 united states|42.5731074,-76.3868797
+new york 12742 united states|41.7248516,-74.7161489
+new york 13350 united states|43.0459158,-74.9910112
+new york 14702 united states|42.0967000,-79.2357000
+new york 12402 united states|41.9276000,-74.0183000
+new york 14095 united states|43.1709000,-78.6906000
+new york 14021 united states|42.9982000,-78.1875000
+new york 11932 united states|40.9425715,-72.3133529
+new york 11201 united states|40.6945658,-73.9918181
+new york 14205 united states|42.8864000,-78.8788000
+new york 14424 united states|42.8841767,-77.2405153
+new york 12037 united states|42.3521632,-73.5829689
+new york 12043 united states|42.7091170,-74.4760088
+new york 14830 united states|42.1461153,-77.0334179
+new mexico 87106 united states|35.0560914,-106.6232359
+new mexico 87002 united states|34.5518045,-106.5819789
+new mexico 88031 united states|32.2687000,-107.7584000
+new mexico 87532 united states|35.9605365,-106.1345705
+new mexico 87499 united states|36.7576000,-108.1085000
+new mexico 88241 united states|32.7028000,-103.1356000
+new mexico 87701 united states|35.5618832,-105.1258955
+new mexico 88202 united states|33.3942000,-104.5228000
+new york 12209 united states|42.6376174,-73.7860276
+new york 13021 united states|42.9406993,-76.5719414
+nebraska 68467 united states|40.8315698,-97.5680595
+nevada 89108 united states|36.2030945,-115.2244853
+new hampshire 03833 united states|42.9735434,-70.9903438
+new hampshire 03246 united states|43.5790521,-71.4749994
+new hampshire 03104 united states|43.0088559,-71.4477469
+new hampshire 03061 united states|42.7656000,-71.4682000
+nebraska 68901 united states|40.6161179,-98.3526560
+nebraska 68510 united states|40.8045740,-96.6157192
+nebraska 68702 united states|42.0275000,-97.4178000
+nebraska 69103 united states|41.1237000,-100.7653000
+ohio 43725 united states|40.0420950,-81.5596427
+ohio 44406 united states|41.0125457,-80.7879407
+ohio 44701 united states|40.7987000,-81.3788000
+ohio 44022 united states|41.4485544,-81.3949264
+ohio 45601 united states|39.3584253,-82.9931607
+ohio 45215 united states|39.2414664,-84.4697663
+ohio 44105 united states|41.4511180,-81.6309078
+north carolina 28782 united states|35.2189940,-82.2474648
+north carolina 28170 united states|35.0964086,-80.1205256
+north carolina 27589 united states|36.3208776,-78.1564432
+north carolina 27889 united states|35.6056024,-77.0564464
+north carolina 27894 united states|35.7213000,-77.9155000
+north carolina 27103 united states|36.0564654,-80.3324514
+north dakota 58502 united states|46.8085000,-100.7836000
+north dakota 58103 united states|46.8647086,-96.8262901
+north dakota 58206 united states|47.9255000,-97.0325000
+north dakota 58703 united states|48.2890596,-101.2415625
+ohio 44306 united states|41.0361900,-81.4828198
+ohio 44001 united states|41.3700299,-82.2474648
+ohio 44005 united states|41.8664000,-80.7933000
+ohio 43906 united states|40.0145055,-80.7990185
+ohio 43311 united states|40.3639520,-83.7411631
+ohio 43402 united states|41.4065709,-83.6561215
+ohio 43506 united states|41.4520535,-84.5431867
+missouri 65037 united states|38.2613013,-92.8377656
+missouri 63401 united states|39.7050180,-91.4241426
+missouri 65483 united states|37.3456816,-91.9294681
+missouri 64050 united states|39.1232621,-94.4079213
+missouri 65110 united states|38.5764000,-92.1736000
+missouri 64803 united states|37.0842000,-94.5132000
+missouri 64759 united states|37.5189552,-94.2743628
+missouri 65536 united states|37.7364113,-92.6586401
+missouri 64069 united states|39.2454000,-94.4284000
+missouri 65265 united states|39.1810112,-91.8708613
+missouri 65712 united states|37.1085460,-93.7841503
+ohio 44120 united states|41.4769163,-81.5760945
+ohio 43224 united states|40.0441439,-82.9609096
+ohio 43812 united states|40.2892965,-81.8879884
+ohio 45409 united states|39.7206965,-84.1936203
+ohio 43920 united states|40.6735208,-80.5660657
+ohio 45320 united states|39.7386241,-84.7315563
+montana 59807 united states|46.8722000,-113.9932000
+montana 59068 united states|45.1685772,-109.5258205
+montana 59759 united states|45.9655183,-112.1707500
+nebraska 68305 united states|40.3025938,-95.8775964
+nebraska 68005 united states|41.1596468,-95.9092754
+nebraska 69130 united states|40.8911427,-99.9465077
+nebraska 68026 united states|41.4504000,-96.5059000
+ohio 44830 united states|41.1522215,-83.4003037
+ohio 45011 united states|39.4296413,-84.5117321
+ohio 43056 united states|40.0342106,-82.3234843
+ohio 43526 united states|41.3018760,-84.7524482
+ohio 44839 united states|41.3822571,-82.5834947
+missouri 64850 united states|36.8507427,-94.4182089
+missouri 64772 united states|37.8557189,-94.3565130
+missouri 64076 united states|38.9628463,-93.9470396
+missouri 63901 united states|36.7381367,-90.4125181
+missouri 63302 united states|38.7838000,-90.4814000
+missouri 64506 united states|39.7946600,-94.8054142
+missouri 63110 united states|38.6212468,-90.2526163
+missouri 65801 united states|37.2155000,-93.2981000
+missouri 65355 united states|38.2259245,-93.3792057
+missouri 65775 united states|36.7242055,-91.8708613
+montana 59711 united states|46.1546980,-112.9981262
+new hampshire 03257 united states|43.4284925,-71.9756990
+new hampshire 03860 united states|44.0427791,-71.1071770
+new hampshire 03303 united states|43.3071121,-71.6910660
+new hampshire 03264 united states|43.7211286,-71.7112355
+new hampshire 03802 united states|43.0719000,-70.7632000
+new hampshire 03896 united states|43.5919000,-71.2062000
+new jersey 07712 united states|40.2432249,-74.0476378
+new jersey 08223 united states|39.2754910,-74.6517540
+new jersey 08010 united states|40.0520116,-74.9150313
+new jersey 08807 united states|40.5971482,-74.6283316
+new jersey 08101 united states|39.9258000,-75.1200000
+new jersey 08512 united states|40.3225327,-74.5111720
+new jersey 07201 united states|40.6670494,-74.1650991
+new jersey 07728 united states|40.2303787,-74.2766186
+new jersey 07602 united states|40.8859000,-74.0439000
+new jersey 08904 united states|40.5024680,-74.4261821
+new jersey 07740 united states|40.2947027,-73.9888797
+new jersey 08332 united states|39.3510393,-74.9910112
+new jersey 07101 united states|40.7357000,-74.1725000
+new jersey 07860 united states|41.0461965,-74.8039205
+new jersey 07509 united states|40.9169000,-74.1723000
+new jersey 08067 united states|39.7409308,-75.4228190
+new jersey 08071 united states|39.7292456,-75.1370254
+new jersey 07060 united states|40.6137438,-74.4232507
+new jersey 08232 united states|39.3983456,-74.5111720
+new jersey 08753 united states|39.9741059,-74.1592278
+new jersey 08638 united states|40.2518754,-74.7629661
+new jersey 08087 united states|39.6332269,-74.3822058
+new jersey 07882 united states|40.7549302,-74.9910112
+new mexico 88311 united states|32.8996000,-105.9597000
+texas 76801 united states|31.8063114,-99.0571089
+texas 77801 united states|30.6423514,-96.3704778
+texas 75633 united states|32.1480660,-94.2743628
+texas 76033 united states|32.2917352,-97.5030669
+texas 77305 united states|30.3117000,-95.4559000
+texas 75372 united states|32.7835000,-96.8001000
+texas 77434 united states|29.5681570,-96.3438785
+texas 79905 united states|31.7699019,-106.4229199
+texas 76110 united states|32.7011609,-97.3354531
+texas 78624 united states|30.3149930,-98.9245343
+texas 78358 united states|28.2466000,-96.7984000
+texas 76241 united states|33.6256000,-97.1334000
+texas 77550 united states|29.3034631,-94.7846938
+texas 75046 united states|32.9127000,-96.6389000
+texas 78628 united states|30.6410107,-97.7634019
+texas 75644 united states|32.7533753,-95.0182460
+texas 76048 united states|32.4084693,-97.8068851
+texas 75404 united states|33.1395000,-96.1114000
+texas 75653 united states|32.1531000,-94.7993000
+texas 77259 united states|29.7632000,-95.3633000
+texas 77029 united states|29.7597385,-95.2632201
+texas 77268 united states|29.7632000,-95.3633000
+tennessee 37822 united states|35.9676000,-83.1925000
+tennessee 38242 united states|36.2942119,-88.2850420
+tennessee 38478 united states|35.2223186,-87.0224442
+tennessee 37852 united states|36.3337797,-84.5431867
+tennessee 37857 united states|36.4445545,-82.9501558
+tennessee 37864 united states|35.8681000,-83.5619000
+tennessee 37162 united states|35.4850000,-86.4602000
+tennessee 37172 united states|36.5250666,-86.8621827
+tennessee 37879 united states|36.4557697,-83.5283420
+tennessee 38382 united states|35.9763939,-88.9988098
+tennessee 37388 united states|35.3527620,-86.1955169
+tennessee 38281 united states|36.4211000,-89.0662000
+tennessee 37190 united states|35.8294813,-86.0733498
+texas 79604 united states|32.4487000,-99.7329000
+texas 79105 united states|35.2218000,-101.8309000
+texas 78702 united states|30.2603535,-97.7145152
+texas 77520 united states|29.7688846,-94.8728093
+texas 77725 united states|30.0425000,-94.1031000
+texas 75418 united states|33.5735591,-96.2163597
+texas 78523 united states|25.9016000,-97.4975000
+north carolina 28106 united states|35.1169000,-80.7237000
+north carolina 28755 united states|35.9196822,-82.2135010
+north carolina 27028 united states|35.9367033,-80.5882803
+north carolina 28111 united states|34.9853000,-80.5498000
+north carolina 28680 united states|35.7456000,-81.6852000
+north carolina 27030 united states|36.4763956,-80.6104890
+north carolina 27856 united states|36.0264715,-77.9967043
+north carolina 28657 united states|36.0392970,-81.9971108
+north carolina 27041 united states|36.4228869,-80.4771472
+north carolina 27312 united states|35.7524399,-79.1774268
+north carolina 28376 united states|34.9799247,-79.2676668
+north carolina 27604 united states|35.8150476,-78.5774408
+north carolina 27323 united states|36.3547000,-79.6644000
+north carolina 27870 united states|36.4260215,-77.7223162
+north carolina 28380 united states|34.9496000,-79.7549000
+north carolina 27801 united states|35.9125927,-77.7223162
+north carolina 27573 united states|36.4046579,-78.9684177
+north carolina 28139 united states|35.3677758,-82.0189155
+north carolina 28145 united states|35.6705000,-80.4744000
+north carolina 27331 united states|35.4797000,-79.1809000
+north carolina 27577 united states|35.5029834,-78.3614672
+north carolina 28388 united states|35.1736000,-79.3925000
+north carolina 28687 united states|35.7827000,-80.8875000
+north carolina 27886 united states|35.8886745,-77.4931403
+north carolina 28681 united states|35.8974199,-81.2078164
+north carolina 27361 united states|35.8825000,-80.0824000
+north carolina 28585 united states|35.0402976,-77.4242972
+north carolina 28025 united states|35.3898417,-80.5216184
+north carolina 28723 united states|35.2646157,-83.1863358
+north carolina 28335 united states|35.3061000,-78.6095000
+north carolina 27289 united states|36.4884000,-79.7667000
+north carolina 27932 united states|36.0927193,-76.6181655
+north carolina 27907 united states|36.3018000,-76.2238000
+north carolina 28621 united states|36.2690439,-80.8433145
+north carolina 28302 united states|35.0527000,-78.8789000
+north carolina 28744 united states|35.1824000,-83.3777000
+north carolina 28053 united states|35.2616000,-81.1875000
+north carolina 27530 united states|35.3463405,-78.0880129
+north carolina 27835 united states|35.6112000,-77.3731000
+north carolina 27536 united states|36.3338756,-78.3955986
+north carolina 28793 united states|35.3186000,-82.4613000
+north carolina 28603 united states|35.7334000,-81.3416000
+north carolina 28540 united states|34.7023151,-77.5160788
+north carolina 27948 united states|36.0191537,-75.6731734
+north carolina 27021 united states|36.3262595,-80.3435908
+new york 14895 united states|42.0915967,-77.9510209
+new york 14171 united states|42.4344663,-78.6341996
+new york 12997 united states|44.3851100,-73.8114755
+north carolina 27910 united states|36.2807916,-76.9643060
+north carolina 28002 united states|35.3544000,-80.1903000
+north carolina 27204 united states|35.7075000,-79.8137000
+north carolina 27209 united states|35.3355643,-79.7287703
+north carolina 28713 united states|35.4328955,-83.4643551
+north carolina 27216 united states|36.0956000,-79.4382000
+north carolina 28234 united states|35.2267000,-80.8434000
+north carolina 28329 united states|35.0021000,-78.3309000
+new york 12309 united states|42.8056144,-73.8771901
+new york 13148 united states|42.9296851,-76.8028933
+new york 10306 united states|40.5613671,-74.1181234
+new york 13503 united states|43.1009000,-75.2331000
+new york 13856 united states|42.1504270,-75.1778853
+pennsylvania 15522 united states|39.9238549,-78.5433701
+pennsylvania 16001 united states|40.9013998,-79.9416549
+pennsylvania 19016 united states|39.8495000,-75.3563000
+pennsylvania 19320 united states|39.9837867,-75.8301537
+pennsylvania 18840 united states|41.9728629,-76.4678766
+pennsylvania 15501 united states|40.0216354,-79.1322744
+pennsylvania 16804 united states|40.7936000,-77.8604000
+pennsylvania 18360 united states|40.9561710,-75.3178952
+pennsylvania 18847 united states|41.9722157,-75.5975296
+pennsylvania 15084 united states|40.6488606,-79.8072611
+pennsylvania 18657 united states|41.5114731,-75.9695465
+pennsylvania 19382 united states|39.9202332,-75.6440842
+pennsylvania 16161 united states|41.1959501,-80.4966062
+pennsylvania 17603 united states|40.0373752,-76.3521514
+pennsylvania 15656 united states|40.6327659,-79.6277523
+pennsylvania 15658 united states|40.2326280,-79.2225576
+pennsylvania 16933 united states|41.8341493,-77.0334179
+pennsylvania 17049 united states|40.6456240,-77.2749964
+pennsylvania 17068 united states|40.4151015,-77.1830243
+pennsylvania 16105 united states|41.0559482,-80.3435908
+pennsylvania 17857 united states|40.9265389,-76.7682775
+pennsylvania 19144 united states|40.0356689,-75.1720488
+pennsylvania 19121 united states|39.9840919,-75.1808035
+pennsylvania 19148 united states|39.9120596,-75.1487007
+pennsylvania 15218 united states|40.4219450,-79.8884819
+pennsylvania 15027 united states|40.6639104,-80.2404959
+pennsylvania 16915 united states|41.8006451,-77.9738650
+pennsylvania 17017 united states|40.6411981,-76.8836261
+pennsylvania 18901 united states|40.3072428,-75.1428632
+pennsylvania 16502 united states|42.1086633,-80.1037721
+pennsylvania 17109 united states|40.2884785,-76.8201976
+pennsylvania 18201 united states|40.9651675,-75.9347113
+pennsylvania 18431 united states|41.6122530,-75.2245693
+pennsylvania 15701 united states|40.6270240,-79.1322744
+pennsylvania 15644 united states|40.3578020,-79.5940544
+pennsylvania 15905 united states|40.2876488,-78.9514510
+pennsylvania 18704 united states|41.2726012,-75.9056753
+pennsylvania 16201 united states|40.8348832,-79.4253776
+oklahoma 73096 united states|35.5570469,-98.7040750
+oregon 97321 united states|44.6879356,-123.1419527
+oregon 97702 united states|43.9657221,-121.2196397
+oregon 97720 united states|43.4566484,-118.7194850
+oregon 97339 united states|44.5649000,-123.2608000
+oregon 97424 united states|43.6429476,-123.0199577
+oregon 97439 united states|44.1059310,-124.0242377
+oregon 97030 united states|45.5140983,-122.4228701
+oregon 97448 united states|44.2188946,-123.3145052
+oregon 97601 united states|42.3057303,-121.9924139
+oregon 97850 united states|45.3598917,-118.1761862
+oregon 97355 united states|44.5395868,-122.7709422
+oregon 97741 united states|44.6526836,-121.0918444
+oregon 97501 united states|42.2672081,-122.9134492
+oregon 97361 united states|44.7647933,-123.3508129
+oregon 97132 united states|45.3000108,-122.9268800
+oregon 97211 united states|45.5767359,-122.6386722
+oregon 97756 united states|44.2998799,-121.2495244
+oregon 97051 united states|45.8733829,-122.8834840
+oregon 97381 united states|44.9623025,-122.7436341
+oregon 97759 united states|44.3120018,-121.6085312
+oregon 97477 united states|44.0599120,-123.0179348
+oregon 97386 united states|44.3328809,-122.6470036
+oregon 97058 united states|45.5335491,-121.1794264
+oregon 97141 united states|45.4829108,-123.7173630
+pennsylvania 18102 united states|40.6073818,-75.4781662
+ohio 44481 united states|41.1794649,-80.8765205
+ohio 43160 united states|39.5096149,-83.4643551
+ohio 45071 united states|39.3304000,-84.4086000
+ohio 44890 united states|41.0706758,-82.7131320
+ohio 45385 united states|39.6151300,-83.8897057
+ohio 43702 united states|39.9406000,-82.0133000
+oklahoma 74820 united states|34.8053888,-96.7922355
+oklahoma 73402 united states|34.1744000,-97.1434000
+oklahoma 74005 united states|36.7473000,-95.9808000
+oklahoma 74023 united states|36.0094805,-96.7279918
+oklahoma 73702 united states|36.3957000,-97.8784000
+oklahoma 73502 united states|34.6088000,-98.3902000
+oklahoma 74402 united states|35.7478000,-95.3694000
+oklahoma 73070 united states|35.2225000,-97.4393000
+oklahoma 73102 united states|35.4711808,-97.5166020
+oklahoma 73077 united states|36.2565462,-97.3084571
+oklahoma 74602 united states|36.7067000,-97.0855000
+oklahoma 74804 united states|35.3932742,-96.8565427
+oklahoma 74076 united states|36.1157000,-97.0584000
+oklahoma 74079 united states|35.8588679,-96.7065914
+oklahoma 74101 united states|36.1537000,-95.9926000
+ohio 44460 united states|40.8994485,-80.8765205
+ohio 45365 united states|40.2833065,-84.1435136
+ohio 45373 united states|40.0212045,-84.2067992
+ohio 45891 united states|40.8712340,-84.5641470
+ohio 43338 united states|40.5497252,-82.7562895
+ohio 43050 united states|40.3521894,-82.5185837
+ohio 44856 united states|40.7938722,-82.8566585
+ohio 45879 united states|41.1127120,-84.5641470
+ohio 43452 united states|41.4889702,-83.0146526
+ohio 44266 united states|41.1637316,-81.1857736
+ohio 43326 united states|40.6622015,-83.6348430
+ohio 43130 united states|39.7047822,-82.6051180
+ohio 45036 united states|39.4458420,-84.2067992
+ohio 45805 united states|40.7199785,-84.1540659
+ohio 44057 united states|41.7888020,-81.0533854
+ohio 44644 united states|40.6824654,-81.1857736
+ohio 43301 united states|40.5887000,-83.1288000
+ohio 44646 united states|40.8171314,-81.5047772
+ohio 44258 united states|41.1383000,-81.8639000
+ohio 45042 united states|39.5504744,-84.4487720
+ohio 45150 united states|39.1680808,-84.2384170
+ohio 44654 united states|40.5292637,-81.8442934
+ohio 44260 united states|41.0446922,-81.3289397
+texas 77342 united states|30.7234000,-95.5508000
+texas 75951 united states|30.9683607,-94.1104449
+texas 78029 united states|30.0472000,-99.1401000
+texas 75663 united states|32.3862000,-94.8757000
+texas 75448 united states|33.3142826,-95.8037437
+texas 77566 united states|29.0405394,-95.4463322
+texas 78044 united states|27.5065000,-99.5087000
+texas 75029 united states|33.0463000,-96.9939000
+texas 75606 united states|32.5006000,-94.7405000
+texas 79408 united states|33.5776000,-101.8549000
+texas 75902 united states|31.3384000,-94.7286000
+michigan 48707 united states|43.5945000,-83.8886000
+michigan 48612 united states|43.8667984,-84.4592701
+michigan 49022 united states|42.1193949,-86.3579520
+michigan 48114 united states|42.5564732,-83.7411631
+michigan 49601 united states|44.2722287,-85.4788065
+michigan 49709 united states|45.0393666,-84.1903585
+michigan 48413 united states|43.7698518,-83.0361376
+michigan 49304 united states|43.9263941,-85.8690933
+michigan 49015 united states|42.2743768,-85.2101269
+michigan 49417 united states|43.0119714,-86.1141045
+michigan 48837 united states|42.7633032,-84.7524482
+michigan 48817 united states|43.0003060,-84.0378894
+michigan 49920 united states|46.2735676,-88.3282475
+michigan 48205 united states|42.4290772,-82.9770371
+michigan 49047 united states|41.9736986,-86.1344697
+michigan 49629 united states|44.9029678,-85.4014387
+michigan 48501 united states|43.0125000,-83.6878000
+michigan 49412 united states|43.4514539,-85.9713220
+michigan 49032 united states|41.9324113,-85.5406209
+michigan 49721 united states|45.5785465,-84.4277638
+michigan 49036 united states|41.9291782,-84.9817540
+michigan 49203 united states|42.2282121,-84.4067610
+michigan 49250 united states|42.0120145,-84.6269824
+michigan 48625 united states|44.0166437,-84.8150781
+michigan 48740 united states|44.6388917,-83.3575670
+michigan 49058 united states|42.6306916,-85.2929384
+michigan 49422 united states|42.7878000,-86.1086000
+michigan 49931 united states|47.1379310,-88.6416908
+michigan 48846 united states|43.0095074,-85.0441304
+michigan 49801 united states|45.9443765,-88.0451565
+pennsylvania 17042 united states|40.2982831,-76.4331698
+pennsylvania 17703 united states|41.2411000,-77.0017000
+pennsylvania 17405 united states|39.9626000,-76.7284000
+pr 00907 united states|18.4536927,-66.0850152
+rhode island 02809 united states|41.6909210,-71.2755422
+rhode island 02881 united states|41.4932371,-71.5071088
+rhode island 02888 united states|41.7475142,-71.4121250
+south carolina 29623 united states|34.5034000,-82.6503000
+maryland 20646 united states|38.5299364,-76.9873477
+maryland 20712 united states|38.9432743,-76.9657463
+maryland 21901 united states|39.6260241,-75.9579358
+maryland 21550 united states|39.3758420,-79.4253776
+maryland 20850 united states|39.0971430,-77.1830243
+maryland 21803 united states|38.3609000,-75.5997000
+massachusetts 01002 united states|42.3403799,-72.4968189
+massachusetts 02703 united states|41.9254940,-71.2992993
+massachusetts 02184 united states|42.2020445,-71.0141180
+massachusetts 02330 united states|41.8703764,-70.7525299
+massachusetts 02722 united states|41.7014000,-71.1558000
+kentucky 41502 united states|37.4795000,-82.5188000
+kentucky 42445 united states|37.1501019,-87.8942451
+kentucky 42450 united states|37.3828923,-87.7566513
+kentucky 40476 united states|37.7479000,-84.2947000
+kentucky 42642 united states|37.0423175,-85.0025539
+kentucky 42276 united states|36.8698340,-86.8621827
+kentucky 42164 united states|36.7650471,-86.2158497
+maryland 21629 united states|38.8461730,-75.8301537
+kentucky 42142 united states|36.9959000,-85.9116000
+kentucky 41143 united states|38.3375954,-82.9716617
+kentucky 42345 united states|37.1353668,-87.1821709
+kentucky 40330 united states|37.8258603,-84.8984775
+kentucky 42419 united states|37.8327000,-87.5673000
+kentucky 42241 united states|36.8658000,-87.4888000
+kentucky 41749 united states|37.1350921,-83.4003037
+kentucky 40336 united states|37.6774189,-83.9955879
+kentucky 41339 united states|37.5559758,-83.3148018
+kentucky 40342 united states|37.9986480,-84.9817540
+kentucky 40033 united states|37.5647092,-85.2515482
+kentucky 42755 united states|37.4803000,-86.2937000
+kentucky 40515 united states|37.9098504,-84.4172666
+kentucky 40447 united states|37.4246771,-84.0378894
+kentucky 42633 united states|36.7983602,-84.8150781
+kentucky 42437 united states|37.6625055,-87.8942451
+kentucky 40353 united states|38.0558296,-83.9532571
+kentucky 42071 united states|36.6184135,-88.2655845
+kentucky 40340 united states|37.8809000,-84.5734000
+kentucky 42002 united states|37.0835000,-88.6003000
+kentucky 40362 united states|38.2097000,-84.2533000
+kentucky 42501 united states|37.0406128,-84.4802606
+kentucky 40484 united states|37.4973464,-84.6688348
+kentucky 40383 united states|37.9877230,-84.7315563
+kentucky 40391 united states|37.9599450,-84.1435136
+louisiana 70895 united states|30.4506000,-91.1547000
+louisiana 70429 united states|30.7908000,-89.8488000
+louisiana 70433 united states|30.4702695,-90.1214235
+north miami beach fl 12345|25.9259630,-80.1653980
+newark nj 07105|40.7231264,-74.1416127
+829 riverside avenue jacksonville fl 32204|30.3149060,-81.6763550
+danielsville ga 30633|34.1250640,-83.2209030
+jean nv 89019|35.7789120,-115.3243280
+east orland me 04431|44.5674150,-68.6790820
+1355 ridder park dr san jose ca 95131|37.3872390,-121.9015320
+la jolla ca 92037-6103|32.8475210,-117.2746090
+nashville tn 37000|36.0802498,-86.0504833
+slater sc 29650|34.0919530,-82.5820000
+sulphur springs 8608 12th street tampa fl 33604|28.0281550,-82.4476920
+15th constitutioon washington dc 2005|
+washington dc 2005|38.8894850,-77.0352720
+pittsburgh pa 15213 usa|40.4379259,-79.9556424
+pittsburgh pa 15217 usa|40.4327086,-79.9248669
+usa|37.0902400,-95.7128910
+milwaukee wi 53202 usa|43.0463596,-87.8966983
+new york ny 10022 usa|40.7589765,-73.9668408
+rockville md 20852 usa|39.0510138,-77.1370115
+cleveland oh 44115 usa|41.4913739,-81.6719914
