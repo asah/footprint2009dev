@@ -30,6 +30,7 @@ import parse_idealist
 import parse_craigslist
 import parse_americorps
 import parse_userpostings
+import parse_servenet
 import parse_volunteermatch
 import subprocess
 import sys
@@ -821,6 +822,8 @@ def guess_shortname(filename):
     return "usaservice"
   if re.search(r'meetup', filename):
     return "meetup"
+  if re.search(r'united.*way', filename):
+    return "unitedway"
   if re.search("habitat", filename):
     return "habitat"
   if re.search("americansolutions", filename):
@@ -841,6 +844,8 @@ def guess_shortname(filename):
     return "craigslist"
   if re.search("americorps", filename):
     return "americorps"
+  if re.search("servenet", filename):
+    return "servenet"
   if re.search("volunteermatch", filename):
     return "volunteermatch"
   return ""
@@ -906,8 +911,13 @@ def guess_parse_func(inputfmt, filename):
   if (inputfmt == "americorps" or
       (inputfmt == None and re.search(r'americorps', filename))):
     return "americorps", parse_americorps.parse
+  if (inputfmt == "servenet" or
+      (inputfmt == None and re.search(r'servenet', filename))):
+    return "servenet", parse_servenet.parse
   if (inputfmt == "handson" or inputfmt == "handsonnetwork"):
     return "handsonnetwork", parse_handsonnetwork.parse
+  if (inputfmt == None and re.search(r'united.*way', filename)):
+    return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'(handson|hot.footprint)', filename)):
     # now using FPXML
     #parsefunc = parse_handsonnetwork.ParseFPXML
@@ -1157,15 +1167,15 @@ def main():
   options, args = parse_options()
   filename = args[0]
   if re.search("spreadsheets[.]google[.]com", filename):
+    if OUTPUTFMT == "fpxml":
+      pgs.parser_error("FPXML format not supported for "+
+                       "spreadsheet-of-spreadsheets")
+      exit
     match = re.search(r'key=([^& ]+)', filename)
     url = "http://spreadsheets.google.com/feeds/cells/" + match.group(1)
     url += "/1/public/basic"
     # to avoid hitting 80 columns
     pgs = parse_gspreadsheet
-    if OUTPUTFMT == "fpxml":
-      pgs.parser_fatal("FPXML format not supported for "+
-                       "spreadsheet-of-spreadsheets")
-
     data = {}
     updated = {}
     if PROGRESS:
@@ -1176,7 +1186,8 @@ def main():
     # check to see if there's a header-description row
     header_desc = pgs.cellval(data, header_row+1, header_startcol)
     if not header_desc:
-      pgs.parser_fatal("blank row not allowed below header row")
+      pgs.parser_error("blank row not allowed below header row")
+      exit
     header_desc = header_desc.lower()
     data_startrow = header_row + 1
     if header_desc.find("example") >= 0:
