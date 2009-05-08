@@ -17,9 +17,6 @@ handlers:
 - url: /images
   static_dir: images
 
-- url: /help
-  static_dir: help
-
 # For FriendConnect
 - url: /rpc_relay.html
   static_files: templates/rpc_relay.html

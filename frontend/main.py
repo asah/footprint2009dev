@@ -23,20 +23,23 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 import views
 import urls
 
+# When we officially go live, remove PREFIX.
+PREFIX = '/staging'
+
 APPLICATION = webapp.WSGIApplication(
-    [(urls.URL_HOME, views.home_page_view),
-     (urls.URL_CONSUMER_UI_SEARCH, views.consumer_ui_search_view),
-     (urls.URL_API_SEARCH, views.search_view),
-     (urls.URL_UI_SNIPPETS, views.ui_snippets_view),
-     (urls.URL_UI_MY_SNIPPETS, views.ui_my_snippets_view),
-     (urls.URL_MY_EVENTS, views.my_events_view),
-     (urls.URL_ACTION, views.action_view),
-     (urls.URL_ADMIN, views.admin_view),
-     (urls.URL_POST, views.post_view),
-     (urls.URL_REDIRECT, views.redirect_view),
-     (urls.URL_MODERATE, views.moderate_view),
+    [(PREFIX + urls.URL_HOME, views.home_page_view),
+     (PREFIX + urls.URL_CONSUMER_UI_SEARCH, views.consumer_ui_search_view),
+     (PREFIX + urls.URL_API_SEARCH, views.search_view),
+     (PREFIX + urls.URL_UI_SNIPPETS, views.ui_snippets_view),
+     (PREFIX + urls.URL_UI_MY_SNIPPETS, views.ui_my_snippets_view),
+     (PREFIX + urls.URL_MY_EVENTS, views.my_events_view),
+     (PREFIX + urls.URL_ACTION, views.action_view),
+     (PREFIX + urls.URL_ADMIN, views.admin_view),
+     (PREFIX + urls.URL_POST, views.post_view),
+     (PREFIX + urls.URL_REDIRECT, views.redirect_view),
+     (PREFIX + urls.URL_MODERATE, views.moderate_view),
     ] +
-    [ (url, views.static_content) for url in
+    [ (PREFIX + url, views.static_content) for url in
          urls.STATIC_CONTENT_FILES.iterkeys() ],
     debug=True)
 
