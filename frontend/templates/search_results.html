@@ -35,16 +35,18 @@
     var addthis_hover_delay = 10000;
     var addthis_test0309 = false;  // Remove "You may also like..." ads
 
-    jQuery.getScript('http://s7.addthis.com/js/200/addthis_widget.js',
-                     function() { asyncLoadManager.doneLoading('addthis'); });
-    function showShareWidget(node, searchResult) {
-      if (asyncLoadManager.isLoaded('addthis')) {
-        addthis_open(node, '', searchResult.url, searchResult.title);
+    if (false) {
+      jQuery.getScript('http://s7.addthis.com/js/200/addthis_widget.js',
+                       function() { asyncLoadManager.doneLoading('addthis'); });
+      function showShareWidget(node, searchResult) {
+        if (asyncLoadManager.isLoaded('addthis')) {
+          addthis_open(node, '', searchResult.url, searchResult.title);
+        }
       }
-    }
-    function hideShareWidget() {
-      if (asyncLoadManager.isLoaded('addthis')) {
-        addthis_close();
+      function hideShareWidget() {
+        if (asyncLoadManager.isLoaded('addthis')) {
+          addthis_close();
+        }
       }
     }
   </script>
