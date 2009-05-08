@@ -111,7 +111,7 @@ def parse(instr, maxrecs, progress):
     r'<SponsoringOrganization>.+?</SponsoringOrganization>', instr, re.DOTALL)
   for i, orgstr in enumerate(sponsorstrs):
     if progress and i > 0 and i % 250 == 0:
-      print datetime.now()+": ", i, " orgs processed."
+      print str(datetime.now())+": ", i, " orgs processed."
     org = xmlh.simple_parser(orgstr, known_elnames, False)
     #sponsors = xmldoc.getElementsByTagName("SponsoringOrganization")
     #for i,org in enumerate(sponsors):

@@ -40,16 +40,10 @@ from datetime import datetime
 
 CURRENT_ROW = None
 
-def parser_fatal(msg):
+def parser_error(msg):
   if CURRENT_ROW != None:
     msg = "row "+str(CURRENT_ROW)+": "+msg
-  print "parse_gspreadsheet FATAL ERROR: "+msg
-  sys.exit(1)
-
-def parser_warn(msg):
-  if CURRENT_ROW != None:
-    msg = "row "+str(CURRENT_ROW)+": "+msg
-  print "parse_gspreadsheet WARNING: "+msg
+  print "parse_gspreadsheet ERROR: "+msg
 
 def recordval(record, key):
   if key in record:
@@ -61,13 +55,13 @@ KNOWN_ORGS = {}
 def get_dtval(record, field_name):
   val = recordval(record, field_name).strip()
   if val != "" and not re.match(r'\d\d?/\d\d?/\d\d\d\d', val):
-    parser_fatal("bad value in "+field_name+": '"+val+"'-- try MM/DD/YYYY")
+    parser_error("bad value in "+field_name+": '"+val+"'-- try MM/DD/YYYY")
   return val
 
 def get_tmval(record, field_name):
   val = recordval(record, field_name).strip()
   if val != "" and not re.match(r'\d?\d:\d\d(:\d\d)?', val):
-    parser_fatal("bad value in "+field_name+": '"+val+"'-- try HH:MM:SS")
+    parser_error("bad value in "+field_name+": '"+val+"'-- try HH:MM:SS")
   return val
 
 def record_to_fpxml(record):
@@ -110,7 +104,7 @@ def record_to_fpxml(record):
   elif freq.find("monthly") >= 0:
     fpxml += '<iCalRecurrence>FREQ=MONTHLY</iCalRecurrence>'
   else:
-    parser_warn("unsupported frequency: '"+recordval(record,'Frequency')+"'-- skipping")
+    parser_error("unsupported frequency: '"+recordval(record,'Frequency')+"'-- skipping")
   fpxml += xmlh.output_val('commitmentHoursPerWeek', recordval(record,'CommitmentHours'))
   fpxml += '</dateTimeDuration>'
   fpxml += '</dateTimeDurations>'
@@ -199,9 +193,9 @@ def find_header_row(data, regexp_str):
         header_startcol = col
         break
   if header_row == -1:
-    parser_fatal("no header row found: looked for "+regexp_str)
+    parser_error("no header row found: looked for "+regexp_str)
   if header_startcol == -1:
-    parser_fatal("no header start column found")
+    parser_error("no header start column found")
   return header_row, header_startcol
 
 def parse(instr, maxrecs, progress):
@@ -276,7 +270,7 @@ def parse(instr, maxrecs, progress):
     elif header_str.find("volunteer appeal") >= 0:
       field_name = None
     else:
-      parser_fatal("couldn't map header '"+header_str+"' to a field name.")
+      parser_error("couldn't map header '"+header_str+"' to a field name.")
     if field_name != None:
       header_colidx[field_name] = header_col
       header_names[header_col] = field_name
@@ -284,12 +278,12 @@ def parse(instr, maxrecs, progress):
     header_col += 1
 
   if len(header_names) < 10:
-    parser_fatal("too few fields found: "+str(len(header_names)))
+    parser_error("too few fields found: "+str(len(header_names)))
 
   # check to see if there's a header-description row
   header_desc = cellval(data, header_row+1, header_startcol)
   if not header_desc:
-    parser_fatal("blank row not allowed below header row")
+    parser_error("blank row not allowed below header row")
   header_desc = header_desc.lower()
   data_startrow = header_row + 1
   if header_desc.find("up to") >= 0:
