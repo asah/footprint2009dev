@@ -198,6 +198,9 @@ def load_gbase(name, url):
 
 def loaders():
   """put all loaders in one function for easier testing."""
+  load_gbase("servenet",
+             "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
+
   load_gbase("unitedway",
              "http://volunteer.united-e-way.org/"+
              "uwnyc/util/voml/uwnyc-footprint-pull.aspx")
