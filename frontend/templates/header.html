@@ -1,22 +1,30 @@
 <div id='header'>
   <div id='header_left'>
     <div id='header_top_spacer'></div>
-    <div>
-      <a style='text-decoration:none;' class='valign noselect no_underline' href='/'><img border='0' id='logo_flag' class='valign' src='/images/logo.png'>
-      <img border='0' id='logo_name' class='valign' src='/images/title-transp.png' alt='All For Good'></a>
-      <div class='valign' style='display:inline-block;'>
-        <form onsubmit='submitForm("keywords"); return false;' class='valign'>
-          <input type='text' id='keywords' defaultValue='keywords' class='valign'
-                 size='40' value='{{ keywords }}' />
-        </form>
-        <img class='search_button valign pointer'
-             onclick='submitForm("keywords"); return false;'
-             src='/images/red-search-button.png'>
+    <form class='valign' onsubmit='submitForm("keywords"); return false;'>
+      <table>
+       <tr>
+        <td valign='middle'>
+          <a style='text-decoration:none;' class='valign noselect no_underline' href='/'><img border='0' id='logo_flag' class='valign' src='/images/logo.png'>
+          <img border='0' id='logo_name' class='valign' src='/images/title-transp.png' alt='All For Good'></a>
+        </td>
+        <td valign='middle'>
+          <div>
+            <input type='text' id='keywords' defaultValue='keywords' class='valign'
+                   size='40' value='{{ keywords }}' />
+            <img class='search_button valign pointer'
+                 onclick='submitForm("keywords"); return false;'
+                 src='/images/red-search-button.png'>
 
-        <span id='loading' style='display:none;'>Loading...</span>
+            <span id='loading' style='display:none;'>Loading...</span>
+          </div>
+          <div id='example_searches'></div>
+        </td>
+       </tr>
+      </table>
+    </form>
+  </div>
 
-        <br>
-        <div id='example_searches'></div>
 <script>
 function setKeywordAndExecute(keywords) {
   setInputFieldValue(el('keywords'), keywords);
@@ -36,23 +44,10 @@ if (currentPageName != 'HOMEPAGE') {
   createExampleSearchText();
 }
 </script>
-      </div>
-    </div>
+
     <script type='text/javascript'>
       setInputFieldValue(el('keywords'), '');
     </script>
-
-    <div id='tabs' style='display:none;'>
-    <div class='noselect pointer {% ifequal current_page "MY_EVENTS" %} tab_active {% else %} tab_inactive {% endifequal %}'
-         onclick="location.href = '/myevents'"><img src="images/Event-Selected-Star.png"/> My Events</div>
-    <div class='noselect pointer {% ifequal current_page "SEARCH" %} tab_active {% else %} tab_inactive {% endifequal %}'
-         onclick="location.href = '/'">Find an event</div>
-    <div class='noselect pointer {% ifequal current_page "FRIENDS" %} tab_active {% else %} tab_inactive {% endifequal %}'
-         onclick="location.href = '/friends'">Work with others</div>
-    <div class='noselect pointer {% ifequal current_page "POST" %} tab_active {% else %} tab_inactive {% endifequal %}'
-         onclick="location.href = '/post'">Add an event</div>
-    </div>
-  </div>
 
   <script type="text/javascript">
     google.setOnLoadCallback(function() {
@@ -80,8 +75,9 @@ if (currentPageName != 'HOMEPAGE') {
       }});
     });
   </script>
-  <div id='header_right' align='right' width='100%'>
-  </div>
+
+  <div id='header_right' align='right' width='100%'></div>
+
   {% endif %}{# no_login #}
 
   <div style='clear: both; float: none'></div>
