@@ -47,7 +47,7 @@ def parser_error(msg):
 
 def recordval(record, key):
   if key in record:
-    return str(record[key])
+    return str(record[key]).strip()
   return ""
 
 KNOWN_ORGS = {}
@@ -72,7 +72,10 @@ def record_to_fpxml(record):
   if orgname not in KNOWN_ORGS:
     KNOWN_ORGS[orgname] = len(KNOWN_ORGS)
   fpxml += xmlh.output_val("sponsoringOrganizationID", KNOWN_ORGS[orgname])
-  fpxml += xmlh.output_val("title", recordval(record,'OpportunityTitle'))
+  title = recordval(record,'OpportunityTitle')
+  if title == "":
+    parser_error("missing OpportunityTitle-- this field is required.")
+  fpxml += xmlh.output_val("title", title)
   fpxml += '<dateTimeDurations>'
   fpxml += '<dateTimeDuration>'
   if ('StartDate' in record and

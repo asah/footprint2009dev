@@ -1153,13 +1153,8 @@ def process_file(filename, options, providerName="", providerID="",
   outstr, numorgs, numopps = convert_to_gbase_events_type(
     footprint_xmlstr, shortname, fastparse, int(options.maxrecs), PROGRESS)
 
-  #only need this if Base quoted fields it enabled
-  #outstr = re.sub(r'"', r'&quot;', outstr)
-  if (options.ftpinfo):
-    ftp_to_base(filename, options.ftpinfo, outstr)
-  else:
-    print outstr,
-  return len(footprint_xmlstr), numorgs, numopps
+  return len(footprint_xmlstr), numorgs, numopps, outstr
+
 
 def main():
   """main function for cmdline execution."""
@@ -1170,7 +1165,7 @@ def main():
     if OUTPUTFMT == "fpxml":
       pgs.parser_error("FPXML format not supported for "+
                        "spreadsheet-of-spreadsheets")
-      exit
+      sys.exit(1)
     match = re.search(r'key=([^& ]+)', filename)
     url = "http://spreadsheets.google.com/feeds/cells/" + match.group(1)
     url += "/1/public/basic"
@@ -1187,13 +1182,14 @@ def main():
     header_desc = pgs.cellval(data, header_row+1, header_startcol)
     if not header_desc:
       pgs.parser_error("blank row not allowed below header row")
-      exit
+      sys.exit(1)
     header_desc = header_desc.lower()
     data_startrow = header_row + 1
     if header_desc.find("example") >= 0:
       data_startrow += 1
 
     bytes = numorgs = numopps = 0
+    outstr = ""
     for row in range(data_startrow, int(maxrow)+1):
       providerName = pgs.cellval(data, row, header_startcol)
       providerID = pgs.cellval(data, row, header_startcol+1)
@@ -1206,13 +1202,22 @@ def main():
       providerURL += "/1/public/basic"
       if PROGRESS:
         print "processing spreadsheet", providerURL, "name="+providerName
-      providerBytes, providerNumorgs, providerNumopps = process_file(
+      providerBytes, providerNumorgs, providerNumopps, tmpstr = process_file(
         providerURL, options, providerName, providerID, providerURL)
       bytes += providerBytes
       numorgs += providerNumorgs
       numopps += providerNumopps
+      outstr += tmpstr
   else:
-    bytes, numorgs, numopps = process_file(filename, options)
+    bytes, numorgs, numopps, outstr = process_file(filename, options)
+
+  #only need this if Base quoted fields it enabled
+  #outstr = re.sub(r'"', r'&quot;', outstr)
+  if (options.ftpinfo):
+    ftp_to_base(filename, options.ftpinfo, outstr)
+  else:
+    print outstr,
+
   elapsed = datetime.now() - start_time
   # NOTE: if you change this, you also need to update datahub/load_gbase.py
   # and frontend/views.py to avoid breaking the dashboard-- other status
