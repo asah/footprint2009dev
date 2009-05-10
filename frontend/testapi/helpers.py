@@ -198,6 +198,8 @@ class ApiTesting(object):
       res.put()
     self.num_failures += 1
     self.output('<p class="result fail">Fail. <span>'+msg+'</span></p>')
+    # stick something in the logs, so it shows up in the appengine dashboard 
+    logging.error('testapi fail: '+msg)
     return False
 
   def print_details(self, msg):
