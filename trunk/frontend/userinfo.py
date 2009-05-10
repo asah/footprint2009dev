@@ -231,3 +231,7 @@ class TestUser(User):
   @classmethod
   def get_cookie(cls):
     return get_cookie('footprinttest')
+
+  def get_friends_by_url(self):
+     # TODO: Something clever for testing--like all TestUser?
+    return []
