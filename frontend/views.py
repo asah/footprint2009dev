@@ -266,6 +266,8 @@ class ui_snippets_view(webapp.RequestHandler):
         'friends' : view_data['friends'],
         'friends_by_event_id_js': view_data['friends_by_event_id_js'],
       }
+    # TODO!!!  replace with real admin check when bug #129 is fixed
+    template_values['admin_mode'] = (user.display_name == "adam sah" )
     if self.request.get('minimal_snippets_list'):
       # Minimal results list for homepage.
       self.response.out.write(render_template(SNIPPETS_LIST_MINI_TEMPLATE,
@@ -420,13 +422,8 @@ class admin_view(webapp.RequestHandler):
       'action': "",
     }
     
-    if False:
-      user = users.get_current_user()
-      if not user or not users.is_current_user_admin():
-        html = "<html><body><a href=\'%s\'>Sign in</a></body></html>"
-        self.response.out.write(html %
-                                (users.create_login_url(self.request.url)))
-        return
+    # TODO!!!  add admin check when bug #129 is fixed
+    # (leave open for now, for the dashboard/etc.)
 
     action = self.request.get('action')
     if not action or action == "":
@@ -438,6 +435,49 @@ class admin_view(webapp.RequestHandler):
     elif action == "flush_memcache":
       memcache.flush_all()
       template_values['msg'] = "memcached flushed"
+    elif action == "blacklist" or action == "unblacklist":
+      key = self.request.get('key')
+      if not key or key == "":
+        self.response.out.write("<html><body>sorry: key required.</body></html>")
+        return
+      if action == "blacklist":
+        if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
+          undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
+                             self.request.url)
+          html = "<html><body>"
+          html += "key "+key+" is already blacklisted."
+          html += " click <a href='%s'>here</a> to restore." % undel_url
+          html += "</body></html>"
+          self.response.out.write(html)
+          return
+        if self.request.get('areyousure') != "1":
+          html = "<html><body>"
+          html += "please confirm blacklisting of key "+key+" ?<br/>"
+          # TODO: defend against xsrf
+          html += "<a href='"+self.request.url+"&areyousure=1'>YES</a> I'm sure."
+          html += "</body></html>"
+          self.response.out.write(html)
+          return
+        models.BlacklistedVolunteerOpportunity.blacklist(key)
+        if not models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
+          template_values['msg'] = "internal failure trying to add"
+          template_values['msg'] += " key "+key+" to blacklist."
+        else:
+          # TODO: better workflow, e.g. email the deleted key to an address
+          # along with an url to undelete it?
+          undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
+                             self.request.url)
+          template_values['msg'] = "deleted listing with key "+key+".<br/>"
+          template_values['msg'] += "  To undo, click <a href='%s'>here</a>" %\
+              undel_url
+          template_values['msg'] += " (you may want to save this URL)."
+      else:
+        models.BlacklistedVolunteerOpportunity.unblacklist(key)
+        if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
+          template_values['msg'] = "internal failure trying to remove"
+          template_values['msg'] += " key "+key+" from blacklist."
+        else:
+          template_values['msg'] = "un-deleted listing with key "+key
     elif action == "datahub_dashboard":
       url = self.request.get('datahub_log')
       if not url or url == "":

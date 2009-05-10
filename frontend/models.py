@@ -23,6 +23,7 @@ import modelutils
 class Error(Exception):
   """Generic error."""
   pass
+
 class BadAccountType(Error):
   """Account type is unknown (not facebook, friendconnect, or test)."""
   pass
@@ -212,6 +213,79 @@ class VolunteerOpportunity(db.Model):
   base_url_failure_count = db.IntegerProperty(default=0)
   last_base_url_update_failure = db.DateTimeProperty()
 
+
+class BlacklistedVolunteerOpportunity(db.Model):
+  """blacklisted VolunteerOpportunity's
+
+  Separate from other models to keep things simple + clean.
+  """
+  # The __key__ is 'id:' + volunteer_opportunity_id
+  DATASTORE_PREFIX = 'blid:'
+  MEMCACHE_PREFIX = 'BlacklistedVolunteerOpportunity:'
+  MEMCACHE_TIME = 60000  # seconds
+
+  # low level methods
+  @classmethod
+  def mc_blacklist(cls, volunteer_opportunity_id):
+    """creates a memcache entry to speed checking."""
+    memcache.set(cls.MEMCACHE_PREFIX + volunteer_opportunity_id, "1",
+                 time=cls.MEMCACHE_TIME)
+    # TODO: detect failures
+  @classmethod
+  def ds_blacklist(cls, volunteer_opportunity_id):
+    """a permanent record of blacklisted entries, for when
+    the memcache is reset."""
+    key_name = cls.DATASTORE_PREFIX + volunteer_opportunity_id
+    entity = BlacklistedVolunteerOpportunity(key_name=key_name)
+    entity.put()
+    # TODO: detect failures
+  @classmethod
+  def mc_unblacklist(cls, volunteer_opportunity_id):
+    """creates a memcache entry to speed checking."""
+    memcache.set(cls.MEMCACHE_PREFIX + volunteer_opportunity_id, "0",
+                 time=cls.MEMCACHE_TIME)
+  @classmethod
+  def ds_unblacklist(cls, volunteer_opportunity_id):
+    """low level ds update-- doesn't update memcache."""
+    key_name = cls.DATASTORE_PREFIX + volunteer_opportunity_id
+    entity = BlacklistedVolunteerOpportunity(key_name=key_name)
+    entity.delete()
+  @classmethod
+  def mc_blacklist_entry(cls, volunteer_opportunity_id):
+    return memcache.get(cls.MEMCACHE_PREFIX + volunteer_opportunity_id)
+  @classmethod
+  def mc_is_blacklisted(cls, volunteer_opportunity_id):
+    return (cls.mc_blacklist_entry(volunteer_opportunity_id) == "1")
+  @classmethod
+  def ds_is_blacklisted(cls, volunteer_opportunity_id):
+    key_name = cls.DATASTORE_PREFIX + volunteer_opportunity_id
+    entity = BlacklistedVolunteerOpportunity.get_by_key_name(key_name)
+    return (entity != None)
+
+  # low level methods
+  @classmethod
+  def blacklist(cls, volunteer_opportunity_id):
+    """rarely used, so can be slow + thorough."""
+    cls.mc_blacklist(volunteer_opportunity_id)
+    cls.ds_blacklist(volunteer_opportunity_id)
+  @classmethod
+  def unblacklist(cls, volunteer_opportunity_id):
+    """rarely used, so can be slow + thorough."""
+    cls.mc_unblacklist(volunteer_opportunity_id)
+    cls.ds_unblacklist(volunteer_opportunity_id)
+  @classmethod
+  def is_blacklisted(cls, volunteer_opportunity_id):
+    """needs to be fast.  note that this can cause memcache updates."""
+    entry = cls.mc_blacklist_entry(volunteer_opportunity_id)
+    if entry == None:
+      blacklisted = cls.ds_is_blacklisted(volunteer_opportunity_id)
+      if blacklisted:
+        cls.mc_blacklist(volunteer_opportunity_id)
+      else:
+        cls.mc_unblacklist(volunteer_opportunity_id)
+      return blacklisted
+    else:
+      return entry == "1"
 
 # TODO(paul): added_to_calendar, added_to_facebook_profile, etc
 
