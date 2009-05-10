@@ -257,7 +257,7 @@ function onLoadSearch() {
                            ['This month', 'this_month'],
                            ['Everything', 'everything'] ],
                          'everything',
-                         function(value) { submitForm(); });
+                         function(value) { submitForm('when_widget'); });
   }
 
   if (el('location')) {
@@ -349,9 +349,20 @@ executeSearchFromHashParams = function() {
 
 /** Called from the "Refine" button's onclick, the main form onsubmit,
  * and the time period filter.
+ * @param {string} invoker Who invoked this submission?  One of
+ *                         ['keywords', 'when_widget', 'map'].
  */
-function submitForm() {
+function submitForm(invoker) {
   var keywords = getInputFieldValue(el('keywords'));
+
+  // If the keywords search form is invoked from non-search page,
+  // redirect to search page.
+  if (invoker == 'keywords' && currentPageName != 'SEARCH') {
+    // TODO: Incorporate current 'when' filter?
+    window.location = '/search#q=' + keywords;
+    return;
+  }
+
   var location = getInputFieldValue(el('location'));
   var timePeriod = whenFilterWidget.getValue();
 
