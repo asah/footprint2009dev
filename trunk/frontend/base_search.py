@@ -352,7 +352,8 @@ def get_from_ids(ids):
   try:
     results = memcache.get(ids, RESULT_CACHE_KEY)
   except:
-    logging.info("get_from_ids: memcache is busted.  ignoring...")
+    # TODO(mblain): Scope to only 'memcache down' exception.
+    logging.exception("get_from_ids: memcache is busted.  ignoring...")
     pass
   for result in results:
     result_set.results.append(result)

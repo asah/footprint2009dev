@@ -267,7 +267,8 @@ class ui_snippets_view(webapp.RequestHandler):
         'friends_by_event_id_js': view_data['friends_by_event_id_js'],
       }
     # TODO!!!  replace with real admin check when bug #129 is fixed
-    template_values['admin_mode'] = (user.display_name == "adam sah" )
+    template_values['admin_mode'] = (user and user.get_user_info()
+                                     and user.get_user_info().moderator)
     if self.request.get('minimal_snippets_list'):
       # Minimal results list for homepage.
       self.response.out.write(render_template(SNIPPETS_LIST_MINI_TEMPLATE,
