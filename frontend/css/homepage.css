@@ -1,11 +1,11 @@
 #home_left {
-  width: 45%;
+  width: 390px;
 }
 
 #home_popular {
-  padding-left: 24px;
+  padding-left: 14px;
   float: right;
-  width: 14%;
+  width: 135px;
 }
 
 #home_mini {
