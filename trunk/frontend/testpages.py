@@ -21,6 +21,7 @@
 # pylint: disable-msg=R0903
 
 import datetime
+import re
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -46,10 +47,10 @@ class TestLogin(webapp.RequestHandler):
                               (user.account_type,
                                user.user_id,
                                user.get_user_info(),
-                               user.get_display_name(),
+                               user.display_name,
                                user.get_user_info().moderator,
-                               user.get_thumbnail_url(),
-                               user.get_thumbnail_url()))
+                               user.thumbnail_url,
+                               user.thumbnail_url))
     else:
       self.response.out.write('<li>Not logged in.')
 
@@ -67,6 +68,10 @@ class TestLogin(webapp.RequestHandler):
   def post(self):
     """HTTP post method."""
     userid = self.request.get('userid')
+    if not re.match('[a-z0-9_@-]*$', userid):
+      self.error(400)
+      self.response.out.write('invalid userid, must be a-z0-9_@-')
+      return
     self.response.headers.add_header('Set-Cookie',
                                      'footprinttest=%s;path=/' % userid)
     self.response.out.write('You are logged ')
