@@ -22,10 +22,12 @@ import datetime
 import time
 import hashlib
 import logging
-import models
+
 from xml.sax.saxutils import escape
 
 from fastpageviews import pagecount
+import models
+import utils
 
 def get_rfc2822_datetime(when = None):
   """GAE server localtime appears to be UTC and timezone %Z
@@ -50,6 +52,7 @@ class SearchResult(object):
   def __init__(self, url, title, snippet, location, item_id, base_url):
     # TODO: Consider using kwargs or something to make this more generic.
     self.url = url
+    self.url_sig = utils.url_signature(url)
     self.title = title
     self.snippet = snippet
     self.location = location

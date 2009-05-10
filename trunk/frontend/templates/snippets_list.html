@@ -22,7 +22,7 @@
 
   var searchResults = [];
 {% for result in result_set.clipped_results %}
-  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}'), '{{result.item_id|escape}}', '{{result.base_url|escape}}', {{result.interest|yesno:"1,0"}}, {{result.interest_count|default:0}}, '{{result.host_website|escape}}'));
+  searchResults.push(new SearchResult('{{result.url|escape}}', '{{result.url_sig|escape}}', '{{result.js_escaped_title|escape}}', '{{result.location|escape}}', '{{result.js_escaped_snippet|escape}}', new Date('{{ result.startdate|date:"r" }}'), new Date('{{ result.enddate|date:"r" }}'), '{{result.item_id|escape}}', '{{result.base_url|escape}}', {{result.interest|yesno:"1,0"}}, {{result.interest_count|default:0}}, '{{result.host_website|escape}}'));
   updateInterestInfoDisplay({{forloop.counter0}});
 {% endfor %}
 </script>
@@ -46,7 +46,7 @@
       {% endif %}
 
       <div class='snippet_title'>
-        <a target='_fp_target' href='/url?q={{ result.url|urlencode }}'>{{ result.title }}</a>
+        <a target='_fp_target' href='/url?q={{ result.url|urlencode }}&sig={{ result.url_sig|urlencode }}'>{{ result.title }}</a>
       </div>
       {% if result.location or result.startdate or result.interest_count %}
         <div class='snippet_sub_text'>
@@ -75,7 +75,7 @@
       </div>
 
       <div class='snippet_bottom'>
-        <a class='snippet_url' href='/url?q={{ result.url|urlencode }}'>{{ result.url_short }}</a>
+        <a class='snippet_url' href='/url?q={{ result.url|urlencode }}{{ result.url_sig|urlencode }}'>{{ result.url_short|escape }}</a>
         -
         <div class='interest_links'>
           <span style='display:{{result.interest|yesno:"none,"}};' id='like_{{forloop.counter0}}'><a href='javascript:void(0)' onclick='toggleInterest({{forloop.counter0}});return false;'>Like</a> - </span>

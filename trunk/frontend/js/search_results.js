@@ -496,6 +496,7 @@ initMap = function() {
 /** A single search result.
  * @constructor
  * @param {string} url a url.
+ * @param (string) url_sig the signature of the url.
  * @param {string} title a title.
  * @param {string} location a location.
  * @param {string} snippet a snippet.
@@ -507,9 +508,10 @@ initMap = function() {
  * @param {number} totalInterestCount total users who flagged interest.
  * @param {string} hostWebsite the website hosting the event (volunteermatch.org etc).
  */
-function SearchResult(url, title, location, snippet, startdate, enddate,
+function SearchResult(url, url_sig, title, location, snippet, startdate, enddate,
                       itemId, baseUrl, liked, totalInterestCount, hostWebsite) {
   this.url = url;
+  this.url_sig = url_sig;
   this.title = title;
   this.location = location;
   this.snippet = snippet;

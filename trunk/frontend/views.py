@@ -44,6 +44,7 @@ import posting
 import search
 import urls
 import userinfo
+import utils
 import view_helper
 
 TEMPLATE_DIR = 'templates/'
@@ -170,7 +171,7 @@ class search_view(webapp.RequestHandler):
   def get(self):
     """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
-    
+
     if "key" not in unique_args:
       tplresult = render_template(SEARCH_RESULTS_MISSING_KEY_TEMPLATE, {})
       self.response.out.write(tplresult)
@@ -277,6 +278,7 @@ class ui_snippets_view(webapp.RequestHandler):
       self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
                                               template_values))
 
+
 class ui_my_snippets_view(webapp.RequestHandler):
   """The current spec for the My Events view (also known as "Profile")
   defines the following filters:
@@ -287,7 +289,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
 
   Furthermore the UI is spec'd such that each event displays a truncated list
   of friend names, along with a total count of friends.
-  
+
   In order to collect that info, we seem to be stuck with O(n2) because
   I need to know *all* the events that *all* of my friends are interested in:
   1. Get the list of all events that I like or am doing.
@@ -300,7 +302,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
   def get(self):
     """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
-    
+
     user_info = userinfo.get_user(self.request)
 
     if user_info:
@@ -422,7 +424,7 @@ class admin_view(webapp.RequestHandler):
       'msg': "",
       'action': "",
     }
-    
+
     # TODO!!!  add admin check when bug #129 is fixed
     # (leave open for now, for the dashboard/etc.)
 
@@ -487,9 +489,9 @@ class admin_view(webapp.RequestHandler):
       if fetch_result.status_code != 200:
         template_values['msg'] = \
             "error fetching dashboard data: code %d" % fetch_result.status_code
-      lines = fetch_result.content.split("\n")      
+      lines = fetch_result.content.split("\n")
       # typical line
-      # 2009-04-26 18:07:16.295996:STATUS:extraordinaries done parsing: output 
+      # 2009-04-26 18:07:16.295996:STATUS:extraordinaries done parsing: output
       # 7 organizations and 7 opportunities (13202 bytes): 0 minutes.
       statusrx = re.compile("(\d+-\d+-\d+ \d+:\d+:\d+)[.]\d+:STATUS:(.+?) "+
                             "done parsing: output (\d+) organizations and "+
@@ -594,15 +596,30 @@ class admin_view(webapp.RequestHandler):
     self.response.out.write(render_template(ADMIN_TEMPLATE, template_values))
 
 class redirect_view(webapp.RequestHandler):
-  """process redirects.  TODO: is this a security issue?"""
+  """Process redirects. Present an interstital if the url is not signed."""
   def get(self):
     """HTTP get method."""
     url = self.request.get('q')
-    if url:
-      self.redirect(url)
-    else:
+    if not url:
       self.error(400)
+      return
 
+    sig = self.request.get('sig')
+    expected_sig = utils.url_signature(url)
+    logging.debug('u: %s s: %s xs: %s' % (url, sig, expected_sig))
+    if sig == expected_sig:
+      self.redirect(url)
+      return
+
+    # TODO: Use a proper template so this looks nicer.
+    response = ('<h1>Redirect</h1>' +
+                'This page is sending you to <a href="%s">%s</a><p />' %
+                (url, url))
+    # TODO: Something more clever than go(-1), which doesn't work on new
+    # windows, etc. Maybe check for 'referer' or send users to '/'.
+    response += ('If you do not want to visit that page, you can ' +
+                '<a href="javascript:history.go(-1)">go back</a>.')
+    self.response.out.write(response)
 
 class moderate_view(webapp.RequestHandler):
   """fast UI for voting/moderating on listings."""
@@ -677,8 +694,17 @@ class action_view(webapp.RequestHandler):
       self.error(400)  # Bad request
       return
 
-    # Note: this is inscure and should use some simple xsrf protection like
-    # a token in a cookie.
+    xsrf_header_found = False
+    for h, v in self.request.headers.iteritems():
+      if h.lower() == 'x-requested-with' and v == 'XMLHttpRequest':
+        xsrf_header_found = True
+        break
+
+    if not xsrf_header_found:
+      self.error(400)
+      logging.warning('Attempted XSRF.')
+      return
+
     user_entity = user.get_user_info()
     user_interest = models.UserInterest.get_or_insert(
       models.UserInterest.make_key_name(user_entity, opp_id),
