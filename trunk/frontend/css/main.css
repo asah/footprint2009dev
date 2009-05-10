@@ -432,6 +432,8 @@ form {
 
 h1 {
   font-size: 24pt;
+  padding: 0px;
+  margin: 0px;
 }
 
 .snippet_number {
