@@ -22,6 +22,7 @@ import datetime
 import time
 import hashlib
 import logging
+import models
 from xml.sax.saxutils import escape
 
 from fastpageviews import pagecount
@@ -254,8 +255,20 @@ class SearchResultSet(object):
 
             more += 1
 
+    def remove_blacklisted_keys():
+      """private helper function for dedup()"""
+      tmplist = []
+      for res in self.results:
+        logging.info("checking blacklist for "+res.merge_key)
+        if models.BlacklistedVolunteerOpportunity.is_blacklisted(res.merge_key):
+          logging.info("found")
+          continue
+        tmplist.append(res)
+      self.results = tmplist
+
     # dedup() main code
     assign_merge_keys()
+    remove_blacklisted_keys()
     for res in self.results:
       merge_result(res)
     compute_more_less()
