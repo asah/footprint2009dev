@@ -35,8 +35,8 @@
       dialog.show();
     }
 
-    function createLikesActivity(eventName, eventWebsite, eventUrl) {
-      var eventRedirectUrl = 'http://www.AllForGood.org/url?q=' + encodeURIComponent(eventUrl);
+    function createLikesActivity(eventName, eventWebsite, eventUrl, sig) {
+      var eventRedirectUrl = 'http://www.AllForGood.org/url?q=' + encodeURIComponent(eventUrl) + '&sig=' + sig;
       var fcString = 'likes <a href="' + eventRedirectUrl + '">' + eventName + ' on ' + eventWebsite + '</a>';
       var fbString = fcString + ' via <a href="http://www.AllForGood.org">AllForGood.org</a>';
 

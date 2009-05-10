@@ -17,6 +17,10 @@ dumping ground for misc utility functions-- please create separate
 files as this gets cluttered
 """
 
+import hmac
+import logging
+import os
+
 from xml.dom import minidom
 
 def get_xml_dom_text(node):
@@ -42,6 +46,22 @@ def xml_elem_text(node, tagname, default=None):
   if child_nodes:
     return get_xml_dom_text(child_nodes[0])
   return default
+
+# Cached hmac object.
+hmac_master = None
+
+def url_signature(url):
+  """Returns a signature for a URL so we can compare it in the redirector."""
+  # This is a super cheesy way of avoiding storing a secret key...
+  # It'll reset every minor update, but that's OK for now.
+  global hmac_master
+  if not hmac_master:
+    hmac_master = hmac.new(os.getenv('CURRENT_VERSION_ID'))
+
+  hmac_object = hmac_master.copy()
+  hmac_object.update(url)
+  return hmac_object.hexdigest()
+
 
 def get_last_arg(request, argname, default):
   """Returns the last urlparam in an HTTP request-- this allows the
