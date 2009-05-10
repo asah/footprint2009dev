@@ -22,7 +22,7 @@ import time
 import re
 import urllib
 import logging
-import posting
+import traceback
 
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
@@ -32,6 +32,7 @@ import api
 import geocode
 import models
 import modelutils
+import posting
 import searchresult
 import utils
 
@@ -353,7 +354,8 @@ def get_from_ids(ids):
     results = memcache.get(ids, RESULT_CACHE_KEY)
   except:
     # TODO(mblain): Scope to only 'memcache down' exception.
-    logging.exception("get_from_ids: memcache is busted.  ignoring...")
+    logging.exception('get_from_ids: ignoring busted memcache. stack: %s',
+                      ''.join(traceback.format_stack()))
     pass
   for result in results:
     result_set.results.append(result)
