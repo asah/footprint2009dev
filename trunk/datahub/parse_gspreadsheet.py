@@ -45,21 +45,24 @@ def parser_error(msg):
     msg = "row "+str(CURRENT_ROW)+": "+msg
   print "parse_gspreadsheet ERROR: "+msg
 
-def recordval(record, key):
+def raw_recordval(record, key):
   if key in record:
     return str(record[key]).strip()
   return ""
 
+def recordval(record, key):
+  return re.sub(r'\s+', ' ', raw_recordval(record, key))
+
 KNOWN_ORGS = {}
 
 def get_dtval(record, field_name):
-  val = recordval(record, field_name).strip()
+  val = recordval(record, field_name)
   if val != "" and not re.match(r'\d\d?/\d\d?/\d\d\d\d', val):
     parser_error("bad value in "+field_name+": '"+val+"'-- try MM/DD/YYYY")
   return val
 
 def get_tmval(record, field_name):
-  val = recordval(record, field_name).strip()
+  val = recordval(record, field_name)
   if val != "" and not re.match(r'\d?\d:\d\d(:\d\d)?', val):
     parser_error("bad value in "+field_name+": '"+val+"'-- try HH:MM:SS")
   return val
@@ -133,7 +136,8 @@ def record_to_fpxml(record):
   fpxml += xmlh.output_val('contactPhone', recordval(record,'ContactPhone'))
   fpxml += xmlh.output_val('contactEmail', recordval(record,'ContactEmail'))
   fpxml += xmlh.output_val('detailURL', recordval(record,'URL'))
-  fpxml += xmlh.output_val('description', recordval(record,'Description'))
+  # note: preserve whitespace in description
+  fpxml += xmlh.output_val('description', raw_recordval(record,'Description'))
   fpxml += '<lastUpdated olsonTZ="Etc/UTC">'
   fpxml += recordval(record,'LastUpdated') + '</lastUpdated>'
   fpxml += '</VolunteerOpportunity>'
@@ -353,6 +357,9 @@ def parse(instr, maxrecs, progress):
   outstr += "</Organizations>"
   outstr += volopps
   outstr += '</FootprintFeed>'
+
   #outstr = re.sub(r'><', '>\n<', outstr)
+  #print outstr
+
   return outstr, numorgs, numopps
 
