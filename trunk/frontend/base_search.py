@@ -79,7 +79,7 @@ def base_restrict_str(key, val=None):
 def form_base_query(args):
   """ensure args[] has all correct and well-formed members and
   return a base query string."""
-  logging.info(args)
+  logging.debug("form_base_query: "+str(args))
   base_query = ""
   if api.PARAM_Q in args and args[api.PARAM_Q] != "":
     base_query += urllib.quote_plus(args[api.PARAM_Q])
@@ -183,12 +183,12 @@ def search(args):
 
     for param in api_list:
       if param in args and args[param]:
-         if param == api.PARAM_VOL_LOC:
-           # vol_loc must render a lat, long pair
-           if not args["lat"] or not args["long"]:
-             continue
-         valid_query = True
-         break
+        if param == api.PARAM_VOL_LOC:
+          # vol_loc must render a lat, long pair
+          if not args["lat"] or not args["long"]:
+            continue
+        valid_query = True
+        break
       
     return valid_query
 
@@ -213,7 +213,7 @@ def search(args):
     result_set = searchresult.SearchResultSet(urllib.unquote(query_url),
                                             query_url,
                                             [])
-    logging.info("Base not called: no query given")
+    logging.debug("Base not called: no query given")
     result_set.query_url = query_url
     result_set.args = args
     result_set.num_results = 0
@@ -222,9 +222,9 @@ def search(args):
     result_set.parse_time = 0
     return result_set
 
-  logging.info("calling Base: "+query_url)
+  logging.debug("calling Base: "+query_url)
   results = query(query_url, args, False)
-  logging.info("Base call done.")
+  logging.debug("Base call done.")
 
   # Base doesn't implement day-of-week filtering
   if (api.PARAM_VOL_STARTDAYOFWEEK in args and
@@ -306,12 +306,15 @@ def query(query_url, args, cache):
       match = DATE_FORMAT_PATTERN.findall(res.event_date_range)
       if not match:
         # TODO(oansaldi): should we accept an event with an invalid date range?
-        logging.info('bad date range: %s for %s' % (res.event_date_range, url))
+        logging.warning('bad date range: %s for %s' %
+                        (res.event_date_range, url))
       else:
         # first match is start date/time
-        res.startdate = datetime.datetime.strptime(match[0], '%Y-%m-%dT%H:%M:%S')
+        res.startdate = datetime.datetime.strptime(match[0],
+                                                   '%Y-%m-%dT%H:%M:%S')
         # last match is either end date/time or start/date time
-        res.enddate = datetime.datetime.strptime(match[-1], '%Y-%m-%dT%H:%M:%S')
+        res.enddate = datetime.datetime.strptime(match[-1],
+                                                 '%Y-%m-%dT%H:%M:%S')
 
     # posting.py currently has an authoritative list of fields in "argnames"
     # that are available to submitted events which may later appear in GBase
@@ -356,7 +359,6 @@ def get_from_ids(ids):
     # TODO(mblain): Scope to only 'memcache down' exception.
     logging.exception('get_from_ids: ignoring busted memcache. stack: %s',
                       ''.join(traceback.format_stack()))
-    pass
   for result in results:
     result_set.results.append(result)
 

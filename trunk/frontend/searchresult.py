@@ -126,10 +126,10 @@ class SearchResultSet(object):
     No need for bounds-checking -- python list slicing does that
     automatically.  Indexed from 1."""
     start -= 1  # Adjust to zero indexing.
-    logging.info("clip_merged_results: start=%d  num=%d  has_more=%s "
-                 "(merged len = %d)" %
-                 (start, num, str(self.has_more_results),
-                  len(self.merged_results)))
+    logging.debug("clip_merged_results: start=%d  num=%d  has_more=%s "
+                  "(merged len = %d)" %
+                  (start, num, str(self.has_more_results),
+                   len(self.merged_results)))
     self.clipped_results = self.merged_results[start:start+num]
     self.clip_start_index = start
     if len(self.merged_results) > start + num:
@@ -137,15 +137,15 @@ class SearchResultSet(object):
 
   def track_views(self):
     """increment impression counts for items in the set."""
-    logging.info(str(datetime.datetime.now())+" track_views: start")
+    logging.debug(str(datetime.datetime.now())+" track_views: start")
     for primary_res in self.clipped_results:
-      logging.info("track_views: key="+primary_res.merge_key)
+      logging.debug("track_views: key="+primary_res.merge_key)
       primary_res.merged_impressions = pagecount.IncrPageCount(
         primary_res.merge_key, 1)
       primary_res.impressions = pagecount.IncrPageCount(primary_res.item_id, 1)
       for res in primary_res.merged_list:
         res.impressions = pagecount.IncrPageCount(res.item_id, 1)
-    logging.info(str(datetime.datetime.now())+" track_views: end")
+    logging.debug(str(datetime.datetime.now())+" track_views: end")
 
   def dedup(self):
     """modify in place, merged by title and snippet."""
@@ -262,9 +262,9 @@ class SearchResultSet(object):
       """private helper function for dedup()"""
       tmplist = []
       for res in self.results:
-        logging.info("checking blacklist for "+res.merge_key)
+        logging.debug("checking blacklist for "+res.merge_key)
         if models.BlacklistedVolunteerOpportunity.is_blacklisted(res.merge_key):
-          logging.info("found")
+          logging.info("found blacklisted key "+res.merge_key)
           continue
         tmplist.append(res)
       self.results = tmplist

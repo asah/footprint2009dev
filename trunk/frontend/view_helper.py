@@ -39,7 +39,7 @@ def get_user_interests(user, remove_no_interest):
       interest_value = getattr(interest, models.USER_INTEREST_LIKED)
       if not remove_no_interest or interest_value != 0:
         user_interests[interest.opp_id] = interest_value
-    #logging.info('Found interests: %s' % user_interests)
+    logging.debug('Found interests: %s' % user_interests)
   return user_interests
 
 
@@ -100,8 +100,8 @@ def annotate_results(user_interests, others_interests, result_set):
     if user_interests and result.item_id in user_interests:
       result.interest = user_interests[result.item_id]
     if others_interests and result.item_id in others_interests:
-      #logging.info("others interest in %s = %s " % \
-      #  (result.item_id, others_interests[result.item_id]))
+      logging.debug("others interest in %s = %s " %
+                    (result.item_id, others_interests[result.item_id]))
       # TODO: Consider updating the base url here if it's changed.
       result.interest_count = others_interests[result.item_id]
 
