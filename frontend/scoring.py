@@ -64,9 +64,9 @@ def score_results_set(result_set, args):
       lngdist = float(lng) - float(args["long"])
       # keep one value to right of decimal
       delta_dist = latdist*latdist + lngdist*lngdist
-      #logging.info("qloc=%s,%s - listing=%g,%g - dist=%g,%g - delta = %g" %
-      #             (args["lat"], args["long"], float(lat), float(lng),
-      #              latdist, lngdist, delta_dist))
+      logging.debug("qloc=%s,%s - listing=%g,%g - dist=%g,%g - delta = %g" %
+                   (args["lat"], args["long"], float(lat), float(lng),
+                    latdist, lngdist, delta_dist))
       # reasonably local
       if delta_dist > 0.025:
         delta_dist = 0.9 + delta_dist

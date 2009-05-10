@@ -30,13 +30,13 @@ def geocode(addr, usecache=True, retries=4):
   loc = re.sub(r'^[^0-9a-z]+', r'', loc)
   loc = re.sub(r'[^0-9a-z]+$', r'', loc)
   loc = re.sub(r'\s\s+', r' ', loc)
-  #logging.info("geocode: loc="+loc)
+  logging.debug("geocode: loc="+loc)
 
   memcache_key = "geocode:"+loc
 
   val = memcache.get(memcache_key)
   if usecache and val:
-    #logging.info("geocode: cache hit loc="+loc+"  val="+val)
+    logging.debug("geocode: cache hit loc="+loc+"  val="+val)
     return val
 
   params = urllib.urlencode(
@@ -45,7 +45,7 @@ def geocode(addr, usecache=True, retries=4):
      'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY'+\
        '_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
   fetchurl = "http://maps.google.com/maps/geo?%s" % params
-  #logging.info("geocode: cache miss, trying "+fetchurl)
+  logging.debug("geocode: cache miss, trying "+fetchurl)
   fetch_result = urlfetch.fetch(fetchurl)
   if fetch_result.status_code != 200:
     # fail and also don't cache
@@ -58,12 +58,13 @@ def geocode(addr, usecache=True, retries=4):
     # pylint: disable-msg=W0612
     respcode, zoom, lat, lng = res.split(",")
   except:
-    logging.info(str(datetime.now())+"unparseable response: "+res[0:80])
+    logging.error(str(datetime.now())+
+                  "unparseable geocoder response: "+res[0:80])
     respcode, zoom, lat, lng = 999, 0, 0, 0
 
   respcode = int(respcode)
   if respcode == 500 or respcode == 620:
-    logging.info(str(datetime.now())+"geocoder quota exceeded-- sleeping...")
+    logging.warn(str(datetime.now())+"geocoder quota exceeded-- sleeping...")
     time.sleep(1)
     return geocode(addr, usecache, retries-1)
 

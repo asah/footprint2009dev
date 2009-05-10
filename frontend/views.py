@@ -215,9 +215,8 @@ class search_view(webapp.RequestHandler):
     if "lat" in result_set.args and "long" in result_set.args:
       latlng_string = "%s,%s" % (result_set.args["lat"],
                                  result_set.args["long"])
-
-    #logging.info("geocode("+result_set.args[api.PARAM_VOL_LOC]+\
-    #   ") = "+result_set.args["lat"]+","+result_set.args["long"])
+    logging.debug("geocode("+result_set.args[api.PARAM_VOL_LOC]+") = "+
+                  result_set.args["lat"]+","+result_set.args["long"])
     template_values = {
         'result_set': result_set,
         'current_page' : 'SEARCH',
@@ -301,10 +300,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
   """
   def get(self):
     """HTTP get method."""
-    unique_args = get_unique_args_from_request(self.request)
-
     user_info = userinfo.get_user(self.request)
-
     if user_info:
       view_data = view_helper.get_my_snippets_view_data(user_info)
       result_set = view_data['result_set']
@@ -441,7 +437,7 @@ class admin_view(webapp.RequestHandler):
     elif action == "blacklist" or action == "unblacklist":
       key = self.request.get('key')
       if not key or key == "":
-        self.response.out.write("<html><body>sorry: key required.</body></html>")
+        self.response.out.write("<html><body>sorry: key required</body></html>")
         return
       if action == "blacklist":
         if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
@@ -457,7 +453,7 @@ class admin_view(webapp.RequestHandler):
           html = "<html><body>"
           html += "please confirm blacklisting of key "+key+" ?<br/>"
           # TODO: defend against xsrf
-          html += "<a href='"+self.request.url+"&areyousure=1'>YES</a> I'm sure."
+          html += "<a href='"+self.request.url+"&areyousure=1'>YES</a> I'm sure"
           html += "</body></html>"
           self.response.out.write(html)
           return
@@ -471,7 +467,7 @@ class admin_view(webapp.RequestHandler):
           undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
                              self.request.url)
           template_values['msg'] = "deleted listing with key "+key+".<br/>"
-          template_values['msg'] += "  To undo, click <a href='%s'>here</a>" %\
+          template_values['msg'] += "  To undo, click <a href='%s'>here</a>" % \
               undel_url
           template_values['msg'] += " (you may want to save this URL)."
       else:
@@ -592,7 +588,7 @@ class admin_view(webapp.RequestHandler):
         js_data += "  showValueLabels:false,labelPosition:'right'});\n"
       template_values['datahub_dashboard_js_data'] = js_data
 
-    logging.info("admin_view: "+template_values['msg'])
+    logging.debug("admin_view: "+template_values['msg'])
     self.response.out.write(render_template(ADMIN_TEMPLATE, template_values))
 
 class redirect_view(webapp.RequestHandler):
@@ -636,7 +632,7 @@ class moderate_view(webapp.RequestHandler):
     dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
     delta = now - dt
     if delta.seconds < 3600:
-      logging.info("processing changes...")
+      logging.debug("processing changes...")
       vals = {}
       for arg in self.request.arguments():
         vals[arg] = self.request.get(arg)

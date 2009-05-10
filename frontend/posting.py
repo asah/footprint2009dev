@@ -126,7 +126,7 @@ def process(args):
     elif args[arg] == "V":
       el.verify()
     elif args[arg] == "X":
-      logging.info("deleting: "+keystr+"  title="+el.title)
+      logging.debug("deleting: "+keystr+"  title="+el.title)
       el.delete()
     elif args[arg] == "":
       el.reset()
@@ -166,8 +166,8 @@ def create_from_xml(xml):
 
   posting = Posting(listing_xml=xml)
   posting.title = utils.xml_elem_text(dom, "title", '')
-  #logging.info("create_from_xml: xml="+xml)
-  logging.info("create_from_xml: title="+posting.title)
+  logging.debug("create_from_xml: title="+posting.title)
+  logging.debug("create_from_xml: xml="+xml)
   posting.description = utils.xml_elem_text(dom, "description", '')
   try:
     start_date = datetime.strptime(utils.xml_elem_text(
@@ -288,9 +288,9 @@ def add_new_fields(vals, newvals):
   addr += " "+vals["region"]
   addr += " "+vals["country"]
   newvals["complete_addr"] = addr
-  logging.info("post: geocoding "+addr)
+  logging.debug("post: geocoding "+addr)
   latlong = geocode.geocode(addr)
-  logging.info("post: latlong="+latlong)
+  logging.debug("post: latlong="+latlong)
   if latlong == "":
     newvals["latitude"] = newvals["longitude"] = ""
   else:

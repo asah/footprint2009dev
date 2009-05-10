@@ -77,10 +77,10 @@ def submit (recaptcha_challenge_field,
     remoteip -- the user's ip address
     """
 
-    logging.info("submit")
+    logging.debug("recaptcha: submit")
     if not (recaptcha_response_field and recaptcha_challenge_field and
             len (recaptcha_response_field) and len (recaptcha_challenge_field)):
-        logging.info("incorrect-captcha-sol")
+        logging.debug("incorrect-captcha-solution")
         return RecaptchaResponse (is_valid = False, error_code = 'incorrect-captcha-sol')
     
     def encode_if_necessary(s):
@@ -94,7 +94,7 @@ def submit (recaptcha_challenge_field,
             'challenge':  encode_if_necessary(recaptcha_challenge_field),
             'response' :  encode_if_necessary(recaptcha_response_field),
             })
-    logging.info("calling recaptcha: "+params)
+    logging.debug("calling recaptcha: "+params)
 
     resp = urlfetch.fetch(url="http://%s/verify" % VERIFY_SERVER,
                           payload=params,

@@ -71,7 +71,7 @@ def search(args):
   use_cache = True
   if api.PARAM_CACHE in args and args[api.PARAM_CACHE] == '0':
     use_cache = False
-    logging.info('Not using search cache')
+    logging.debug('Not using search cache')
 
   if api.PARAM_TIMEPERIOD in args:
     period = args[api.PARAM_TIMEPERIOD]
@@ -107,7 +107,7 @@ def search(args):
       end_date = date_range[1].strftime("%Y-%m-%d")
       args[api.PARAM_VOL_STARTDATE] = start_date
       args[api.PARAM_VOL_ENDDATE] = end_date
-      logging.info(start_date + '...' + end_date)
+      logging.debug("date range: "+ start_date + '...' + end_date)
 
   # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
   # I (mblain) suggest using "zx", which is used at Google for most services.
@@ -125,9 +125,9 @@ def search(args):
     # note: key cannot exceed 250 bytes
     result_set = memcache.get(memcache_key)
     if result_set:
-      logging.info('in cache: "' + normalized_query_string + '"')
+      logging.debug('in cache: "' + normalized_query_string + '"')
     else:
-      logging.info('not in cache: "' + normalized_query_string + '"')
+      logging.debug('not in cache: "' + normalized_query_string + '"')
 
   if not result_set:
     result_set = fetch_result_set(args)
