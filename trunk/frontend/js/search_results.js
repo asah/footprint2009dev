@@ -28,11 +28,13 @@ var searchResults = [];
  * @param {Object} opt_filters Filters for this query.
  *      Maps 'filtername':value.
  */
-function Query(keywords, location, pageNum, opt_timePeriod, opt_filters) {
+function Query(keywords, location, pageNum, useCache, opt_timePeriod,
+               opt_filters) {
   var me = this;
   me.keywords_ = keywords;
   me.location_ = location;
   me.pageNum_ = pageNum;
+  me.use_cache_ = useCache;
   me.timePeriod_ = opt_timePeriod || 'everything';
   me.filters_ = opt_filters || {};
 };
@@ -138,8 +140,21 @@ Query.prototype.getUrlQuery = function() {
     }
   }
 
+  // Use Cache
+  var use_cache = me.getUseCache();
+  addQueryParam('cache', use_cache);
+
   return urlQuery;
 };
+
+Query.prototype.getUseCache = function() {
+  return this.use_cache_;
+};
+
+Query.prototype.setUseCache = function(use_cache) {
+  this.use_cache_ = use_cache;
+};
+
 
 function NewQueryFromUrlParams() {
   var keywords = getHashOrQueryParam('q', '');
@@ -166,7 +181,9 @@ function NewQueryFromUrlParams() {
   getNamedFilterFromUrl('who_filter');
   getNamedFilterFromUrl('activity_filter');
 
-  return new Query(keywords, location, pageNum, timePeriod, filters);
+  var use_cache = Number(getHashOrQueryParam('cache', '1'));
+
+  return new Query(keywords, location, pageNum, use_cache, timePeriod, filters);
 }
 
 /**
@@ -494,7 +511,7 @@ function SearchResult(url, title, location, snippet, startdate, enddate,
   this.hostWebsite = hostWebsite;
 }
 
-var lastSearchQuery = new Query('', '', 0, {});
+var lastSearchQuery = new Query('', '', 0, {}, 1);
 var whenFilterWidget;
 
 asyncLoadManager.addCallback('bodyload', onLoadSearch);
