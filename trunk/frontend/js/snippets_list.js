@@ -200,9 +200,9 @@ function updateInterestInfoDisplay(resultIndex) {
     }
 
     html += nameList;
-    html += ' like this (' +
+    html += ' like this <span class="undo">(' +
         '<a href="javascript:toggleInterest(' + resultIndex +
-        ');void(0);">undo</a>)';  
+        ');void(0);">undo</a>)</span>';
   }
 
   var div = el('interest_info_' + resultIndex);

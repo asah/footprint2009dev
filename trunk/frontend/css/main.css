@@ -462,6 +462,11 @@ h1 {
   text-decoration: none;
 }
 
+.undo, .undo A {
+  color: #666;
+  text-decoration: none;
+}
+
 A:hover {  /* Keep this near end of file, after other A definitions */
   text-decoration: underline;
 }
