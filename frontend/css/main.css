@@ -396,6 +396,10 @@ form {
   background: white;
 }
 
+#static_content {
+  font-size: 13px;
+}
+
 #static_content_list {
   font-weight: bold;
   list-style-type: none;
