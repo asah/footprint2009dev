@@ -318,7 +318,7 @@ function setInputFieldValue(input, value) {
       input.onfocus = function() {
         input.value = '';
         input.style.color = 'black';
-        input.onfocus = undefined;
+        input.onfocus = null;
       }
     } else {
       input.style.color = 'black';
