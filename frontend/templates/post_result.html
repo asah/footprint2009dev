@@ -10,7 +10,7 @@ All For Good - Posting results
 {% block body %}
 <body>
 
-<a href="{{ geturl }}">geturl</a>
+<a href="{{ geturl|urlencode }}">geturl</a>
 
 <p>
 
@@ -27,66 +27,66 @@ note: postings pipeline is under construction, i.e. this posting does not go liv
   {% for key,value in vals.items %}{{ key }} = {{ value }}{% endfor %}
 {% endcomment %} 
 
-title = {{ val_title }}
-description = {{ val_description }}
-skills = {{ val_skills }}
-virtual = {{ val_virtual }}
-addr1 = {{ val_addr1 }}
-addrname1 = {{ val_addrname1 }}
-sponsoringOrganizationsName = {{ val_sponsoringOrganizationsName }}
-openEnded = {{ val_openEnded }}
-startDate = {{ val_startDate }}
-startTime = {{ val_startTime }}
-endTime = {{ val_endTime }}
-endDate = {{ val_endDate }}
-contactNoneNeeded = {{ val_contactNoneNeeded }}
-contactEmail = {{ val_contactEmail }}
-contactPhone = {{ val_contactPhone }}
-contactName = {{ val_contactName }}
-detailURL = {{ val_detailURL }}
-weeklySun = {{ val_weeklySun }}
-weeklyMon = {{ val_weeklyMon }}
-weeklyTue = {{ val_weeklyTue }}
-weeklyWed = {{ val_weeklyWed }}
-weeklyThu = {{ val_weeklyThu }}
-weeklyFri = {{ val_weeklyFri }}
-weeklySat = {{ val_weeklySat }}
-biweeklySun = {{ val_biweeklySun }}
-biweeklyMon = {{ val_biweeklyMon }}
-biweeklyTue = {{ val_biweeklyTue }}
-biweeklyWed = {{ val_biweeklyWed }}
-biweeklyThu = {{ val_biweeklyThu }}
-biweeklyFri = {{ val_biweeklyFri }}
-biweeklySat = {{ val_biweeklySat }}
-recurrence = {{ val_recurrence }}
-audienceAll = {{ val_audienceAll }}
-audienceAge = {{ val_audienceAge }}
-minAge = {{ val_minAge }}
-audienceSexRestricted = {{ val_audienceSexRestricted }}
-sexRestrictedTo = {{ val_sexRestrictedTo }}
-commitmentHoursPerWeek = {{ val_commitmentHoursPerWeek }}
-test_submit = {{ val_test_submit }}
-city = {{ val_city }}
-region = {{ val_region }}
-postalCode = {{ val_postalCode }}
-country = {{ val_country }}
-street1 = {{ val_street1 }}
-street2 = {{ val_street2 }}
-recaptcha_response = {{ val_recaptcha_response }}
+title = {{ val_title|escape}}
+description = {{ val_description|escape}}
+skills = {{ val_skills|escape}}
+virtual = {{ val_virtual|escape}}
+addr1 = {{ val_addr1|escape}}
+addrname1 = {{ val_addrname1|escape}}
+sponsoringOrganizationsName = {{ val_sponsoringOrganizationsName|escape}}
+openEnded = {{ val_openEnded|escape}}
+startDate = {{ val_startDate|escape}}
+startTime = {{ val_startTime|escape}}
+endTime = {{ val_endTime|escape}}
+endDate = {{ val_endDate|escape}}
+contactNoneNeeded = {{ val_contactNoneNeeded|escape}}
+contactEmail = {{ val_contactEmail|escape}}
+contactPhone = {{ val_contactPhone|escape}}
+contactName = {{ val_contactName|escape}}
+detailURL = {{ val_detailURL|escape}}
+weeklySun = {{ val_weeklySun|escape}}
+weeklyMon = {{ val_weeklyMon|escape}}
+weeklyTue = {{ val_weeklyTue|escape}}
+weeklyWed = {{ val_weeklyWed|escape}}
+weeklyThu = {{ val_weeklyThu|escape}}
+weeklyFri = {{ val_weeklyFri|escape}}
+weeklySat = {{ val_weeklySat|escape}}
+biweeklySun = {{ val_biweeklySun|escape}}
+biweeklyMon = {{ val_biweeklyMon|escape}}
+biweeklyTue = {{ val_biweeklyTue|escape}}
+biweeklyWed = {{ val_biweeklyWed|escape}}
+biweeklyThu = {{ val_biweeklyThu|escape}}
+biweeklyFri = {{ val_biweeklyFri|escape}}
+biweeklySat = {{ val_biweeklySat|escape}}
+recurrence = {{ val_recurrence|escape}}
+audienceAll = {{ val_audienceAll|escape}}
+audienceAge = {{ val_audienceAge|escape}}
+minAge = {{ val_minAge|escape}}
+audienceSexRestricted = {{ val_audienceSexRestricted|escape}}
+sexRestrictedTo = {{ val_sexRestrictedTo|escape}}
+commitmentHoursPerWeek = {{ val_commitmentHoursPerWeek|escape}}
+test_submit = {{ val_test_submit|escape}}
+city = {{ val_city|escape}}
+region = {{ val_region|escape}}
+postalCode = {{ val_postalCode|escape}}
+country = {{ val_country|escape}}
+street1 = {{ val_street1|escape}}
+street2 = {{ val_street2|escape}}
+recaptcha_response = {{ val_recaptcha_response|escape}}
 
-parsedStartDate = {{ val_parsedStartDate }}
-parsedStartTime = {{ val_parsedStartTime }}
-parsedEndDate = {{ val_parsedEndDate }}
-parsedEndTime = {{ val_parsedEndTime }}
-latitude = {{ val_latitude }}
-longitude = {{ val_longitude }}
+parsedStartDate = {{ val_parsedStartDate|escape}}
+parsedStartTime = {{ val_parsedStartTime|escape}}
+parsedEndDate = {{ val_parsedEndDate|escape}}
+parsedEndTime = {{ val_parsedEndTime|escape}}
+latitude = {{ val_latitude|escape}}
+longitude = {{ val_longitude|escape}}
 
 {% else %}{% ifequal respcode ""  %}
 captcha failed
 
 {% else %}
 post failed:
-respcode = {{ respcode }}
+respcode = {{ respcode|escape}}
 message = {{ content|escape }}
 
 {% endifequal %}{% endifequal %}

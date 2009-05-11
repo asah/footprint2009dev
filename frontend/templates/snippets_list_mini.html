@@ -1,10 +1,10 @@
 {% for result in result_set.clipped_results %}
       <div class='snippet_mini_title'>
-        <a target='_fp_target' href='/url?q={{ result.url|urlencode }}'>{{ result.title }}</a>
+        <a target='_fp_target' href='/url?q={{ result.url|urlencode }}'>{{ result.title|escape }}</a>
       </div>
       {% if result.location or result.startdate or result.interest_count %}
         <div class='snippet_sub_text'>
-          {{ result.location }}
+          {{ result.location|escape }}
           {% if result.location %}-{% endif %}
           {{ result.startdate|custom_date_format }}
           {% ifnotequal result.startdate.date result.enddate.date %}

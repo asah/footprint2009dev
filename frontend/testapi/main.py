@@ -22,11 +22,13 @@ main() for API testing framework
 # pylint: disable-msg=E1101
 # pylint: disable-msg=R0903
 
+import re
 import os
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+import utils
 import testapi.helpers
 
 class DumpSampleData(webapp.RequestHandler):
@@ -43,25 +45,33 @@ class RunTests(webapp.RequestHandler):
   """main for running all tests."""
   def get(self):
     """HTTP get method."""
-    testType = self.request.get('test_type') or 'all'
-    responseTypes = self.request.get('response_types') or \
-        testapi.helpers.DEFAULT_RESPONSE_TYPES
-    remoteUrl = self.request.get('url') or ''
-    specialOutput = self.request.get('output') or ''
-    # cache=0: don't read from cache, else read from cache.
-    read_from_cache = not (self.request.get('cache') == '0')
-    errors = ''
-    
+    ok_pattern = re.compile('[a-z0-9_,:/-]*$')
+    try:
+      testType = utils.get_verified_arg(ok_pattern, self.request,
+                                        'test_type') or 'all'
+      responseTypes = (utils.get_verified_arg(ok_pattern, self.request,
+                                              'response_types') or
+                       testapi.helpers.DEFAULT_RESPONSE_TYPES)
+      remoteUrl = utils.get_verified_arg(ok_pattern, self.request, 'url')
+      specialOutput = utils.get_verified_arg(ok_pattern, self.request,
+                                             'output')
+      # cache=0: don't read from cache, else read from cache.
+      read_from_cache = not (self.request.get('cache') == '0')
+    except utils.InvalidValue:
+      self.error(400)
+      return
+
     if specialOutput == 'test_types':
       self.response.out.write(testapi.helpers.ALL_TEST_TYPES)
       return
 
-    if remoteUrl == '':
+    errors = ''
+    if not remoteUrl:
       errors = 'No remote url given in request, using default url'
       apiUrl = testapi.helpers.DEFAULT_TEST_URL
     else:
       apiUrl = remoteUrl
-        
+
     outstr = ""
     outstr += '<style>'
     outstr += 'p {font-family: Arial, sans-serif; font-size: 10pt; margin: 0;}'
@@ -93,7 +103,7 @@ class RunTests(webapp.RequestHandler):
         final_status = 500
 
     self.response.set_status(final_status)
-    
+
 APP = webapp.WSGIApplication(
   [('/testapi/run', RunTests),
    ('/testapi/sampleData.xml', DumpSampleData)],

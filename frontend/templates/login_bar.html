@@ -1,7 +1,7 @@
    <nobr>
     {% if user %}
 <div id='sign_in'>
-  Hello, {{ user.display_name }} |
+  Hello, {{ user.display_name|escape }} |
 
   <a href='/myevents'>Your Events</a> <a href='/myevents'><img border=0 src='/images/like.gif'></a> |
 
@@ -46,7 +46,7 @@
     function createActivity(fbString, fcString) {
       {% ifequal user.account_type "friendconnect"%}
         var activity = opensocial.newActivity(
-            {title: '{{user.display_name}} ' + fcString});
+            {title: '{{user.display_name|escape }} ' + fcString});
         opensocial.requestCreateActivity(activity, "HIGH");
       {% else %} {% ifequal user.account_type "facebook" %}
         var templateId = 79242242909; // Template of the format "<user> <description>" 

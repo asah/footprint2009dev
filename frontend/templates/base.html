@@ -23,7 +23,7 @@
     // ...and one to queue JS callbacks on body unload event.
     var onUnloadWorkQueue = new WorkQueue();
 
-    var currentPageName = '{{ current_page }}';
+    var currentPageName = '{{ current_page|escape }}';
 
     var popularSearches = [ 'Park', 'Education', 'Hunger',
       'Homeless', 'Seniors', 'Health', 'Animals', 'Hospital' ];

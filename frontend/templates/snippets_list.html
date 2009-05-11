@@ -14,9 +14,9 @@
 
   var friendsInfo = {};
 {% for friend in friends %}
-  friendsInfo['{{friend.user_id}}'] = {
-    'thumbnail_url': '{{friend.thumbnail_url}}',
-    'name': '{{friend.display_name}}'
+  friendsInfo['{{friend.user_id|escape }}'] = {
+    'thumbnail_url': '{{friend.thumbnail_url|escape }}',
+    'name': '{{friend.display_name|escape }}'
   };
 {% endfor %}
 
@@ -50,7 +50,7 @@
       </div>
       {% if result.location or result.startdate or result.interest_count %}
         <div class='snippet_sub_text'>
-          {{ result.location }}
+          {{ result.location|escape}}
           {% if result.location %}-{% endif %}
           {{ result.startdate|custom_date_format }}
           {% ifnotequal result.startdate.date result.enddate.date %}
@@ -61,17 +61,17 @@
       {% if result.have_more %}
 <div class="snippet_sub_text" style="display:inline">
       {% endif %}
-      {% for entry in result.less_list %}{{ entry }}{% endfor %}
+      {% for entry in result.less_list %}{{ entry|escape}}{% endfor %}
       {% if result.have_more %}
-<div id="{{ result.more_id }}" style="display:none;">
-      {% for entry in result.more_list %}{{ entry }}{% endfor %}
-<div onclick="showLessDuplicates('{{ result.more_id }}')" class="more_link"> show fewer locations and times...</div>
+<div id="{{ result.more_id|escape}}" style="display:none;">
+      {% for entry in result.more_list %}{{ entry|escape}}{% endfor %}
+<div onclick="showLessDuplicates('{{ result.more_id|escape}}')" class="more_link"> show fewer locations and times...</div>
 </div>
-<span id="s{{ result.more_id }}" onclick="showMoreDuplicates('{{ result.more_id }}')" class="more_link"> more locations and times...</span>
+<span id="s{{ result.more_id|escape}}" onclick="showMoreDuplicates('{{ result.more_id|escape}}')" class="more_link"> more locations and times...</span>
 </div>
       {% endif %}
       <div class='snippet_text'>
-        {{ result.snippet|truncate_chars:285 }}
+        {{ result.snippet|truncate_chars:285|escape}}
       </div>
 
       <div class='snippet_bottom'>
@@ -96,7 +96,7 @@
             </div>
             <a href='javascript:void(0);'>Add to calendar</a>
 {% if admin_mode %}
-	    - <a href='/admin?action=blacklist&key={{result.merge_key}}'>blacklist</a>
+	    - <a href='/admin?action=blacklist&key={{result.merge_key|urlencode}}'>blacklist</a>
 {% endif %}
           </span>
           <!-- - <span id='addthis{{ forloop.counter0 }}'>
@@ -132,7 +132,7 @@ renderPaginator(el('paginator'), {{last_result_index|default:0}}, {{display_next
 <script>
 if (false) {
   el('debug_snippets').style.display = '';
-  el('debug_snippets').innerHTML = "DEBUG INFO:<br> FP query=<a href='{{ view_url }}'>{{ view_url }}</a><br> Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded }}</a><br> num results: backend-estimated={{result_set.estimated_results}}  merged-estimated={{result_set.estimated_merged_results}}  backend={{result_set.num_results}}   merged={{result_set.num_merged_results}}";
+  el('debug_snippets').innerHTML = "DEBUG INFO:<br> FP query=<a href='{{ view_url|urlencode }}'>{{ view_url|escape }}</a><br> Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded|escape }}</a><br> num results: backend-estimated={{result_set.estimated_results|escape}}  merged-estimated={{result_set.estimated_merged_results|escape}}  backend={{result_set.num_results|escape}}   merged={{result_set.num_merged_results|escape}}";
 }
 </script>
 

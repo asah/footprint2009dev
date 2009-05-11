@@ -13,8 +13,7 @@
 # limitations under the License.
 
 """
-dumping ground for misc utility functions-- please create separate
-files as this gets cluttered
+Miscellaneous utility functions.
 """
 
 import hmac
@@ -22,6 +21,14 @@ import logging
 import os
 
 from xml.dom import minidom
+
+class Error(Exception):
+  pass
+
+
+class InvalidValue(Error):
+  pass
+
 
 def get_xml_dom_text(node):
   """Returns the text of the first node found with the given tagname.
@@ -32,12 +39,14 @@ def get_xml_dom_text(node):
       text += child.data
   return text
 
+
 def get_xml_dom_text_ns(node, namespace, tagname):
   """Returns the text of the first node found with the given namespace/tagname.
   Returns None if no node found."""
   child_nodes = node.getElementsByTagNameNS(namespace, tagname)
   if child_nodes:
     return get_xml_dom_text(child_nodes[0])
+
 
 def xml_elem_text(node, tagname, default=None):
   """Returns the text of the first node found with the given namespace/tagname.
@@ -69,5 +78,36 @@ def get_last_arg(request, argname, default):
   (vs. earlier ones taking precedence)."""
   values = request.get(argname, allow_multiple=True)
   if values:
-    return values[len(values) - 1]
+    return values[-1]
   return default
+
+
+def get_verified_arg(pattern, request, argname, default=None, last=True):
+  """Return the (last) requested argument, if it passes the pattern.
+
+  Args:
+    pattern: A re pattern, e.g. re.compile('[a-z]*$')
+    request: webob request
+    argname: argument to look for
+    default: value to return if not found
+    last: use the last argument or first argument?
+
+  Returns:
+    Value in the get param, if prsent and valid. default if not present.
+
+  Raises:
+    InvalidValue exception if present and not valid.
+  """
+  values = request.get(argname, allow_multiple=True)
+  if not values:
+    return default
+
+  if last:
+    value = values[-1]
+  else:
+    value = value[0]
+
+  if not pattern.match(value):
+    raise InvalidValue
+
+  return value
