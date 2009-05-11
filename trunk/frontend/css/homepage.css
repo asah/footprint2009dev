@@ -41,3 +41,8 @@
 #home A:hover {
   text-decoration: underline;
 }
+
+#home .snippet_url {
+  color: #666;
+  text-decoration: none;
+}
