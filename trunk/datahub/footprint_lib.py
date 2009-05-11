@@ -984,6 +984,7 @@ def parse_options():
   parser.set_defaults(progress=False)
   parser.set_defaults(debug_input=False)
   parser.set_defaults(outputfmt="basetsv")
+  parser.set_defaults(output="")
   parser.set_defaults(test=False)
   parser.set_defaults(clean=True)
   parser.set_defaults(maxrecs=-1)
@@ -997,6 +998,7 @@ def parse_options():
   parser.add_option("--dbginput", action="store_true", dest="debug_input")
   parser.add_option("--progress", action="store_true", dest="progress")
   parser.add_option("--outputfmt", action="store", dest="outputfmt")
+  parser.add_option("--output", action="store", dest="output")
   parser.add_option("-g", "--geodbg", action="store_true", dest="geocode_debug")
   parser.add_option("--ftpinfo", dest="ftpinfo")
   parser.add_option("--fs", "--fieldsep", action="store", dest="fs")
@@ -1215,8 +1217,12 @@ def main():
   #outstr = re.sub(r'"', r'&quot;', outstr)
   if (options.ftpinfo):
     ftp_to_base(filename, options.ftpinfo, outstr)
-  else:
+  elif options.output == "":
     print outstr,
+  else:
+    outfh = open(options.output, "w")
+    outfh.write(outstr)
+    outfh.close()
 
   elapsed = datetime.now() - start_time
   # NOTE: if you change this, you also need to update datahub/load_gbase.py
