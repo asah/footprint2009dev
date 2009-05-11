@@ -60,7 +60,8 @@ def Pull(filename, url, min_key, delim, prefix):
 
   if prefix:
     lines = content.split("\n")
-    content = ("%s" % prefix) + ("\n%s" % prefix).join(lines)
+    lines.pop()
+    content = ("%s" % prefix) + ("\n%s" % prefix).join(lines) + "\n"
 
   tsv_file.write(content)
   tsv_file.close()
@@ -75,7 +76,7 @@ def Pull(filename, url, min_key, delim, prefix):
 
   # get the key value of the last line
   fields = last_line.split(delim)
-  min_key = fields[0]
+  min_key = fields[0][4:]
 
   return min_key, line_count
 
@@ -128,8 +129,8 @@ def main(argv):
 
   delim = "\t"
   min_key = ""
-  lines = batch_size
-  while lines == batch_size:
+  lines = batch_size + 2
+  while lines >= batch_size:
     url_step = ("%s?digsig=%s&min_key=%s&limit=%s" %
                  (url, str(digsig), str(min_key), str(batch_size)))
     if min_key != "":
@@ -138,9 +139,10 @@ def main(argv):
       log_key = "[start]"
     t0 = datetime.datetime.now()
     min_key, lines = Pull(filename, url_step, min_key, delim, prefix)
+    #print min_key
     diff = datetime.datetime.now() - t0
     secs = "%d.%d" % (diff.seconds, diff.microseconds/1000)
-    logging.info('fetched %d in %s secs from %s', lines, secs, log_key)
+    logging.info('fetched header + %d in %s secs from %s', lines - 1, secs, log_key)
 
   return 0
 

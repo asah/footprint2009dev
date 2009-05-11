@@ -19,6 +19,8 @@ export main().
 import re
 import logging
 import hashlib
+from datetime import datetime
+from string import strip
 
 from google.appengine.ext import db
 from google.appengine.ext import webapp
@@ -28,10 +30,25 @@ import utils
 import models 
 import posting 
 from fastpageviews import pagecount
+from testapi import helpers
 
 QT = "%s%s%s" % ("ec813d6d0c96f3a562c70d78b7ac98d7ec2cfcaaf44cbd7",
                  "ac897ca3481e27a777398da97d0b93bbe0f5633f6203ff3",
                  "b77ea55f62cf002ad7e4b5ec3f89d18954")
+
+# http://code.google.com/appengine/docs/python/datastore/typesandpropertyclasses.html
+MAX_FIELD_TYPES = 8
+FIELD_TYPE_BOOL = 0
+FIELD_TYPE_INT = 1
+FIELD_TYPE_LONG = 2
+FIELD_TYPE_FLOAT = 3
+FIELD_TYPE_STR = 4
+FIELD_TYPE_DATETIME = 5
+FIELD_TYPE_DATE = 6
+FIELD_TYPE_REF = 7
+
+ROW_MARKER_LEN = 4
+ROW_MARKER = "row="
 
 USAGE = """
 <pre>
@@ -102,12 +119,14 @@ def get_model(table, caller):
     model = models.VolunteerOpportunityStats
   elif table == "VolunteerOpportunity":
     model = models.VolunteerOpportunity
+  elif table == "BlacklistedVolunteerOpportunity":
+    model = models.BlacklistedVolunteerOpportunity
   elif table == "Posting":
-    # TODO add Posting to models.py
     model = posting.Posting
   elif table == "PageCountShard":
-    # TODO add PageCountShard to models.py
     model = pagecount.PageCountShard
+  elif table == "TestResults":
+    model = helpers.TestResults
   else:
     pagecount.IncrPageCount("export.%s.unknownTable" % caller, 1)
     raise Fail("unknown table name '%s'" % table)
@@ -153,7 +172,8 @@ def export_table_as_tsv(table, min_key, limit):
       field_value = ""
     else:
       try:
-        # could be a Key object
+        # could be a key or a Reference object, eg
+        #   <models.UserInfo object at 0x94bed32057743898>
         field_value = str(value.key().id_or_name())
       except:
         field_value = str(value)
@@ -178,21 +198,24 @@ def export_table_as_tsv(table, min_key, limit):
   else:
     inequality = ">"
 
-  query = table.gql(("WHERE __key__ %s :1 ORDER BY __key__" % inequality), 
+  try:
+    query = table.gql(("WHERE __key__ %s :1 ORDER BY __key__" % inequality), 
           get_min_key(table, min_key))
-
-  rsp = query.fetch(limit)
-  for row in rsp:
-    line = []
-    for field in fields:
-      if field == "key":
-        value = row.key().id_or_name()
-      else:
-        value = getattr(row, field, "")
-      line.append(esc_value(value, delim, recsep))
-    output.append(delim.join(line))
-
-  return "%s%s" % (recsep.join(output), recsep)
+  except:
+    query = None
+  
+  if query:
+    rsp = query.fetch(limit)
+    for row in rsp:
+      line = []
+      for field in fields:
+        if field == "key":
+          value = row.key().id_or_name()
+        else:
+          value = getattr(row, field, None)
+        line.append(esc_value(value, delim, recsep))
+      output.append(delim.join(line))
+    return "%s%s" % (recsep.join(output), recsep)
 
 class ExportTableTSV(webapp.RequestHandler):
   """ export the data in the table """
@@ -226,14 +249,14 @@ def transfer_table(source, destination, min_key, limit):
   def populate_row(src_table, dest_table, row, key = None):
     """ put a row from the src_table into the dest_table """
     if key:
-      row_i = dest_table(key_name = str(key))
+      record = dest_table(key_name = str(key))
     else:
-      row_i = dest_table()
+      record = dest_table()
 
     for field in src_table.properties():
-      setattr(row_i, field, getattr(row, field))
+      setattr(record, field, getattr(row, field))
 
-    row_i.put()
+    record.put()
 
   if min_key == "":
     # this is the first record 
@@ -256,6 +279,14 @@ def transfer_table(source, destination, min_key, limit):
       number_of_rows += 1
 
   return last_key, number_of_rows
+
+def verify_table_name(table_to):
+  """ make sure this table name is safe to use """
+  good_chars = re.compile(r'[A-Za-z0-9_]')
+  good_name = ''.join(c for c in table_to if good_chars.match(c))
+  if table_to != good_name:
+    pagecount.IncrPageCount("export.TransferTable.badDestName", 1)
+    raise Fail("destination contains nonalphanumerics '%s'" % table_to)
 
 class TransferTable(webapp.RequestHandler):
   """ export the data in the table """
@@ -285,19 +316,20 @@ class TransferTable(webapp.RequestHandler):
     if (table_to[0:len(table_from)] + '_') != (table_from + '_'):
       raise Fail("destination must start with '%s_'" % table_from)
 
-    good_chars = re.compile(r'[A-Za-z0-9_]')
-    good_name = ''.join(c for c in table_to if good_chars.match(c))
-    if table_to != good_name:
-      pagecount.IncrPageCount("export.TransferTable.badDestName", 1)
-      raise Fail("destination contains nonalphanumerics '%s'" % table_to)
+    verify_table_name(table_to)
 
+    # match our type of table
     source = get_model(table_from, "TransferTable")
     destination = type(table_to, (source,), {})
 
     if min_key == "":
+      # a blank key means that we are starting at the top of the table 
+      # so we need to clean out anything that may already be in
+      # the destination table
       while True:
         query = destination.all()
-        results = query.fetch(1000)
+        # 500 records is the max
+        results = query.fetch(500)
         if results:
           db.delete(results)
         else:
@@ -326,7 +358,35 @@ class PopulateTable(webapp.RequestHandler):
     """ handle the request to populate the table """
     pagecount.IncrPageCount("export.PopulateTable.attempt", 1)
     verify_dig_sig(self.request, "PopulateTable")
-    destination = get_model(table, "PopulateTable")
+
+    table_version = str(utils.get_last_arg(self.request, "tv", ""))
+    if len(table_version) > 0:
+      verify_table_name(table_version)
+      source = get_model(table, "PopulateTable")
+      destination = type(table + table_version, (source,), {})
+    else:
+      destination = get_model(table, "PopulateTable")
+
+    # handle reference properties
+    def ref_property_UserInfo(field):
+      rmodel = type('UserInfo' + table_version, (models.UserInfo,), {})
+      return rmodel.get_by_key_name(field)
+
+    def nop(v):
+      """ this is used for unknown field types """
+      return v
+
+    def str_to_datetime(datetimestring):
+      """ convert string to a real DateTime object """
+      # dont need milliseconds here
+      ar = datetimestring.split(".")
+      datetime_format = "%Y-%m-%d %H:%M:%S"
+      return datetime.strptime(ar[0], datetime_format)
+
+    def str_to_date(datestring):
+      """ convert string to a real Date object """
+      date_format = "%Y-%m-%d"
+      return datetime.strptime(datestring, date_format).date()
 
     try:
       reset = int(utils.get_last_arg(self.request, "reset", "0"))
@@ -335,58 +395,230 @@ class PopulateTable(webapp.RequestHandler):
       raise Fail("invalid &reset signal")
 
     if reset == 1:
+      """ we should only see this with a first batch of records """
+      logging.info("export.PopulateTable reset signal recvd for %s%s" 
+        % (table, table_version))
+      self.response.out.write(
+        "PopulateTable: reset signal recvd, clearing all rows\n")
       pagecount.IncrPageCount("export.%s.reset" % "PopulateTable", 1)
       while True:
         query = destination.all()
-        results = query.fetch(1000)
+        # cannot delete more than 500 entities in a single call
+        # and if there are a lot here we are going to timeout
+        # anyway but better to try and fail than risk duplicating
+        results = query.fetch(500)
         if results:
-          self.response.out.write("deleting %d from %s\n" 
-              % (len(results), table))
+          logging.info("export.PopulateTable deleting %d from %s%s" % 
+            (len(results), table, table_version))
+          self.response.out.write("PopulateTable: deleting %d from %s%s\n" 
+              % (len(results), table, table_version))
           db.delete(results)
         else:
-          self.response.out.write("%s reset\n" % table)
+          logging.info("export.PopulateTable %s%s reset complete" % 
+            (table, table_version))
+          self.response.out.write("PopulateTable: %s%s reset complete\n" % 
+            (table, table_version))
           break
 
+    # one record per line
     rows = self.request.get("row").split("\n")
+
     # the first row is a header
     header = rows.pop(0).split("\t")
-    
-    field_typing = 0
+
+    field_type = []
+    for field in header:
+      # we are going to want to remember a function for each field type
+      # but for now all we are doing is initializing the list
+      field_type.append(None)
+      
+    limit = get_limit(self.request, "PopulateTable")
+    logging.info("export.PopulateTable write to %s%s" % (table, table_version))
+
     written = 0
+    row_number = 0
     for row in rows:
-      if len(row) > 4:
-        fields = row[4:].split("\t")
+      row_number += 1
+      # all of our kind of lines should start "row="
+      if len(row) > ROW_MARKER_LEN and row[0:ROW_MARKER_LEN] == ROW_MARKER:
+        fields = row[ROW_MARKER_LEN:].split("\t")
         for i, field in enumerate(fields):
           if i == 0:
+            # on the first column (key) we only instantiate our kind of record
             try:
-              row_i = destination(key_name = str(field))
+              # it could be a named key
+              if not str(field)[0].isdigit():
+                record = destination(key_name = str(field))
+              else:
+                record = destination()
             except:
-              row_i = destination()
+              record = destination()
           else:
-            try:
-              setattr(row_i, header[i], field)
-            except:
-              try:
-                setattr(row_i, header[i], int(field))
-              except:
-                field_typing += 1
-                try:
-                  setattr(row_i, header[i], float(field))
-                except:
-                  field_typing += 1
-             
-        if field_typing:
-          # TODO implement field typing
-          field_typing = 0
-        row_i.put()
-        written += 1
+            if field is None or len(strip(field)) < 1:
+              # no field/field value, nothing to do
+              continue
 
-    self.response.out.write("wrote %d rows to %s\n" % (written, table))
+            if field_type[i] != None:
+              # we think we already know what kind of field this is 
+              try:
+                # but we could be wrong
+                setattr(record, header[i], field_type[i](field))
+              except:
+                # nothing we can really do about it now except carry on
+                # and see if we can still make this a good record
+                logging.warning(
+                  "export.PopulateTable %s = %s not set in row %d of %s%s" % 
+                          (header[i], field, row_number, table, table_version))
+                self.response.out.write("field %s = %s not set in row %d of %s%s\n" % 
+                          (header[i], field, row_number, table, table_version))
+                pass
+            else:
+              # on the first row of the file
+              # we dont know what type of field this is
+              # but we can try them all until we succeed
+              # and remember which one worked for subsequent rows
+              n = 0
+              while n < MAX_FIELD_TYPES:
+                if n == FIELD_TYPE_REF:
+                  if table != "UserInterest" or header[i] != "user":
+                    continue
+                  setattr(record, header[i], ref_property_UserInfo(field))
+                  field_type[i] = ref_property_UserInfo
+                  break
+                elif n == FIELD_TYPE_DATETIME:
+                  try:
+                    setattr(record, header[i], str_to_datetime(field))
+                    field_type[i] = str_to_datetime
+                    break
+                  except:
+                    pass
+                elif n == FIELD_TYPE_DATE:
+                  try:
+                    setattr(record, header[i], str_to_date(field))
+                    field_type[i] = str_to_date
+                    break
+                  except:
+                    pass
+                elif n == FIELD_TYPE_STR:
+                  try:
+                    setattr(record, header[i], field)
+                    field_type[i] = str
+                    break
+                  except:
+                    pass
+                elif n == FIELD_TYPE_BOOL:
+                  try:
+                    setattr(record, header[i], bool(field))
+                    field_type[i] = bool
+                    break
+                  except:
+                    pass
+                elif n == FIELD_TYPE_INT:
+                  try:
+                    setattr(record, header[i], int(field))
+                    field_type[i] = int
+                    break
+                  except:
+                    pass
+                elif n == FIELD_TYPE_LONG:
+                  try:
+                    setattr(record, header[i], long(field))
+                    field_type[i] = long
+                    break
+                  except:
+                    pass
+                elif n == FIELD_TYPE_FLOAT:
+                  try:
+                    setattr(record, header[i], float(field))
+                    field_type[i] = float
+                    break
+                  except:
+                    pass
+                n += 1
+              if n >= MAX_FIELD_TYPES:
+                logging.warning(
+                  "export.PopulateTable unknown field type %s in %s%s" % 
+                  (header[i], table, table_version))
+                self.response.out.write("unknown field type %s in %s%s\n" % 
+                  (header[i], table, table_version))
+                field_type[i] = nop
+              else:
+                logging.debug("%s is type %d\n" % (header[i], n))
+
+        # end-of for each field
+        try:
+          # ready to attempt a put
+          record.put()
+          written += 1
+          if written >= limit:
+            break
+        except:
+          logging.error("export.PopulateTable put failed at row %d in %s%s" % 
+            (row_number, table, table_version))
+          self.response.out.write("put failed at row %d in %s%s" % 
+            (row_number, table, table_version))
+
+    # end-of for each row
+    logging.info("export.PopulateTable wrote %d rows to %s%s" % 
+            (written, table, table_version))
+    self.response.out.write("wrote %d rows to %s%s\n" % 
+            (written, table, table_version))
     pagecount.IncrPageCount("export.PopulateTable.success", 1)
 
+class ClearTable(webapp.RequestHandler):
+  """ clear all data from a table """
+  def __init__(self):
+    if hasattr(webapp.RequestHandler, '__init__'):
+      webapp.RequestHandler.__init__(self)
+
+  def request(self):
+    """ pylint wants a public request method """
+    webapp.RequestHandler.__response__(self)
+
+  def response(self):
+    """ pylint wants a public response method """
+    webapp.RequestHandler.__response__(self)
+
+  def get(self, table):
+    """ clear data """
+    pagecount.IncrPageCount("export.ClearTable", 1)
+    verify_dig_sig(self.request, "ClearTable")
+
+    table_version = str(utils.get_last_arg(self.request, "tv", ""))
+    if len(table_version) > 0:
+      source = get_model(table, "ClearTable")
+      destination = type(table + table_version, (source,), {})
+    else:
+      destination = get_model(table, "ClearTable")
+
+    limit = get_limit(self.request, "ClearTable")
+    if limit < 1:
+      limit = 500
+    elif limit > 500:
+      limit = 500
+
+    query = destination.all()
+    # cannot delete more than 500 entities in a single call
+    results = query.fetch(limit)
+    if results:
+      self.response.out.write("ClearTable: deleting %d from %s%s\n"
+          % (len(results), table, table_version))
+      db.delete(results)
+    else:
+      self.response.out.write("ClearTable: %s%s clear complete\n" % 
+            (table, table_version))
+
+"""
+TODO:
+/exportapi/export/<tablename>
+/exportapi/import/<tablename>
+/exportapi/clear/<tablename>
+/exportapi/transfer/<from-table>/<to-table>
+"""
 APPLICATION = webapp.WSGIApplication(
     [ ("/export/(.*?)\.tsv", ExportTableTSV),
       ("/export/-/(.*?)", PopulateTable),
+      ("/export/-clear-/(.*?)", ClearTable),
       ("/export/(.*?)/(.*?)", TransferTable),
       ("/export/", ShowUsage)
     ], debug=True)
