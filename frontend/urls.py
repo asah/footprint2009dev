@@ -40,4 +40,5 @@ STATIC_CONTENT_FILES = {
   '/privacypolicy' : 'privacy_policy.html',
   '/publishers' : 'publishers.html',
   '/help' : 'help.html',
+  '/faq' : 'faq.html',
 }

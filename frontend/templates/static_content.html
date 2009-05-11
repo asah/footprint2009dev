@@ -8,7 +8,10 @@
 {% ifequal path '/about' %} About {% else %} <a href='/about'>About</a> {% endifequal %}
 
 <li>
-{% ifequal path '/help' %} Help/FAQs {% else %} <a href='/help'>Help/FAQs</a> {% endifequal %}
+{% ifequal path '/help' %} Help {% else %} <a href='/help'>Help</a> {% endifequal %}
+
+<li>
+{% ifequal path '/faq' %} Frequently Asked Questions {% else %} <a href='/faq'>Frequently Asked Questions</a> {% endifequal %}
 
 <li>
 {% ifequal path '/privacypolicy' %} Privacy Policy {% else %} <a href='/privacypolicy'>Privacy Policy</a> {% endifequal %}
