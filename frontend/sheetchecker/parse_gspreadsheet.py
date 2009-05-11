@@ -18,6 +18,10 @@ parser for feed stored in a google spreadsheet
 expects the caller to pass in the providerID and providerName)
 """
 
+# TODO: share this code between frontend and datahub
+# see http://code.google.com/p/footprint2009dev/issues/detail?id=150
+
+
 # typical cell
 #<entry>
 #<id>http://spreadsheets.google.com/feeds/cells/pMY64RHUNSVfKYZKPoVXPBg
@@ -31,126 +35,93 @@ expects the caller to pass in the providerID and providerName)
 #google.com/feeds/cells/pMY64RHUNSVfKYZKPoVXPBg/1/public/basic/R14C13'/>
 #</entry>
 
-import xml_helpers as xmlh
 import re
-import urllib
-import sys
-import time
-from datetime import datetime
+import logging
 
+MAX_BLANKROWS = 2
+
+# TODO: right thing is to create a class for spreadsheets...
 CURRENT_ROW = None
+MESSAGES = []
+DATA = None
+HEADER_STARTCOL = None
+HEADER_ROW = None
 
 def parser_error(msg):
+  """capture an error in its current context."""
+  global MESSAGES
   if CURRENT_ROW != None:
     msg = "row "+str(CURRENT_ROW)+": "+msg
-  print "parse_gspreadsheet ERROR: "+msg
+    msg += "<br/>\n&nbsp;&nbsp;&nbsp;starting with: "
+    for col in range(5):
+      val = cellval(CURRENT_ROW, col)
+      if val == None:
+        val = ""
+      msg += val+" | "
+  MESSAGES.append("ERROR: "+msg)
 
 def raw_recordval(record, key):
+  """get a cell value, or empty string."""
   if key in record:
     return str(record[key]).strip()
   return ""
 
 def recordval(record, key):
+  """get a cell value, replacing whitespace with space."""
   return re.sub(r'\s+', ' ', raw_recordval(record, key))
 
 KNOWN_ORGS = {}
 
 def get_dtval(record, field_name):
+  """parse a field as a datetime."""
   val = recordval(record, field_name)
-  if val != "" and not re.match(r'\d\d?/\d\d?/\d\d\d\d', val):
+  if (val != "" and val != "ongoing" and
+      not re.match(r'\d\d?/\d\d?/\d\d\d\d', val)):
     parser_error("bad value in "+field_name+": '"+val+"'-- try MM/DD/YYYY")
   return val
 
 def get_tmval(record, field_name):
+  """parse a field as a time-of-day."""
   val = recordval(record, field_name)
-  if val != "" and not re.match(r'\d?\d:\d\d(:\d\d)?', val):
+  if (val != "" and val != "ongoing" and
+      not re.match(r'\d?\d:\d\d(:\d\d)?', val)):
     parser_error("bad value in "+field_name+": '"+val+"'-- try HH:MM:SS")
   return val
 
-def record_to_fpxml(record):
-  fpxml = ""
-  fpxml += '<VolunteerOpportunity>'
-  fpxml += xmlh.output_val("volunteerOpportunityID", recordval(record, 'oppid'))
-  orgname = recordval(record,'SponsoringOrganization')
-  if orgname not in KNOWN_ORGS:
-    KNOWN_ORGS[orgname] = len(KNOWN_ORGS)
-  fpxml += xmlh.output_val("sponsoringOrganizationID", KNOWN_ORGS[orgname])
-  title = recordval(record,'OpportunityTitle')
-  if title == "":
-    parser_error("missing OpportunityTitle-- this field is required.")
-  fpxml += xmlh.output_val("title", title)
-  fpxml += '<dateTimeDurations>'
-  fpxml += '<dateTimeDuration>'
-  if ('StartDate' in record and
-      recordval(record,'StartDate').find("ongoing") >= 0):
-    fpxml += xmlh.output_val('openEnded', 'Yes')
-  else:
-    fpxml += xmlh.output_val('openEnded', 'No')
-    startdtval = get_dtval(record, 'StartDate')
-    if startdtval != "":
-      fpxml += xmlh.output_val('startDate', startdtval)
-    starttmval = get_tmval(record, 'StartTime')
-    if starttmval != "":
-      fpxml += xmlh.output_val('startTime', starttmval)
-    enddtval = get_dtval(record, 'EndDate')
-    if enddtval != "":
-      fpxml += xmlh.output_val('endDate', enddtval)
-    endtmval = get_tmval(record, 'EndTime')
-    if endtmval != "":
-      fpxml += xmlh.output_val('endTime', endtmval)
-  freq = recordval(record,'Frequency').lower()
-  if freq == "" or freq.find("once") >= 0:
-    fpxml += '<iCalRecurrence/>'
-  elif freq.find("daily") >= 0:
-    fpxml += '<iCalRecurrence>FREQ=DAILY</iCalRecurrence>'
-  elif freq.find("weekly") >= 0:
-    fpxml += '<iCalRecurrence>FREQ=WEEKLY</iCalRecurrence>'
-  elif freq.find("other") >= 0 and freq.find("week") >= 0:
-    fpxml += '<iCalRecurrence>FREQ=WEEKLY;INTERVAL=2</iCalRecurrence>'
-  elif freq.find("monthly") >= 0:
-    fpxml += '<iCalRecurrence>FREQ=MONTHLY</iCalRecurrence>'
-  else:
-    parser_error("unsupported frequency: '"+recordval(record,'Frequency')+"'-- skipping")
-  fpxml += xmlh.output_val('commitmentHoursPerWeek', recordval(record,'CommitmentHours'))
-  fpxml += '</dateTimeDuration>'
-  fpxml += '</dateTimeDurations>'
-  fpxml += '<locations>'
-  fpxml += '<location>'
-  if recordval(record,'LocationName').find("virtual") >= 0:
-    fpxml += xmlh.output_val('virtual', 'Yes')
-  else:
-    fpxml += xmlh.output_val('virtual', 'No')
-    fpxml += xmlh.output_val('name', recordval(record,'LocationName'))
-    fpxml += xmlh.output_val('streetAddress1', recordval(record,'LocationStreet'))
-    fpxml += xmlh.output_val('city', recordval(record,'LocationCity'))
-    fpxml += xmlh.output_val('region', recordval(record,'LocationProvince'))
-    fpxml += xmlh.output_val('postalCode', recordval(record,'LocationPostalCode'))
-    fpxml += xmlh.output_val('country', recordval(record,'LocationCountry'))
-  fpxml += '</location>'
-  fpxml += '</locations>'
-  fpxml += xmlh.output_val('paid', recordval(record,'Paid'))
-  fpxml += xmlh.output_val('minimumAge', recordval(record,'MinimumAge'))
-  # TODO: seniors only, kidfriendly
-  fpxml += xmlh.output_val('sexRestrictedTo', recordval(record,'SexRestrictedTo'))
-  fpxml += xmlh.output_val('skills', recordval(record,'Skills'))
-  fpxml += xmlh.output_val('contactName', recordval(record,'ContactName'))
-  fpxml += xmlh.output_val('contactPhone', recordval(record,'ContactPhone'))
-  fpxml += xmlh.output_val('contactEmail', recordval(record,'ContactEmail'))
-  fpxml += xmlh.output_val('detailURL', recordval(record,'URL'))
-  # note: preserve whitespace in description
-  fpxml += xmlh.output_val('description', raw_recordval(record,'Description'))
-  fpxml += '<lastUpdated olsonTZ="Etc/UTC">'
-  fpxml += recordval(record,'LastUpdated') + '</lastUpdated>'
-  fpxml += '</VolunteerOpportunity>'
-  return fpxml
+def get_boolval(record, field_name):
+  """parse a field as a yes/no field-- note that blank is allowed."""
+  val = recordval(record, field_name)
+  if val.lower() not in ["y", "yes", "n", "no", ""]:
+    # TODO: support these alternates in the datahub!
+    parser_error("bad value in "+field_name+": '"+val+"'-- try 'Yes' or 'No'")
+  return val
 
-def cellval(data, row, col):
+def get_intval(record, field_name):
+  """parse a field as a time-of-day."""
+  val = recordval(record, field_name)
+  if val != "" and not re.match('[0-9]+', val):
+    parser_error("bad value in "+field_name+": '"+val+"'-- try a number")
+  return val
+
+def get_minlen(record, field_name, minlen):
+  """parse a field as a minlen string."""
+  val = recordval(record, field_name)
+  if val == "":
+    parser_error("missing value in "+field_name+": '"+val+"'-- field required.")
+  elif len(val) < minlen:
+    parser_error("value not long enough in "+field_name+": '"+val+"'-- "+
+                 "requires %d characters" % minlen)
+  return val
+
+def cellval(row, col):
+  """get a single cell value."""
   key = 'R'+str(row)+'C'+str(col)
-  if key not in data:
+  if key not in DATA:
     return None
-  return data[key]
+  return DATA[key]
 
-def parse_gspreadsheet(instr, data, updated, progress):
+def parse_gspreadsheet(instr, updated):
+  """load a spreadsheet into a two dimensional array."""
   # look ma, watch me parse XML a zillion times faster!
   #<entry><id>http://spreadsheets.google.com/feeds/cells/pMY64RHUNSVfKYZKPoVXPBg
   #/1/public/basic/R14C15</id><updated>2009-04-28T03:34:21.900Z</updated>
@@ -164,14 +135,12 @@ def parse_gspreadsheet(instr, data, updated, progress):
                       '<updated.*?>(.+?)</updated>.*?'+
                       '<content.*?>(.+?)</content>.+?</entry>', re.DOTALL)
   maxrow = maxcol = 0
-  for i, match in enumerate(re.finditer(regexp, instr)):
-    if progress and i > 0 and i % 250 == 0:
-      print str(datetime.now())+": ", i, " cells processed."
+  for match in re.finditer(regexp, instr):
     lastupd = re.sub(r'([.][0-9]+)?Z?$', '', match.group(4)).strip()
     #print "lastupd='"+lastupd+"'"
     updated[match.group(1)] = lastupd.strip("\r\n\t ")
     val = match.group(5).strip("\r\n\t ")
-    data[match.group(1)] = val
+    DATA[match.group(1)] = val
     row = match.group(2)
     if row > maxrow:
       maxrow = row
@@ -181,51 +150,52 @@ def parse_gspreadsheet(instr, data, updated, progress):
     #print row, col, val
   return maxrow, maxcol
 
-def read_gspreadsheet(url, data, updated, progress):
-  # read the spreadsheet into a big string
-  infh = urllib.urlopen(url)
-  instr = infh.read()
-  infh.close()
-  return parse_gspreadsheet(instr, data, updated, progress)
-
-def find_header_row(data, regexp_str):
+def find_header_row(regexp_str):
+  """location the header row in a footprint spreadsheet."""
   regexp = re.compile(regexp_str, re.IGNORECASE|re.DOTALL)
-  header_row = header_startcol = -1
+  global HEADER_ROW, HEADER_STARTCOL
+  HEADER_ROW = HEADER_STARTCOL = None
   for row in range(20):
-    if header_row != -1:
+    if HEADER_ROW:
       break
     for col in range(5):
-      val = cellval(data, row, col)
+      val = cellval(row, col)
       if (val and re.search(regexp, val)):
-        header_row = row
-        header_startcol = col
+        HEADER_ROW = row
+        HEADER_STARTCOL = col
         break
-  if header_row == -1:
-    parser_error("no header row found: looked for "+regexp_str)
-  if header_startcol == -1:
-    parser_error("no header start column found")
-  return header_row, header_startcol
+  if HEADER_ROW == None or HEADER_STARTCOL == None:
+    parser_error("failed to parse this as a footprint spreadsheet. "+
+                 "No header row found: looked for "+regexp_str)
 
-def parse(instr, maxrecs, progress):
+def parse(instr):
+  """main function for parsing footprint spreadsheets."""
   # TODO: a spreadsheet should really be an object and cellval a method
-  data = {}
+  global DATA, MESSAGES, CURRENT_ROW
+  DATA = {}
+  MESSAGES = []
+  CURRENT_ROW = None
+
   updated = {}
-  maxrow, maxcol = parse_gspreadsheet(instr, data, updated, progress)
+  parse_gspreadsheet(instr, updated)
   # find header row: look for "opportunity title" (case insensitive)
-  header_row, header_startcol = find_header_row(data, 'opportunity\s*title')
+  find_header_row('opportunity\s*title')
+  if not HEADER_ROW or not HEADER_STARTCOL:
+    return DATA, MESSAGES
 
   header_colidx = {}
   header_names = {}
-  header_col = header_startcol
+  header_col = HEADER_STARTCOL
   while True:
-    header_str = cellval(data, header_row, header_col)
+    header_str = cellval(HEADER_ROW, header_col)
     if not header_str:
       break
     field_name = None
     header_str = header_str.lower()
     if header_str.find("title") >= 0:
       field_name = "OpportunityTitle"
-    elif header_str.find("organization") >= 0 and header_str.find("sponsor") >= 0:
+    elif header_str.find("organization") >= 0 and \
+          header_str.find("sponsor") >= 0:
       field_name = "SponsoringOrganization"
     elif header_str.find("description") >= 0:
       field_name = "Description"
@@ -289,21 +259,18 @@ def parse(instr, maxrecs, progress):
     parser_error("too few fields found: "+str(len(header_names)))
 
   # check to see if there's a header-description row
-  header_desc = cellval(data, header_row+1, header_startcol)
+  header_desc = cellval(HEADER_ROW+1, HEADER_STARTCOL)
   if not header_desc:
     parser_error("blank row not allowed below header row")
   header_desc = header_desc.lower()
-  data_startrow = header_row + 1
+  data_startrow = HEADER_ROW + 1
   if header_desc.find("up to") >= 0:
     data_startrow += 1
 
   # find the data
-  global CURRENT_ROW
-  CURRENT_ROW = row = data_startrow
+  CURRENT_ROW = data_startrow
   blankrows = 0
-  MAX_BLANKROWS = 2
-  volopps = '<VolunteerOpportunities>'
-  numorgs = numopps = 0
+  numopps = 0
   while True:
     blankrow = True
     #rowstr = "row="+str(row)+"\n"
@@ -311,14 +278,14 @@ def parse(instr, maxrecs, progress):
     record['LastUpdated'] = '0000-00-00'
     for field_name in header_colidx:
       col = header_colidx[field_name]
-      val = cellval(data, row, col)
+      val = cellval(CURRENT_ROW, col)
       if val:
         blankrow = False
       else:
         val = ""
       #rowstr += "  "+field_name+"="+val+"\n"
       record[field_name] = val
-      key = 'R'+str(row)+'C'+str(col)
+      key = 'R'+str(CURRENT_ROW)+'C'+str(col)
       if (key in updated and
           updated[key] > record['LastUpdated']):
         record['LastUpdated'] = updated[key]
@@ -330,37 +297,51 @@ def parse(instr, maxrecs, progress):
       numopps += 1
       blankrows = 0
       record['oppid'] = str(numopps)
-      volopps += record_to_fpxml(record)
-    row += 1
-    CURRENT_ROW = row
-  CURRENT_ROW = None
-  volopps += '</VolunteerOpportunities>'
-
-  outstr = '<?xml version="1.0" ?>'
-  outstr += '<FootprintFeed schemaVersion="0.1">'
-  outstr += '<FeedInfo>'
-  # providerID replaced by caller
-  outstr += '<providerID></providerID>'
-  # providerName replaced by caller
-  outstr += '<providerName></providerName>'
-  outstr += '<feedID>1</feedID>'
-  outstr += '<createdDateTime>%s</createdDateTime>' % xmlh.current_ts()
-  # providerURL replaced by caller
-  outstr += '<providerURL></providerURL>'
-  outstr += '<description></description>'
-  outstr += '</FeedInfo>'
-  outstr += "<Organizations>"
-  for orgname in KNOWN_ORGS:
-    outstr += "<Organization>"
-    outstr += xmlh.output_val("organizationID", KNOWN_ORGS[orgname])
-    outstr += xmlh.output_val("name", orgname)
-    outstr += "</Organization>"
-  outstr += "</Organizations>"
-  outstr += volopps
-  outstr += '</FootprintFeed>'
-
-  #outstr = re.sub(r'><', '>\n<', outstr)
-  #print outstr
-
-  return outstr, numorgs, numopps
+      get_minlen(record, 'OpportunityTitle', 10)
+      get_minlen(record, 'Description', 15)
+      # TODO: try geocoding...
+      get_dtval(record, "StartDate")
+      get_tmval(record, "StartTime")
+      get_dtval(record, "EndDate")
+      get_tmval(record, "EndTime")
+      email = recordval(record, "ContactEmail")
+      if email != "" and email.find("@") == -1:
+        parser_error("malformed email address: "+email)
+      daysofweek = recordval(record, "DaysOfWeek").split(",")
+      for dow in daysofweek:
+        lcdow = dow.strip().lower()
+        if lcdow not in ["sat", "saturday",
+                         "sun", "sunday",
+                         "mon", "monday",
+                         "tue", "tues", "tuesday",
+                         "wed", "weds", "wednesday",
+                         "thu", "thur", "thurs", "thursday",
+                         "fri", "friday", ""]:
+          # TODO: support these alternates in the datahub!
+          parser_error("malformed day of week: '%s'" % dow)
+      get_boolval(record, "Paid")
+      get_intval(record, "CommitmentHours")
+      get_intval(record, "MinimumAge")
+      get_boolval(record, "KidFriendly")
+      get_boolval(record, "SeniorsOnly")
+      sexrestrict = recordval(record, "SexRestrictedTo")
+      if sexrestrict.lower() not in ["women", "men", "either", ""]:
+        parser_error("bad SexRestrictedTo-- try Men, Women, Either or (blank).")
+      org = recordval(record, 'SponsoringOrganization')
+      if org == "":
+        parser_error("missing Sponsoring Organization-- this field is required."+
+                     "  (it can be an informal name, or even a person's name).")
+      else:
+        get_minlen(record, 'SponsoringOrganization', 8)
+      freq = recordval(record, 'Frequency').lower()
+      if not (freq == "" or freq.find("once") >= 0 or
+              freq.find("daily") >= 0 or freq.find("weekly") >= 0 or
+              (freq.find("other") >= 0 and freq.find("week") >= 0) or
+              freq.find("monthly") >= 0):
+        parser_error("unsupported frequency: '"+
+                     recordval(record, 'Frequency')+"'")
+    CURRENT_ROW += 1
+  if len(MESSAGES) == 0:
+    MESSAGES.append("spreadsheet parsed correctly-- no errors!")
+  return DATA, MESSAGES
 

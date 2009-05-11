@@ -55,6 +55,10 @@ handlers:
 - url: /autocomplete/.*
   script: autocomplete/main.py
 
+# checker for spreadsheet feeds
+- url: /sheetchecker/.*
+  script: sheetchecker/main.py
+
 # Keep this last
 - url: /.*
   script: main.py
