@@ -23,6 +23,8 @@ DETAILED_LOG_FN = LOGPATH + "load_gbase_detail.log"
 # this file needs to be copied over to frontend/autocomplete/
 POPULAR_WORDS_FN = "popular_words.txt"
 
+FIELD_STATS_FN = "field_stats.txt"
+
 STOPWORDS = set([
   'a', 'about', 'above', 'across', 'after', 'afterwards', 'again', 'against',
   'all', 'almost', 'alone', 'along', 'already', 'also', 'although', 'always',
@@ -73,14 +75,10 @@ def print_progress(msg):
   print str(datetime.now())+": "+msg
 
 KNOWN_WORDS = {}
-def process_popular_words(name, url):
-  """fetch this URL and update the dictionary of popular words."""
+def process_popular_words(content):
+  """update the dictionary of popular words."""
   # TODO: handle phrases (via whitelist, then later do something smart.
-  print_progress("fetching %s from %s" % (name, url))
-  urlfh = footprint_lib.open_input_filename(url)
-  content = urlfh.read()
-  urlfh.close()
-  print_progress("cleaning content, %d bytes" % len(content))
+  print_progress("cleaning content: %d bytes" % len(content))
   cleaner_regexp = re.compile('<[^>]*>', re.DOTALL)
   cleaned_content = re.sub(cleaner_regexp, '', content).lower()
   print_progress("splitting words, %d bytes" % len(cleaned_content))
@@ -102,6 +100,59 @@ def process_popular_words(name, url):
     if KNOWN_WORDS[word] < 2:
       del KNOWN_WORDS[word]
   print_progress("done: word dict size %d words" % len(KNOWN_WORDS))
+
+def print_word_stats():
+  """dump word stats."""
+  print_progress("final cleanse: keeping only words appearing 10 times")
+  for word in KNOWN_WORDS.keys():
+    if KNOWN_WORDS[word] < 10:
+      del KNOWN_WORDS[word]
+  sorted_words = list(KNOWN_WORDS.iteritems())
+  sorted_words.sort(cmp=lambda a, b: cmp(b[1], a[1]))
+
+  print_progress("writing "+POPULAR_WORDS_FN+"...")
+  popfh = open(POPULAR_WORDS_FN, "w")
+  for word, freq in sorted_words:
+    popfh.write(str(freq)+"\t"+word+"\n")
+  popfh.close()
+  print_progress("done writing "+POPULAR_WORDS_FN)
+
+FIELD_VALUES = None
+FIELD_NAMES = None
+NUM_RECORDS_TOTAL = 0
+def process_field_stats(content):
+  """update the field-value histograms."""
+  global FIELD_NAMES, FIELD_VALUES, NUM_RECORDS_TOTAL
+  for lineno, line in enumerate(content.splitlines()):
+    fields = line.split("\t")
+    if lineno == 0:
+      if FIELD_NAMES == None:
+        FIELD_NAMES = fields
+        FIELD_VALUES = [{} for i in range(len(fields))]
+      continue
+    NUM_RECORDS_TOTAL += 1
+    for i, val in enumerate(fields):
+      val = val[0:300]
+      if val in FIELD_VALUES[i]:
+        FIELD_VALUES[i][val] += 1
+      else:
+        FIELD_VALUES[i][val] = 1
+
+def print_field_stats():
+  """dump field-value stats."""
+  print_progress("writing "+FIELD_STATS_FN+"...")
+  outfh = open(FIELD_STATS_FN, "w")
+  outfh.write("number of records: "+NUM_RECORDS_TOTAL)
+  for i, fieldname in enumerate(FIELD_NAMES):
+    outfh.write("field "+fieldname+":\n")
+    sorted_vals = list(FIELD_VALUES[i].iteritems())
+    sorted_vals.sort(cmp=lambda a, b: cmp(b[1], a[1]))
+    for val, freq in sorted_vals[0:1000]:
+      if freq < 10:
+        break
+      outfh.write("  %5d %s\n" % (freq, val))
+  outfh.close()
+  print_progress("done writing "+FIELD_STATS_FN)
 
 def append_log(outstr):
   """append to the detailed and truncated log, for stats collection."""
@@ -178,29 +229,50 @@ def run_shell(command, silent_ok=False, universal_newlines=True,
 def load_gbase(name, url):
   """shutup pylint."""
   print_progress("loading "+name+" from "+url)
-  # run as a subprocess so we can ignore failures and keep going
-  # later, we'll run these concurrently, but for now we're RAM-limited
+
+  # run as a subprocess so we can ignore failures and keep going.
+  # later, we'll run these concurrently, but for now we're RAM-limited.
   # ignore retcode
+  tsv_filename = "out-"+name+".tsv"
   stdout, stderr, retcode = run_shell(["./footprint_lib.py", "--progress",
-                                       "--ftpinfo", USERNAME+":"+PASSWORD, url],
+                                       #"--ftpinfo", USERNAME+":"+PASSWORD,
+                                       "--output", tsv_filename, url],
                                       silent_ok=True, print_output=False)
   print stdout,
   if stderr and stderr != "":
     print name+":STDERR: ", re.sub(r'\n', '\n'+name+':STDERR: ', stderr)
   if retcode and retcode != 0:
     print name+":RETCODE: "+str(retcode)
+
+  infh = open(tsv_filename, "r")
+  tsv_data = infh.read()
+  infh.close()
+
+  process_field_stats(tsv_data)
+  process_popular_words(tsv_data)
+
+  print_progress("ftp'ing to base")
+  footprint_lib.ftp_to_base(name, USERNAME+":"+PASSWORD, tsv_data)
   print_progress("load_gbase: done.")
 
-  # TODO: this causes the URL to be downloaded twice-- once for popular
-  # words, and once for loading...
-  process_popular_words(name, url)
 
+def test_loaders():
+  """for testing, read from local disk as much as possible."""
+  load_gbase("americansolutions", "americansolutions.xml")
+  load_gbase("unitedway", "unitedway.xml")
+  load_gbase("handson", "hot.footprint.xml.gz")
+  load_gbase("craigslist", "craigslist-cache.txt")
+  load_gbase("meetup", "meetup.xml")
+  load_gbase("gspreadsheets",
+             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
+  load_gbase("servenet", "servenet.xml")
+  load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
+  load_gbase("idealist", "idealist.xml")
 
 def loaders():
   """put all loaders in one function for easier testing."""
   load_gbase("servenet",
              "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
-
   load_gbase("unitedway",
              "http://volunteer.united-e-way.org/"+
              "uwnyc/util/voml/uwnyc-footprint-pull.aspx")
@@ -235,19 +307,9 @@ def main():
   PASSWORD = sys.argv[2]
 
   loaders()
+  print_word_stats()
+  print_field_stats()
 
-  print_progress("final cleanse: keeping only words appearing 10 times")
-  for word in KNOWN_WORDS.keys():
-    if KNOWN_WORDS[word] < 10:
-      del KNOWN_WORDS[word]
-  sorted_words = list(KNOWN_WORDS.iteritems())
-  sorted_words.sort(cmp=lambda a, b: cmp(b[1], a[1]))
-
-  popfh = open("popular_words.txt", "w")
-  for word, freq in sorted_words:
-    popfh.write(str(freq)+"\t"+word+"\n")
-  popfh.close()
-  print_progress("done writing "+POPULAR_WORDS_FN)
 
 if __name__ == "__main__":
   main()
