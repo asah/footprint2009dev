@@ -142,7 +142,7 @@ def print_field_stats():
   """dump field-value stats."""
   print_progress("writing "+FIELD_STATS_FN+"...")
   outfh = open(FIELD_STATS_FN, "w")
-  outfh.write("number of records: "+NUM_RECORDS_TOTAL)
+  outfh.write("number of records: "+str(NUM_RECORDS_TOTAL)+"\n")
   for i, fieldname in enumerate(FIELD_NAMES):
     outfh.write("field "+fieldname+":\n")
     sorted_vals = list(FIELD_VALUES[i].iteritems())
@@ -258,16 +258,18 @@ def load_gbase(name, url):
 
 def test_loaders():
   """for testing, read from local disk as much as possible."""
-  load_gbase("americansolutions", "americansolutions.xml")
+  load_gbase("servenet", "servenet.xml")
   load_gbase("unitedway", "unitedway.xml")
-  load_gbase("handson", "hot.footprint.xml.gz")
-  load_gbase("craigslist", "craigslist-cache.txt")
+  load_gbase("americansolutions", "americansolutions.xml")
   load_gbase("meetup", "meetup.xml")
+  load_gbase("extraordinaries", "beextra-extraordinaries.xml")
+  load_gbase("idealist", "idealist.xml")
   load_gbase("gspreadsheets",
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
-  load_gbase("servenet", "servenet.xml")
-  load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
-  load_gbase("idealist", "idealist.xml")
+  load_gbase("craigslist", "craigslist-cache.txt")
+  load_gbase("americorps", "americorps-xml_ac_recruitopps.xml.gz")
+  load_gbase("volunteer.gov", "volunteergov.xml")
+  load_gbase("handson", "hot.footprint.xml.gz")
 
 def loaders():
   """put all loaders in one function for easier testing."""
@@ -306,6 +308,7 @@ def main():
   USERNAME = sys.argv[1]
   PASSWORD = sys.argv[2]
 
+  #test_loaders()
   loaders()
   print_word_stats()
   print_field_stats()
