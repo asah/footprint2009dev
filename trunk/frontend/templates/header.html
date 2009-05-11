@@ -11,7 +11,7 @@
         <td valign='middle'>
           <div>
             <input type='text' id='keywords' defaultValue='keywords' class='valign'
-                   size='40' value='{{ keywords }}' />
+                   size='40' value='{{ keywords|escape }}' />
             <img class='search_button valign pointer'
                  onclick='submitForm("keywords"); return false;'
                  src='/images/red-search-button.png'>
@@ -59,9 +59,9 @@ if (currentPageName != 'HOMEPAGE') {
   {% if not no_login %}
   <script src='http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' type='text/javascript'></script>
   <script type="text/javascript">
-    document.userId = "{{user.user_id}}";
-    document.userType = "{{user.account_type}}";
-    document.userDisplayName = "{{user.display_name}}";
+    document.userId = "{{user.user_id|escape }}";
+    document.userType = "{{user.account_type|escape }}";
+    document.userDisplayName = "{{user.display_name|escape }}";
 
     var FC_SITE_ID = '02962301966004179520';
     var FB_SITE_ID = 'df68a40a4a90d4495ed03f920f16c333';
