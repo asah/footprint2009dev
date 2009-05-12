@@ -21,6 +21,7 @@ views in the app, in the MVC sense.
 # pylint: disable-msg=E1101
 # pylint: disable-msg=R0903
 from datetime import datetime
+import cgi
 import os
 import urllib
 import logging
@@ -641,7 +642,7 @@ class redirect_view(webapp.RequestHandler):
     # TODO: Use a proper template so this looks nicer.
     response = ('<h1>Redirect</h1>' +
                 'This page is sending you to <a href="%s">%s</a><p />' %
-                (url, url))
+                (cgi.escape(url), cgi.escape(url)))
     # TODO: Something more clever than go(-1), which doesn't work on new
     # windows, etc. Maybe check for 'referer' or send users to '/'.
     response += ('If you do not want to visit that page, you can ' +
