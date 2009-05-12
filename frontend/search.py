@@ -47,6 +47,48 @@ def search(args):
   #     yet need the rest.  QueryParams can have a function to
   #     create a normalized string, for the memcache key.
   # pylint: disable-msg=C0321
+  
+  normalizeQueryValues(args)
+
+  # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
+  # I (mblain) suggest using "zx", which is used at Google for most services.
+
+  # TODO: Should construct our own normalized query string instead of
+  # using the browser's querystring.
+
+  args_array = [str(key)+'='+str(value) for (key, value) in args.items()]
+  args_array.sort()
+  normalized_query_string = str('&'.join(args_array))
+
+  use_cache = True
+  if api.PARAM_CACHE in args and args[api.PARAM_CACHE] == '0':
+    use_cache = False
+    logging.debug('Not using search cache')
+
+  result_set = None
+  memcache_key = hashlib.md5('search:' + normalized_query_string).hexdigest()
+
+  if use_cache:
+    # note: key cannot exceed 250 bytes
+    result_set = memcache.get(memcache_key)
+    if result_set:
+      logging.debug('in cache: "' + normalized_query_string + '"')
+    else:
+      logging.debug('not in cache: "' + normalized_query_string + '"')
+
+  if not result_set:
+    result_set = fetch_result_set(args)
+    memcache.set(memcache_key, result_set, time=CACHE_TIME)
+
+  result_set.clip_merged_results(args[api.PARAM_START], args[api.PARAM_NUM])
+  result_set.track_views()
+  return result_set
+
+
+def normalizeQueryValues(args):
+  """Pre-processes several values related to the search API that might be
+  present in the query string."""
+
   num = 10
   if api.PARAM_NUM in args:
     num = int(args[api.PARAM_NUM])
@@ -67,11 +109,6 @@ def search(args):
     if overfetch_ratio < 1.0: overfetch_ratio = 1.0
     if overfetch_ratio > 10.0: overfetch_ratio = 10.0
   args[api.PARAM_OVERFETCH_RATIO] = overfetch_ratio
-
-  use_cache = True
-  if api.PARAM_CACHE in args and args[api.PARAM_CACHE] == '0':
-    use_cache = False
-    logging.debug('Not using search cache')
 
   if api.PARAM_TIMEPERIOD in args:
     period = args[api.PARAM_TIMEPERIOD]
@@ -108,34 +145,6 @@ def search(args):
       args[api.PARAM_VOL_STARTDATE] = start_date
       args[api.PARAM_VOL_ENDDATE] = end_date
       logging.debug("date range: "+ start_date + '...' + end_date)
-
-  # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
-  # I (mblain) suggest using "zx", which is used at Google for most services.
-
-  # TODO: Should construct our own normalized query string instead of
-  # using the browser's querystring.
-
-  args_array = [str(key)+'='+str(value) for (key, value) in args.items()]
-  args_array.sort()
-  normalized_query_string = str('&'.join(args_array))
-
-  result_set = None
-  memcache_key = hashlib.md5('search:' + normalized_query_string).hexdigest()
-  if use_cache:
-    # note: key cannot exceed 250 bytes
-    result_set = memcache.get(memcache_key)
-    if result_set:
-      logging.debug('in cache: "' + normalized_query_string + '"')
-    else:
-      logging.debug('not in cache: "' + normalized_query_string + '"')
-
-  if not result_set:
-    result_set = fetch_result_set(args)
-    memcache.set(memcache_key, result_set, time=CACHE_TIME)
-
-  result_set.clip_merged_results(args[api.PARAM_START], args[api.PARAM_NUM])
-  result_set.track_views()
-  return result_set
 
 
 def fetch_result_set(args):

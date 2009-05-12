@@ -121,19 +121,25 @@ class SearchResultSet(object):
     self.pubdate = get_rfc2822_datetime()
     self.last_build_date = self.pubdate
 
-  def clip_merged_results(self, start, num):
+  def clip_set(self, start, num, result_set):
     """Extract just the slice of merged results from start to start+num.
     No need for bounds-checking -- python list slicing does that
     automatically.  Indexed from 1."""
     start -= 1  # Adjust to zero indexing.
+    self.clipped_results = result_set[start:start + num]
+    self.clip_start_index = start
+    if len(result_set) > start + num:
+      self.has_more_results = True
+
+  def clip_merged_results(self, start, num):
     logging.debug("clip_merged_results: start=%d  num=%d  has_more=%s "
                   "(merged len = %d)" %
                   (start, num, str(self.has_more_results),
                    len(self.merged_results)))
-    self.clipped_results = self.merged_results[start:start+num]
-    self.clip_start_index = start
-    if len(self.merged_results) > start + num:
-      self.has_more_results = True
+    return self.clip_set(start, num, self.merged_results)
+
+  def clip_results(self, start, num):
+     return self.clip_set(start, num, self.results)
 
   def track_views(self):
     """increment impression counts for items in the set."""

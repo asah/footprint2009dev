@@ -118,6 +118,7 @@ function addToCalendar(div, type, searchResult) {
 
 function toggleInterest(resultIndex) {
   var result = searchResults[resultIndex];
+
   var div = el('like_' + resultIndex);
 
   // TODO: First need to check if the user is logged in
@@ -136,9 +137,12 @@ function toggleInterest(resultIndex) {
 
     if (result.liked) {
       createLikesActivity(result.title, result.hostWebsite, result.url, result.url_sig);
+      result.totalInterestCount += 1
+    } else {
+      result.totalInterestCount -= 1
     }
 
-    updateInterestInfoDisplay(resultIndex);
+    updateInterestInfoDisplay(resultIndex, true);
   };
 
   var error = function(xhr, textStatus, errorThrown) {
@@ -173,7 +177,7 @@ function updateInterestInfoDisplay(resultIndex) {
   if (result.liked || friends.length) {
     html += '<img class="like_icon" src="/images/like.gif">';
     
-    var nameList = result.liked ? 'You ' : '';
+    var nameList = result.liked ? 'You' : '';
   
     // Display friends' info, if any.
     if (friends.length) {
@@ -181,7 +185,7 @@ function updateInterestInfoDisplay(resultIndex) {
         var friendId = friends[i];
         var info = friendsInfo[friendId];
         if (info) {
-          if (i == 0) {
+          if (i == 0 && nameList != '') {
             nameList += ', ';
           }
           nameList += info.name;
@@ -194,15 +198,31 @@ function updateInterestInfoDisplay(resultIndex) {
 
     var youAndFriendsCount = (friends ? friends.length : 0) +
         (result.liked ? 1 : 0);
-    var strangerInterestCount = result.totalInterestCount - youAndFriendsCount;
+
+    var strangerInterestCount = Math.max(result.totalInterestCount -
+                                         youAndFriendsCount, 0);
     if (strangerInterestCount > 0) {
       nameList += ' and ' + strangerInterestCount + ' more';
     }
 
+    var onlyYou = youAndFriendsCount == 1 && result.liked &&
+      strangerInterestCount < 1;
+
     html += nameList;
-    html += ' like this <span class="undo">(' +
-        '<a href="javascript:toggleInterest(' + resultIndex +
-        ');void(0);">undo</a>)</span>';
+
+    if ((youAndFriendsCount + strangerInterestCount == 1) && !onlyYou) {
+      html += ' likes'
+    } else {
+      html += ' like'
+    }
+
+    html += ' this ';
+    
+    if (result.liked) {
+      html += '<span class="undo">(' +
+          '<a href="javascript:toggleInterest(' + resultIndex +
+          ');void(0);">undo</a>)</span>';
+    }
   }
 
   var div = el('interest_info_' + resultIndex);
