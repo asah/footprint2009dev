@@ -3,25 +3,28 @@
 <div id='sign_in'>
   Hello, {{ user.display_name|escape }} |
 
+  {% ifequal user.account_type "friendconnect"%}
+    <a href="#" onclick="google.friendconnect.requestSettings()">Settings</a> |
+    <a href="#" onclick="google.friendconnect.requestInvite()">Invite</a>
+  {% else %} {% ifequal user.account_type "facebook" %}
+    <a href="#" onclick="inviteFacebookFriends();">Invite</a>
+  {% endifequal %}{% endifequal %}
+
+  |
   {% ifequal current_page "MY_EVENTS" %}
-  Activity Page <img border=0 src='/images/like.gif'>
+  Activity Page <img border=0 src='/images/like_default.png'>
   {% else %}
-  <a href='/myevents'>Activity Page</a> <a href='/myevents'><img border=0 src='/images/like.gif'></a> 
+  <a href='/myevents'>Activity Page</a> <a href='/myevents'><img class='valign' border=0 src='/images/like_default.png'></a>
   {% endifequal %}
-  
+
+  | <a href='/help'><b>Help</b></a>
   |
 
   {% ifequal user.account_type "friendconnect"%}
-    <!-- Note: This link to Settings must be included. If it is not included the user has no way to adjust their privacy controls. -->
-    <!-- So things like their activities will never go anywhere. -->
-    <a href="#" onclick="google.friendconnect.requestSettings()">Settings</a> |
-    <a href="#" onclick="google.friendconnect.requestInvite()">Invite</a> |
     <a href="#" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
   {% else %} {% ifequal user.account_type "facebook" %}
-    <a href="#" onclick="inviteFacebookFriends();">Invite</a> |
     <a href="#" onclick="FB.Connect.logout(function() {window.location.reload();});">Sign Out</a>
   {% endifequal %}{% endifequal %}
-  | <a href='/help'><b>Help</b></a>
 </div>
 
 <script type="text/javascript">
@@ -55,22 +58,19 @@
             {title: '{{user.display_name|escape }} ' + fcString});
         opensocial.requestCreateActivity(activity, "HIGH");
       {% else %} {% ifequal user.account_type "facebook" %}
-        var templateId = 79242242909; // Template of the format "<user> <description>" 
-        FB.Connect.showFeedDialog(templateId, {"description" : fbString}, 
+        var templateId = 79242242909; // Template of the format "<user> <description>"
+        FB.Connect.showFeedDialog(templateId, {"description" : fbString},
           [], '', 1, FB.RequireConnect.require, function(){});
-      {% endifequal %}{% endifequal %} 
+      {% endifequal %}{% endifequal %}
     }
 
 </script>
     {% else %}
 <div id='sign_in'>
-  Sign in with <span id="signInProvider"></span> :
-  <img height='18px' width='18px' src="images/signin-yahoo.gif" alt="Yahoo!" title="Yahoo!" onclick="google.friendconnect.requestSignIn('YAHOO')"/>
-  <img height='18px' width='18px'  src="images/signin-google.gif" alt="Google" title="Google" onclick="google.friendconnect.requestSignIn('GOOGLE')"/>
-  <img height='18px' width='18px' src="images/signin-aol.gif" alt="AOL" title="AOL" onclick="google.friendconnect.requestSignIn('AIM')"/>
-  <img height='18px' width='18px' src="images/signin-facebook.gif" alt="Facebook" title="Facebook" onclick="requestFacebookSignIn()"/>
-  <!--img height='18px' width='18px' src="images/signin-myspace.gif" alt="MySpace" title="MySpace" onclick="google.friendconnect.requestSignIn()"/-->
-  <img height='18px' width='18px' src="images/signin-openid.gif" alt="OpenID" title="OpenID" onclick="google.friendconnect.requestSignIn('OPENID')"/>
+  Sign in with <span id="signInProvider"></span>
+  <a href='#' onclick="requestFacebookSignIn();return false"/>Facebook</a>,
+  <a href='#' onclick="google.friendconnect.requestSignIn('GOOGLE');return false"/>Google</a>,
+  <a href='#' onclick="google.friendconnect.requestSignIn('');return false"/>More &raquo;</a>
 
   <script type="text/javascript">
     function requestFacebookSignIn() {

@@ -46,3 +46,8 @@
   color: #666;
   text-decoration: none;
 }
+
+.no_underline {
+  text-decoration: none;
+}
+

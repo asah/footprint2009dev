@@ -175,10 +175,10 @@ function updateInterestInfoDisplay(resultIndex) {
   var friends = friendsByEventId[result.itemId] || [];
 
   if (result.liked || friends.length) {
-    html += '<img class="like_icon" src="/images/like.gif">';
-    
+    html += '<img class="like_icon" src="/images/like_default.png">&nbsp;';
+
     var nameList = result.liked ? 'You' : '';
-  
+
     // Display friends' info, if any.
     if (friends.length) {
       for (var i = 0; i < friends.length; i++) {
