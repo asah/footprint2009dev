@@ -445,6 +445,13 @@ h1 {
   text-decoration: underline;
 }
 
+.profile_subtitle {
+  color: #aaa;
+  font-size: 18pt;
+  margin: 0 0 7px 4px;
+  font-weight: normal;
+}
+
 .filterwidget_title {
   margin-top: 16px;
   font-weight: bold;
