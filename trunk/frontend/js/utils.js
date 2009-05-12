@@ -274,15 +274,7 @@ getClientLocation = function() {
     if (clientLocation === undefined) {
       try {
         var loc = google.loader.ClientLocation;
-        lat = loc.latitude;
-        lon = loc.longitude;
-        if (lat > 0) {
-          lat = '+' + lat;
-        }
-        if (lon > 0) {
-          lon = '+' + lon;
-        }
-        var clientLocationString = lat + lon;
+        var clientLocationString = loc.latitude + "," + loc.longitude;
 
         clientLocation = { 'coords': clientLocationString, 'address': '',
                            'city': '' };
