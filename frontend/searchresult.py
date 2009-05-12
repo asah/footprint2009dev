@@ -173,9 +173,11 @@ class SearchResultSet(object):
     def assign_merge_keys():
       """private helper function for dedup()"""
       for res in self.results:
-        res.merge_key = hashlib.md5(safe_str(res.title) +
-                                    safe_str(res.snippet) +
-                                    safe_str(res.location)).hexdigest()
+        # Merge keys are M + md5hash(some stuff). This distinguishes them from
+        # the stable IDs, which are just md5hash(someotherstuff).
+        res.merge_key = 'M' + hashlib.md5(safe_str(res.title) +
+                                          safe_str(res.snippet) +
+                                          safe_str(res.location)).hexdigest()
         # we will be sorting & de-duping the merged results
         # by start date so we need an epoch time
         res.t_startdate = res.startdate.timetuple()
