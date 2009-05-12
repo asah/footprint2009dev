@@ -30,9 +30,10 @@ import re
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from google.appengine.api import users
+from google.appengine.api import urlfetch
+from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
-from google.appengine.api import urlfetch
 
 from fastpageviews import pagecount
 
@@ -125,6 +126,35 @@ def render_template(template_filename, template_values):
                       TEMPLATE_DIR + template_filename)
   rendered = template.render(path, template_values)
   return rendered
+
+
+def require_moderator(handler_method):
+  """Decorator ensuring the current FP user is a logged in moderator."""
+  def Decorate(self):
+    user = userinfo.get_user(self.request)
+    if not user:
+      self.error(401)
+      self.response.out.write('<html><body>Please log in.</body></html>')
+      return
+    if not user.get_user_info() or not user.get_user_info().moderator:
+      self.error(403)
+      self.response.out.write('<html><body>Permission denied.</body></html>')
+      logging.warning('Non-moderator blacklist attempt.')
+      return
+    return handler_method(self)
+  return Decorate
+
+
+def require_admin(handler_method):
+  """Decorator ensuring the current App Engine user is an administrator."""
+  def Decorate(self):
+    if not users.is_current_user_admin():
+      self.error(401)
+      html = '<html><body><a href="%s">Sign in</a></body></html>'
+      self.response.out.write(html % (users.create_login_url(self.request.url)))
+      return
+    return handler_method(self)
+  return Decorate
 
 
 class test_page_views_view(webapp.RequestHandler):
@@ -268,9 +298,8 @@ class ui_snippets_view(webapp.RequestHandler):
         'friends' : view_data['friends'],
         'friends_by_event_id_js': view_data['friends_by_event_id_js'],
       }
-    # TODO!!!  replace with real admin check when bug #129 is fixed
-    template_values['admin_mode'] = (user and user.get_user_info()
-                                     and user.get_user_info().moderator)
+    template_values['moderator'] = (user and user.get_user_info()
+                                    and user.get_user_info().moderator)
     if self.request.get('minimal_snippets_list'):
       # Minimal results list for homepage.
       self.response.out.write(render_template(SNIPPETS_LIST_MINI_TEMPLATE,
@@ -309,22 +338,22 @@ class ui_my_snippets_view(webapp.RequestHandler):
       # This is a dict of event id keys and interest flag values (right now
       # we only support Liked).
       my_interests = view_helper.get_user_interests(user_info, True)
-  
+
       # Fetch the event details for the events I like, so they can be
       # displayed in the snippets template.
       my_events_gbase_result_set = base_search.get_from_ids(my_interests)
       for result in my_events_gbase_result_set.results:
         result.interest = my_interests[result.item_id]
-  
+
       args = get_unique_args_from_request(self.request)
       search.normalizeQueryValues(args)
       start = args[api.PARAM_START]
       my_events_gbase_result_set.clip_start_index = start
       num = args[api.PARAM_NUM]
-      
+
       # Handle clipping.
       my_events_gbase_result_set.clip_results(start, num)
-      
+
       # Get general interest numbers (i.e., not filtered to friends).
       overall_stats_for_my_interests = \
         view_helper.get_interest_for_opportunities(my_interests)
@@ -445,6 +474,7 @@ class post_view(webapp.RequestHandler):
 
 class admin_view(webapp.RequestHandler):
   """admin UI."""
+  @require_admin
   def get(self):
     """HTTP get method."""
     template_values = {
@@ -453,11 +483,8 @@ class admin_view(webapp.RequestHandler):
       'action': "",
     }
 
-    # TODO!!!  add admin check when bug #129 is fixed
-    # (leave open for now, for the dashboard/etc.)
-
     action = self.request.get('action')
-    if not action or action == "":
+    if not action:
       action = "mainmenu"
     template_values['action'] = action
 
@@ -466,49 +493,8 @@ class admin_view(webapp.RequestHandler):
     elif action == "flush_memcache":
       memcache.flush_all()
       template_values['msg'] = "memcached flushed"
-    elif action == "blacklist" or action == "unblacklist":
-      key = self.request.get('key')
-      if not key or key == "":
-        self.response.out.write("<html><body>sorry: key required</body></html>")
-        return
-      if action == "blacklist":
-        if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
-          undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
-                             self.request.url)
-          html = "<html><body>"
-          html += "key "+key+" is already blacklisted."
-          html += " click <a href='%s'>here</a> to restore." % undel_url
-          html += "</body></html>"
-          self.response.out.write(html)
-          return
-        if self.request.get('areyousure') != "1":
-          html = "<html><body>"
-          html += "please confirm blacklisting of key "+key+" ?<br/>"
-          # TODO: defend against xsrf
-          html += "<a href='"+self.request.url+"&areyousure=1'>YES</a> I'm sure"
-          html += "</body></html>"
-          self.response.out.write(html)
-          return
-        models.BlacklistedVolunteerOpportunity.blacklist(key)
-        if not models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
-          template_values['msg'] = "internal failure trying to add"
-          template_values['msg'] += " key "+key+" to blacklist."
-        else:
-          # TODO: better workflow, e.g. email the deleted key to an address
-          # along with an url to undelete it?
-          undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
-                             self.request.url)
-          template_values['msg'] = "deleted listing with key "+key+".<br/>"
-          template_values['msg'] += "  To undo, click <a href='%s'>here</a>" % \
-              undel_url
-          template_values['msg'] += " (you may want to save this URL)."
-      else:
-        models.BlacklistedVolunteerOpportunity.unblacklist(key)
-        if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
-          template_values['msg'] = "internal failure trying to remove"
-          template_values['msg'] += " key "+key+" from blacklist."
-        else:
-          template_values['msg'] = "un-deleted listing with key "+key
+    elif action == 'moderators':
+      self.admin_moderator(template_values)
     elif action == "datahub_dashboard":
       url = self.request.get('datahub_log')
       if not url or url == "":
@@ -623,6 +609,98 @@ class admin_view(webapp.RequestHandler):
     logging.debug("admin_view: "+template_values['msg'])
     self.response.out.write(render_template(ADMIN_TEMPLATE, template_values))
 
+  def admin_moderator(self, template_values):
+    """View for adding/deleting moderators."""
+
+    # TODO: Use the template!
+    message = []
+    message.append('<h2>Moderator Management</h2>')
+
+    moderator_query = models.UserInfo.gql('WHERE moderator = TRUE')
+    request_query = models.UserInfo.gql('WHERE moderator = FALSE and ' +
+                                        'moderator_request_email > \'\'')
+
+    usig = 'BOGUS'
+    message.append('<form method="POST">'
+        '<input type="hidden" name="usig" value="%s">'
+        '<input type="hidden" name="action" value="moderators">' % usig)
+    message.append('Existing moderators'
+        '<table><tr><td>+</td><td>-</td><td>UID</td><td>Email</td></tr>')
+    for moderator in moderator_query:
+      keyname = moderator.key().name() or ''
+      desc = moderator.moderator_request_desc or ''
+      email = moderator.moderator_request_email or ''
+      message.append('<tr><td>&nbsp;</td><td>'
+          '<input type="checkbox" name="disable" value="%s"></td><td>%s</td>'
+          '<td><span title="%s">%s</span></td></tr>' %
+          (cgi.escape(keyname), cgi.escape(keyname),
+           cgi.escape(desc), cgi.escape(email)))
+
+    message.append('</table>Requests<table>'
+                   '<tr><td>+</td><td>-</td>'
+                   '<td>UID</td><td>Email</td></tr>')
+    for request in request_query:
+      keyname = request.key().name() or ''
+      desc = request.moderator_request_desc or ''
+      email = request.moderator_request_email or ''
+      message.append('<tr><td>'
+          '<input type="checkbox" name="enable" value="%s"></td>'
+          '<td>&nbsp;</td>'
+          '<td>%s</td><td><span title="%s">%s</span></td></tr>' %
+          (cgi.escape(keyname), cgi.escape(keyname),
+           cgi.escape(desc), cgi.escape(email)))
+
+    message.append('</table>'
+                   '<input type="submit" />'
+                   '</form>')
+
+    message.append('<hr>')
+    template_values['msg'] = ''.join(message)
+
+  @require_admin
+  def post(self):
+    """HTTP post method."""
+    if self.request.get('action') != 'moderators':
+      self.error(400)
+      return
+    usig = 'BOGUS'
+    if self.request.get('usig') != usig:
+      self.error(400)
+      logging.warning('XSRF attempt.')
+      return
+
+    keys_to_enable = self.request.POST.getall('enable')
+    keys_to_disable = self.request.POST.getall('disable')
+
+    now = datetime.isoformat(datetime.now())
+    admin = users.get_current_user().email()
+
+    users_to_enable = models.UserInfo.get_by_key_name(keys_to_enable)
+    for user in users_to_enable:
+      user.moderator = True
+      if not user.moderator_request_admin_notes:
+        user.moderator_request_admin_notes = ''
+      user.moderator_request_admin_notes += '%s: Enabled by %s.\n' % \
+          (now, admin)
+    db.put(users_to_enable)
+
+    users_to_disable = models.UserInfo.get_by_key_name(keys_to_disable)
+    for user in users_to_disable:
+      user.moderator = False
+      if not user.moderator_request_admin_notes:
+        user.moderator_request_admin_notes = ''
+      user.moderator_request_admin_notes += '%s: Disabled by %s.\n' % \
+          (now, admin)
+    db.put(users_to_disable)
+
+    self.response.out.write(
+        '<div style="color: green">Enabled %s and '
+        'disabled %s moderators.</div>' %
+        (len(users_to_enable), len(users_to_disable)))
+    self.response.out.write('<a href="%s?action=moderators&zx=%d">'
+        'Continue</a>' % (self.request.path_url, datetime.now().microsecond))
+
+
 class redirect_view(webapp.RequestHandler):
   """Process redirects. Present an interstital if the url is not signed."""
   def get(self):
@@ -651,12 +729,14 @@ class redirect_view(webapp.RequestHandler):
 
 class moderate_view(webapp.RequestHandler):
   """fast UI for voting/moderating on listings."""
+  @require_moderator
   def get(self):
     """HTTP get method."""
-    # TODO: require admin access-- implement when we agree on mechanism
     action = self.request.get('action')
     if action == "test":
       posting.createTestDatabase()
+    if action == 'blacklist' or action == 'unblacklist':
+      return self.blacklist(action)
 
     now = datetime.now()
     nowstr = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -693,6 +773,56 @@ class moderate_view(webapp.RequestHandler):
       'result_set' : reslist,
     }
     self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))
+
+  def blacklist(self, action):
+    """HTTP get method for blacklist actions."""
+    key = self.request.get('key')
+    if not key or key == "":
+      self.response.out.write("<html><body>sorry: key required</body></html>")
+      return
+
+    text = 'Internal error.'
+    if action == "blacklist":
+      if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
+        undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
+                           self.request.url)
+        text = ('key %s is already blacklisted.'
+                ' click <a href="%s">here</a> to restore.' %
+                (key, undel_url))
+      elif self.request.get('areyousure') != "1":
+        text = ('please confirm blacklisting of key %s ?<br/>'
+               '<a href="%s&areyousure=1">YES</a> I am sure' %
+               (key, self.request.url))
+      else:
+        models.BlacklistedVolunteerOpportunity.blacklist(key)
+        if not models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
+          text = 'Internal failure trying to add key %s to blacklist.' % key
+        else:
+          # TODO: better workflow, e.g. email the deleted key to an address
+          # along with an url to undelete it?
+          # Or just show all the blacklisted keys on this page...
+          undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
+                             self.request.url)
+          text = ('deleted listing with key %s.<br/>'
+                  'To undo, click <a href="%s">here</a>'
+                  ' (you may want to save this URL).' %
+                  (key, undel_url))
+    else:
+      models.BlacklistedVolunteerOpportunity.unblacklist(key)
+      if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
+        text = 'Internal failure trying to remove key %s from blacklist.' % key
+      else:
+        text = "un-deleted listing with key "+key
+
+    # TODO: Switch this to its own template!
+    template_values = {
+        'user' : userinfo.get_user(self.request),
+        'path' : self.request.path,
+        'static_content' : text,
+    }
+    self.response.out.write(render_template(STATIC_CONTENT_TEMPLATE,
+                                            template_values))
+
 
 class action_view(webapp.RequestHandler):
   """vote/tag/etc on a listing.  TODO: rename to something more specific."""
