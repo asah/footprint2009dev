@@ -21,7 +21,7 @@ results: backend-estimated={{result_set.estimated_results|escape}}  merged-estim
 link: <a href="{{result.url|urlencode}}">{{result.url|escape}}</a>
 desc: {{result.snippet|escape}}
 id: {{result.id|escape}}     date range: {{result.startdate|escape}}    provider: {{result.provider|escape}} 
-score: {{result.scorestr|escape}} (orig result #{{result.orig_idx|escape}}){{result.score_notes|escape}}
+score: {{result.score_str|escape}} (orig result #{{result.orig_idx|escape}}){{result.score_notes|escape}}
 views: {{result.merged_pageviews|escape}} merged / {{result.pageviews|escape}} for this one
 start: {{result.starttime|escape}} stop: {{result.endtime|escape}}
 {% if result.merged_list %}
