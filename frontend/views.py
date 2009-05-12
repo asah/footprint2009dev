@@ -391,7 +391,11 @@ class my_events_view(webapp.RequestHandler):
     """HTTP get method."""
     user_info = userinfo.get_user(self.request)
     if not user_info:
-      template_values = {'current_page' : 'MY_EVENTS'}
+      template_values = {
+        'current_page': 'MY_EVENTS',
+        # Don't bother rendering this page if not authenticated.
+        'redirect_to_home': True,
+      }
       self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
           template_values))
       return
