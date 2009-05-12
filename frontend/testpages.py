@@ -20,6 +20,7 @@
 # pylint: disable-msg=E1101
 # pylint: disable-msg=R0903
 
+import cgi
 import datetime
 import re
 
@@ -30,6 +31,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 import models
 import userinfo
+import utils
 
 class TestLogin(webapp.RequestHandler):
   """test user login sequence."""
@@ -63,15 +65,20 @@ class TestLogin(webapp.RequestHandler):
                             '<input name="Test Login" type="submit" />'
                             '(Blank form = logout)'
                             '</form>')
-
-
+                            
+  USERID_REGEX = re.compile('[a-z0-9_@+.-]*$')
+                            
   def post(self):
     """HTTP post method."""
-    userid = self.request.get('userid')
-    if not re.match('[a-z0-9_@-]*$', userid):
+    try:
+      userid = utils.get_verified_arg(self.USERID_REGEX, self.request, 
+                                      'userid')
+    except utils.InvalidValue:
       self.error(400)
-      self.response.out.write('invalid userid, must be a-z0-9_@-')
+      self.response.out.write('invalid userid, must be ^%s' %
+                              self.USERID_REGEX.pattern)
       return
+
     self.response.headers.add_header('Set-Cookie',
                                      'footprinttest=%s;path=/' % userid)
     self.response.out.write('You are logged ')
@@ -99,11 +106,10 @@ class TestModerator(webapp.RequestHandler):
     if user.get_user_info().moderator_request_email:
       # TODO: This is very vulnerable to html injection.
       self.response.out.write('<li>We have received your request'
-                              '<li>Your email: %s'
-                              '<li>Your comments: %s'
-                              %
-                              (user.get_user_info().moderator_request_email,
-                               user.get_user_info().moderator_request_desc))
+          '<li>Your email: %s'
+          '<li>Your comments: %s' %
+          (cgi.escape(user.get_user_info().moderator_request_email),
+           cgi.escape(user.get_user_info().moderator_request_desc)))
 
     self.response.out.write('</ul>')
     self.response.out.write(
@@ -121,111 +127,33 @@ class TestModerator(webapp.RequestHandler):
       self.response.out.write('Not logged in.')
       return
 
-    if not self.request.get('email'):
-      # TODO: Actual validation.
+    try:
+      # This regex is a bit sloppy but good enough.
+      email = utils.get_verified_arg(re.compile('[a-z0-9_+.-]+@[a-z0-9.-]+$'),
+                                     self.request, 'email')
+      desc = self.request.get('desc')
+    except utils.InvalidValue:
+      self.error(400)
       self.response.out.write('<div style="color:red">' +
-                              'Email address required.</div>')
-    else:
-      user_info = user.get_user_info()
-      user_info.moderator_request_email = self.request.get('email')
-      user_info.moderator_request_desc = self.request.get('desc')
-      if not user_info.moderator_request_admin_notes:
-        user_info.moderator_request_admin_notes = ''
-      user_info.moderator_request_admin_notes += (
-          '%s: Requested.\n' %
-          datetime.datetime.isoformat(datetime.datetime.now()))
-      user_info.put()
+                              'Valid email address required.</div>')
+      return           
+
+    user_info = user.get_user_info()
+    user_info.moderator_request_email = self.request.get('email')
+    user_info.moderator_request_desc = self.request.get('desc')
+    if not user_info.moderator_request_admin_notes:
+      user_info.moderator_request_admin_notes = ''
+    user_info.moderator_request_admin_notes += (
+        '%s: Requested.\n' %
+        datetime.datetime.isoformat(datetime.datetime.now()))
+    user_info.put()
 
     return self.get()
-
-
-class AdminModerator(webapp.RequestHandler):
-  """test moderation functionality (for admins)."""
-  def get(self):
-    """HTTP get method."""
-    if not users.is_current_user_admin():
-      html = '<html><body><a href="%s">Sign in</a></body></html>'
-      self.response.out.write(html % (users.create_login_url(self.request.url)))
-      return
-
-    self.response.out.write('<h1>Moderator Management</h1>')
-
-    moderator_query = models.UserInfo.gql('WHERE moderator = TRUE')
-    request_query = models.UserInfo.gql('WHERE moderator = FALSE and ' +
-                                        'moderator_request_email != \'\'')
-
-    self.response.out.write('<form method="POST">')
-    self.response.out.write('Existing moderators<table>')
-    self.response.out.write('<tr><td>+</td><td>-</td>'
-                            '<td>UID</td><td>Email</td></tr>')
-    for moderator in moderator_query:
-      # NOTE: This is very vulnerable to html injection.
-      self.response.out.write('<tr><td>&nbsp;</td><td>'
-          '<input type="checkbox" name="enable" value="%s"></td><td>%s</td>'
-          '<td><span title="%s">%s</span></td></tr>' %
-          (moderator.key().name(), moderator.key().name(),
-           moderator.moderator_request_desc, moderator.moderator_request_email))
-
-    self.response.out.write('</table>Requests<table>')
-
-    self.response.out.write('<tr><td>+</td><td>-</td>'
-                            '<td>UID</td><td>Email</td></tr>')
-    for request in request_query:
-      # NOTE: This is very vulnerable to html injection.
-      self.response.out.write('<tr><td>'
-          '<input type="checkbox" name="enable" value="%s"></td><td>&nbsp;</td>'
-          '<td>%s</td><td><span title="%s">%s</span></td></tr>' %
-          (request.key().name(), request.key().name(),
-           request.moderator_request_desc, request.moderator_request_email))
-
-    self.response.out.write('</table>'
-                            '<input type="submit" />'
-                            '</form>')
-
-  def post(self):
-    """HTTP post method."""
-    # todo: xsrf protection
-    if not users.is_current_user_admin():
-      html = '<html><body><a href="%s">Sign in</a></body></html>'
-      self.response.out.write(html % (users.create_login_url(self.request.url)))
-      return
-
-    keys_to_enable = self.request.POST.getall('enable')
-    keys_to_disable = self.request.POST.getall('disable')
-
-    now = datetime.datetime.isoformat(datetime.datetime.now())
-    admin = users.get_current_user().email()
-
-    users_to_enable = models.UserInfo.get_by_key_name(keys_to_enable)
-    for user in users_to_enable:
-      user.moderator = True
-      if not user.moderator_request_admin_notes:
-        user.moderator_request_admin_notes = ''
-      user.moderator_request_admin_notes += '%s: Enabled by %s.\n' % \
-          (now, admin)
-    db.put(users_to_enable)
-
-    users_to_disable = models.UserInfo.get_by_key_name(keys_to_disable)
-    for user in users_to_disable:
-      user.moderator = False
-      if not user.moderator_request_admin_notes:
-        user.moderator_request_admin_notes = ''
-      user.moderator_request_admin_notes += '%s: Disabled by %s.\n' % \
-          (now, admin)
-    db.put(users_to_disable)
-
-    self.response.out.write(
-        '<div style="color: green">Enabled %s and '
-        'disabled %s moderators.</div>' %
-        (len(users_to_enable), len(users_to_disable)))
-    self.response.out.write('<a href="?zx=%d">Continue</a>' %
-                            datetime.datetime.now().microsecond)
 
 
 APP = webapp.WSGIApplication([
     ('/test/login', TestLogin),
     ('/test/moderator', TestModerator),
-    ('/test/adminmoderator', AdminModerator),
     ], debug=True)
 
 def main():
