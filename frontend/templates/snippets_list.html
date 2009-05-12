@@ -30,6 +30,10 @@
 {% endfor %}
 </script>
 
+{% ifequal current_page "MY_EVENTS" %}
+<h1 class="profile_subtitle">Your Activities</h1>
+{% endifequal %}
+
 {% for result in result_set.clipped_results %}
   <div class='snippet'>
     <div class='snippet_number'>{{ forloop.counter0|as_letter }}</div>
