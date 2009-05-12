@@ -38,6 +38,7 @@ from fastpageviews import pagecount
 import recaptcha
 
 import api
+import base_search
 import models
 import modelutils
 import posting
@@ -247,7 +248,7 @@ class ui_snippets_view(webapp.RequestHandler):
     user = userinfo.get_user(self.request)
     if user:
       result_set = view_helper.get_annotated_results(user, result_set)
-      view_data = view_helper.get_my_snippets_view_data(user)
+      view_data = view_helper.get_friends_data_for_snippets(user)
     else:
       view_data = {
         'friends': [],
@@ -301,18 +302,48 @@ class ui_my_snippets_view(webapp.RequestHandler):
   def get(self):
     """HTTP get method."""
     user_info = userinfo.get_user(self.request)
+
     if user_info:
-      view_data = view_helper.get_my_snippets_view_data(user_info)
-      result_set = view_data['result_set']
-      result_set.clipped_results = result_set.results
+      # Get the list of all events that I like or am doing.
+      # This is a dict of event id keys and interest flag values (right now
+      # we only support Liked).
+      my_interests = view_helper.get_user_interests(user_info, True)
+  
+      # Fetch the event details for the events I like, so they can be
+      # displayed in the snippets template.
+      my_events_gbase_result_set = base_search.get_from_ids(my_interests)
+      for result in my_events_gbase_result_set.results:
+        result.interest = my_interests[result.item_id]
+  
+      args = get_unique_args_from_request(self.request)
+      search.normalizeQueryValues(args)
+      start = args[api.PARAM_START]
+      my_events_gbase_result_set.clip_start_index = start
+      num = args[api.PARAM_NUM]
+      
+      # Handle clipping.
+      my_events_gbase_result_set.clip_results(start, num)
+      
+      # Get general interest numbers (i.e., not filtered to friends).
+      overall_stats_for_my_interests = \
+        view_helper.get_interest_for_opportunities(my_interests)
+      view_helper.annotate_results(my_interests,
+                                   overall_stats_for_my_interests,
+                                   my_events_gbase_result_set)
+
+      friend_data = view_helper.get_friends_data_for_snippets(user_info)
       template_values = {
           'current_page' : 'MY_EVENTS',
           'view_url': self.request.url,
           'user' : user_info,
-          'result_set': result_set,
-          'has_results' : view_data['has_results'],
-          'friends' : view_data['friends'],
-          'friends_by_event_id_js': view_data['friends_by_event_id_js'],
+          'result_set': my_events_gbase_result_set,
+          'has_results' : len(my_events_gbase_result_set.clipped_results) > 0,
+          'last_result_index':
+            my_events_gbase_result_set.clip_start_index + \
+            len(my_events_gbase_result_set.clipped_results),
+          'display_nextpage_link' : my_events_gbase_result_set.has_more_results,
+          'friends' : friend_data['friends'],
+          'friends_by_event_id_js': friend_data['friends_by_event_id_js'],
         }
     else:
       template_values = {
