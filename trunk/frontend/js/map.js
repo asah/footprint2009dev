@@ -23,6 +23,13 @@ SimpleMap = function(div) {
   this.defaultZoom_ = 10;
 
   this.map = new GMap2(div);
+  
+  /**
+   * The bounds containing all markers added to this map. This will be null
+   * until at least one marker is added to the map.
+   * @type {GLatLngBounds}
+   */
+  this.bounds_ = null;
 
   var lat = 40, lon = -100, zoom = 3;
   try {
@@ -69,11 +76,42 @@ SimpleMap.prototype.addMarker = function(lat, lng, opt_suffix) {
   if (!GBrowserIsCompatible()) {
     return;
   }
-  var latLng = new GLatLng(lat, lng);
+  var latLng = new GLatLng(Number(lat), Number(lng));
   var url = 'http://www.google.com/mapfiles/marker_midblue' +
       [opt_suffix === undefined ? '' : opt_suffix] +
       '.png';
   this.map.addOverlay(new GMarker(latLng, new GIcon(this.defaultIcon_, url)));
+  
+  // extend the bounds with this latlng.
+  var markerBounds = SimpleMap.convertLatLngToBounds(latLng, 0.1);
+  if (this.bounds_ === null) {
+    this.bounds_ = markerBounds;
+  } else {
+    this.bounds_.extend(markerBounds.getSouthWest());
+    this.bounds_.extend(markerBounds.getNorthEast());
+  }
+};
+
+SimpleMap.prototype.clearMarkers = function() {
+  this.map.clearOverlays();
+  this.bounds_ = null;
+};
+
+SimpleMap.prototype.autoZoomAndCenter = function(location) {
+  if (this.bounds_ === null) {
+    this.setCenterGeocode(location);
+  } else {
+    var zoom = this.map.getBoundsZoomLevel(this.bounds_);
+    this.map.setCenter(this.bounds_.getCenter(), zoom);
+  }
+};
+
+SimpleMap.convertLatLngToBounds = function(latLng, padding) {
+  var north = latLng.lat() + padding;
+  var south = latLng.lat() - padding;
+  var west = latLng.lng() - padding;
+  var east = latLng.lng() + padding;
+  return new GLatLngBounds(new GLatLng(south, west), new GLatLng(north, east));
 };
 
 SimpleMap.prototype.addMarkerGeocode = function(locationString) {

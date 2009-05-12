@@ -293,11 +293,6 @@ executeSearchFromHashParams = function() {
 
     // TODO: eliminate the need for lastSearchQuery to be global
 
-    var updateMap = false;
-    if (!lastSearchQuery ||
-        lastSearchQuery.getLocation() != query.getLocation()) {
-      updateMap = true;
-    }
     lastSearchQuery = query;
 
     var success = function(text, status) {
@@ -313,12 +308,10 @@ executeSearchFromHashParams = function() {
           setInputFieldValue(el('location'), query.getLocation());
         }
       }
-      if (updateMap) {
-        asyncLoadManager.addCallback('map', function() {
-          map.setCenterGeocode(query.getLocation());
-        });
-      }
       jQuery('#snippets_pane').html(text);
+      asyncLoadManager.addCallback('map', function() {
+        map.autoZoomAndCenter(query.getLocation());
+      });
       el('loading').style.display = 'none';
     };
 
