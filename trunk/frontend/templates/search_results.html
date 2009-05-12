@@ -7,6 +7,13 @@
 {% endblock subheader %}
 
 {% block content_left %}
+
+{% ifequal current_page "SEARCH" %}
+<div class="map_hint">
+To change the search location, please enter a zip code or city/state.
+</div>
+{% endifequal %}
+
   {% include 'map_widget.html' %}
 
   <div id='when_filter_widget'></div>
