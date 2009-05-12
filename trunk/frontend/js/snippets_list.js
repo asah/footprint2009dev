@@ -205,19 +205,8 @@ function updateInterestInfoDisplay(resultIndex) {
       nameList += ' and ' + strangerInterestCount + ' more';
     }
 
-    var onlyYou = youAndFriendsCount == 1 && result.liked &&
-      strangerInterestCount < 1;
+    html += nameList + ' liked this ';
 
-    html += nameList;
-
-    if ((youAndFriendsCount + strangerInterestCount == 1) && !onlyYou) {
-      html += ' likes'
-    } else {
-      html += ' like'
-    }
-
-    html += ' this ';
-    
     if (result.liked) {
       html += '<span class="undo">(' +
           '<a href="javascript:toggleInterest(' + resultIndex +
