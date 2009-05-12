@@ -207,6 +207,11 @@ form {
   height: 238px;
 }
 
+.map_hint {
+  font-style: italic;
+  margin-left: 7px;
+}
+
 /** Work with others **/
 .friend {
   padding-top: 10px;
