@@ -1,10 +1,15 @@
 {% extends "search_results.html" %}
 
 {% block title %}
-All For Good - My Events
+All For Good - Your Activities
 {% endblock %}}
 
 {% block subheader %}
+  {% if redirect_to_home %}
+  <script>
+    window.location = '/';
+  </script>
+  {% endif %}
 {% endblock subheader %}
 
 {% block content_left %}

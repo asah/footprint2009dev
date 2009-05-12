@@ -41,5 +41,7 @@ STATIC_CONTENT_FILES = {
   '/publishers' : 'publishers.html',
   '/help' : 'help.html',
   '/faq' : 'faq.html',
+  '/tos' : 'tos.html',
+  '/blog' : 'blog.html',
   '/docs/api.html' : 'api.html',
 }
