@@ -24,9 +24,26 @@ from datetime import datetime
 from google.appengine.api import urlfetch
 from google.appengine.api import memcache
 
+def is_latlong(instr):
+  """check whether a string is a valid lat-long."""
+  return (re.match(r'[0-9.+-]+\s*,\s*[0-9.+-]+', instr) != None)
+  
+def is_latlongzoom(instr):
+  """check whether a string is a valid lat-long-zoom."""
+  return (re.match(r'[0-9.+-]+\s*,\s*[0-9.+-]+,[0-9.+-]+', instr) != None)
+
 def geocode(addr, usecache=True, retries=4):
   """convert a human-readable address into a "lat,long" value (string)."""
   loc = addr.lower().strip()
+
+  # already geocoded-- just return
+  if is_latlongzoom(loc):
+    return loc
+  if is_latlong(loc):
+    # regexp allow missing comma
+    # TODO: pick a smart default zoom, depending on population density.
+    return loc+",4"
+
   loc = re.sub(r'^[^0-9a-z]+', r'', loc)
   loc = re.sub(r'[^0-9a-z]+$', r'', loc)
   loc = re.sub(r'\s\s+', r' ', loc)
@@ -59,7 +76,7 @@ def geocode(addr, usecache=True, retries=4):
     respcode, zoom, lat, lng = res.split(",")
   except:
     logging.error(str(datetime.now())+
-                  "unparseable geocoder response: "+res[0:80])
+                  ": unparseable geocoder response: "+res[0:80])
     respcode, zoom, lat, lng = 999, 0, 0, 0
 
   respcode = int(respcode)

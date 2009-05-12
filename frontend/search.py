@@ -20,7 +20,6 @@ import calendar
 import datetime
 import hashlib
 import logging
-import re
 
 from google.appengine.api import memcache
 
@@ -48,7 +47,7 @@ def search(args):
   #     create a normalized string, for the memcache key.
   # pylint: disable-msg=C0321
   
-  normalizeQueryValues(args)
+  normalize_query_values(args)
 
   # TODO: query param (& add to spec) for defeating the cache (incl FastNet)
   # I (mblain) suggest using "zx", which is used at Google for most services.
@@ -85,29 +84,35 @@ def search(args):
   return result_set
 
 
-def normalizeQueryValues(args):
+def normalize_query_values(args):
   """Pre-processes several values related to the search API that might be
   present in the query string."""
 
   num = 10
   if api.PARAM_NUM in args:
     num = int(args[api.PARAM_NUM])
-    if num < 1: num = 1
-    if num > 999: num = 999
+    if num < 1:
+      num = 1
+    if num > 999:
+      num = 999
   args[api.PARAM_NUM] = num
 
   start_index = 1
   if api.PARAM_START in args:
     start_index = int(args[api.PARAM_START])
-    if start_index < 1: start_index = 1
-    if start_index > 1000-num: start_index = 1000-num
+    if start_index < 1:
+      start_index = 1
+    if start_index > 1000-num:
+      start_index = 1000-num
   args[api.PARAM_START] = start_index
 
   overfetch_ratio = 2.0
   if api.PARAM_OVERFETCH_RATIO in args:
     overfetch_ratio = float(args[api.PARAM_OVERFETCH_RATIO])
-    if overfetch_ratio < 1.0: overfetch_ratio = 1.0
-    if overfetch_ratio > 10.0: overfetch_ratio = 10.0
+    if overfetch_ratio < 1.0:
+      overfetch_ratio = 1.0
+    if overfetch_ratio > 10.0:
+      overfetch_ratio = 10.0
   args[api.PARAM_OVERFETCH_RATIO] = overfetch_ratio
 
   if api.PARAM_TIMEPERIOD in args:
@@ -171,10 +176,9 @@ def fetch_result_set(args):
   args["lat"] = args["long"] = ""
   if api.PARAM_VOL_LOC in args:
     zoom = 5
-    if re.match(r'[0-9.-]+\s*,\s*[0-9.-]+', args[api.PARAM_VOL_LOC]):
+    if geocode.is_latlong(args[api.PARAM_VOL_LOC]):
       args["lat"], args["long"] = args[api.PARAM_VOL_LOC].split(",")
-    elif re.match(r'[0-9.-]+\s*,\s*[0-9.-]+,\s*[0-9]+',
-                  args[api.PARAM_VOL_LOC]):
+    elif geocode.is_latlongzoom(args[api.PARAM_VOL_LOC]):
       args["lat"], args["long"], zoom = args[api.PARAM_VOL_LOC].split(",")
     else:
       res = geocode.geocode(args[api.PARAM_VOL_LOC])
