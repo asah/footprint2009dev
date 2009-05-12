@@ -64,10 +64,10 @@
       {% if result.have_more %}
 <div class="snippet_sub_text" style="display:inline">
       {% endif %}
-      {% for entry in result.less_list %}{{ entry|safe }}{% endfor %}
+      {% for entry in result.less_list %}{{ entry|escape }}{% endfor %}
       {% if result.have_more %}
 <div id="{{ result.more_id|escape}}" style="display:none;">
-      {% for entry in result.more_list %}{{ entry|safe }}{% endfor %}
+      {% for entry in result.more_list %}{{ entry|escape }}{% endfor %}
 <div onclick="showLessDuplicates('{{ result.more_id|escape }}')" class="more_link"> show fewer locations and times...</div>
 </div>
 <span id="s{{ result.more_id|escape}}" onclick="showMoreDuplicates('{{ result.more_id|escape}}')" class="more_link"> more locations and times...</span>
