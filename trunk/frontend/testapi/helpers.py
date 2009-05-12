@@ -24,11 +24,13 @@ import re
 import hashlib
 import random
 import math
+import logging
 from urlparse import urlsplit
 from google.appengine.ext import db
 from urllib import urlencode
 
-DEFAULT_API_KEY = 'testkey'
+from fastpageviews.pagecount import TEST_API_KEY
+
 DEFAULT_TEST_URL = 'http://footprint2009dev.appspot.com/api/volopps'
 DEFAULT_RESPONSE_TYPES = 'rss'
 LOCAL_STATIC_URL = 'http://localhost:8080/test/sampleData.xml'
@@ -215,8 +217,9 @@ class ApiTesting(object):
   def make_uri(self, options):
     """generate an API call given args."""
     result = self.api_url + '?output=' + self.response_type + '&'
-    result += 'key=%s&' % DEFAULT_API_KEY
+    result += 'key=%s&' % TEST_API_KEY
     result += urlencode(options)
+    logging.debug('testapi.helpers.make_uri = %s' % result)
     return result
   
   def assert_nonempty_results(self, result_set):

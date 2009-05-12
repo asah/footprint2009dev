@@ -9,6 +9,11 @@ from google.appengine.ext import db
 import logging
 import random
 
+# this is a key used for testing and calls made with it
+# are seperated from the production stats
+TEST_API_KEY = 'testkey'
+TESTING = False
+
 # increase as needed
 WRITEBACK_FREQ_PCT = 1.0
 WRITEBACK_VAL = WRITEBACK_FREQ_PCT / 100.0 * 1000000.0
@@ -59,13 +64,25 @@ def GetPageCount(pagename):
   return val
 
 def IncrPageCount(pagename, delta):
+  """ increment page count """
+  global TESTING
+
+  if ("key.%s.searches" % TEST_API_KEY) == pagename:
+    TESTING = True
+
+  if TESTING:
+    logging.debug("pagecount.IncrPageCount(pagename='%s', value=%d) tested out" 
+      % (pagename, delta))
+    return
+
   logging.debug("pagecount.IncrPageCount(pagename='"+pagename+"')")
   memcache_id = KeyName(pagename)
   if memcache.get(memcache_id) == None:
     # initializes memcache if missing
     return GetPageCount(pagename)
   newval = memcache.incr(memcache_id, delta)
-  rnd = random.random() * 1000000.0
+  #TODO: rnd seems unused?
+  #rnd = random.random() * 1000000.0
   
   if (random.random() * 1000000.0 <= WRITEBACK_FREQ_PCT / 100.0 * 1000000.0):
     logging.debug("pagecount.IncrPageCount: writeback: writebacks="+
