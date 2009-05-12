@@ -822,6 +822,8 @@ def guess_shortname(filename):
     return "usaservice"
   if re.search(r'meetup', filename):
     return "meetup"
+  if re.search(r'barackobama[.]com', filename):
+    return "mybarackobama"
   if re.search(r'united.*way', filename):
     return "unitedway"
   if re.search("habitat", filename):
@@ -917,6 +919,8 @@ def guess_parse_func(inputfmt, filename):
   if (inputfmt == "handson" or inputfmt == "handsonnetwork"):
     return "handsonnetwork", parse_handsonnetwork.parse
   if (inputfmt == None and re.search(r'united.*way', filename)):
+    return "fpxml", parse_footprint.parse
+  if (inputfmt == None and re.search(r'barackobama[.]com', filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'(handson|hot.footprint)', filename)):
     # now using FPXML
