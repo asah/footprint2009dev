@@ -346,7 +346,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
         result.interest = my_interests[result.item_id]
 
       args = get_unique_args_from_request(self.request)
-      search.normalizeQueryValues(args)
+      search.normalize_query_values(args)
       start = args[api.PARAM_START]
       my_events_gbase_result_set.clip_start_index = start
       num = args[api.PARAM_NUM]
