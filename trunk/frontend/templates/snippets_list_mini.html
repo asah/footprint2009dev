@@ -1,6 +1,6 @@
 {% for result in result_set.clipped_results %}
       <div class='snippet_mini_title'>
-        <a target='_fp_target' href='/url?q={{ result.url|urlencode }}'>{{ result.title|escape }}</a>
+        <a target='_fp_target' href='/url?q={{ result.url|urlencode }}&sig={{ result.url_sig|urlencode }}'>{{ result.title|escape }}</a>
       </div>
       {% if result.location or result.startdate or result.interest_count %}
         <div class='snippet_sub_text'>
