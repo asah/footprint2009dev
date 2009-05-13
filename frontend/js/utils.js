@@ -307,6 +307,8 @@ getDefaultLocation = function() {
 // These defaultValues used to be stored directly as attributes
 // of the DOM elements (in the HTML templates), but IE doesn't like
 // that.  Having default values here is not the cleanest.
+// TODO: Clean this up -- these defaults should really be properties
+//       of the input fields, or something else cleaner than this.
 var inputFieldDefaultValues = {
   'keywords' : 'keywords',
   'location' : 'enter location'
