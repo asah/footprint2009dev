@@ -302,10 +302,20 @@ getClientLocation = function() {
  * @param {string} value Value to set Input field to.
  */
 function setInputFieldValue(input, value) {
+  // These defaultValues used to be stored directly as attributes
+  // of the DOM elements (in the HTML templates), but IE doesn't like
+  // that.  Having default values here is not the cleanest.
+  var defaultValue = '';
+  if (input.id == 'keywords') {
+    defaultValue = 'keywords';
+  } else if (input.id == 'location') {
+    defaultValue = 'enter location';
+  }
+
   function set(valueToSet) {
     if (!valueToSet || valueToSet == '') {
       input.style.color = '#666';
-      input.value = input.getAttribute('defaultValue');
+      input.value = defaultValue;
 
       input.onfocus = function() {
         input.value = '';
