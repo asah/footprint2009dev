@@ -159,7 +159,7 @@ Query.prototype.setUseCache = function(use_cache) {
 function NewQueryFromUrlParams() {
   var keywords = getHashOrQueryParam('q', '');
 
-  var location = getHashOrQueryParam('vol_loc', getClientLocation().coords);
+  var location = getHashOrQueryParam('vol_loc', getDefaultLocation().coords);
 
   var start = Number(getHashOrQueryParam('start', '1'));
   start = Math.max(start, 1);
@@ -261,7 +261,7 @@ function onLoadSearch() {
   }
 
   if (el('location')) {
-    setInputFieldValue(el('location'), getClientLocation().address);
+    setInputFieldValue(el('location'), getDefaultLocation().displayLong);
   }
   NewQueryFromUrlParams().execute();
   executeSearchFromHashParams();
@@ -357,12 +357,17 @@ function submitForm(invoker) {
   }
 
   var location = getInputFieldValue(el('location'));
+
+  if (invoker == 'map') {
+    setSessionCookie('user_vol_loc', location);
+  }
+
   var timePeriod = whenFilterWidget.getValue();
 
   // TODO: strip leading/trailing whitespace.
 
   if (location == '') {
-    location = getClientLocation().coords;
+    location = getDefaultLocation().coords;
   }
 
   var query = lastSearchQuery.clone();

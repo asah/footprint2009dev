@@ -15,8 +15,8 @@ limitations under the License.
 
 // TODO(paul): Verify ClientLocation.address/coords are defined
 
-var coords = getClientLocation().coords || '';
-var city = getClientLocation().city || '';
+var coords = getDefaultLocation().coords || '';
+var city = getDefaultLocation().displayShort || '';
 
 var vol_loc_term = '';
 if (coords) {
@@ -56,5 +56,6 @@ setInputFieldValue(el('location'), '');
 
 function changeLocation() {
   var newLocation = getInputFieldValue(el('location'));
+  setSessionCookie('user_vol_loc', newLocation);
   window.location.href = '/search#vol_loc=' + escape(newLocation);
 }
