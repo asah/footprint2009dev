@@ -43,6 +43,5 @@ STATIC_CONTENT_FILES = {
   '/help' : 'help.html',
   '/faq' : 'faq.html',
   '/tos' : 'tos.html',
-  '/blog' : 'blog.html',
   '/docs/api.html' : 'api.html',
 }
