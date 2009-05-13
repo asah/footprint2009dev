@@ -318,6 +318,7 @@ class ui_snippets_view(webapp.RequestHandler):
         'view_url': self.request.url,
         'friends' : view_data['friends'],
         'friends_by_event_id_js': view_data['friends_by_event_id_js'],
+        'query_param_q' : unique_args.get(api.PARAM_Q, None),
       }
     template_values['moderator'] = (user and user.get_user_info()
                                     and user.get_user_info().moderator)

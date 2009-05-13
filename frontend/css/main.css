@@ -447,8 +447,8 @@ h1 {
   text-decoration: underline;
 }
 
-.profile_subtitle {
-  color: #aaa;
+.snippets_list_header {
+  color: #666 ;
   font-size: 18pt;
   margin: 0 0 7px 4px;
   font-weight: normal;

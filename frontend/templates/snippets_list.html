@@ -31,7 +31,14 @@
 </script>
 
 {% ifequal current_page "MY_EVENTS" %}
-<h1 class="profile_subtitle">Your Activities</h1>
+<h1 class='snippets_list_header'>Your Activities</h1>
+{% endifequal %}
+{% ifequal current_page "SEARCH" %}
+<h1 class='snippets_list_header'>Volunteering activities
+  {% if query_param_q %}
+    matching '{{query_param_q|escape}}'  {# use escapejs (django 1.0) #}
+  {% endif %}
+</h1>
 {% endifequal %}
 
 {% for result in result_set.clipped_results %}
