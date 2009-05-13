@@ -17,7 +17,9 @@ Keys:  <span id='shortcut_dbg'></span>
 
 <span style="font-family: Lucida Console, Andale Mono, Courier New, arial;">
 <div style="position:absolute;top:3px;left:3px;display:none;border:1px solid gray;background-color:red;font-family:arial;padding:3px 6px 3px 6px" id="alert"></div>
-<form method='GET' name='moderator'>
+<form method='POST' name='moderator'>
+<input type='hidden' name='usig' value='{{usig|escape}}'>
+<input type='hidden' name='action' value='moderate'>
 <input type='hidden' name='num' value='{{num|escape }}'>
 <input type='hidden' name='ts' value='{{ts|escape }}'>
 

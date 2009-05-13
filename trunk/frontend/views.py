@@ -140,7 +140,7 @@ def require_moderator(handler_method):
       self.error(401)
       self.response.out.write('<html><body>Please log in.</body></html>')
       return
-    if (not self.user.get_user_info() or 
+    if (not self.user.get_user_info() or
         not self.user.get_user_info().moderator):
       self.error(403)
       self.response.out.write('<html><body>Permission denied.</body></html>')
@@ -159,7 +159,8 @@ def require_usig(handler_method):
     self.usig = userinfo.get_usig(self.user)
     if self.usig != self.request.get('usig'):
       self.error(403)
-      logging.warning('XSRF attempt. %s!=%s', usig, self.request.get('usig'))
+      logging.warning('XSRF attempt. %s!=%s',
+                      self.usig, self.request.get('usig'))
       return
     return handler_method(self)
   return Decorate
@@ -738,7 +739,7 @@ class redirect_view(webapp.RequestHandler):
   def get(self):
     """HTTP get method."""
     url = self.request.get('q')
-    if not url or (not url.startswith('http:') and 
+    if not url or (not url.startswith('http:') and
                    not url.startswith('https:')):
       self.error(400)
       return
@@ -762,26 +763,36 @@ class redirect_view(webapp.RequestHandler):
 
 class moderate_view(webapp.RequestHandler):
   """fast UI for voting/moderating on listings."""
+
   @require_moderator
   def get(self):
     """HTTP get method."""
+    return self.moderate_postings(False)
+
+  @require_moderator
+  @require_usig
+  def post(self):
+    """HTTP post method."""
+    return self.moderate_postings(True)
+
+  def moderate_postings(self, is_post):
+    """Combined request handler. Only POSTs can modify state."""
     action = self.request.get('action')
     if action == "test":
       posting.createTestDatabase()
-    if action == 'blacklist' or action == 'unblacklist':
-      return self.blacklist(action)
 
     now = datetime.now()
     nowstr = now.strftime("%Y-%m-%d %H:%M:%S")
-    ts = self.request.get('ts', nowstr)
-    dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
-    delta = now - dt
-    if delta.seconds < 3600:
-      logging.debug("processing changes...")
-      vals = {}
-      for arg in self.request.arguments():
-        vals[arg] = self.request.get(arg)
-      posting.process(vals)
+    if is_post:
+      ts = self.request.get('ts', nowstr)
+      dt = datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+      delta = now - dt
+      if delta.seconds < 3600:
+        logging.debug("processing changes...")
+        vals = {}
+        for arg in self.request.arguments():
+          vals[arg] = self.request.get(arg)
+        posting.process(vals)
 
     num = self.request.get('num', "20")
     reslist = posting.query(num=int(num))
@@ -804,15 +815,26 @@ class moderate_view(webapp.RequestHandler):
       'num' : str(num),
       'ts' : str(nowstr),
       'result_set' : reslist,
+      'usig': userinfo.get_usig(self.user),
     }
     self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))
 
-  def blacklist(self, action):
+class moderate_blacklist_view(webapp.RequestHandler):
+  """Handle moderating blacklist entries."""
+  @require_moderator
+  def get(self):
     """HTTP get method for blacklist actions."""
+    action = self.request.get('action')
+    if action not in ['blacklist', 'unblacklist']:
+      self.error(400)
+      return
+
     key = self.request.get('key')
-    if not key or key == "":
+    if not key:
+      self.error(400)
       self.response.out.write("<html><body>sorry: key required</body></html>")
       return
+
 
     def generate_blacklist_form(action, key):
       """Return an HTML form for the blacklist action."""
@@ -839,7 +861,7 @@ class moderate_view(webapp.RequestHandler):
       text = 'Key %s is not currently blacklisted.' % key
     else:
       text = ('key %s is already blacklisted.<br>'
-              'Would you like to restore it?%s' % 
+              'Would you like to restore it?%s' %
               (key, generate_blacklist_form('unblacklist', key)))
 
     # TODO: Switch this to its own template!
@@ -851,16 +873,21 @@ class moderate_view(webapp.RequestHandler):
     self.response.out.write(render_template(STATIC_CONTENT_TEMPLATE,
                                             template_values))
 
-
   @require_moderator
   @require_usig
   def post(self):
-    """HTTP post method."""
-    if self.request.get('action') not in ['blacklist', 'unblacklist']:
+    """Handle edits to the blacklist from HTTP POST."""
+    action = self.request.get('action')
+    if action not in ['blacklist', 'unblacklist']:
       self.error(400)
       return
 
     key = self.request.get('key')
+    if not key:
+      self.error(400)
+      self.response.out.write("<html><body>sorry: key required</body></html>")
+      return
+
     if self.request.get('action') == 'blacklist':
       if not models.VolunteerOpportunityStats.set_blacklisted(key, 1):
         text = 'Internal failure trying to add key %s to blacklist.' % key
