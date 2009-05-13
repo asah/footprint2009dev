@@ -104,7 +104,7 @@
             <a href='javascript:void(0);'>Add to calendar</a>
           </span>
 {% if moderator %}
-          - <a href='/moderate?action=blacklist&key={{result.merge_key|urlencode}}'>blacklist</a>
+          - <a href='/moderateblacklist?action=blacklist&key={{result.merge_key|urlencode}}'>blacklist</a>
 {% endif %}
           <!-- - <span id='addthis{{ forloop.counter0 }}'>
             <a href="javascript:showShareWidget(this, searchResults[{{ forloop.counter0 }}]);void(0);"
