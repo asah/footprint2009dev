@@ -4,10 +4,10 @@
   Hello, {{ user.display_name|escape }} |
 
   {% ifequal user.account_type "friendconnect"%}
-    <a href="#" onclick="google.friendconnect.requestSettings()">Settings</a> |
-    <a href="#" onclick="google.friendconnect.requestInvite()">Invite</a>
+    <a href="javascript:;" onclick="google.friendconnect.requestSettings()">Settings</a> |
+    <a href="javascript:;" onclick="google.friendconnect.requestInvite()">Invite</a>
   {% else %} {% ifequal user.account_type "facebook" %}
-    <a href="#" onclick="inviteFacebookFriends();">Invite</a>
+    <a href="javascript:;" onclick="inviteFacebookFriends();">Invite</a>
   {% endifequal %}{% endifequal %}
 
   |
@@ -21,9 +21,9 @@
   |
 
   {% ifequal user.account_type "friendconnect"%}
-    <a href="#" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
+    <a href="javascript:;" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
   {% else %} {% ifequal user.account_type "facebook" %}
-    <a href="#" onclick="FB.Connect.logout(function() {window.location.reload();});">Sign Out</a>
+    <a href="javascript:;" onclick="FB.Connect.logout(function() {window.location.reload();});">Sign Out</a>
   {% endifequal %}{% endifequal %}
 </div>
 
@@ -35,7 +35,7 @@
       var fbml = '<fb:fbml><fb:request-form action="' + url
           + '" method="POST" invite="true" type="All For Good" content="Visit ' + url
           + ' to find volunteer opportunities near you! '
-          + '<fb:req-choice url=\'' + url  + '\' label=\'Yes, I want to get invovled\' />">'
+          + '<fb:req-choice url=\'' + url  + '\' label=\'Yes, I want to get involved\' />">'
           + '<fb:multi-friend-selector rows="2" showborder="false" actiontext="Invite your friends"/>'
           + '</fb:request-form></fb:fbml>';
       dialog.setFBMLContent(fbml);
@@ -68,9 +68,9 @@
     {% else %}
 <div id='sign_in'>
   Sign in with <span id="signInProvider"></span>
-  <a href='#' onclick="requestFacebookSignIn();return false"/>Facebook</a>,
-  <a href='#' onclick="google.friendconnect.requestSignIn('GOOGLE');return false"/>Google</a>,
-  <a href='#' onclick="google.friendconnect.requestSignIn('');return false"/>More &raquo;</a>
+  <a href='javascript:;' onclick="requestFacebookSignIn()"/>Facebook</a>,
+  <a href='javascript:;' onclick="google.friendconnect.requestSignIn('GOOGLE');return false"/>Google</a>,
+  <a href='javascript:;' onclick="google.friendconnect.requestSignIn('');return false"/>More &raquo;</a>
 
   <script type="text/javascript">
     function requestFacebookSignIn() {
