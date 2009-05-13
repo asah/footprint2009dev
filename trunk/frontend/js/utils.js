@@ -295,6 +295,14 @@ getClientLocation = function() {
   };
 }(); // executed inline to close over the 'clientLocationString' variable.
 
+// These defaultValues used to be stored directly as attributes
+// of the DOM elements (in the HTML templates), but IE doesn't like
+// that.  Having default values here is not the cleanest.
+var inputFieldDefaultValues = {
+  'keywords' : 'keywords',
+  'location' : 'enter location'
+};
+
 /**
  * Populate a text input field with a value, and revert to input.defaultValue
  * when value is ''.
@@ -302,20 +310,10 @@ getClientLocation = function() {
  * @param {string} value Value to set Input field to.
  */
 function setInputFieldValue(input, value) {
-  // These defaultValues used to be stored directly as attributes
-  // of the DOM elements (in the HTML templates), but IE doesn't like
-  // that.  Having default values here is not the cleanest.
-  var defaultValue = '';
-  if (input.id == 'keywords') {
-    defaultValue = 'keywords';
-  } else if (input.id == 'location') {
-    defaultValue = 'enter location';
-  }
-
   function set(valueToSet) {
     if (!valueToSet || valueToSet == '') {
       input.style.color = '#666';
-      input.value = defaultValue;
+      input.value = inputFieldDefaultValues[input.id];
 
       input.onfocus = function() {
         input.value = '';
@@ -340,7 +338,7 @@ function setInputFieldValue(input, value) {
  * @param {HTMLInputerElement} input Input element.
  */
 function getInputFieldValue(input) {
-  if (!input || input.value == input.getAttribute('defaultValue')) {
+  if (!input || input.value == inputFieldDefaultValues[input.id]) {
     return '';
   } else {
     return input.value;
