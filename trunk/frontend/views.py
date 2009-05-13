@@ -664,8 +664,8 @@ class admin_view(webapp.RequestHandler):
       message.append('<tr><td>&nbsp;</td><td>'
           '<input type="checkbox" name="disable" value="%s"></td><td>%s</td>'
           '<td><span title="%s">%s</span></td></tr>' %
-          (cgi.escape(keyname), cgi.escape(keyname),
-           cgi.escape(desc), cgi.escape(email)))
+          (cgi.escape(keyname, True), cgi.escape(keyname),
+           cgi.escape(desc, True), cgi.escape(email)))
 
     message.append('</table>Requests<table>'
                    '<tr><td>+</td><td>-</td>'
@@ -678,8 +678,8 @@ class admin_view(webapp.RequestHandler):
           '<input type="checkbox" name="enable" value="%s"></td>'
           '<td>&nbsp;</td>'
           '<td>%s</td><td><span title="%s">%s</span></td></tr>' %
-          (cgi.escape(keyname), cgi.escape(keyname),
-           cgi.escape(desc), cgi.escape(email)))
+          (cgi.escape(keyname, True), cgi.escape(keyname, True),
+           cgi.escape(desc, True), cgi.escape(email, True)))
 
     message.append('</table>'
                    '<input type="submit" />'
@@ -738,7 +738,8 @@ class redirect_view(webapp.RequestHandler):
   def get(self):
     """HTTP get method."""
     url = self.request.get('q')
-    if not url:
+    if not url or (not url.startswith('http:') and 
+                   not url.startswith('https:')):
       self.error(400)
       return
 
@@ -752,7 +753,7 @@ class redirect_view(webapp.RequestHandler):
     # TODO: Use a proper template so this looks nicer.
     response = ('<h1>Redirect</h1>' +
                 'This page is sending you to <a href="%s">%s</a><p />' %
-                (cgi.escape(url), cgi.escape(url)))
+                (cgi.escape(url, True), cgi.escape(url, True)))
     # TODO: Something more clever than go(-1), which doesn't work on new
     # windows, etc. Maybe check for 'referer' or send users to '/'.
     response += ('If you do not want to visit that page, you can ' +
