@@ -363,7 +363,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
 
       # Fetch the event details for the events I like, so they can be
       # displayed in the snippets template.
-      my_events_gbase_result_set = base_search.get_from_ids(my_interests)
+      my_events_gbase_result_set = base_search.get_from_ids(my_interests.keys())
       for result in my_events_gbase_result_set.results:
         result.interest = my_interests[result.item_id]
 

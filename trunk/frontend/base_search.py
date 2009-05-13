@@ -354,12 +354,16 @@ def get_from_ids(ids):
   # First get all that we can from memcache
   results = {}
   try:
-    results = memcache.get(ids, RESULT_CACHE_KEY)
+    # get_multi returns a dictionary of the keys and values that were present
+    # in memcache. Even with the key_prefix specified, that key_prefix won't
+    # be on the keys in the returned dictionary.
+    hits = memcache.get_multi(ids, RESULT_CACHE_KEY)
   except:
     # TODO(mblain): Scope to only 'memcache down' exception.
     logging.exception('get_from_ids: ignoring busted memcache. stack: %s',
                       ''.join(traceback.format_stack()))
-  for result in results:
+  for key in hits:
+    result = hits[key]
     result_set.results.append(result)
 
   # OK, we've collected what we can from memcache. Now look up the rest.
