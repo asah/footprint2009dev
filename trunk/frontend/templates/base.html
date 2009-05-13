@@ -13,6 +13,7 @@
   <script type='text/javascript' src='/thirdparty/js/jquery.hashchange-1.0.0.js'></script>
   <script type='text/javascript' src='/js/utils.js'></script>
   <script type='text/javascript' src='/js/jquery.autocomplete.js'></script>
+  <script type='text/javascript' src='/js/jquery.simplemodal.js'></script>
   <script type='text/javascript'>
     // These components load asynchronously.  We use AsyncLoadManager to
     // queue up function callbacks until each component is loaded.
@@ -96,6 +97,16 @@
       }
     }
   </script>
+
+  <div id='pleaselogin' style='display:none'>
+    <a href='#' title='Close' class='modal_close_x simplemodal-close'>x</a>
+    <div class='header'><span>Please sign in</span></div>
+    <p class='message'>You need to sign in before liking an opportunity.</p>
+    <div class='buttons'>
+      <div class='ok'>Ok</div>
+    </div>
+  </div>
+
 </body>
 {% endblock %}
 

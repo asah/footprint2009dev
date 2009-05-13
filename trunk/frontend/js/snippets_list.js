@@ -148,7 +148,18 @@ function toggleInterest(resultIndex) {
   var error = function(xhr, textStatus, errorThrown) {
     if (xhr.status == 401) {
       // Unauthorized
-      alert("Please log in first");
+      $('#pleaselogin').modal({
+              close:false,
+              position: ["20%",],
+              overlayId:'modal_overlay',
+              containerId:'modal_container', 
+              onShow: function (dialog) {
+                dialog.data.find('.ok').click(function () {
+                  $.modal.close();
+                });
+              }
+      });
+      
     } else if (xhr.status == 400) {
     }
   };
