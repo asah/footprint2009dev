@@ -268,7 +268,7 @@ AsyncLoadManager.prototype.isLoaded = function(eventName) {
  * @return {string} the current geolocation of the client, if it is known,
  *     otherwise an empty string.
  */
-getClientLocation = function() {
+getDefaultLocation = function() {
   var clientLocation;
   return function() {
     if (clientLocation === undefined) {
@@ -276,22 +276,31 @@ getClientLocation = function() {
         var loc = google.loader.ClientLocation;
         var clientLocationString = loc.latitude + "," + loc.longitude;
 
-        clientLocation = { 'coords': clientLocationString, 'address': '',
-                           'city': '' };
+        clientLocation = { 'coords': clientLocationString,
+                           'displayShort': '',
+                           'displayLong': '' };
 
         if (loc.address.city) {
-          clientLocation.address = loc.address.city;
-          clientLocation.city = loc.address.city;
+          clientLocation.displayLong = loc.address.city;
+          clientLocation.displayShort = loc.address.city;
           if (loc.address.region) {
-            clientLocation.address += ', ' + loc.address.region;
+            clientLocation.displayLong += ', ' + loc.address.region;
           }
         }
       } catch (err) {
-        clientLocation = { 'coords': undefined, 'address': undefined,
-                           'city': undefined };
+        clientLocation = { 'coords': undefined,
+                           'displayShort': undefined,
+                           'displayLong': undefined };
       }
     }
-    return clientLocation;
+    var userVolLocCookie = getSessionCookie('user_vol_loc');
+    if (userVolLocCookie) {
+      return { 'coords': userVolLocCookie,
+               'displayShort': userVolLocCookie,
+               'displayLong': userVolLocCookie };
+    } else {
+      return clientLocation;
+    }
   };
 }(); // executed inline to close over the 'clientLocationString' variable.
 
@@ -345,6 +354,28 @@ function getInputFieldValue(input) {
   }
 }
 
+var SESSION_COOKIE_PREFIX = 'allforgood_';
+function setSessionCookie(name, value) {
+  document.cookie = SESSION_COOKIE_PREFIX +
+    escape(name) + '=' + escape(value);
+}
+
+function getSessionCookie(name) {
+  var prefixedName = SESSION_COOKIE_PREFIX + escape(name);
+  var cookies = document.cookie.split(';');
+  for (var i = 0; i < cookies.length; i++) {
+    var pair = cookies[i].split('=');
+    var cookieName = pair[0];
+    var cookieValue = pair[1];
+    while (cookieName.charAt(0) == ' ') {
+      cookieName = cookieName.substring(1, cookieName.length);
+    }
+    if (cookieName == prefixedName) {
+      return unescape(pair[1]);
+    }
+  }
+  return undefined;
+}
 
 // Globals
 var queryParams = GetQueryParams();
