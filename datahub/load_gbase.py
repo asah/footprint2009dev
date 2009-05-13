@@ -273,6 +273,9 @@ def test_loaders():
 
 def loaders():
   """put all loaders in one function for easier testing."""
+  load_gbase("mybarackobama",
+             "http://my.barackobama.com/page/event/search_results?"+
+             "format=footprint)
   load_gbase("servenet",
              "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
   load_gbase("unitedway",
