@@ -129,17 +129,37 @@ def render_template(template_filename, template_values):
 
 
 def require_moderator(handler_method):
-  """Decorator ensuring the current FP user is a logged in moderator."""
+  """Decorator ensuring the current FP user is a logged in moderator.
+
+  Also sets self.user.
+  """
   def Decorate(self):
-    user = userinfo.get_user(self.request)
-    if not user:
+    if not getattr(self, 'user', None):
+      self.user = userinfo.get_user(self.request)
+    if not self.user:
       self.error(401)
       self.response.out.write('<html><body>Please log in.</body></html>')
       return
-    if not user.get_user_info() or not user.get_user_info().moderator:
+    if (not self.user.get_user_info() or 
+        not self.user.get_user_info().moderator):
       self.error(403)
       self.response.out.write('<html><body>Permission denied.</body></html>')
       logging.warning('Non-moderator blacklist attempt.')
+      return
+    return handler_method(self)
+  return Decorate
+
+def require_usig(handler_method):
+  """Deceratore ensuring the current FP user has a valid usig XSRF token.
+
+  Also sets self.usig and self.user."""
+  def Decorate(self):
+    if not getattr(self, 'user', None):
+      self.user = userinfo.get_user(self.request)
+    self.usig = userinfo.get_usig(self.user)
+    if self.usig != self.request.get('usig'):
+      self.error(403)
+      logging.warning('XSRF attempt. %s!=%s', usig, self.request.get('usig'))
       return
     return handler_method(self)
   return Decorate
@@ -481,10 +501,17 @@ class admin_view(webapp.RequestHandler):
   @require_admin
   def get(self):
     """HTTP get method."""
+
+    # XSRF check: usig = signature of the user's login cookie.
+    # Note: This is the logged in app engine user and uses
+    # an internal implementation detail of appengine.
+    usig = utils.signature(userinfo.get_cookie('ACSID') or
+                           userinfo.get_cookie('dev_appserver_login'))
     template_values = {
       'logout_link': users.create_logout_url('/'),
-      'msg': "",
-      'action': "",
+      'msg': '',
+      'action': '',
+      'usig': usig
     }
 
     action = self.request.get('action')
@@ -624,10 +651,10 @@ class admin_view(webapp.RequestHandler):
     request_query = models.UserInfo.gql('WHERE moderator = FALSE and ' +
                                         'moderator_request_email > \'\'')
 
-    usig = 'BOGUS'
     message.append('<form method="POST">'
         '<input type="hidden" name="usig" value="%s">'
-        '<input type="hidden" name="action" value="moderators">' % usig)
+        '<input type="hidden" name="action" value="moderators">' %
+        template_values['usig'])
     message.append('Existing moderators'
         '<table><tr><td>+</td><td>-</td><td>UID</td><td>Email</td></tr>')
     for moderator in moderator_query:
@@ -667,10 +694,11 @@ class admin_view(webapp.RequestHandler):
     if self.request.get('action') != 'moderators':
       self.error(400)
       return
-    usig = 'BOGUS'
+    usig = utils.signature(userinfo.get_cookie('ACSID') or
+                           userinfo.get_cookie('dev_appserver_login'))
     if self.request.get('usig') != usig:
       self.error(400)
-      logging.warning('XSRF attempt.')
+      logging.warning('XSRF attempt. %s!=%s', usig, self.request.get('usig'))
       return
 
     keys_to_enable = self.request.POST.getall('enable')
@@ -715,7 +743,7 @@ class redirect_view(webapp.RequestHandler):
       return
 
     sig = self.request.get('sig')
-    expected_sig = utils.url_signature(url)
+    expected_sig = utils.signature(url)
     logging.debug('u: %s s: %s xs: %s' % (url, sig, expected_sig))
     if sig == expected_sig:
       self.redirect(url)
@@ -785,42 +813,75 @@ class moderate_view(webapp.RequestHandler):
       self.response.out.write("<html><body>sorry: key required</body></html>")
       return
 
+    def generate_blacklist_form(action, key):
+      """Return an HTML form for the blacklist action."""
+      # TODO: This should obviously be in a template.
+      usig = userinfo.get_usig(self.user)
+      return ('<form method="POST" action="%s">'
+              '<input type="hidden" name="action" value="%s">'
+              '<input type="hidden" name="usig" value="%s">'
+              '<input type="hidden" name="key" value="%s">'
+              '<input type="submit" value="I am sure">'
+              '</form>' %
+              (self.request.path_url, action, usig, key))
+
     text = 'Internal error.'
-    if action == "blacklist":
-      if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
-        undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
-                           self.request.url)
-        text = ('key %s is already blacklisted.'
-                ' click <a href="%s">here</a> to restore.' %
-                (key, undel_url))
-      elif self.request.get('areyousure') != "1":
-        text = ('please confirm blacklisting of key %s ?<br/>'
-               '<a href="%s&areyousure=1">YES</a> I am sure' %
-               (key, self.request.url))
-      else:
-        models.BlacklistedVolunteerOpportunity.blacklist(key)
-        if not models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
-          text = 'Internal failure trying to add key %s to blacklist.' % key
-        else:
-          # TODO: better workflow, e.g. email the deleted key to an address
-          # along with an url to undelete it?
-          # Or just show all the blacklisted keys on this page...
-          undel_url = re.sub(r'action=blacklist', 'action=unblacklist',
-                             self.request.url)
-          text = ('deleted listing with key %s.<br/>'
-                  'To undo, click <a href="%s">here</a>'
-                  ' (you may want to save this URL).' %
-                  (key, undel_url))
+    opp_stats = modelutils.get_by_ids(models.VolunteerOpportunityStats,
+                                      [key])
+    key_blacklisted = key in opp_stats and opp_stats[key].blacklisted
+
+
+    if action == "blacklist" and not key_blacklisted:
+      text = ('Please confirm blacklisting of key %s: %s' %
+              (key, generate_blacklist_form('blacklist', key)))
+    elif action == 'unblacklist' and not key_blacklisted:
+      text = 'Key %s is not currently blacklisted.' % key
     else:
-      models.BlacklistedVolunteerOpportunity.unblacklist(key)
-      if models.BlacklistedVolunteerOpportunity.is_blacklisted(key):
+      text = ('key %s is already blacklisted.<br>'
+              'Would you like to restore it?%s' % 
+              (key, generate_blacklist_form('unblacklist', key)))
+
+    # TODO: Switch this to its own template!
+    template_values = {
+        'user' : self.user,
+        'path' : self.request.path,
+        'static_content' : text,
+    }
+    self.response.out.write(render_template(STATIC_CONTENT_TEMPLATE,
+                                            template_values))
+
+
+  @require_moderator
+  @require_usig
+  def post(self):
+    """HTTP post method."""
+    if self.request.get('action') not in ['blacklist', 'unblacklist']:
+      self.error(400)
+      return
+
+    key = self.request.get('key')
+    if self.request.get('action') == 'blacklist':
+      if not models.VolunteerOpportunityStats.set_blacklisted(key, 1):
+        text = 'Internal failure trying to add key %s to blacklist.' % key
+      else:
+        # TODO: better workflow, e.g. email the deleted key to an address
+        # along with an url to undelete it?
+        # Or just show it on the moderate/action=unblacklist page.
+        undel_url = '%s?action=unblacklist&key=%s' % (self.request.path_url,
+                                                      key)
+        text = ('deleted listing with key %s.<br/>'
+                'To undo, click <a href="%s">here</a>'
+                ' (you may want to save this URL).' %
+                (key, undel_url))
+    else:
+      if not models.VolunteerOpportunityStats.set_blacklisted(key, 0):
         text = 'Internal failure trying to remove key %s from blacklist.' % key
       else:
         text = "un-deleted listing with key "+key
 
     # TODO: Switch this to its own template!
     template_values = {
-        'user' : userinfo.get_user(self.request),
+        'user' : self.user,
         'path' : self.request.path,
         'static_content' : text,
     }

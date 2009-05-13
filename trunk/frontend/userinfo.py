@@ -30,6 +30,8 @@ from StringIO import StringIO
 from facebook import Facebook
 
 import models
+import utils
+
 
 class Error(Exception): pass
 class NotLoggedInError(Error): pass
@@ -67,6 +69,11 @@ def get_user(request):
           logging.exception("Facebook or Friend Connect client exception.")
           return None
       return user
+
+def get_usig(user):
+  """Get a signature for the current user suitable for an XSRF token."""
+  if user and user.get_cookie():
+    return utils.signature(user.get_cookie())
 
 
 class User(object):
