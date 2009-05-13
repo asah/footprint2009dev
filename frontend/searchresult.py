@@ -27,6 +27,7 @@ from xml.sax.saxutils import escape
 
 from fastpageviews import pagecount
 import models
+import modelutils
 import utils
 
 def get_rfc2822_datetime(when = None):
@@ -52,7 +53,7 @@ class SearchResult(object):
   def __init__(self, url, title, snippet, location, item_id, base_url):
     # TODO: Consider using kwargs or something to make this more generic.
     self.url = url
-    self.url_sig = utils.url_signature(url)
+    self.url_sig = utils.signature(url)
     self.title = title
     self.snippet = snippet
     self.location = location
@@ -266,20 +267,36 @@ class SearchResultSet(object):
 
             more += 1
 
-    def remove_blacklisted_keys():
-      """private helper function for dedup()"""
-      tmplist = []
-      for res in self.results:
-        logging.debug("checking blacklist for "+res.merge_key)
-        if models.BlacklistedVolunteerOpportunity.is_blacklisted(res.merge_key):
-          logging.info("found blacklisted key "+res.merge_key)
-          continue
-        tmplist.append(res)
-      self.results = tmplist
+    def remove_blacklisted_results():
+      """Private helper function for dedup().
+
+      Looks up stats for each result and deletes blacklisted results."""
+      opp_ids = [result.merge_key for result in self.results]
+      opp_stats = modelutils.get_by_ids(models.VolunteerOpportunityStats, 
+                                        opp_ids)
+      unknown_keys = set()
+      nonblacklisted_results = []
+
+      for result in self.results:
+        if result.merge_key not in opp_stats:
+          unknown_keys.add(result.merge_key)
+          nonblacklisted_results.append(result)
+        elif not opp_stats[result.merge_key].blacklisted:
+          nonblacklisted_results.append(result)
+
+      self.results = nonblacklisted_results
+      if unknown_keys:
+        # This probably shouldn't be done right here... but we'll stuff these
+        # in the memcache to prevent future datastore lookups.
+        logging.debug('Found unblacklisted items which had no memcache or ' +
+                      'datastore entries. Adding to memcache. Items: %s', 
+                      unknown_keys)
+        models.VolunteerOpportunityStats.add_default_entities_to_memcache(
+            unknown_keys)
 
     # dedup() main code
     assign_merge_keys()
-    remove_blacklisted_keys()
+    remove_blacklisted_results()
     for res in self.results:
       merge_result(res)
     compute_more_less()

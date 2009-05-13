@@ -59,8 +59,14 @@ def xml_elem_text(node, tagname, default=None):
 # Cached hmac object.
 hmac_master = None
 
-def url_signature(url):
-  """Returns a signature for a URL so we can compare it in the redirector."""
+def signature(value):
+  """Returns a signature for a param so we can compare it later.
+
+  Examples: Signature(url) is compared in the url redirector to prevent other
+  sites from using it. Signtaure(user_cookie) is used to limit XSRF attacks.
+  """
+  if not value:
+    return None
   # This is a super cheesy way of avoiding storing a secret key...
   # It'll reset every minor update, but that's OK for now.
   global hmac_master
@@ -68,7 +74,7 @@ def url_signature(url):
     hmac_master = hmac.new(os.getenv('CURRENT_VERSION_ID'))
 
   hmac_object = hmac_master.copy()
-  hmac_object.update(url)
+  hmac_object.update(value)
   return hmac_object.hexdigest()
 
 

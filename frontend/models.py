@@ -165,8 +165,12 @@ class VolunteerOpportunityStats(db.Model):
   will_attend = db.IntegerProperty(default=0)
   flagged = db.IntegerProperty(default=0)
 
+  # Blacklist is controlled by the moderators only, it is not a statistic.
+  blacklisted = db.IntegerProperty(default=0)
+
   @classmethod
-  def increment(cls, volunteer_opportunity_id, relative_attributes):
+  def increment(cls, volunteer_opportunity_id, relative_attributes,
+                absolute_attributes=None):
     """Helper to increment volunteer opportunity stats.
 
     Example:
@@ -177,6 +181,8 @@ class VolunteerOpportunityStats(db.Model):
       volunteer_opportunity_id: ID of opportunity.
       relative_attributes: Dictionary of attr_name:value pairs to set as
           relative to current value.
+      absolute_attributes: Dictionary of attr_name:value pairs to set as
+          absolute values.
     Returns:
       Success boolean
     """
@@ -186,10 +192,27 @@ class VolunteerOpportunityStats(db.Model):
       return False
 
     (new_entity, unused_deltas) = \
-        modelutils.set_entity_attributes(entity, None, relative_attributes)
+        modelutils.set_entity_attributes(entity, absolute_attributes,
+                                         relative_attributes)
+                                         
     memcache.set(cls.MEMCACHE_PREFIX + volunteer_opportunity_id, new_entity,
                  time=cls.MEMCACHE_TIME)
     return True
+
+  @classmethod
+  def set_blacklisted(cls, volunteer_opportunity_id, value):
+    """Helper to set volunteer opportunity value and update memcache."""
+    # A wrapper for 'increment'--it's overkill, but manages memcache for us.
+    return cls.increment(volunteer_opportunity_id, {}, {'blacklisted' : value})
+
+  @classmethod
+  def add_default_entities_to_memcache(cls, ids):
+    """Add blank entities to memcache so get_by_ids quickly returns them."""
+    entities = {}
+    for key in ids:
+      entities[key] = cls(key_name= cls.DATASTORE_PREFIX + key)
+    memcache.add_multi(entities, time=cls.MEMCACHE_TIME,
+                       key_prefix=cls.MEMCACHE_PREFIX)
 
 
 class VolunteerOpportunity(db.Model):
@@ -213,79 +236,6 @@ class VolunteerOpportunity(db.Model):
   base_url_failure_count = db.IntegerProperty(default=0)
   last_base_url_update_failure = db.DateTimeProperty()
 
-
-class BlacklistedVolunteerOpportunity(db.Model):
-  """blacklisted VolunteerOpportunity's
-
-  Separate from other models to keep things simple + clean.
-  """
-  # The __key__ is 'id:' + volunteer_opportunity_id
-  DATASTORE_PREFIX = 'blid:'
-  MEMCACHE_PREFIX = 'BlacklistedVolunteerOpportunity:'
-  MEMCACHE_TIME = 60000  # seconds
-
-  # low level methods
-  @classmethod
-  def mc_blacklist(cls, volunteer_opportunity_id):
-    """creates a memcache entry to speed checking."""
-    memcache.set(cls.MEMCACHE_PREFIX + volunteer_opportunity_id, "1",
-                 time=cls.MEMCACHE_TIME)
-    # TODO: detect failures
-  @classmethod
-  def ds_blacklist(cls, volunteer_opportunity_id):
-    """a permanent record of blacklisted entries, for when
-    the memcache is reset."""
-    key_name = cls.DATASTORE_PREFIX + volunteer_opportunity_id
-    entity = BlacklistedVolunteerOpportunity(key_name=key_name)
-    entity.put()
-    # TODO: detect failures
-  @classmethod
-  def mc_unblacklist(cls, volunteer_opportunity_id):
-    """creates a memcache entry to speed checking."""
-    memcache.set(cls.MEMCACHE_PREFIX + volunteer_opportunity_id, "0",
-                 time=cls.MEMCACHE_TIME)
-  @classmethod
-  def ds_unblacklist(cls, volunteer_opportunity_id):
-    """low level ds update-- doesn't update memcache."""
-    key_name = cls.DATASTORE_PREFIX + volunteer_opportunity_id
-    entity = BlacklistedVolunteerOpportunity(key_name=key_name)
-    entity.delete()
-  @classmethod
-  def mc_blacklist_entry(cls, volunteer_opportunity_id):
-    return memcache.get(cls.MEMCACHE_PREFIX + volunteer_opportunity_id)
-  @classmethod
-  def mc_is_blacklisted(cls, volunteer_opportunity_id):
-    return (cls.mc_blacklist_entry(volunteer_opportunity_id) == "1")
-  @classmethod
-  def ds_is_blacklisted(cls, volunteer_opportunity_id):
-    key_name = cls.DATASTORE_PREFIX + volunteer_opportunity_id
-    entity = BlacklistedVolunteerOpportunity.get_by_key_name(key_name)
-    return (entity != None)
-
-  # low level methods
-  @classmethod
-  def blacklist(cls, volunteer_opportunity_id):
-    """rarely used, so can be slow + thorough."""
-    cls.mc_blacklist(volunteer_opportunity_id)
-    cls.ds_blacklist(volunteer_opportunity_id)
-  @classmethod
-  def unblacklist(cls, volunteer_opportunity_id):
-    """rarely used, so can be slow + thorough."""
-    cls.mc_unblacklist(volunteer_opportunity_id)
-    cls.ds_unblacklist(volunteer_opportunity_id)
-  @classmethod
-  def is_blacklisted(cls, volunteer_opportunity_id):
-    """needs to be fast.  note that this can cause memcache updates."""
-    entry = cls.mc_blacklist_entry(volunteer_opportunity_id)
-    if entry == None:
-      blacklisted = cls.ds_is_blacklisted(volunteer_opportunity_id)
-      if blacklisted:
-        cls.mc_blacklist(volunteer_opportunity_id)
-      else:
-        cls.mc_unblacklist(volunteer_opportunity_id)
-      return blacklisted
-    else:
-      return entry == "1"
 
 # TODO(paul): added_to_calendar, added_to_facebook_profile, etc
 
