@@ -36,8 +36,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
 from fastpageviews import pagecount
-
-import recaptcha
+from third_party.recaptcha.client import captcha
 
 import api
 import base_search
@@ -464,8 +463,8 @@ class post_view(webapp.RequestHandler):
       return
 
     recaptcha_response_field = self.request.get('recaptcha_response_field')
-    resp = recaptcha.submit(recaptcha_challenge_field, recaptcha_response_field,
-                            PK, self.request.remote_addr)
+    resp = captcha.submit(recaptcha_challenge_field, recaptcha_response_field,
+                          PK, self.request.remote_addr)
     vals = {}
     computed_vals = {}
     recaptcha_response = self.request.get('recaptcha_response_field')

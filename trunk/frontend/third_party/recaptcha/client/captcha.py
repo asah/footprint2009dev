@@ -1,26 +1,4 @@
-# Copyright 2009 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-"""
-RE:Captcha client, from 
-http://pypi.python.org/pypi/recaptcha-client
-http://recaptcha.googlecode.com/svn/trunk/recaptcha-plugins/python
-http://code.google.com/p/recaptcha/
-"""
 import urllib2, urllib
-import logging
-from google.appengine.api import urlfetch
 
 API_SSL_SERVER="https://api-secure.recaptcha.net"
 API_SERVER="http://api.recaptcha.net"
@@ -77,12 +55,11 @@ def submit (recaptcha_challenge_field,
     remoteip -- the user's ip address
     """
 
-    logging.debug("recaptcha: submit")
     if not (recaptcha_response_field and recaptcha_challenge_field and
             len (recaptcha_response_field) and len (recaptcha_challenge_field)):
-        logging.debug("incorrect-captcha-solution")
         return RecaptchaResponse (is_valid = False, error_code = 'incorrect-captcha-sol')
     
+
     def encode_if_necessary(s):
         if isinstance(s, unicode):
             return s.encode('utf-8')
@@ -94,28 +71,26 @@ def submit (recaptcha_challenge_field,
             'challenge':  encode_if_necessary(recaptcha_challenge_field),
             'response' :  encode_if_necessary(recaptcha_response_field),
             })
-    logging.debug("calling recaptcha: "+params)
 
-    resp = urlfetch.fetch(url="http://%s/verify" % VERIFY_SERVER,
-                          payload=params,
-                          method=urlfetch.POST,
-                          headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    request = urllib2.Request (
+        url = "http://%s/verify" % VERIFY_SERVER,
+        data = params,
+        headers = {
+            "Content-type": "application/x-www-form-urlencoded",
+            "User-agent": "reCAPTCHA Python"
+            }
+        )
+    
+    httpresp = urllib2.urlopen (request)
 
-    #request = urllib2.Request (
-    #    url = "http://%s/verify" % VERIFY_SERVER,
-    #    data = params,
-    #    headers = {
-    #        "Content-type": "application/x-www-form-urlencoded",
-    #        "User-agent": "reCAPTCHA Python"
-    #        }
-    #    )
-    #httpresp = urllib2.urlopen (request)
-    #return_values = httpresp.read ().splitlines ();
-    return_values = resp.content.splitlines ();
-    #httpresp.close();
-    return_code = return_values[0]
-    if return_code == "true":
+    return_values = httpresp.read ().splitlines ();
+    httpresp.close();
+
+    return_code = return_values [0]
+
+    if (return_code == "true"):
         return RecaptchaResponse (is_valid=True)
-    return RecaptchaResponse (is_valid=False, error_code=return_values[1])
+    else:
+        return RecaptchaResponse (is_valid=False, error_code = return_values [1])
 
 
