@@ -16,11 +16,6 @@ p {
   color: white;
   font-size: 14px;
 }
-.dash_column {
-  float: left;
-  text-align: center;
-  background: #eee;
-}
 </style>
 {% endblock %}
 
@@ -42,7 +37,7 @@ p {
   <h2>Main Menu:</h2>
   <ul>
   <li><a href='/admin?action=moderators'>review/approve moderators</a></li>
-  <li><a href='/admin?action=datahub_dashboard'>datahub dashboard</a></li>
+  <li><a href='/dashboard/datahub'>datahub dashboard</a></li>
   <li><a href='/admin?action=flush_memcache'>flush memcache (i.e. after new server push)</a></li>
   <li><a href='/testapi/run'>API self-test</a> (<a href='/testapi/run?cache=0'>run manually</a>) <a href='http://host-tracker.com/' onMouseOver='this.href="http://host-tracker.com/web-site-monitoring-stats/2481561/lvuc/";'><img 
 width=80 height=15 border=0 alt='server monitor' 
@@ -54,40 +49,6 @@ src="http://ext.host-tracker.com/uptime-img/?s=15&amp;t=2481561&amp;m=00.05&amp;
 
 <p/>
   
-  {% ifequal action "datahub_dashboard" %}
-<div style="width:1024px;height:500px;background:#eee;padding:10px;text-align:left">
-<a href="https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw">list of spreadsheet providers</a>
-<p/>
-  <div style="background:#eee;width=100%">
-    <div class="dash_column">Provider<br/>
-      <div style="width:155px" id="provider_names"></div>
-    </div>
-    <div class="dash_column"># of Organizations<br/>
-      <div style="width:210px" id="organizations_chart"></div>
-    </div>
-    <div class="dash_column"># of Listings<br/>
-      <div style="width:210px" id="listings_chart"></div>
-    </div>
-    <div class="dash_column">Feed Size (bytes)<br/>
-      <div style="width:210px" id="bytes_chart"></div>
-    </div>
-    <div class="dash_column">Load Times (minutes)<br/>
-      <div style="width:210px" id="loadtimes_chart"></div>
-    </div>
-  </div>
-</div>
-
-<script type="text/javascript">
-  google.load("visualization", "1", {packages:["imagesparkline"]});
-  google.setOnLoadCallback(drawChart);
-  var data;
-  function drawChart() {
-    {# django can't unpack complex data structures, and it would be too slow #}
-    {{ datahub_dashboard_js_data }}
-  }
-  </script>
-{% endifequal %}{# datahub_dashboard #}
-
   {% block prefooter %}{% endblock %}
   {% block footer %}
   <div id='footer'>

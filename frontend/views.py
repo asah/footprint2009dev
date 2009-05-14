@@ -67,6 +67,7 @@ MY_EVENTS_TEMPLATE = 'my_events.html'
 POST_TEMPLATE = 'post.html'
 POST_RESULT_TEMPLATE = 'post_result.html'
 ADMIN_TEMPLATE = 'admin.html'
+DATAHUB_DASHBOARD_TEMPLATE = 'datahub_dashboard.html'
 MODERATE_TEMPLATE = 'moderate.html'
 STATIC_CONTENT_TEMPLATE = 'static_content.html'
 
@@ -565,113 +566,9 @@ class admin_view(webapp.RequestHandler):
       template_values['msg'] = "memcached flushed"
     elif action == 'moderators':
       self.admin_moderator(template_values)
-    elif action == "datahub_dashboard":
-      url = self.request.get('datahub_log')
-      if not url or url == "":
-        url = DATAHUB_LOG
-      fetch_result = urlfetch.fetch(url)
-      if fetch_result.status_code != 200:
-        template_values['msg'] = \
-            "error fetching dashboard data: code %d" % fetch_result.status_code
-      lines = fetch_result.content.split("\n")
-      # typical line
-      # 2009-04-26 18:07:16.295996:STATUS:extraordinaries done parsing: output
-      # 7 organizations and 7 opportunities (13202 bytes): 0 minutes.
-      statusrx = re.compile("(\d+-\d+-\d+) (\d+:\d+:\d+)[.]\d+:STATUS:(.+?) "+
-                            "done parsing: output (\d+) organizations and "+
-                            "(\d+) opportunities .(\d+) bytes.: (\d+) minutes")
-      def parse_date(datestr, timestr):
-        """TODO: move to day granularity once we have a few weeks of data.
-        At N=10 providers, 5 values, 12 bytes each, 600B per record.
-        daily is reasonable for a year, hourly is not."""
-        match = re.search(r'(\d+):', timestr)
-        hour = int(match.group(1))
-        return datestr + str(4*int(hour / 4)) + ":00"
-
-      js_data = ""
-      known_dates = {}
-      date_strings = []
-      known_providers = {}
-      provider_names = []
-      for line in lines:
-        match = re.search(statusrx, line)
-        if match:
-          hour = parse_date(match.group(1), match.group(2))
-          known_dates[hour] = 0
-          known_providers[match.group(3)] = 0
-          #js_data += "// hour="+hour+" provider="+match.group(3)+"\n"
-      template_values['provider_data'] = provider_data = []
-      sorted_providers = sorted(known_providers.keys())
-      for i, provider in enumerate(sorted_providers):
-        known_providers[provider] = i
-        provider_data.append([])
-        provider_names.append(provider)
-        #js_data += "// provider_names["+str(i)+"]="+provider_names[i]+"\n"
-      sorted_dates = sorted(known_dates.keys())
-      for i, hour in enumerate(sorted_dates):
-        for j, provider in enumerate(sorted_providers):
-          provider_data[j].append({})
-        known_dates[hour] = i
-        date_strings.append(hour)
-      #js_data += "// date_strings["+str(i)+"]="+date_strings[i]+"\n"
-      for line in lines:
-        match = re.search(statusrx, line)
-        if match:
-          hour = parse_date(match.group(1), match.group(2))
-          date_idx = known_dates[hour]
-          provider = match.group(3)
-          provider_idx = known_providers[provider]
-          #js_data += "// date_idx="+str(date_idx)
-          #js_data += " provider_idx="+str(provider_idx)+"\n"
-          rec = provider_data[provider_idx][date_idx]
-          rec['organizations'] = match.group(4)
-          rec['listings'] = match.group(5)
-          rec['bytes'] = match.group(6)
-          rec['loadtimes'] = match.group(7)
-      js_data += "function sv(row,col,val) {data.setValue(row,col,val);}\n"
-      js_data += "function ac(typ,key) {data.addColumn(typ,key);}\n"
-      js_data += "function acn(key) {data.addColumn('number',key);}\n"
-
-      js_data += "data = new google.visualization.DataTable();\n"
-      js_data += "data.addRows(1);"
-      for provider_idx, provider in enumerate(sorted_providers):
-        js_data += "acn('"+provider+"');"
-        js_data += "sv(0,"+str(provider_idx)+",0);"
-      js_data += "\n"
-      js_data += "var chart = new google.visualization.ImageSparkLine("
-      js_data += "  document.getElementById('provider_names'));\n"
-      js_data += "chart.draw(data,{width:150,height:50,showAxisLines:false,"
-      js_data += "  showValueLabels:false,labelPosition:'right'});\n"
-
-      for key in ['organizations', 'listings', 'bytes', 'loadtimes']:
-        js_data += "data = new google.visualization.DataTable();\n"
-        js_data += "data.addRows("+str(len(sorted_dates))+");\n"
-        colnum = 0
-        for provider_idx, provider in enumerate(sorted_providers):
-          colstr = ""
-          try:
-            # print the current number next to the graph
-            colstr = "\nacn('"+str(provider_data[provider_idx][-1][key])+"');"
-          except:
-            colstr = "\nacn('0');"
-          for date_idx, hour in enumerate(sorted_dates):
-            try:
-              rec = provider_data[provider_idx][date_idx]
-              val = "sv("+str(date_idx)+","+str(colnum)+","+rec[key]+");"
-            except:
-              val = ""
-            colstr += val
-          colnum += 1
-          js_data += colstr
-        js_data += "\n"
-        js_data += "var chart = new google.visualization.ImageSparkLine("
-        js_data += "  document.getElementById('"+key+"_chart'));\n"
-        js_data += "chart.draw(data,{width:200,height:50,showAxisLines:false,"
-        js_data += "  showValueLabels:false,labelPosition:'right'});\n"
-      template_values['datahub_dashboard_js_data'] = js_data
-
-    logging.debug("admin_view: "+template_values['msg'])
-    self.response.out.write(render_template(ADMIN_TEMPLATE, template_values))
+    logging.debug("admin_view: %s" % template_values['msg'])
+    self.response.out.write(render_template(ADMIN_TEMPLATE,
+                                            template_values))
 
   def admin_moderator(self, template_values):
     """View for adding/deleting moderators."""
@@ -1066,3 +963,120 @@ class static_content(webapp.RequestHandler):
                                               template_values))
     else:
       self.error(404)
+
+
+class datahub_dashboard_view(webapp.RequestHandler):
+  """stats by provider, on a hidden URL (underlying data is a hidden URL)."""
+  @expires(0)
+  def get(self):
+    """shutup pylint"""
+    template_values = {
+      'msg': '',
+      'action': ''
+    }
+    url = self.request.get('datahub_log')
+    if not url or url == "":
+      url = DATAHUB_LOG
+    fetch_result = urlfetch.fetch(url)
+    if fetch_result.status_code != 200:
+      template_values['msg'] = \
+          "error fetching dashboard data: code %d" % fetch_result.status_code
+    lines = fetch_result.content.split("\n")
+    # typical line
+    # 2009-04-26 18:07:16.295996:STATUS:extraordinaries done parsing: output
+    # 7 organizations and 7 opportunities (13202 bytes): 0 minutes.
+    statusrx = re.compile("(\d+-\d+-\d+) (\d+:\d+:\d+)[.]\d+:STATUS:(.+?) "+
+                          "done parsing: output (\d+) organizations and "+
+                          "(\d+) opportunities .(\d+) bytes.: (\d+) minutes")
+    def parse_date(datestr, timestr):
+      """TODO: move to day granularity once we have a few weeks of data.
+      At N=10 providers, 5 values, 12 bytes each, 600B per record.
+      daily is reasonable for a year, hourly is not."""
+      match = re.search(r'(\d+):', timestr)
+      hour = int(match.group(1))
+      return datestr + str(4*int(hour / 4)) + ":00"
+
+    js_data = ""
+    known_dates = {}
+    date_strings = []
+    known_providers = {}
+    provider_names = []
+    for line in lines:
+      match = re.search(statusrx, line)
+      if match:
+        hour = parse_date(match.group(1), match.group(2))
+        known_dates[hour] = 0
+        known_providers[match.group(3)] = 0
+        #js_data += "// hour="+hour+" provider="+match.group(3)+"\n"
+    template_values['provider_data'] = provider_data = []
+    sorted_providers = sorted(known_providers.keys())
+    for i, provider in enumerate(sorted_providers):
+      known_providers[provider] = i
+      provider_data.append([])
+      provider_names.append(provider)
+      #js_data += "// provider_names["+str(i)+"]="+provider_names[i]+"\n"
+    sorted_dates = sorted(known_dates.keys())
+    for i, hour in enumerate(sorted_dates):
+      for j, provider in enumerate(sorted_providers):
+        provider_data[j].append({})
+      known_dates[hour] = i
+      date_strings.append(hour)
+    #js_data += "// date_strings["+str(i)+"]="+date_strings[i]+"\n"
+    for line in lines:
+      match = re.search(statusrx, line)
+      if match:
+        hour = parse_date(match.group(1), match.group(2))
+        date_idx = known_dates[hour]
+        provider = match.group(3)
+        provider_idx = known_providers[provider]
+        #js_data += "// date_idx="+str(date_idx)
+        #js_data += " provider_idx="+str(provider_idx)+"\n"
+        rec = provider_data[provider_idx][date_idx]
+        rec['organizations'] = match.group(4)
+        rec['listings'] = match.group(5)
+        rec['bytes'] = match.group(6)
+        rec['loadtimes'] = match.group(7)
+    js_data += "function sv(row,col,val) {data.setValue(row,col,val);}\n"
+    js_data += "function ac(typ,key) {data.addColumn(typ,key);}\n"
+    js_data += "function acn(key) {data.addColumn('number',key);}\n"
+
+    js_data += "data = new google.visualization.DataTable();\n"
+    js_data += "data.addRows(1);"
+    for provider_idx, provider in enumerate(sorted_providers):
+      js_data += "acn('"+provider+"');"
+      js_data += "sv(0,"+str(provider_idx)+",0);"
+    js_data += "\n"
+    js_data += "var chart = new google.visualization.ImageSparkLine("
+    js_data += "  document.getElementById('provider_names'));\n"
+    js_data += "chart.draw(data,{width:150,height:50,showAxisLines:false,"
+    js_data += "  showValueLabels:false,labelPosition:'right'});\n"
+
+    for key in ['organizations', 'listings', 'bytes', 'loadtimes']:
+      js_data += "data = new google.visualization.DataTable();\n"
+      js_data += "data.addRows("+str(len(sorted_dates))+");\n"
+      colnum = 0
+      for provider_idx, provider in enumerate(sorted_providers):
+        colstr = ""
+        try:
+          # print the current number next to the graph
+          colstr = "\nacn('"+str(provider_data[provider_idx][-1][key])+"');"
+        except:
+          colstr = "\nacn('0');"
+        for date_idx, hour in enumerate(sorted_dates):
+          try:
+            rec = provider_data[provider_idx][date_idx]
+            val = "sv("+str(date_idx)+","+str(colnum)+","+rec[key]+");"
+          except:
+            val = ""
+          colstr += val
+        colnum += 1
+        js_data += colstr
+      js_data += "\n"
+      js_data += "var chart = new google.visualization.ImageSparkLine("
+      js_data += "  document.getElementById('"+key+"_chart'));\n"
+      js_data += "chart.draw(data,{width:200,height:50,showAxisLines:false,"
+      js_data += "  showValueLabels:false,labelPosition:'right'});\n"
+    template_values['datahub_dashboard_js_data'] = js_data
+    logging.debug("datahub_dashboard_view: %s" % template_values['msg'])
+    self.response.out.write(render_template(DATAHUB_DASHBOARD_TEMPLATE,
+                                            template_values))
