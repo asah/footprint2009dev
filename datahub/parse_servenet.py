@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-parser for Hands On Network
+parser for SERVEnet
 """
 
 import xml_helpers as xmlh
@@ -138,12 +138,12 @@ def parse(instr, maxrecs, progress):
   outstr += '<FootprintFeed schemaVersion="0.1">'
   outstr += '<FeedInfo>'
   # TODO: assign provider IDs?
-  outstr += xmlh.output_val('providerID', '106')
-  outstr += xmlh.output_val('providerName', 'networkforgood')
+  outstr += xmlh.output_val('providerID', '114')
+  outstr += xmlh.output_val('providerName', 'servenet')
   outstr += xmlh.output_val('feedID', 'servenet')
   outstr += xmlh.output_val('createdDateTime', xmlh.current_ts())
-  outstr += xmlh.output_val('providerURL', 'http://www.networkforgood.org/')
-  outstr += xmlh.output_val('description', 'Servenet')
+  outstr += xmlh.output_val('providerURL', 'http://www.servenet.org/')
+  outstr += xmlh.output_val('description', 'servenet')
   # TODO: capture ts -- use now?!
   outstr += '</FeedInfo>'
 
