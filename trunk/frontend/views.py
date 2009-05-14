@@ -540,14 +540,16 @@ class admin_view(webapp.RequestHandler):
       # typical line
       # 2009-04-26 18:07:16.295996:STATUS:extraordinaries done parsing: output
       # 7 organizations and 7 opportunities (13202 bytes): 0 minutes.
-      statusrx = re.compile("(\d+-\d+-\d+ \d+:\d+:\d+)[.]\d+:STATUS:(.+?) "+
+      statusrx = re.compile("(\d+-\d+-\d+) (\d+:\d+:\d+)[.]\d+:STATUS:(.+?) "+
                             "done parsing: output (\d+) organizations and "+
                             "(\d+) opportunities .(\d+) bytes.: (\d+) minutes")
-      def parse_date(datestr):
+      def parse_date(datestr, timestr):
         """TODO: move to day granularity once we have a few weeks of data.
         At N=10 providers, 5 values, 12 bytes each, 600B per record.
         daily is reasonable for a year, hourly is not."""
-        return re.sub(':.+', '', datestr) + ":00"
+        match = re.search(r'(\d+):', timestr)
+        hour = int(match.group(1))
+        return datestr + str(4*int(hour / 4)) + ":00"
 
       js_data = ""
       known_dates = {}
@@ -557,10 +559,10 @@ class admin_view(webapp.RequestHandler):
       for line in lines:
         match = re.search(statusrx, line)
         if match:
-          hour = parse_date(match.group(1))
+          hour = parse_date(match.group(1), match.group(2))
           known_dates[hour] = 0
-          known_providers[match.group(2)] = 0
-          #js_data += "// hour="+hour+" provider="+match.group(2)+"\n"
+          known_providers[match.group(3)] = 0
+          #js_data += "// hour="+hour+" provider="+match.group(3)+"\n"
       template_values['provider_data'] = provider_data = []
       sorted_providers = sorted(known_providers.keys())
       for i, provider in enumerate(sorted_providers):
@@ -578,18 +580,17 @@ class admin_view(webapp.RequestHandler):
       for line in lines:
         match = re.search(statusrx, line)
         if match:
-          #recordts = datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S")
-          hour = parse_date(match.group(1))
+          hour = parse_date(match.group(1), match.group(2))
           date_idx = known_dates[hour]
-          provider = match.group(2)
+          provider = match.group(3)
           provider_idx = known_providers[provider]
           #js_data += "// date_idx="+str(date_idx)
           #js_data += " provider_idx="+str(provider_idx)+"\n"
           rec = provider_data[provider_idx][date_idx]
-          rec['organizations'] = match.group(3)
-          rec['listings'] = match.group(4)
-          rec['bytes'] = match.group(5)
-          rec['loadtimes'] = match.group(6)
+          rec['organizations'] = match.group(4)
+          rec['listings'] = match.group(5)
+          rec['bytes'] = match.group(6)
+          rec['loadtimes'] = match.group(7)
       js_data += "function sv(row,col,val) {data.setValue(row,col,val);}\n"
       js_data += "function ac(typ,key) {data.addColumn(typ,key);}\n"
       js_data += "function acn(key) {data.addColumn('number',key);}\n"
