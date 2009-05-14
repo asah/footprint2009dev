@@ -27,7 +27,7 @@
   {% endifequal %}{% endifequal %}
 </div>
 
-<script type="text/javascript">
+<script type='text/javascript'>
     function inviteFacebookFriends() {
       var url = location.protocol + "//" + location.host;
 
@@ -72,14 +72,7 @@
   <a href='javascript:;' onclick="google.friendconnect.requestSignIn('GOOGLE');return false"/>Google</a>,
   <a href='javascript:;' onclick="google.friendconnect.requestSignIn('');return false"/>More &raquo;</a>
 
-  <script type="text/javascript">
-    function requestFacebookSignIn() {
-      FB.Connect.requireSession(null, true);
-      FB.Facebook.get_sessionState().waitUntilReady(function() {
-        window.location.reload();
-      });
-    }
-
+  <script type='text/javascript'>
     function checkForViewer() {
       // If the viewer is != null and the userId == null reload page.
       // This is a temporary placeholder until FC gives us an onSignIn callback
@@ -95,3 +88,12 @@
 
     {% endif %}
    </nobr>
+
+<script type='text/javascript'>
+function requestFacebookSignIn() {
+  FB.Connect.requireSession(null, true);
+  FB.Facebook.get_sessionState().waitUntilReady(function() {
+    window.location.reload();
+  });
+}
+</script>

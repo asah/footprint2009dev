@@ -51,3 +51,6 @@
   text-decoration: none;
 }
 
+#home_left ul {
+  list-style-image: url('/images/like_default.png');
+}
