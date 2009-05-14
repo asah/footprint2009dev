@@ -53,6 +53,9 @@ PRINTHEAD = False
 ABRIDGED = False
 OUTPUTFMT = "fpxml"
 
+import socket
+socket.setdefaulttimeout(120.0)
+
 # pick a latlng that'll never match real queries
 UNKNOWN_LAT = UNKNOWN_LNG = "-10"
 UNKNOWN_LATLNG = UNKNOWN_LAT + "," + UNKNOWN_LNG
