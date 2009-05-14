@@ -1110,19 +1110,19 @@ def parse_options():
 def open_input_filename(filename):
   """handle different file/URL opening methods."""
   if re.search(r'^https?://', filename):
-    print_progress("starting download...")
+    print_progress("starting download of "+filename)
     outfh = urllib.urlopen(filename)
     if (re.search(r'[.]gz$', filename)):
       # is there a way to fetch and unzip an URL in one shot?
       print_progress("ah, gzip format.")
       content = outfh.read()
       outfh.close()
+      print_progress("download done.")
       tmp_fn = "/tmp/tmp-"+hashlib.md5().hexdigest()
       tmpfh = open(tmp_fn, "wb+")
       tmpfh.write(content)
       tmpfh.close()
       outfh = gzip.open(tmp_fn, 'rb')
-    print_progress("download done.")
     return outfh
   elif re.search(r'[.]gz$', filename):
     return gzip.open(filename, 'rb')
@@ -1170,10 +1170,11 @@ def process_file(filename, options, providerName="", providerID="",
                  providerURL=""):
   shortname = guess_shortname(filename)
   inputfmt, parsefunc = guess_parse_func(options.inputfmt, filename)
-  outfh = open_input_filename(filename)
-  print_progress("reading file...")
+  infh = open_input_filename(filename)
+  print_progress("reading data...")
   # don't put this inside open_input_filename() because it could be large
-  instr = outfh.read()
+  instr = infh.read()
+  print_progress("done reading data.")
 
   # remove bad encodings etc.
   if options.clean:
