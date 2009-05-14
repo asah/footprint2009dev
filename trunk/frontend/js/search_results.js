@@ -468,6 +468,11 @@ function renderPaginator(div, totalNum, forceShowNextLink) {
   }
 
   div.innerHTML = html.join('');
+  // pagination debugging
+  //div.innerHTML += "<br/>totalNum="+totalNum
+  //div.innerHTML += "<br/>currentPageNum="+currentPageNum;
+  //div.innerHTML += "<br/>numPages="+numPages;
+  //div.innerHTML += "<br/>forceShowNextLink="+forceShowNextLink;
 }
 
 /** Loads the Maps API asynchronously and notifies the asynchronous load
