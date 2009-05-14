@@ -47,9 +47,8 @@ handlers:
   secure: always
 
 # For Gadget
-- url: /gadget.xml
-  static_files: templates/gadget.xml
-  upload: templates/gadget.xml
+- url: /gadget
+  static_dir: html/gadget
 
 # autocompleter for search
 - url: /autocomplete/.*
