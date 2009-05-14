@@ -33,8 +33,22 @@ import models
 import userinfo
 import utils
 
+# require_admin is copied from views.py so we don't have to import all of it.
+def require_admin(handler_method):
+  """Decorator ensuring the current App Engine user is an administrator."""
+  def Decorate(self):
+    if not users.is_current_user_admin():
+      self.error(401)
+      html = '<html><body><a href="%s">Sign in</a></body></html>'
+      self.response.out.write(html % (users.create_login_url(self.request.url)))
+      return
+    return handler_method(self)
+  return Decorate
+
 class TestLogin(webapp.RequestHandler):
   """test user login sequence."""
+  # This is still useful for testing but we'll limit it to just admins.
+  @require_admin  
   def get(self):
     """HTTP get method."""
     user = userinfo.get_user(self.request)
@@ -68,6 +82,7 @@ class TestLogin(webapp.RequestHandler):
                             
   USERID_REGEX = re.compile('[a-z0-9_@+.-]*$')
                             
+  @require_admin  
   def post(self):
     """HTTP post method."""
     try:
