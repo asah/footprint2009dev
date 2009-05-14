@@ -89,6 +89,15 @@ class SearchResult(object):
     self.score_notes = notes
     self.score_str = "%.4g" % (score)
 
+def compare_result_dates(dt1, dt2):
+  """private helper function for dedup()"""
+  if (dt1.t_startdate > dt2.t_startdate):
+    return 1
+  elif (dt1.t_startdate < dt2.t_startdate):
+    return -1
+  else:
+    return 0
+
 class SearchResultSet(object):
   """Contains a list of SearchResult objects.
 
@@ -191,15 +200,6 @@ class SearchResultSet(object):
         res.merged_list = []
         res.merged_debug = []
 
-    def compare_merged_dates(dt1, dt2):
-      """private helper function for dedup()"""
-      if (dt1.t_startdate > dt2.t_startdate):
-        return 1
-      elif (dt1.t_startdate < dt2.t_startdate):
-        return -1
-      else:
-        return 0
-
     def merge_result(res):
       """private helper function for dedup()"""
       merged = False
@@ -231,7 +231,7 @@ class SearchResultSet(object):
       for i, res in enumerate(self.merged_results):
         res.idx = i + 1
         if len(res.merged_list) > 1:
-          res.merged_list.sort(cmp=compare_merged_dates)
+          res.merged_list.sort(cmp=compare_result_dates)
           location_was = res.location
           # TODO(mt1955)-- need_more appears to be unused?!  pls fix or remove.
           #need_more = False

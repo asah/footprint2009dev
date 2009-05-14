@@ -49,6 +49,7 @@ import urls
 import userinfo
 import utils
 import view_helper
+import searchresult
 
 TEMPLATE_DIR = 'templates/'
 
@@ -324,6 +325,7 @@ class ui_snippets_view(webapp.RequestHandler):
                                     and user.get_user_info().moderator)
     if self.request.get('minimal_snippets_list'):
       # Minimal results list for homepage.
+      result_set.clipped_results.sort(cmp=searchresult.compare_result_dates)
       self.response.out.write(render_template(SNIPPETS_LIST_MINI_TEMPLATE,
                                               template_values))
     else:
