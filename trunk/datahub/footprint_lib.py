@@ -475,6 +475,9 @@ def approx_latlng(latlng):
   #print "approx_latlng("+latlng+")="+res
   return res
 
+def cleanup_geocode_query(query):
+  return re.sub(r'\s\s+', r' ', re.sub(r'\\[tnrfv]', r' ', query)).lower().strip()
+
 def load_geocode_cache():
   global GEOCODE_CACHE, RGEOCODE_CACHE
   GEOCODE_CACHE = {}
@@ -484,7 +487,7 @@ def load_geocode_cache():
     for line in geocode_fh:
       if "|" in line:
         key, val = line.split("|")
-        key = re.sub(r'\s\s+', r' ', key).lower().strip()
+        key = cleanup_geocode_query(key)
         latlng = val.strip()
         GEOCODE_CACHE[key] = latlng
         RGEOCODE_CACHE[approx_latlng(latlng)] = key
@@ -497,8 +500,7 @@ def load_geocode_cache():
 def geocode_call(query, retries, parsefunc):
   # geocode with google maps, and cache responses
   params = urllib.urlencode(
-    {'q':query.lower(), 'output':'csv',
-     'oe':'utf8', 'sensor':'false',
+    {'q':query, 'output':'csv', 'oe':'utf8', 'sensor':'false',
      'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY' + \
        '_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
   if GEOCODE_DEBUG:
@@ -521,7 +523,7 @@ def geocode_call(query, retries, parsefunc):
 
   # these results get cached
   geocode_fh = open(GEOCODE_CACHE_FN, "a")
-  if re.match(r'\d+,\d+', val):
+  if re.match(r'[0-9.+-]+,[0-9.+-]+', val):
     # gecoding
     cacheline = query + "|" + val
     GEOCODE_CACHE[query] = val
@@ -541,6 +543,7 @@ def geocode_call(query, retries, parsefunc):
 
 def reverse_geocode(latlng, retries=4):
   global RGEOCODE_CACHE
+  latlng = cleanup_geocode_query(latlng)
   latlng = re.sub(r'\s', '', latlng)
   if RGEOCODE_CACHE == None:
     load_geocode_cache()
@@ -565,18 +568,17 @@ def reverse_geocode(latlng, retries=4):
 def geocode(addr, retries=4):
   """convert a string addr to a "lat,long" string"""
   global GEOCODE_CACHE
-  loc = addr.lower().strip()
-  loc = re.sub(r'^[^0-9a-z]+', r'', loc)
-  loc = re.sub(r'[^0-9a-z]+$', r'', loc)
-  loc = re.sub(r'\s\s+', r' ', loc)
-  geocode_call(addr, retries)
+  addr = cleanup_geocode_query(addr)
+  # ignore leading/trailing punctuation
+  addr = re.sub(r'^[^0-9a-z]+', r'', addr)
+  addr = re.sub(r'[^0-9a-z]+$', r'', addr)
   if GEOCODE_CACHE == None:
     load_geocode_cache()
-  if loc in GEOCODE_CACHE:
-    return GEOCODE_CACHE[loc]
+  if addr in GEOCODE_CACHE:
+    return GEOCODE_CACHE[addr]
 
   def parsefunc(locstr):
-    match = re.search(r'(\d+),(\d+),([0-9.+-]+,[0-9.+-]+)', response)
+    match = re.search(r'(\d+),(\d+),([0-9.+-]+,[0-9.+-]+)', locstr)
     if match:
       respcode = int(match.group(1))
       zoom = int(match.group(2))
