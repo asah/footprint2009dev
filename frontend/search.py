@@ -64,14 +64,19 @@ def search(args):
     use_cache = False
     logging.debug('Not using search cache')
 
-  result_set = None
+  # note: key cannot exceed 250 bytes
   memcache_key = hashlib.md5('search:' + normalized_query_string).hexdigest()
+  start = int(args[api.PARAM_START])
+  num = int(args[api.PARAM_NUM])
 
+  result_set = None
   if use_cache:
-    # note: key cannot exceed 250 bytes
     result_set = memcache.get(memcache_key)
     if result_set:
       logging.debug('in cache: "' + normalized_query_string + '"')
+      if len(result_set.merged_results) < start + num:
+        logging.debug('but too small-- rerunning query...')
+        result_set = None
     else:
       logging.debug('not in cache: "' + normalized_query_string + '"')
 
@@ -79,7 +84,7 @@ def search(args):
     result_set = fetch_result_set(args)
     memcache.set(memcache_key, result_set, time=CACHE_TIME)
 
-  result_set.clip_merged_results(args[api.PARAM_START], args[api.PARAM_NUM])
+  result_set.clip_merged_results(start, num)
   result_set.track_views()
   return result_set
 

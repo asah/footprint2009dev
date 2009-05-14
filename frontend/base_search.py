@@ -194,7 +194,8 @@ def search(args):
 
   base_query = form_base_query(args)
   query_url = args["backend"]
-  num_to_fetch = int(args[api.PARAM_NUM] * args[api.PARAM_OVERFETCH_RATIO])
+  num_to_fetch = int(args[api.PARAM_START])
+  num_to_fetch += int(args[api.PARAM_NUM] * args[api.PARAM_OVERFETCH_RATIO])
   if num_to_fetch > BASE_MAX_RESULTS:
     num_to_fetch = BASE_MAX_RESULTS
   query_url += "?max-results=" + str(num_to_fetch)
