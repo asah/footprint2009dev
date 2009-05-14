@@ -22,10 +22,12 @@ views in the app, in the MVC sense.
 # pylint: disable-msg=R0903
 from datetime import datetime
 import cgi
+import email.Utils
 import os
 import urllib
 import logging
 import re
+import time
 
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
@@ -133,7 +135,7 @@ def require_moderator(handler_method):
 
   Also sets self.user.
   """
-  def Decorate(self):
+  def decorate(self):
     if not getattr(self, 'user', None):
       self.user = userinfo.get_user(self.request)
     if not self.user:
@@ -147,13 +149,13 @@ def require_moderator(handler_method):
       logging.warning('Non-moderator blacklist attempt.')
       return
     return handler_method(self)
-  return Decorate
+  return decorate
 
 def require_usig(handler_method):
   """Deceratore ensuring the current FP user has a valid usig XSRF token.
 
   Also sets self.usig and self.user."""
-  def Decorate(self):
+  def decorate(self):
     if not getattr(self, 'user', None):
       self.user = userinfo.get_user(self.request)
     self.usig = userinfo.get_usig(self.user)
@@ -163,23 +165,46 @@ def require_usig(handler_method):
                       self.usig, self.request.get('usig'))
       return
     return handler_method(self)
-  return Decorate
+  return decorate
 
 
 def require_admin(handler_method):
   """Decorator ensuring the current App Engine user is an administrator."""
-  def Decorate(self):
+  def decorate(self):
     if not users.is_current_user_admin():
       self.error(401)
       html = '<html><body><a href="%s">Sign in</a></body></html>'
       self.response.out.write(html % (users.create_login_url(self.request.url)))
       return
     return handler_method(self)
-  return Decorate
+  return decorate
+
+
+def expires(seconds):
+  """Set expires and cache-control headers appropriately."""
+  # If you try to use '@expires' instead of '@expires(0)', this
+  # will raise an exception.
+  seconds = int(seconds)
+  def decorator(handler_method):
+    def decorate(self):
+      if seconds <= 0:
+        # Expire immediately.
+        self.response.headers['Cache-Control'] = 'no-cache'
+        self.response.headers['Expires'] = 'Thu, 01 Jan 2009 00:00:00 GMT'
+        pass
+      else:
+        self.response.headers['Cache-Control'] = 'public'
+        self.response.headers['Expires'] = email.Utils.formatdate(
+            time.time() + seconds, usegmt=True)
+      # The handler method can now re-write these if needed.
+      return handler_method(self)
+    return decorate
+  return decorator
 
 
 class test_page_views_view(webapp.RequestHandler):
   """testpage for pageviews counter."""
+  @expires(0)
   def get(self):
     """HTTP get method."""
     pagename = "testpage%s" % (self.request.get('pagename'))
@@ -192,6 +217,7 @@ class test_page_views_view(webapp.RequestHandler):
 
 class home_page_view(webapp.RequestHandler):
   """default homepage for consumer UI."""
+  @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
     user = userinfo.get_user(self.request)
@@ -204,6 +230,7 @@ class home_page_view(webapp.RequestHandler):
 
 class consumer_ui_search_view(webapp.RequestHandler):
   """default homepage for consumer UI."""
+  @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
     template_values = {
@@ -221,6 +248,7 @@ class consumer_ui_search_view(webapp.RequestHandler):
 
 class search_view(webapp.RequestHandler):
   """run a search.  note various output formats."""
+  @expires(1800)  # Search results change slowly; cache for half an hour.
   def get(self):
     """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
@@ -289,6 +317,7 @@ class ui_snippets_view(webapp.RequestHandler):
   """run a search and return consumer HTML for the results--
   this awful hack exists for latency reasons: it's super slow to
   parse things on the client."""
+  @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
@@ -352,6 +381,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
   4. For each of the events found in step (3), associate the list of all
   interested users with that event.
   """
+  @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
     user_info = userinfo.get_user(self.request)
@@ -410,6 +440,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
 
 class my_events_view(webapp.RequestHandler):
   """Shows events that you and your friends like or are doing."""
+  @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
     user_info = userinfo.get_user(self.request)
@@ -433,9 +464,13 @@ class my_events_view(webapp.RequestHandler):
 
 class post_view(webapp.RequestHandler):
   """user posting flow."""
+
+  @expires(0)
   def post(self):
     """HTTP post method."""
     return self.get()
+
+  @expires(0)
   def get(self):
     """HTTP get method."""
     user_info = userinfo.get_user(self.request)
@@ -502,6 +537,7 @@ class post_view(webapp.RequestHandler):
 class admin_view(webapp.RequestHandler):
   """admin UI."""
   @require_admin
+  @expires(0)
   def get(self):
     """HTTP get method."""
 
@@ -732,6 +768,7 @@ class admin_view(webapp.RequestHandler):
 
 class redirect_view(webapp.RequestHandler):
   """Process redirects. Present an interstital if the url is not signed."""
+  @expires(0)  # Used for counting.
   def get(self):
     """HTTP get method."""
     url = self.request.get('q')
@@ -761,6 +798,7 @@ class moderate_view(webapp.RequestHandler):
   """fast UI for voting/moderating on listings."""
 
   @require_moderator
+  @expires(0)
   def get(self):
     """HTTP get method."""
     return self.moderate_postings(False)
@@ -818,6 +856,7 @@ class moderate_view(webapp.RequestHandler):
 class moderate_blacklist_view(webapp.RequestHandler):
   """Handle moderating blacklist entries."""
   @require_moderator
+  @expires(0)
   def get(self):
     """HTTP get method for blacklist actions."""
     action = self.request.get('action')
@@ -871,6 +910,7 @@ class moderate_blacklist_view(webapp.RequestHandler):
 
   @require_moderator
   @require_usig
+  @expires(0)
   def post(self):
     """Handle edits to the blacklist from HTTP POST."""
     action = self.request.get('action')
@@ -915,6 +955,7 @@ class moderate_blacklist_view(webapp.RequestHandler):
 
 class action_view(webapp.RequestHandler):
   """vote/tag/etc on a listing.  TODO: rename to something more specific."""
+  @expires(0)
   def post(self):
     """HTTP POST method."""
     if self.request.get('type') != 'star':
@@ -996,22 +1037,23 @@ class static_content(webapp.RequestHandler):
   submitted into SVN, it will go live on the site automatically (as soon
   as memcache entry expires) without requiring a full site push.
   """
+  STATIC_CONTENT_MEMCACHE_TIME = 60 * 60  # One hour.
+  STATIC_CONTENT_MEMCACHE_KEY = 'static_content:'
+
+  @expires(0)  # User specific. Maybe we should remove that so it's cacheable.
   def get(self):
     """HTTP get method."""
     remote_url = (urls.STATIC_CONTENT_LOCATION +
         urls.STATIC_CONTENT_FILES[self.request.path])
 
-    STATIC_CONTENT_MEMCACHE_TIME = 60 * 60  # One hour.
-    STATIC_CONTENT_MEMCACHE_KEY = 'static_content:'
-
-    text = memcache.get(STATIC_CONTENT_MEMCACHE_KEY + remote_url)
+    text = memcache.get(self.STATIC_CONTENT_MEMCACHE_KEY + remote_url)
     if not text:
       result = urlfetch.fetch(remote_url)
       if result.status_code == 200:
         text = result.content
-        memcache.set(STATIC_CONTENT_MEMCACHE_KEY + remote_url,
+        memcache.set(self.STATIC_CONTENT_MEMCACHE_KEY + remote_url,
                      text,
-                     STATIC_CONTENT_MEMCACHE_TIME)
+                     self.STATIC_CONTENT_MEMCACHE_TIME)
 
     if text:
       user = userinfo.get_user(self.request)
