@@ -27,11 +27,12 @@ def custom_date_format(value):
   the current one."""
   if not value:
     return ''
+  elif value.year < date.today().year:
+    return 'Present'
   elif value.year == date.today().year:
     return dateformat.format(value, 'F j')
   else:
     return dateformat.format(value, 'F j, Y')  
-
 
 # Prevents pylint from triggering on the 'register' name. Django expects this
 # module to have a 'register' variable.
