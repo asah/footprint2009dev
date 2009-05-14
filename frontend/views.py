@@ -612,28 +612,21 @@ class admin_view(webapp.RequestHandler):
         js_data += "data.addRows("+str(len(sorted_dates))+");\n"
         colnum = 0
         for provider_idx, provider in enumerate(sorted_providers):
+          colstr = ""
           try:
-            # ignore errors where there's no data for this key
-            #js_data += "//acn('str(provider_data["
-            #js_data += "str(provider_idx)+"][-1]["+key+"])');\n"
-            js_data += "acn('"+str(provider_data[provider_idx][-1][key])+"');"
-            #js_data += "acn('"+provider+" "+key
-            #js_data += " ("+str(provider_data[provider_idx][-1][key])+")');"
-            for date_idx, hour in enumerate(sorted_dates):
-              # doesn't work?!
-              #if date_idx in provider_data[provider_idx]:
-              val = ""
-              try:
-                rec = provider_data[provider_idx][date_idx]
-                val = "sv("+str(date_idx)+","+str(colnum)
-                val += ","+rec[key]+");"
-              except:
-                val = ""
-              js_data += val
-            colnum += 1
+            # print the current number next to the graph
+            colstr = "\nacn('"+str(provider_data[provider_idx][-1][key])+"');"
           except:
-            # shutup pylint
-            js_data += ""
+            colstr = "\nacn('0');"
+          for date_idx, hour in enumerate(sorted_dates):
+            try:
+              rec = provider_data[provider_idx][date_idx]
+              val = "sv("+str(date_idx)+","+str(colnum)+","+rec[key]+");"
+            except:
+              val = ""
+            colstr += val
+          colnum += 1
+          js_data += colstr
         js_data += "\n"
         js_data += "var chart = new google.visualization.ImageSparkLine("
         js_data += "  document.getElementById('"+key+"_chart'));\n"
