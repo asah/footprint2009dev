@@ -53,8 +53,8 @@ class Posting(db.Model):
 
   # for queries, parse-out these fields - note that we don't care about datatypes
   quality_score = db.FloatProperty(default=1.0)
-  creation_time = db.DateTimeProperty(auto_now=True)
-  start_date = db.DateProperty(auto_now=True)
+  creation_time = db.DateTimeProperty(auto_now_add=True)
+  start_date = db.DateProperty(auto_now_add=True)
 
   # listing_xml is the full contents for the listing, assuming it gets approved
   # note: listing_xml also used for fulltext queries
@@ -294,7 +294,7 @@ def add_new_fields(vals, newvals):
   if latlong == "":
     newvals["latitude"] = newvals["longitude"] = ""
   else:
-    newvals["latitude"],newvals["longitude"] = latlong.split(",")
+    newvals["latitude"],newvals["longitude"] = latlong.split(",")[:2]
 
   newvals["parsedStartDate"] = newvals["parsedStartTime"] = ""
   newvals["parsedEndDate"] = newvals["parsedEndTime"] = ""
