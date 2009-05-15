@@ -53,8 +53,9 @@ PRINTHEAD = False
 ABRIDGED = False
 OUTPUTFMT = "fpxml"
 
+# set a nice long timeout
 import socket
-socket.setdefaulttimeout(120.0)
+socket.setdefaulttimeout(600.0)
 
 # pick a latlng that'll never match real queries
 UNKNOWN_LAT = UNKNOWN_LNG = "-10"
