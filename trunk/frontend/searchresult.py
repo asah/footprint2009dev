@@ -53,7 +53,7 @@ class SearchResult(object):
   def __init__(self, url, title, snippet, location, item_id, base_url):
     # TODO: Consider using kwargs or something to make this more generic.
     self.url = url
-    self.url_sig = utils.signature(url)
+    self.url_sig = None
     self.title = title
     self.snippet = snippet
     self.location = location
@@ -157,12 +157,13 @@ class SearchResultSet(object):
     """increment impression counts for items in the set."""
     logging.debug(str(datetime.datetime.now())+" track_views: start")
     for primary_res in self.clipped_results:
-      logging.debug("track_views: key="+primary_res.merge_key)
+      #logging.debug("track_views: key="+primary_res.merge_key)
       primary_res.merged_impressions = pagecount.IncrPageCount(
-        primary_res.merge_key, 1)
-      primary_res.impressions = pagecount.IncrPageCount(primary_res.item_id, 1)
-      for res in primary_res.merged_list:
-        res.impressions = pagecount.IncrPageCount(res.item_id, 1)
+        pagecount.VIEWS_PREFIX+primary_res.merge_key, 1)
+      # TODO: for now (performance), only track merge_keys, not individual items
+      #primary_res.impressions = pagecount.IncrPageCount(primary_res.item_id, 1)
+      #for res in primary_res.merged_list:
+      #  res.impressions = pagecount.IncrPageCount(res.item_id, 1)
     logging.debug(str(datetime.datetime.now())+" track_views: end")
 
   def dedup(self):
@@ -190,6 +191,7 @@ class SearchResultSet(object):
         res.merge_key = 'M' + hashlib.md5(safe_str(res.title) +
                                           safe_str(res.snippet) +
                                           safe_str(res.location)).hexdigest()
+        res.url_sig = utils.signature(res.url + res.merge_key)
         # we will be sorting & de-duping the merged results
         # by start date so we need an epoch time
         res.t_startdate = res.startdate.timetuple()

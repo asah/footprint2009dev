@@ -85,6 +85,9 @@ def search(args):
     memcache.set(memcache_key, result_set, time=CACHE_TIME)
 
   result_set.clip_merged_results(start, num)
+  # TODO: for better results, we should segment CTR computation by
+  # homepage vs. search views, etc. -- but IMHO it's better to give
+  # up and outsource stats to a web-hosted service.
   result_set.track_views()
   return result_set
 

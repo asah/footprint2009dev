@@ -248,7 +248,7 @@ class consumer_ui_search_view(webapp.RequestHandler):
 
 
 class search_view(webapp.RequestHandler):
-  """run a search.  note various output formats."""
+  """run a search from the API.  note various output formats."""
   @expires(1800)  # Search results change slowly; cache for half an hour.
   def get(self):
     """HTTP get method."""
@@ -311,6 +311,19 @@ class search_view(webapp.RequestHandler):
         'location': result_set.args[api.PARAM_VOL_LOC],
         'max_distance': result_set.args[api.PARAM_VOL_DIST],
       }
+
+    # pagecount.GetPageCount() is expensive-- only do for debug mode,
+    # where this is printed.
+    if tpl == SEARCH_RESULTS_DEBUG_TEMPLATE:
+      for res in result_set.clipped_results:
+        res.merged_clicks = pagecount.GetPageCount(
+          pagecount.CLICKS_PREFIX+res.merge_key)
+        if res.merged_impressions < 1.0:
+          res.merged_ctr = "0"
+        else:
+          res.merged_ctr = "%.2f" % (
+            100.0 * float(res.merged_clicks) / float(res.merged_impressions))
+
     self.response.out.write(render_template(tpl, template_values))
 
 
@@ -668,16 +681,25 @@ class redirect_view(webapp.RequestHandler):
   @expires(0)  # Used for counting.
   def get(self):
     """HTTP get method."""
+    # destination url
     url = self.request.get('q')
     if not url or (not url.startswith('http:') and
                    not url.startswith('https:')):
       self.error(400)
       return
-
+    # id is optional -- for tracking clicks on individual items
+    id = self.request.get('id')
     sig = self.request.get('sig')
-    expected_sig = utils.signature(url)
-    logging.debug('u: %s s: %s xs: %s' % (url, sig, expected_sig))
+    expected_sig = utils.signature(url+id)
+    logging.debug('url: %s s: %s xs: %s' % (url, sig, expected_sig))
     if sig == expected_sig:
+      if id:
+        # note: clicks are relatively rare-- we can trivially afford the
+        # cost of CTR computation, and it helps development.
+        clicks = pagecount.IncrPageCount(pagecount.CLICKS_PREFIX + id, 1)
+        views = pagecount.GetPageCount(pagecount.VIEWS_PREFIX + id)
+        logging.debug("click: merge_key=%s  clicks=%d  views=%d  ctr=%.1f%%" %
+                      (id, clicks, views, float(clicks)/float(views+0.1)))
       self.redirect(url)
       return
 
