@@ -39,24 +39,22 @@
   </div>
 
   <div id='home_left'>
-    <font size=+1>
-Each of us has a role to play in improving our communities and our country. Small actions add up to a big difference. <b>All for Good</b> helps you find and share ways to do good.
-</font>
+    <img src='/images/leadin.png'>
 
-<p>Sign in with Facebook to:
+    <div id='home_signin'>
+      <div id='home_signin_header'>Sign in to:</div>
 
-<ul>
-<li>Share volunteering opportunities with your Facebook friends
-<li>Invite friends to join you on <b>All for Good</b> and see how they're volunteering
-<li>Track volunteering opportunities you care about
-</ul>
+      <ul>
+        <li>Share volunteering activities with your friends
+        <li>Invite friends to join you on <b>All&nbsp;for&nbsp;Good</b> and see how they're volunteering
+        <li>Track volunteering activities you care about
+      </ul>
 
-<p><input type=button value="Sign in with Facebook" onclick='requestFacebookSignIn()'><br>
-
-<p>Track and share your opportunities by signing in with
-  <a href='javascript:;' onclick="google.friendconnect.requestSignIn('GOOGLE');return false"/>Google</a> or
-  <a href='javascript:;' onclick="google.friendconnect.requestSignIn('');return false"/>more &raquo;</a>
-
+      <p id='home_signin_links'>Track and share your opportunities by signing in with
+        <a href='javascript:void(0);' onclick="requestFacebookSignIn();return false"/>Facebook</a>,
+        <a href='javascript:void(0);' onclick="google.friendconnect.requestSignIn('GOOGLE');return false"/>Google</a>, or
+        <a href='javascript:void(0);' onclick="google.friendconnect.requestSignIn('');return false"/>more &raquo;</a>
+    </div>
   </div>
 </div>
 
