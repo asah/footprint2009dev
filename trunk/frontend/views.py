@@ -698,6 +698,8 @@ class redirect_view(webapp.RequestHandler):
       return
     # id is optional -- for tracking clicks on individual items
     id = self.request.get('id')
+    if not id:
+      id = ""
     sig = self.request.get('sig')
     expected_sig = utils.signature(url+id)
     logging.debug('url: %s s: %s xs: %s' % (url, sig, expected_sig))
