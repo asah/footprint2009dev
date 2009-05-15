@@ -209,7 +209,6 @@ form {
 
 .map_hint {
   font-style: italic;
-  margin-left: 7px;
 }
 
 /** Work with others **/
@@ -301,7 +300,6 @@ form {
 }
 
 #location {
-  margin-left: 5px;
   width: 186px;
 }
 
