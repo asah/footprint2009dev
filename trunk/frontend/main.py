@@ -19,9 +19,13 @@ appengine main().
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
+import os
+import logging
 
 import views
 import urls
+
+IS_DEVELOPMENT = (os.environ.get('SERVER_SOFTWARE').find("Development")==0)
 
 APPLICATION = webapp.WSGIApplication(
     [(urls.URL_HOME, views.home_page_view),
@@ -40,10 +44,15 @@ APPLICATION = webapp.WSGIApplication(
     ] +
     [ (url, views.static_content) for url in
          urls.STATIC_CONTENT_FILES.iterkeys() ],
-    debug=True)
+    debug=IS_DEVELOPMENT)
 
 def main():
   """this comment to appease pylint."""
+  if IS_DEVELOPMENT:
+    logging.info("IS_DEVELOPMENT=True")
+  else:
+    # we have lots of debug and info's
+    logging.getLogger().setLevel(logging.WARNING)
   run_wsgi_app(APPLICATION)
 
 if __name__ == "__main__":
