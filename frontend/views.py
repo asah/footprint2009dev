@@ -226,6 +226,7 @@ class home_page_view(webapp.RequestHandler):
       'user' : user,
       'current_page' : 'HOMEPAGE',
       'host' : urllib.quote(self.request.host_url),
+      'version' : os.getenv('CURRENT_VERSION_ID'),
       'js_debug' : self.request.get('js_debug'),
     }
     self.response.out.write(render_template(HOMEPAGE_TEMPLATE,
@@ -241,6 +242,7 @@ class consumer_ui_search_view(webapp.RequestHandler):
         'current_page' : 'SEARCH',
         'is_main_page' : True,
         'host' : urllib.quote(self.request.host_url),
+        'version' : os.getenv('CURRENT_VERSION_ID'),
         'js_debug' : self.request.get('js_debug'),
       }
     # Retrieve the user-specific information for the search result set.
@@ -364,6 +366,7 @@ class ui_snippets_view(webapp.RequestHandler):
         'display_nextpage_link' : result_set.has_more_results,
         'view_url': self.request.url,
         'host' : urllib.quote(self.request.host_url),
+        'version' : os.getenv('CURRENT_VERSION_ID'),
         'js_debug' : self.request.get('js_debug'),
         'friends' : view_data['friends'],
         'friends_by_event_id_js': view_data['friends_by_event_id_js'],
@@ -411,7 +414,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
       # This is a dict of event id keys and interest flag values (right now
       # we only support Liked).
       my_interests = view_helper.get_user_interests(user_info, True)
-
+      
       # Fetch the event details for the events I like, so they can be
       # displayed in the snippets template.
       my_events_gbase_result_set = base_search.get_from_ids(my_interests.keys())
@@ -439,6 +442,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
           'current_page' : 'MY_EVENTS',
           'view_url': self.request.url,
           'host' : urllib.quote(self.request.host_url),
+          'version' : os.getenv('CURRENT_VERSION_ID'),
           'js_debug' : self.request.get('js_debug'),
           'user' : user_info,
           'result_set': my_events_gbase_result_set,
@@ -479,6 +483,8 @@ class my_events_view(webapp.RequestHandler):
     template_values = {
         'current_page' : 'MY_EVENTS',
         'host' : urllib.quote(self.request.host_url),
+        'version' : os.getenv('CURRENT_VERSION_ID'),
+        'js_debug' : self.request.get('js_debug'),
     }
     load_userinfo_into_dict(user_info, template_values)
 
@@ -573,7 +579,8 @@ class admin_view(webapp.RequestHandler):
       'logout_link': users.create_logout_url('/'),
       'msg': '',
       'action': '',
-      'usig': usig
+      'usig': usig,
+      'version' : os.getenv('CURRENT_VERSION_ID'),
     }
 
     action = self.request.get('action')
@@ -776,6 +783,7 @@ class moderate_view(webapp.RequestHandler):
 
     template_values = {
       'current_page' : 'MODERATE',
+      'version' : os.getenv('CURRENT_VERSION_ID'),
       'num' : str(num),
       'ts' : str(nowstr),
       'result_set' : reslist,
@@ -1005,7 +1013,8 @@ class datahub_dashboard_view(webapp.RequestHandler):
     """shutup pylint"""
     template_values = {
       'msg': '',
-      'action': ''
+      'action': '',
+      'version' : os.getenv('CURRENT_VERSION_ID'),
     }
     url = self.request.get('datahub_log')
     if not url or url == "":
