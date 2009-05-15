@@ -10,7 +10,8 @@
   </script>
   <script src='http://www.google.com/jsapi?key=ABQIAAAAHtEBbyenR4BaYGl54_p0fRRlOb26qSyU154aZeLwOrF4C7-DphT-k84KU2QtDbk5G77Rqt1x2njBTQ' type='text/javascript'></script>
 
-{% if "appspot.com"|isin:host and not js_debug %}
+{% if false %} 
+  <!-- TODO: Use the proxy again: if "appspot.com"|isin:host and not js_debug -->
   <script type='text/javascript' src='http://www.gmodules.com/ig/proxy?url=http%3A%2F%2Fsuprfetch.appspot.com%2F%3Furl%3D{{host}}%2Fjs%2Fthird_party%2Fjquery-1.3.2.min.js%26url%3D{{host}}%2Fjs%2Fthird_party%2Fjquery.json-1.3.min.js%26url%3D{{host}}%2Fjs%2Fthird_party%2Frsh.js%26url%3D{{host}}%2Fjs%2Fthird_party%2Fjquery.autocomplete.js%26url%3D{{host}}%2Fjs%2Fthird_party%2Fjquery.simplemodal.js%26url%3D{{host}}%2Fjs%2Futils.js%26jsmin%3Dtrue'></script>
 {% else %}
   <script type='text/javascript' src='/js/third_party/jquery-1.3.2.min.js'></script>
