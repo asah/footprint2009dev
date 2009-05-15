@@ -1,7 +1,7 @@
 {% extends 'layout_full.html' %}
 
 {% block css_files %}
-  <link href='/css/homepage.css' rel='stylesheet'/>
+  <link href='/css/homepage.css?zx={{version}}' rel='stylesheet'/>
 {% endblock css_files %}
 
 {% block content %}
@@ -58,5 +58,5 @@
   </div>
 </div>
 
-<script type='text/javascript' src='/js/homepage.js'></script>
+<script type='text/javascript' src='/js/homepage.js?zx={{version}}'></script>
 {% endblock content %}
