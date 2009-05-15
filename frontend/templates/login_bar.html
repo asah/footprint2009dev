@@ -21,9 +21,9 @@
   |
 
   {% ifequal user.account_type "friendconnect"%}
-    <a href="javascript:;" onclick="google.friendconnect.requestSignOut(); window.location.reload();">Sign Out</a>
+    <a href="javascript:;" onclick="google.friendconnect.requestSignOut(); clearExternalCookies(); window.location.reload();">Sign Out</a>
   {% else %} {% ifequal user.account_type "facebook" %}
-    <a href="javascript:;" onclick="FB.Connect.logout(function() {window.location.reload();});">Sign Out</a>
+    <a href="javascript:;" onclick="FB.Connect.logout(function() {clearExternalCookies(); window.location.reload();});">Sign Out</a>
   {% endifequal %}{% endifequal %}
 </div>
 
