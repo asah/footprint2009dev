@@ -281,6 +281,7 @@ def loaders():
   load_gbase("unitedway",
              "http://volunteer.united-e-way.org/"+
              "uwnyc/util/voml/uwnyc-footprint-pull.aspx")
+  load_gbase("habitat", "http://www.habitat.org/cd/gv/schedule_to_xml.aspx")
   load_gbase("americansolutions",
              "http://www.americansolutions.com/footprint/footprint.xml")
   load_gbase("meetup", "http://api.meetup.com/footprint?"+
