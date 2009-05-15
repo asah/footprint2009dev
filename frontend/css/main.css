@@ -322,9 +322,12 @@ form {
 	vertical-align: middle;
 }
 
+#logo_span {
+  margin-left: 22px;
+}
+
 #logo_flag {
   margin-right: 10px;
-  margin-left: 24px;
   width: 70px;
   height: 34px;
 }
