@@ -29,10 +29,14 @@ To change the search location, please enter a zip code or city/state.
 
 {% block prefooter %}
 
+{% if "appspot.com"|isin:host and not js_debug %}
+  <script type='text/javascript' src='http://www.gmodules.com/ig/proxy?url=http%3A%2F%2Fsuprfetch.appspot.com%2F%3Furl%3D{{host}}%2Fjs%2Fsnippets_list.js%26url%3D{{host}}%2Fjs%2Fmap.js%26url%3D{{host}}%2Fjs%2Fsearch_results.js%26url%3D{{host}}%2Fjs%2Fcalendar_widget.js%26jsmin%3Dtrue'></script>
+{% else %}
   <script type='text/javascript' src='/js/snippets_list.js'></script>
   <script type='text/javascript' src='/js/map.js'></script>
   <script type='text/javascript' src='/js/search_results.js'></script>
   <script type='text/javascript' src='/js/calendar_widget.js'></script>
+{% endif %}
 
   <script type='text/javascript'>
     var addthis_pub='footprint2009dev';
