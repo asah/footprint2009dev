@@ -40,6 +40,7 @@ STATIC_CONTENT_LOCATION = 'http://footprint2009dev.googlecode.com/svn/trunk/fron
 STATIC_CONTENT_FILES = {
   '/about' : 'about_us.html',
   '/privacypolicy' : 'privacy_policy.html',
+  '/contentpolicy' : 'content_policy.html',
   '/publishers' : 'publishers.html',
   '/help' : 'help.html',
   '/faq' : 'faq.html',
