@@ -14,6 +14,9 @@ import random
 TEST_API_KEY = 'testkey'
 TESTING = False
 
+VIEWS_PREFIX = "v:"
+CLICKS_PREFIX = "c:"
+
 # increase as needed
 WRITEBACK_FREQ_PCT = 1.0
 WRITEBACK_VAL = WRITEBACK_FREQ_PCT / 100.0 * 1000000.0
@@ -96,3 +99,4 @@ def GetStats():
   stats['pc_writebacks'] = pc_writebacks
   stats['pc_loads'] = pc_loads
   return stats
+
