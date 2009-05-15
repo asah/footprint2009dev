@@ -36,7 +36,7 @@ for (var i = 0; i < popularSearches.length; i++) {
   el('popular_list').innerHTML += html + '<br>';
 }
 
-var url = '/ui_snippets?start=0&num=6&minimal_snippets_list=1&' + vol_loc_term;
+var url = '/ui_snippets?start=0&num=4&minimal_snippets_list=1&' + vol_loc_term;
 
 el('location_text').innerHTML = city;
 jQuery.ajax({
