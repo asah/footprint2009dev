@@ -378,6 +378,24 @@ function getSessionCookie(name) {
   return undefined;
 }
 
+function clearExternalCookies() {
+  var cookiesToClear = [];
+  var cookies = document.cookie.split(';');
+  for (var i = 0; i < cookies.length; i++) {
+    var pair = cookies[i].split('=');
+    var cookieName = pair[0];
+    var cookieValue = pair[1];
+    if (cookieName.indexOf(SESSION_COOKIE_PREFIX) == -1) {
+      cookiesToClear.push(cookieName);
+    }
+  }
+
+  for (var i = 0; i < cookiesToClear.length; i++) {
+    var cookieName = cookiesToClear[i];
+    document.cookie = cookieName + '=;path=/;';
+  }
+}
+
 // Define console.log in case it's not already.
 try {
   var console = {};
@@ -398,4 +416,3 @@ try {
     }
   }
 } catch(err) {}
-
