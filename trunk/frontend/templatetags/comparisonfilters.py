@@ -44,6 +44,11 @@ def length_lte(value, arg):
     equal to the argument"""
     return len(value) <= int(arg)
 
+# This was not in the original library.
+def isin(a, b):
+  """Checks if a is contained in b."""
+  return a in b
+
 # register = Library()
 register = webapp.template.create_template_register()
 register.filter('gt', gt)
@@ -54,3 +59,4 @@ register.filter('length_gt', length_gt)
 register.filter('length_lt', length_lt)
 register.filter('length_gte', length_gte)
 register.filter('length_lte', length_lte)
+register.filter('isin', isin)
