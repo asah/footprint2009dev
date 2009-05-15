@@ -52,7 +52,11 @@ Query.prototype.execute = function() {
   // Set the URL hash, but only if the query string is not empty.
   // Setting hash to an empty string causes a page reload.
   if (urlQueryString.length > 0 && urlQueryString != window.location.hash) {
-    window.location.hash = urlQueryString;
+    dhtmlHistory.add(urlQueryString);
+    // Sleep a bit to give the add function a chance to manipulate the hash.
+    // TODO(manzoid): Revisit, not clear why this was necessary, or why only
+    // 1 ms sufficed.  See comment on lines 191-3 of rsh.js.
+    setTimeout(executeSearchFromHashParams, 1);
   }
 };
 
@@ -156,7 +160,7 @@ Query.prototype.setUseCache = function(use_cache) {
 };
 
 
-function NewQueryFromUrlParams() {
+function createQueryFromUrlParams() {
   var keywords = getHashOrQueryParam('q', '');
 
   var location = getHashOrQueryParam('vol_loc', getDefaultLocation().coords);
@@ -167,7 +171,7 @@ function NewQueryFromUrlParams() {
   var numPerPage = Number(getHashOrQueryParam('num', NUM_PER_PAGE));
   numPerPage = Math.max(numPerPage, 1);
 
-  var pageNum = (start-1) / numPerPage;
+  var pageNum = (start - 1) / numPerPage;
 
   var timePeriod = getHashOrQueryParam('timeperiod');
 
@@ -263,9 +267,20 @@ function onLoadSearch() {
   if (el('location')) {
     setInputFieldValue(el('location'), getDefaultLocation().displayLong);
   }
-  NewQueryFromUrlParams().execute();
-  executeSearchFromHashParams();
-  $(window).hashchange(executeSearchFromHashParams);
+  createQueryFromUrlParams().execute();
+
+  // Using jquery json functions so pass in overrides.
+  dhtmlHistory.create({
+      debugMode: false, // Set to 'true' to see the hidden form & iframe.
+      toJSON: function(o) {
+        return $.toJSON(o);
+      },
+      fromJSON: function(s) {
+        return $.evalJSON(s);
+      }
+  });
+  dhtmlHistory.initialize();
+  dhtmlHistory.addListener(executeSearchFromHashParams);
 }
 
 /** Asynchronously execute a search based on the current parameters.
@@ -282,12 +297,7 @@ executeSearchFromHashParams = function() {
       currentXhr.abort();
     }
 
-    // reset hash params cache since we have a new hash.
-    // (no need to refresh GET param cache.)
-    hashParams = GetHashParams();
-
-    var query = NewQueryFromUrlParams();
-
+    var query = createQueryFromUrlParams();
     el('no_results_message').style.display = 'none';
     el('loading').style.display = '';
 

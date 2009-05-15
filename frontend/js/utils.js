@@ -131,7 +131,7 @@ function removeListener(element, type, callback) {
   }
 }
 
-function GetUrlParams(paramString) {
+function getUrlParams(paramString) {
   // Decode URL hash params.
   var params = {};
   var pairs = paramString.split('&');
@@ -149,13 +149,7 @@ function GetUrlParams(paramString) {
   return params;
 }
 
-function GetQueryParams() {
-  return GetUrlParams(document.location.search.replace(/(^\?)/,''));
-}
-
-function GetHashParams() {
-  return GetUrlParams(document.location.hash.replace(/(^#)/,''));
-}
+var cachedParams_ = {};
 
 /** Retrieve a parameter from the URL hashstring or querystring.
  * Hashstring takes precedence.
@@ -168,12 +162,17 @@ function GetHashParams() {
  *     {@code null}.
  */
 function getHashOrQueryParam(paramName, opt_defaultValue) {
-  if (hashParams[paramName]) {
-    return hashParams[paramName];
-  } else if (queryParams[paramName]) {
-    return queryParams[paramName];
+  var location = dhtmlHistory.getCurrentLocation();
+  var params = cachedParams_[location];
+  if (!params) {
+    params = getUrlParams(location);
+    cachedParams_[location] = params;
   }
-  return opt_defaultValue || null;
+  val = params[paramName];
+  if (val === '') {
+    return val;
+  }
+  return val || opt_defaultValue || null;
 }
 
 /** Count number of elements inside a JS object */
@@ -346,7 +345,7 @@ function setInputFieldValue(input, value) {
 
 /**
  * Retrieves the value of an inputfield, but returns '' if value==defaultValue
- * @param {HTMLInputerElement} input Input element.
+ * @param {HTMLInputElement} input Input element.
  */
 function getInputFieldValue(input) {
   if (!input || input.value == inputFieldDefaultValues[input.id]) {
@@ -378,10 +377,6 @@ function getSessionCookie(name) {
   }
   return undefined;
 }
-
-// Globals
-var queryParams = GetQueryParams();
-var hashParams = GetHashParams();
 
 // Define console.log in case it's not already.
 try {
