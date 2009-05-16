@@ -371,7 +371,7 @@ def get_from_ids(ids):
   # Find the Google Base url from the datastore, then look that up in base.
   missing_ids = []
   for item_id in ids:
-    if not item_id in results:
+    if not item_id in hits:
       missing_ids.append(item_id)
 
   datastore_results = modelutils.get_by_ids(models.VolunteerOpportunity,
