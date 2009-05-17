@@ -30,6 +30,7 @@ IS_DEVELOPMENT = (os.environ.get('SERVER_SOFTWARE').find("Development")==0)
 APPLICATION = webapp.WSGIApplication(
     [(urls.URL_HOME, views.home_page_view),
      (urls.URL_CONSUMER_UI_SEARCH, views.consumer_ui_search_view),
+     (urls.URL_CONSUMER_UI_SEARCH_REDIR, views.consumer_ui_search_redir_view),
      (urls.URL_API_SEARCH, views.search_view),
      (urls.URL_UI_SNIPPETS, views.ui_snippets_view),
      (urls.URL_UI_MY_SNIPPETS, views.ui_my_snippets_view),
