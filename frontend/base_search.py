@@ -311,11 +311,14 @@ def query(query_url, args, cache):
                         (res.event_date_range, url))
       else:
         # first match is start date/time
-        res.startdate = datetime.datetime.strptime(match[0],
-                                                   '%Y-%m-%dT%H:%M:%S')
+        startdate = datetime.datetime.strptime(match[0], '%Y-%m-%dT%H:%M:%S')
         # last match is either end date/time or start/date time
-        res.enddate = datetime.datetime.strptime(match[-1],
-                                                 '%Y-%m-%dT%H:%M:%S')
+        enddate = datetime.datetime.strptime(match[-1], '%Y-%m-%dT%H:%M:%S')
+        # protect against absurd dates
+        if startdate > res.startdate:
+          res.startdate = startdate
+        if enddate < res.enddate:
+          res.enddate = enddate
 
     # posting.py currently has an authoritative list of fields in "argnames"
     # that are available to submitted events which may later appear in GBase
