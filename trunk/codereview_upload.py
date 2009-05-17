@@ -1311,7 +1311,7 @@ def RealMain(argv, data=None):
       if re.search(r'[.]py$', file):
         print "pylinting "+file+"..."
         res = RunShell(["pylint", file], silent_ok=True, ignore_retcode=True)
-        match = re.search(r'Your code has been rated at ([0-9.]*)', res)
+        match = re.search(r'Your code has been rated at ([0-9.-]+)', res)
         try:
           score = float(match.group(1))
         except:
@@ -1453,15 +1453,19 @@ def main():
     email = sys.argv[1]
     if email.find("@") == -1:
       email += "@gmail.com"
-      print >>sys.stderr, "*** sending to "+email+"@gmail.com for review.",\
-          " (note: @gmail.com)"
+      print >>sys.stderr, "*** sending to "+email+" for review. (note: @gmail.com)"
     args.append(email)
     sys.argv = args + sys.argv[2:]
     if "PYLINTRC" not in os.environ:
-      cwd = os.getcwd()
-      path_to_pylint = re.sub(r'footprint2009dev/.+$', 'footprint2009dev/pylintrc', cwd)
-      os.environ['PYLINTRC'] = path_to_pylint
-      print "guessing PYLINTRC="+path_to_pylint
+      testpath = os.getcwd()
+      while testpath != "" and not os.path.exists(testpath + "/pylintrc"):
+        testpath = re.sub(r'/[^/]*$', '', testpath)
+        print "checking for "+testpath + "/pylintrc"
+      if testpath == "":
+        print >>sys.stderr, "ERROR: couldn't find 'pylintrc' file."
+        sys.exit(1)
+      os.environ['PYLINTRC'] = testpath + "/pylintrc"
+      print "guessing PYLINTRC="+os.environ['PYLINTRC']
     print "running: ", " ".join(sys.argv)
     RealMain(sys.argv)
   except KeyboardInterrupt:
