@@ -232,6 +232,20 @@ class home_page_view(webapp.RequestHandler):
     self.response.out.write(render_template(HOMEPAGE_TEMPLATE,
                                            template_values))
 
+class consumer_ui_search_redir_view(webapp.RequestHandler):
+  """handler for embedded HTML forms, which can't form queries
+     with query params to the right of the # (hash)."""
+  @expires(0)
+  def get(self):
+    """HTTP get method."""
+    # replace the path and replace the ? with #
+    # down the road, if the consumer UI diverges from the urlparams
+    # required by HTML embedders, then this algorithm could become
+    # more complex, possibly including real page(s) instead of a 
+    # simple reuse of the consumer UI.
+    dest = urls.URL_CONSUMER_UI_SEARCH + "#" + self.request.query_string
+    self.redirect(dest)
+
 class consumer_ui_search_view(webapp.RequestHandler):
   """default homepage for consumer UI."""
   @expires(0)  # User specific.
