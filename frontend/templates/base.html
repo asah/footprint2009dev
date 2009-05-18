@@ -100,7 +100,15 @@
     // Handle searches when in static content pages.
     if (!('submitForm' in window)) {
       window.submitForm = function(fromWhere) {
-        window.location = '/search#q=' + getInputFieldValue(el('keywords'));
+        var vol_loc = '';
+        if (el('location')) {
+          var location = getInputFieldValue(el('location'));
+          vol_loc = '&vol_loc=' + escape(location);
+          setSessionCookie('user_vol_loc', location);
+        }
+        window.location = '/search#q=' +
+            escape(getInputFieldValue(el('keywords'))) +
+            vol_loc;
       }
     }
   </script>

@@ -163,7 +163,8 @@ Query.prototype.setUseCache = function(use_cache) {
 function createQueryFromUrlParams() {
   var keywords = getHashOrQueryParam('q', '');
 
-  var location = getHashOrQueryParam('vol_loc', getDefaultLocation().coords);
+  var location = getHashOrQueryParam('vol_loc',
+      getDefaultLocation().displayLong);
 
   var start = Number(getHashOrQueryParam('start', '1'));
   start = Math.max(start, 1);
@@ -338,8 +339,18 @@ executeSearchFromHashParams = function() {
       url = '/ui_my_snippets?';
     }
 
+    url += query.getUrlQuery();
+
+    var location = query.getLocation();
+    if (!location || location.length == 0) {
+      // TODO: Make these the defaults inside search.py/base_search.py.
+      //       Will then need to test that "No Results" message doesn't
+      //       show "USA".
+      url += '&vol_loc=USA&vol_dist=1500';
+    }
+
     currentXhr = jQuery.ajax({
-      url: url + query.getUrlQuery(),
+      url: url,
       async: true,
       dataType: 'html',
       error: error,
@@ -376,7 +387,7 @@ function submitForm(invoker) {
   // TODO: strip leading/trailing whitespace.
 
   if (location == '') {
-    location = getDefaultLocation().coords;
+    location = getDefaultLocation().displayLong;
   }
 
   var query = lastSearchQuery.clone();

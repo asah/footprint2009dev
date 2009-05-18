@@ -13,32 +13,45 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// TODO(paul): Verify ClientLocation.address/coords are defined
-
-var coords = getDefaultLocation().coords || '';
-var city = getDefaultLocation().displayShort || '';
-
-var vol_loc_term = '';
-if (coords) {
-  vol_loc_term = 'vol_loc=' + coords + '&';
+if (getDefaultLocation().displayLong) {
   el('mini_with_location').style.display = '';
 } else {
   el('mini_without_location').style.display = '';
   el('location_form').style.display = '';
 }
 
-el('more_link').href = '/search?' + vol_loc_term;
+var defaultLocation = getDefaultLocation().displayLong || '';
+setInputFieldValue(el('location'), defaultLocation);
+
+el('more_link').href = 'javascript:submitForm("");void(0);';
+
+function goPopular(index) {
+  setInputFieldValue(el('keywords'), popularSearches[index]);
+  submitForm('');
+}
 
 // Populate the popular searches list.
 for (var i = 0; i < popularSearches.length; i++) {
-  var html = '<a href="/search#q=' + popularSearches[i] + '">' +
+  var href = 'javascript:goPopular(' + i + ');void(0);';
+  var html = '<a href="' + href + '">' +
       popularSearches[i] + '<' + '\a>';
   el('popular_list').innerHTML += html + '<br>';
 }
 
-var url = '/ui_snippets?start=0&num=4&minimal_snippets_list=1&' + vol_loc_term;
+var vol_loc_term;
+if (defaultLocation != '') {
+  vol_loc_term = '&vol_loc=' + defaultLocation;
+} else {
+  // TODO: Make these the defaults inside search.py/base_search.py.
+  //       Will then need to test that "No Results" message doesn't
+  //       show "USA".
+  vol_loc_term = '&vol_loc=USA&vol_dist=1500';
+}
+var url = '/ui_snippets?start=0&num=4&minimal_snippets_list=1' + vol_loc_term;
 
-setTextContent(el('location_text'), city);
+
+setTextContent(el('location_text'), defaultLocation);
+
 jQuery.ajax({
       url: url,
       async: true,
@@ -51,11 +64,3 @@ jQuery.ajax({
         }
       }
     });
-
-setInputFieldValue(el('location'), '');
-
-function changeLocation() {
-  var newLocation = getInputFieldValue(el('location'));
-  setSessionCookie('user_vol_loc', newLocation);
-  window.location.href = '/search#vol_loc=' + escape(newLocation);
-}
