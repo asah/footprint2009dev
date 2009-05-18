@@ -13,8 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-function el(node) {
-  return document.getElementById(node);
+function el(id) {
+  return document.getElementById(id);
+}
+
+function setTextContent(el, text) {
+  el.innerHTML = '';
+  el.appendChild(document.createTextNode(text));
 }
 
 function popupModalElement(node) {
