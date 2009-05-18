@@ -42,6 +42,7 @@ from third_party.recaptcha.client import captcha
 
 import api
 import base_search
+import geocode
 import models
 import modelutils
 import posting
@@ -386,6 +387,9 @@ class ui_snippets_view(webapp.RequestHandler):
         'friends_by_event_id_js': view_data['friends_by_event_id_js'],
         'query_param_q' : unique_args.get(api.PARAM_Q, None),
       }
+    loc = unique_args.get(api.PARAM_VOL_LOC, None)
+    if not geocode.is_latlong(loc) and not geocode.is_latlongzoom(loc):
+      template_values['query_param_loc'] = loc
     template_values['moderator'] = (user and user.get_user_info()
                                     and user.get_user_info().moderator)
     if self.request.get('minimal_snippets_list'):
@@ -474,6 +478,11 @@ class ui_my_snippets_view(webapp.RequestHandler):
           'view_url': self.request.url,
           'has_results' : False,
       }
+
+    template_values['query_param_q'] = unique_args.get(api.PARAM_Q, None)
+    loc = unique_args.get(api.PARAM_VOL_LOC, None)
+    if not geocode.is_latlong(loc) and not geocode.is_latlongzoom(loc):
+      template_values['query_param_loc'] = loc
 
     self.response.out.write(render_template(SNIPPETS_LIST_TEMPLATE,
                                             template_values))

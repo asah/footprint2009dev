@@ -1,11 +1,5 @@
 {% if not has_results %}
-<script type='text/javascript'>
-  el('no_results_message').style.display = '';
-  initMap();  // In case it hasn't been inited.
-  asyncLoadManager.addCallback('map', function(){
-      map.clearMarkers();
-  });
-</script>
+{% include 'no_results.html' %}
 {% else %}
 
 <script type='text/javascript'>

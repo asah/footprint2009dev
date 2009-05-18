@@ -298,7 +298,6 @@ executeSearchFromHashParams = function() {
     }
 
     var query = createQueryFromUrlParams();
-    el('no_results_message').style.display = 'none';
     el('loading').style.display = '';
 
     // TODO: eliminate the need for lastSearchQuery to be global
