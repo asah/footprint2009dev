@@ -343,8 +343,8 @@ class ApiTesting(object):
     self.output('<p class="uri">Fetching result set for following tests</p>')
     self.output('<p class="uri">URI: ' + full_uri + '</p>')
     
-    data = retrieve_raw_data(full_uri)
     try:
+      data = retrieve_raw_data(full_uri)
       return self.parse_raw_data(data)
     except:
       self.fail(TestResultCode.LOW_LEVEL_PARSE_FAIL,
