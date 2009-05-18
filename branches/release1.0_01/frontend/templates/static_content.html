@@ -1,0 +1,32 @@
+{% extends 'layout_two_column.html' %}
+
+{% block content_left %}
+<h1>&nbsp;</h1>
+<ul id='static_content_list'>
+
+<li>
+{% ifequal path '/about' %} About {% else %} <a href='/about'>About</a> {% endifequal %}
+
+<li>
+{% ifequal path '/help' %} Help {% else %} <a href='/help'>Help</a> {% endifequal %}
+
+<li>
+{% ifequal path '/faq' %} Frequently Asked Questions {% else %} <a href='/faq'>Frequently Asked Questions</a> {% endifequal %}
+
+<li>
+{% ifequal path '/privacypolicy' %} Privacy Policy {% else %} <a href='/privacypolicy'>Privacy Policy</a> {% endifequal %}
+
+<li>
+{% ifequal path '/tos' %} Terms of Service {% else %} <a href='/tos'>Terms of Service</a> {% endifequal %}
+
+<li>
+{% ifequal path '/contentpolicy' %} Content Policy {% else %} <a href='/contentpolicy'>Content Policy</a> {% endifequal %}
+
+</ul>
+{% endblock content_left %}
+
+{% block content_right %}
+<div id='static_content'>
+{{ static_content }}
+</div>
+{% endblock content_right %}
