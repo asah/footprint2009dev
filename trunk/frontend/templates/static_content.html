@@ -17,13 +17,10 @@
 {% ifequal path '/privacypolicy' %} Privacy Policy {% else %} <a href='/privacypolicy'>Privacy Policy</a> {% endifequal %}
 
 <li>
-{% ifequal path '/contentpolicy' %} Content Policy {% else %} <a href='/contentpolicy'>Content Policy</a> {% endifequal %}
-
-<li>
 {% ifequal path '/tos' %} Terms of Service {% else %} <a href='/tos'>Terms of Service</a> {% endifequal %}
 
-<!--<li>
-{% ifequal path '/publishers' %} Privacy Policy {% else %} <a href='/publishers'>Privacy Policy</a> {% endifequal %}-->
+<li>
+{% ifequal path '/contentpolicy' %} Content Policy {% else %} <a href='/contentpolicy'>Content Policy</a> {% endifequal %}
 
 </ul>
 {% endblock content_left %}
