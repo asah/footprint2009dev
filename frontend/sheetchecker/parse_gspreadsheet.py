@@ -37,6 +37,8 @@ expects the caller to pass in the providerID and providerName)
 
 import re
 import logging
+from google.appengine.api import urlfetch
+import geocode
 
 MAX_BLANKROWS = 2
 
@@ -111,6 +113,15 @@ def get_minlen(record, field_name, minlen):
   elif len(val) < minlen:
     parser_error("value not long enough in "+field_name+": '"+val+"'-- "+
                  "requires %d characters" % minlen)
+  return val
+
+def get_blank(record, field_name, reason=" in this case."):
+  """parse a field as a string that must be blank."""
+  val = recordval(record, field_name)
+  if val == "":
+    return ""
+  else:
+    parser_error("field "+field_name+" must be blank"+reason)
   return val
 
 def cellval(row, col):
@@ -297,16 +308,85 @@ def parse(instr):
       numopps += 1
       blankrows = 0
       record['oppid'] = str(numopps)
-      get_minlen(record, 'OpportunityTitle', 10)
+      get_minlen(record, 'OpportunityTitle', 4)
       get_minlen(record, 'Description', 15)
-      # TODO: try geocoding...
-      get_dtval(record, "StartDate")
-      get_tmval(record, "StartTime")
-      get_dtval(record, "EndDate")
-      get_tmval(record, "EndTime")
+      location_name = get_minlen(record, 'LocationName', 4)
+      if location_name == "virtual":
+        is_virtual = True
+      elif location_name.lower() == "virtaul" or location_name.lower() == "virtual":
+        parser_error("misspelled location name: "+location_name+
+                     " -- perhaps you meant 'virtual'?  (note spelling)")
+        is_virtual = True
+      else:
+        is_virtual = False
+
+      if is_virtual:
+        reason = " for virtual opportunities-- if you want both a location and"
+        reason += " a virtual opportunity, then provide two separate records."
+        get_blank(record, "LocationStreet", reason)
+        get_blank(record, "LocationCity", reason)
+        get_blank(record, "LocationProvince", reason)
+        get_blank(record, "LocationPostalCode", reason)
+        get_blank(record, "LocationCountry", reason)
+      else:
+        # TODO: appengine 30sec timeouts render this ambiguous/confuse for users
+        check_locations = False
+        if check_locations:
+          addr = recordval(record, "LocationStreet")
+          addr += " "+recordval(record, "LocationCity")
+          addr += " "+recordval(record, "LocationProvince")
+          addr += " "+recordval(record, "LocationPostalCode")
+          addr += " "+recordval(record, "LocationCountry")
+          latlong = geocode.geocode(addr)
+          if latlong == "":
+            parser_error("could not convert '"+addr+"' to a location "+
+                         "on the map: changing the address will help your "+
+                         "listing be found by users.")
+
+      start_date = recordval(record, "StartDate")
+      if start_date == "ongoing":
+        ongoing = True
+      elif start_date.lower().find("ong") == 0:
+        parser_error("misspelled Start Date: "+start_date+
+                     " -- perhaps you meant 'ongoing'?  (note spelling)")
+        ongoing = True
+      else:
+        ongoing = False
+      if ongoing:
+        start_time = recordval(record, "StartTime")
+        if start_time != "" and start_time != "ongoing":
+          parser_error("ongoing event should have blank Start Time.")
+        end_date = recordval(record, "EndDate")
+        if end_date != "" and end_date != "ongoing":
+          parser_error("ongoing event should have blank End Date.")
+        end_time = recordval(record, "EndTime")
+        if end_time != "" and end_time != "ongoing":
+          parser_error("ongoing event should have blank End Time.")
+      else:
+        get_dtval(record, "StartDate")
+        get_tmval(record, "StartTime")
+        get_dtval(record, "EndDate")
+        get_tmval(record, "EndTime")
       email = recordval(record, "ContactEmail")
       if email != "" and email.find("@") == -1:
         parser_error("malformed email address: "+email)
+      url = recordval(record, "URL")
+
+      # TODO: appengine 30sec timeouts render this ambiguous/confuse for users
+      check_urls = False
+      if check_urls:
+        try:
+          fetch_result = urlfetch.fetch(url)
+          if fetch_result.status_code >= 400:
+            parser_error("problem fetching url '"+url+"': HTTP status code "+
+                         fetch_result.status_code)
+        except urlfetch.InvalidURLError:
+          parser_error("invalid url '"+url+"'")
+        except urlfetch.ResponseTooLargeError:
+          parser_error("problem fetching url '"+url+"': response too large")
+        except:
+          parser_error("problem fetching url '"+url+"'")
+        
       daysofweek = recordval(record, "DaysOfWeek").split(",")
       for dow in daysofweek:
         lcdow = dow.strip().lower()
@@ -332,16 +412,15 @@ def parse(instr):
         parser_error("missing Sponsoring Organization-- this field is required."+
                      "  (it can be an informal name, or even a person's name).")
       else:
-        get_minlen(record, 'SponsoringOrganization', 8)
+        get_minlen(record, 'SponsoringOrganization', 4)
       freq = recordval(record, 'Frequency').lower()
-      if not (freq == "" or freq.find("once") >= 0 or
-              freq.find("daily") >= 0 or freq.find("weekly") >= 0 or
-              (freq.find("other") >= 0 and freq.find("week") >= 0) or
-              freq.find("monthly") >= 0):
+      if not (freq == "" or freq == "once" or freq == "daily" or
+              freq == "weekly" or freq == "every other week" or 
+              freq == "monthly"):
         parser_error("unsupported frequency: '"+
                      recordval(record, 'Frequency')+"'")
     CURRENT_ROW += 1
   if len(MESSAGES) == 0:
-    MESSAGES.append("spreadsheet parsed correctly-- no errors!")
+    MESSAGES.append("spreadsheet parsed correctly!  Feel free to submit.")
   return DATA, MESSAGES
 
