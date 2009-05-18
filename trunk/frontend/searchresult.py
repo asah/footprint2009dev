@@ -153,13 +153,13 @@ class SearchResultSet(object):
     """clip to start/num using the unmerged (original) results."""
     return self.clip_set(start, num, self.results)
 
-  def track_views(self):
+  def track_views(self, num_to_incr=1):
     """increment impression counts for items in the set."""
     logging.debug(str(datetime.datetime.now())+" track_views: start")
     for primary_res in self.clipped_results:
       #logging.debug("track_views: key="+primary_res.merge_key)
       primary_res.merged_impressions = pagecount.IncrPageCount(
-        pagecount.VIEWS_PREFIX+primary_res.merge_key, 1)
+        pagecount.VIEWS_PREFIX+primary_res.merge_key, num_to_incr)
       # TODO: for now (performance), only track merge_keys, not individual items
       #primary_res.impressions = pagecount.IncrPageCount(primary_res.item_id, 1)
       #for res in primary_res.merged_list:

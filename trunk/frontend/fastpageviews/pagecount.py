@@ -12,7 +12,6 @@ import random
 # this is a key used for testing and calls made with it
 # are seperated from the production stats
 TEST_API_KEY = 'testkey'
-TESTING = False
 
 VIEWS_PREFIX = "v:"
 CLICKS_PREFIX = "c:"
@@ -68,16 +67,6 @@ def GetPageCount(pagename):
 
 def IncrPageCount(pagename, delta):
   """ increment page count """
-  global TESTING
-
-  if ("key.%s.searches" % TEST_API_KEY) == pagename:
-    TESTING = True
-
-  if TESTING:
-    logging.debug("pagecount.IncrPageCount(pagename='%s', value=%d) tested out" 
-      % (pagename, delta))
-    return
-
   logging.debug("pagecount.IncrPageCount(pagename='"+pagename+"')")
   memcache_id = KeyName(pagename)
   if memcache.get(memcache_id) == None:

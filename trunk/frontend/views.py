@@ -735,9 +735,10 @@ class redirect_view(webapp.RequestHandler):
     logging.debug('url: %s s: %s xs: %s' % (url, sig, expected_sig))
     if sig == expected_sig:
       if id:
+        # note: testapi calls don't test clicks...
+        clicks = pagecount.IncrPageCount(pagecount.CLICKS_PREFIX + id, 1)
         # note: clicks are relatively rare-- we can trivially afford the
         # cost of CTR computation, and it helps development.
-        clicks = pagecount.IncrPageCount(pagecount.CLICKS_PREFIX + id, 1)
         views = pagecount.GetPageCount(pagecount.VIEWS_PREFIX + id)
         logging.debug("click: merge_key=%s  clicks=%d  views=%d  ctr=%.1f%%" %
                       (id, clicks, views, float(clicks)/float(views+0.1)))

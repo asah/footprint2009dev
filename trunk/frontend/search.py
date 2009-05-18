@@ -27,6 +27,7 @@ import api
 import base_search
 import geocode
 import scoring
+from fastpageviews import pagecount
 
 CACHE_TIME = 24*60*60  # seconds
 
@@ -88,7 +89,12 @@ def search(args):
   # TODO: for better results, we should segment CTR computation by
   # homepage vs. search views, etc. -- but IMHO it's better to give
   # up and outsource stats to a web-hosted service.
-  result_set.track_views()
+  if 'key' in args and args['key'] == pagecount.TEST_API_KEY:
+    logging.debug("search(): not tracking testapi key views")
+    # needed to populate stats
+    result_set.track_views(num_to_incr=0)
+  else:
+    result_set.track_views(num_to_incr=1)
   return result_set
 
 
