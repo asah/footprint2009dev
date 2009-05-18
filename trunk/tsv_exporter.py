@@ -142,7 +142,7 @@ def main(argv):
     #print min_key
     diff = datetime.datetime.now() - t0
     secs = "%d.%d" % (diff.seconds, diff.microseconds/1000)
-    logging.info('fetched header + %d in %s secs from %s', lines - 1, secs, log_key)
+    logging.info('fetched header + %d in %s secs from %s', lines, secs, log_key)
 
   return 0
 
