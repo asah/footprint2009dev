@@ -427,6 +427,8 @@ class ui_my_snippets_view(webapp.RequestHandler):
     """HTTP get method."""
     user_info = userinfo.get_user(self.request)
 
+    unique_args = get_unique_args_from_request(self.request)
+
     if user_info:
       # Get the list of all events that I like or am doing.
       # This is a dict of event id keys and interest flag values (right now
@@ -439,11 +441,10 @@ class ui_my_snippets_view(webapp.RequestHandler):
       for result in my_events_gbase_result_set.results:
         result.interest = my_interests[result.item_id]
 
-      args = get_unique_args_from_request(self.request)
-      search.normalize_query_values(args)
-      start = args[api.PARAM_START]
+      search.normalize_query_values(unique_args)
+      start = unique_args[api.PARAM_START]
       my_events_gbase_result_set.clip_start_index = start
-      num = args[api.PARAM_NUM]
+      num = unique_args[api.PARAM_NUM]
 
       # Handle clipping.
       my_events_gbase_result_set.clip_results(start, num)
