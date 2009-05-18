@@ -77,16 +77,14 @@ KNOWN_ORGS = {}
 def get_dtval(record, field_name):
   """parse a field as a datetime."""
   val = recordval(record, field_name)
-  if (val != "" and val != "ongoing" and
-      not re.match(r'\d\d?/\d\d?/\d\d\d\d', val)):
+  if (val != "" and not re.match(r'\d\d?/\d\d?/\d\d\d\d', val)):
     parser_error("bad value in "+field_name+": '"+val+"'-- try MM/DD/YYYY")
   return val
 
 def get_tmval(record, field_name):
   """parse a field as a time-of-day."""
   val = recordval(record, field_name)
-  if (val != "" and val != "ongoing" and
-      not re.match(r'\d?\d:\d\d(:\d\d)?', val)):
+  if (val != "" and not re.match(r'\d?\d:\d\d(:\d\d)?', val)):
     parser_error("bad value in "+field_name+": '"+val+"'-- try HH:MM:SS")
   return val
 
@@ -349,6 +347,9 @@ def parse(instr):
       elif start_date.lower().find("ong") == 0:
         parser_error("misspelled Start Date: "+start_date+
                      " -- perhaps you meant 'ongoing'?  (note spelling)")
+        ongoing = True
+      elif start_date == "":
+        parser_error("Start Date may not be blank.")
         ongoing = True
       else:
         ongoing = False
