@@ -38,7 +38,7 @@ for (var i = 0; i < popularSearches.length; i++) {
 
 var url = '/ui_snippets?start=0&num=4&minimal_snippets_list=1&' + vol_loc_term;
 
-el('location_text').innerHTML = city;
+setTextContent(el('location_text'), city);
 jQuery.ajax({
       url: url,
       async: true,
