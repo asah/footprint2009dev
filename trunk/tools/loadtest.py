@@ -33,7 +33,7 @@ DEFAULT_TIMEOUT = 10
 socket.setdefaulttimeout(DEFAULT_TIMEOUT)
 
 # set to a lower number if you have problems
-CONCURRENT_REQUESTS = 30
+CONCURRENT_PAGE_FETCHERS = 30
 
 CONCURRENT_STATIC_FETCHERS = 10
 STATIC_CONTENT_HITRATE = 80
@@ -203,9 +203,13 @@ def setup_tests():
       request_type_counts[name] += 1.0
     else:
       request_type_counts[name] = 1.0
+  print "CONCURRENT_PAGE_FETCHERS: %d" % CONCURRENT_PAGE_FETCHERS
+  print "CONCURRENT_STATIC_FETCHERS: %d" % CONCURRENT_STATIC_FETCHERS
+  print "STATIC_CONTENT_HITRATE: %d%%" % STATIC_CONTENT_HITRATE
   print "request type breakdown:"
   for name, cnt in request_type_counts.iteritems():
-    print "  %4.1f%% - %s" % (100.0*cnt/float(len(REQUEST_FREQ)), name)
+    print "  %4.1f%% - %4d%% cache hitrate - %s" % \
+        (100.0*cnt/float(len(REQUEST_FREQ)), CACHE_HITRATE[name], name)
 
 RUNNING = True
 def run_tests():
@@ -230,7 +234,7 @@ def run_tests():
     append_results([result_name, elapsed])
 
 setup_tests()
-for i in range(CONCURRENT_REQUESTS):
+for i in range(CONCURRENT_PAGE_FETCHERS):
   thread.start_new_thread(run_tests, ())
 
 for i in range(CONCURRENT_STATIC_FETCHERS):
