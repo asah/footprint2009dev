@@ -29,6 +29,7 @@ from google.appengine.api import urlfetch
 from StringIO import StringIO
 from facebook import Facebook
 
+import deploy
 import models
 import utils
 
@@ -41,8 +42,6 @@ USERINFO_CACHE_TIME = 120  # seconds
 
 # Keys specific to Footprint
 FRIENDCONNECT_KEY = '02962301966004179520'
-FACEBOOK_KEY = 'df68a40a4a90d4495ed03f920f16c333'
-FACEBOOK_SECRET = 'b063a345dd9f0f9c6d3baad86dd5ae8a'
 
 def get_cookie(cookie_name):
   if 'HTTP_COOKIE' in os.environ:
@@ -182,7 +181,8 @@ class FriendConnectUser(User):
 
 class FacebookUser(User):
   def __init__(self, request):
-    self.facebook = Facebook(FACEBOOK_KEY, FACEBOOK_SECRET)
+    self.facebook = Facebook(deploy.get_facebook_key(),
+                             deploy.get_facebook_secret())
     if not self.facebook.check_connect_session(request):
       raise NotLoggedInError()
 
@@ -202,8 +202,11 @@ class FacebookUser(User):
     self.friends = []
 
     friend_ids = self.facebook.friends.getAppUsers()
+    if not friend_ids or len(friend_ids) == 0:
+      friend_ids = []  # Force return type to be a list, not a dict or None.
     self.total_friends = len(friend_ids)
 
+    # TODO: handle >20 friends.
     friend_objects = self.facebook.users.getInfo([friend_ids[0:20]],
         ['name', 'pic_square_with_logo'])
     for friend_object in friend_objects:
@@ -218,7 +221,7 @@ class FacebookUser(User):
 
   @classmethod
   def get_cookie(cls):
-    return get_cookie(FACEBOOK_KEY)
+    return get_cookie(deploy.get_facebook_key())
 
 
 class TestUser(User):
