@@ -42,6 +42,7 @@ STATIC_CONTENT_FILES = {
   '/about' : 'about_us.html',
   '/privacypolicy' : 'privacy_policy.html',
   '/contentpolicy' : 'content_policy.html',
+  '/spreadsheet' : 'spreadsheet.html',
   '/publishers' : 'publishers.html',
   '/help' : 'help.html',
   '/faq' : 'faq.html',
