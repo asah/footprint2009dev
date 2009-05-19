@@ -42,6 +42,7 @@ from third_party.recaptcha.client import captcha
 
 import api
 import base_search
+import deploy
 import geocode
 import models
 import modelutils
@@ -128,6 +129,7 @@ def render_template(template_filename, template_values):
   """wrapper for template.render() which handles path."""
   path = os.path.join(os.path.dirname(__file__),
                       TEMPLATE_DIR + template_filename)
+  deploy.load_standard_template_values(template_values)
   rendered = template.render(path, template_values)
   return rendered
 
