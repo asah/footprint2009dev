@@ -274,6 +274,11 @@ window.dhtmlHistory = {
 			: ""
 		);
     },
+    
+    /* Added by manzoid */
+    getWaitTime: function() {
+	return this.waitTime;
+    },
 	
 	/*- - - - - - - - - - - -*/
 	
@@ -397,7 +402,8 @@ window.dhtmlHistory = {
 	/*Private: Safari method to write the history stack to a hidden form field*/
 	putSafariState: function(newLocation) {
 	    var stack = this.getSafariStack();
-	    stack[history.length - this.safariHistoryStartPoint] = newLocation;
+	    // Note(manzoid): added "- 1" to adjust for an apparent off by one err.
+	    stack[history.length - this.safariHistoryStartPoint - 1] = newLocation;
 	    this.safariStack.value = historyStorage.toJSON(stack);
 	},
 
