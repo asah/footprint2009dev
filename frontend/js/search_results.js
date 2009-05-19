@@ -53,10 +53,11 @@ Query.prototype.execute = function() {
   // Setting hash to an empty string causes a page reload.
   if (urlQueryString.length > 0 && urlQueryString != window.location.hash) {
     dhtmlHistory.add(urlQueryString);
-    // Sleep a bit to give the add function a chance to manipulate the hash.
-    // TODO(manzoid): Revisit, not clear why this was necessary, or why only
-    // 1 ms sufficed.  See comment on lines 191-3 of rsh.js.
-    setTimeout(executeSearchFromHashParams, 1);
+    // Sleep to give the add function a chance to manipulate the hash.
+    // TODO(manzoid): Revisit.  RSH says these delays are necessary, but
+    // should independently verify why.
+    // See comment on lines 191-3 of rsh.js.
+    setTimeout(executeSearchFromHashParams, dhtmlHistory.getWaitTime() + 1);
   }
 };
 
@@ -161,32 +162,32 @@ Query.prototype.setUseCache = function(use_cache) {
 
 
 function createQueryFromUrlParams() {
-  var keywords = getHashOrQueryParam('q', '');
+  var keywords = getHashParam('q', '');
 
-  var location = getHashOrQueryParam('vol_loc',
+  var location = getHashParam('vol_loc',
       getDefaultLocation().displayLong);
 
-  var start = Number(getHashOrQueryParam('start', '1'));
+  var start = Number(getHashParam('start', '1'));
   start = Math.max(start, 1);
 
-  var numPerPage = Number(getHashOrQueryParam('num', NUM_PER_PAGE));
+  var numPerPage = Number(getHashParam('num', NUM_PER_PAGE));
   numPerPage = Math.max(numPerPage, 1);
 
   var pageNum = (start - 1) / numPerPage;
 
-  var timePeriod = getHashOrQueryParam('timeperiod');
+  var timePeriod = getHashParam('timeperiod');
 
   var filters = {};
 
   // Read in the other filters from the URL, and place them in
   // 'filters' object.
   function getNamedFilterFromUrl(name) {
-    filters[name] = getHashOrQueryParam(name, '');
+    filters[name] = getHashParam(name, '');
   }
   getNamedFilterFromUrl('who_filter');
   getNamedFilterFromUrl('activity_filter');
 
-  var use_cache = Number(getHashOrQueryParam('cache', '1'));
+  var use_cache = Number(getHashParam('cache', '1'));
 
   return new Query(keywords, location, pageNum, use_cache, timePeriod, filters);
 }
@@ -268,9 +269,9 @@ function onLoadSearch() {
   if (el('location')) {
     setInputFieldValue(el('location'), getDefaultLocation().displayLong);
   }
-  createQueryFromUrlParams().execute();
 
-  // Using jquery json functions so pass in overrides.
+  // Using jquery json functions where RSH expects other json functions,
+  // pass in as overrides.
   dhtmlHistory.create({
       debugMode: false, // Set to 'true' to see the hidden form & iframe.
       toJSON: function(o) {
@@ -282,6 +283,8 @@ function onLoadSearch() {
   });
   dhtmlHistory.initialize();
   dhtmlHistory.addListener(executeSearchFromHashParams);
+
+  createQueryFromUrlParams().execute();
 }
 
 /** Asynchronously execute a search based on the current parameters.

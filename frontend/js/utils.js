@@ -136,6 +136,11 @@ function removeListener(element, type, callback) {
   }
 }
 
+/**
+ * Gets a map of params from the given URL.
+ * @param {string} paramString The URL params to process.
+ * @return {Object} The map of key/values.
+ */
 function getUrlParams(paramString) {
   // Decode URL hash params.
   var params = {};
@@ -156,18 +161,18 @@ function getUrlParams(paramString) {
 
 var cachedParams_ = {};
 
-/** Retrieve a parameter from the URL hashstring or querystring.
- * Hashstring takes precedence.
- * Note: this function uses cached results, invoke GetHashParams and
- * GetQueryParams to refresh the caches.
+/**
+ * Retrieves a parameter from the browser URL, as managed by RSH. If RSH doesn't
+ * have a valid value then fall back to the direct hashstring.
+ * Note: this function caches the processed parameters, keyed to the URL's.
  *
  * @param {string} paramName Parameter name
  * @param {string} opt_defaultValue Default value returned by this function if
  *     the parameter does not exist. If left unspecified, the function returns
  *     {@code null}.
  */
-function getHashOrQueryParam(paramName, opt_defaultValue) {
-  var location = dhtmlHistory.getCurrentLocation();
+function getHashParam(paramName, opt_defaultValue) {
+  var location = window.location.hash.substring(1); // Removes '#'.
   var params = cachedParams_[location];
   if (!params) {
     params = getUrlParams(location);
@@ -177,8 +182,10 @@ function getHashOrQueryParam(paramName, opt_defaultValue) {
   if (val === '') {
     return val;
   }
+
   return val || opt_defaultValue || null;
 }
+
 
 /** Count number of elements inside a JS object */
 function getObjectLength(object) {
