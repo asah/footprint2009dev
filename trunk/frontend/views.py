@@ -390,7 +390,7 @@ class ui_snippets_view(webapp.RequestHandler):
         'query_param_q' : unique_args.get(api.PARAM_Q, None),
       }
     loc = unique_args.get(api.PARAM_VOL_LOC, None)
-    if not geocode.is_latlong(loc) and not geocode.is_latlongzoom(loc):
+    if loc and not geocode.is_latlong(loc) and not geocode.is_latlongzoom(loc):
       template_values['query_param_loc'] = loc
     template_values['moderator'] = (user and user.get_user_info()
                                     and user.get_user_info().moderator)

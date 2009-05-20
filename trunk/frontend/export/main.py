@@ -555,7 +555,7 @@ class PopulateTable(webapp.RequestHandler):
         except:
           logging.error("export.PopulateTable put failed at row %d in %s%s" % 
             (row_number, table, table_version))
-          self.response.out.write("put failed at row %d in %s%s" % 
+          self.response.out.write("put failed at row %d in %s%s\n" % 
             (row_number, table, table_version))
 
     # end-of for each row
