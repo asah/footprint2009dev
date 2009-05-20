@@ -94,11 +94,12 @@ def process_popular_words(content):
     if word not in KNOWN_WORDS:
       KNOWN_WORDS[word] = 0
     KNOWN_WORDS[word] += 1
+
   print_progress("cleaning rare words from %d words" % len(KNOWN_WORDS))
-  # clean to reduce ram needs
   for word in KNOWN_WORDS.keys():
     if KNOWN_WORDS[word] < 2:
       del KNOWN_WORDS[word]
+
   print_progress("done: word dict size %d words" % len(KNOWN_WORDS))
 
 def print_word_stats():
@@ -144,7 +145,7 @@ def print_field_stats():
   outfh = open(FIELD_STATS_FN, "w")
   outfh.write("number of records: "+str(NUM_RECORDS_TOTAL)+"\n")
   for i, fieldname in enumerate(FIELD_NAMES):
-    outfh.write("field "+fieldname+":\n")
+    outfh.write("field "+fieldname+":uniqvals="+str(len(FIELD_VALUES[i]))+"\n")
     sorted_vals = list(FIELD_VALUES[i].iteritems())
     sorted_vals.sort(cmp=lambda a, b: cmp(b[1], a[1]))
     for val, freq in sorted_vals[0:1000]:
@@ -226,7 +227,7 @@ def run_shell(command, silent_ok=False, universal_newlines=True,
   return stdout, stderr, retcode
 
 
-def load_gbase(name, url):
+def load_gbase(name, url, do_processing=True, do_ftp=True):
   """shutup pylint."""
   print_progress("loading "+name+" from "+url)
 
@@ -234,42 +235,49 @@ def load_gbase(name, url):
   # later, we'll run these concurrently, but for now we're RAM-limited.
   # ignore retcode
   tsv_filename = "out-"+name+".tsv"
-  stdout, stderr, retcode = run_shell(["./footprint_lib.py", "--progress",
-                                       #"--ftpinfo", USERNAME+":"+PASSWORD,
-                                       "--output", tsv_filename, url],
-                                      silent_ok=True, print_output=False)
-  print stdout,
-  if stderr and stderr != "":
-    print name+":STDERR: ", re.sub(r'\n', '\n'+name+':STDERR: ', stderr)
-  if retcode and retcode != 0:
-    print name+":RETCODE: "+str(retcode)
 
+  if do_processing:
+    stdout, stderr, retcode = run_shell(["./footprint_lib.py", "--progress",
+                                         #"--ftpinfo", USERNAME+":"+PASSWORD,
+                                         "--output", tsv_filename, url],
+                                        silent_ok=True, print_output=False)
+    print stdout,
+    if stderr and stderr != "":
+      print name+":STDERR: ", re.sub(r'\n', '\n'+name+':STDERR: ', stderr)
+    if retcode and retcode != 0:
+      print name+":RETCODE: "+str(retcode)
+
+  print "reading TSV data..."
   infh = open(tsv_filename, "r")
   tsv_data = infh.read()
   infh.close()
 
+  print "processing field stats..."
   process_field_stats(tsv_data)
+
+  print "processing popular words..."
   process_popular_words(tsv_data)
 
-  print_progress("ftp'ing to base")
-  footprint_lib.ftp_to_base(name, USERNAME+":"+PASSWORD, tsv_data)
-  print_progress("load_gbase: done.")
+  if do_ftp:
+    print_progress("ftp'ing to base")
+    footprint_lib.ftp_to_base(name, USERNAME+":"+PASSWORD, tsv_data)
+    print_progress("load_gbase: done.")
 
 
 def test_loaders():
   """for testing, read from local disk as much as possible."""
-  load_gbase("servenet", "servenet.xml")
-  load_gbase("unitedway", "unitedway.xml")
-  load_gbase("americansolutions", "americansolutions.xml")
-  load_gbase("meetup", "meetup.xml")
-  load_gbase("extraordinaries", "beextra-extraordinaries.xml")
-  load_gbase("idealist", "idealist.xml")
+  load_gbase("servenet", "servenet.xml", False, False)
+  load_gbase("unitedway", "unitedway.xml", False, False)
+  load_gbase("americansolutions", "americansolutions.xml", False, False)
+  #load_gbase("meetup", "meetup.xml", False, False)
+  load_gbase("extraordinaries", "beextra-extraordinaries.xml", False, False)
+  load_gbase("idealist", "idealist.xml", False, False)
   load_gbase("gspreadsheets",
-             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
-  load_gbase("craigslist", "craigslist-cache.txt")
-  load_gbase("americorps", "americorps-xml_ac_recruitopps.xml.gz")
-  load_gbase("volunteer.gov", "volunteergov.xml")
-  load_gbase("handson", "hot.footprint.xml.gz")
+             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw", False, False)
+  load_gbase("craigslist", "craigslist-cache.txt", False, False)
+  load_gbase("americorps", "americorps-xml_ac_recruitopps.xml.gz", False, False)
+  load_gbase("volunteer.gov", "volunteergov.xml", False, False)
+  load_gbase("handson", "hot.footprint.xml.gz", False, False)
 
 def loaders():
   """put all loaders in one function for easier testing."""
@@ -284,8 +292,9 @@ def loaders():
   load_gbase("habitat", "http://www.habitat.org/cd/gv/schedule_to_xml.aspx")
   load_gbase("americansolutions",
              "http://www.americansolutions.com/footprint/footprint.xml")
-  load_gbase("meetup", "http://api.meetup.com/footprint?"+
-             "key=2c24625a70343bb68451e337e714b22")
+  #load_gbase("meetup", "http://api.meetup.com/footprint?"+
+  #           "key=2c24625a70343bb68451e337e714b22")
+
   # old custom feed
   #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
   #           "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
@@ -316,7 +325,6 @@ def main():
   loaders()
   print_word_stats()
   print_field_stats()
-
 
 if __name__ == "__main__":
   main()
