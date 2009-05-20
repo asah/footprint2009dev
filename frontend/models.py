@@ -31,6 +31,48 @@ class BadAccountType(Error):
 
 # Models
 
+class Config(db.Model):
+  """Configuration parameters.
+  
+  The key name is used as the name of the parameter.
+  """
+  description = db.StringProperty()
+  value = db.StringProperty(required=True)
+
+  MEMCACHE_ENTRY = 'Config'
+
+  # Warning: do not add private/secret configuration values used in production
+  # to these default values. The default values are intended for development.
+  # Production values must be stored in the datastore.
+  DEFAULT_VALUES = {}
+
+  local_config_cache = None
+
+  @classmethod
+  def get_value(cls, name):
+    """Retrieves the value of a configuration parameter.
+    
+    Args:
+      name: the name of the parameter whose value we are looking for.
+
+    Returns:
+      The value of the parameter or None if the parameter is unknown.
+    """
+    if cls.local_config_cache is None:
+      # The local cache is empty, retrieve its content from memcache.
+      cache = memcache.get(cls.MEMCACHE_ENTRY)
+      if cache is None:
+        # Nothing in memcache either, recreate the cache from the datastore.
+        cache = dict(cls.DEFAULT_VALUES)
+        for parameter in Config.all():
+          cache[parameter.key().name()] = parameter.value
+        # Save the full cache in memcache with 1h expiration time.
+        memcache.add(cls.MEMCACHE_ENTRY, cache, 60*60)
+      cls.local_config_cache = cache
+    # Retrieve the value from the cache.
+    return cls.local_config_cache.get(name)
+
+
 class UserInfo(db.Model):
   """Basic user statistics/preferences data."""
   # Key is accounttype:user_id.
