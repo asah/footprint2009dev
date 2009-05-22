@@ -119,6 +119,7 @@ def error_request(name, cached=False):
   """requests for 404 junk on the site.  Here mostly to prove that
   the framework does catch errors."""
   make_request(cached, BASE_URL+"foo")
+  return "no content"
 register_request_type("error", error_request, freq=5)
 
 def static_url():
@@ -199,7 +200,7 @@ def nextpage_serp_request(name, cached=False):
   make_request(cached, search_url("/ui_snippets?start=11"))
   # we expect next-page static content to be 100% cacheable
   # so don't return content
-  return ""
+  return "no content"
 # nextpage is relatively rare, but this includes all pagination requests
 register_request_type("nextpage", nextpage_serp_request, freq=5)
 
@@ -207,7 +208,7 @@ def api_request(name, cached=False):
   # API calls are probably more likely to ask for more results and/or paginate
   make_request(cached, search_url("/api/volopps?num=20&key=testkey"))
   # API requests don't create static content requests
-  return ""
+  return "no content"
 # until we have more apps, API calls will be rare
 register_request_type("api", api_request, freq=2)
 
