@@ -158,11 +158,14 @@ def static_fetcher_main():
     if len(static_content_request_queue) == 0:
       time.sleep(1)
       continue
+    url = None
     static_content_request_lock.acquire()
-    url = static_content_request_queue.pop(0)
+    if len(static_content_request_queue) > 0:
+      url = static_content_request_queue.pop(0)
     static_content_request_lock.release()
-    cached = (random.randint(0, 99) < STATIC_CONTENT_HITRATE)
-    make_request(cached, url)
+    if url:
+      cached = (random.randint(0, 99) < STATIC_CONTENT_HITRATE)
+      make_request(cached, url)
 
 def homepage_request(name, cached=False):
   """request to FP homepage."""
