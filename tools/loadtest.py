@@ -118,7 +118,8 @@ def search_url(base, loc="Chicago,IL", keyword="park"):
 def error_request(name, cached=False):
   """requests for 404 junk on the site.  Here mostly to prove that
   the framework does catch errors."""
-  make_request(cached, BASE_URL+"foo")
+  if make_request(cached, BASE_URL+"foo") == "":
+    return ""
   return "no content"
 register_request_type("error", error_request, freq=5)
 
@@ -170,9 +171,12 @@ def static_fetcher_main():
       url = static_content_request_queue.pop(0)
     static_content_request_lock.release()
     if url:
+      # for static content, caching means client/proxy-side
       cached = (random.randint(0, 99) < STATIC_CONTENT_HITRATE)
+      if cached:
+        continue
       ts1 = datetime.now()
-      content = make_request(cached, url)
+      content = make_request(False, url)
       elapsed = delta_secs(ts1, datetime.now())
       if content and content != "":
         result_name = "static content requests (success)"
@@ -197,7 +201,8 @@ register_request_type("initial_serp", initial_serp_request, cache_hitrate="10%")
 def nextpage_serp_request(name, cached=False):
   # statistically, nextpage is page 2
   # 50% hitrate due to the overfetch algorithm
-  make_request(cached, search_url("/ui_snippets?start=11"))
+  if make_request(cached, search_url("/ui_snippets?start=11")) == "":
+    return ""
   # we expect next-page static content to be 100% cacheable
   # so don't return content
   return "no content"
@@ -206,7 +211,8 @@ register_request_type("nextpage", nextpage_serp_request, freq=5)
 
 def api_request(name, cached=False):
   # API calls are probably more likely to ask for more results and/or paginate
-  make_request(cached, search_url("/api/volopps?num=20&key=testkey"))
+  if make_request(cached, search_url("/api/volopps?num=20&key=testkey")) == "":
+    return ""
   # API requests don't create static content requests
   return "no content"
 # until we have more apps, API calls will be rare
