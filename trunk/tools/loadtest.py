@@ -29,14 +29,19 @@ from datetime import datetime
 import socket
 import random
 
-DEFAULT_TIMEOUT = 10
+# match appengine's timeout
+DEFAULT_TIMEOUT = 30
 socket.setdefaulttimeout(DEFAULT_TIMEOUT)
 
-# set to a lower number if you have problems
+# fetchers take RAM and create extra server load
 CONCURRENT_PAGE_FETCHERS = 30
-
 CONCURRENT_STATIC_FETCHERS = 10
+
+# how long to run the testing for-- want to amortize startup time
+RUN_TIME = 60*10
+
 STATIC_CONTENT_HITRATE = 80
+
 
 START_TS = datetime.now()
 def delta_secs(ts1, ts2):
@@ -165,7 +170,14 @@ def static_fetcher_main():
     static_content_request_lock.release()
     if url:
       cached = (random.randint(0, 99) < STATIC_CONTENT_HITRATE)
-      make_request(cached, url)
+      ts1 = datetime.now()
+      content = make_request(cached, url)
+      elapsed = delta_secs(ts1, datetime.now())
+      if content and content != "":
+        result_name = "static content requests (success)"
+      else:
+        result_name = "static content requests (errors)"
+      append_results([result_name, elapsed])
 
 def homepage_request(name, cached=False):
   """request to FP homepage."""
@@ -220,73 +232,59 @@ def run_tests():
   while RUNNING:
     testname = REQUEST_FREQ[random.randint(0, len(REQUEST_FREQ)-1)]
     func = REQUEST_TYPES[testname]
-    ts1 = datetime.now()
     cached = (random.randint(0, 99) < CACHE_HITRATE[testname])
+    ts1 = datetime.now()
     content = func(testname, cached)
     elapsed = delta_secs(ts1, datetime.now())
+    if cached:
+      result_name = testname + " (warm cache)"
+    else:
+      result_name = testname + " (cold cache)"
     # don't count static content towards latency--
     # too hard to model CSS/JS execution costs, HTTP pipelining
     # and parallel fetching.  But we do want to create load on the
     # servers
     if content and content != "":
       fetch_static_content(BASE_URL, content)
-    if cached:
-      result_name = testname + " (warm cache)"
     else:
-      result_name = testname + " (cold cache)"
+      result_name = testname + " (errors)"
     append_results([result_name, elapsed])
 
-setup_tests()
-for i in range(CONCURRENT_PAGE_FETCHERS):
-  thread.start_new_thread(run_tests, ())
+def main():
+  setup_tests()
+  for i in range(CONCURRENT_PAGE_FETCHERS):
+    thread.start_new_thread(run_tests, ())
 
-for i in range(CONCURRENT_STATIC_FETCHERS):
-  thread.start_new_thread(static_fetcher_main, ())
+  for i in range(CONCURRENT_STATIC_FETCHERS):
+    thread.start_new_thread(static_fetcher_main, ())
+  
+  while True:
+    time.sleep(2)
+    current_max = len(RESULTS)
+    total_secs_elapsed, total_qps = perfstats(current_max)
+    print " %4.1f: %4.1f queries/sec (avg across workload)" % \
+        (total_secs_elapsed, total_qps)
+    sum_elapsed_time = {}
+    counts = {}
+    for i in range(0, current_max-1):
+      name, elapsed_time = RESULTS[i]
+      if name in sum_elapsed_time:
+        sum_elapsed_time[name] += elapsed_time
+        counts[name] += 1
+      else:
+        sum_elapsed_time[name] = elapsed_time
+        counts[name] = 1
+    for name in sorted(sum_elapsed_time):
+      print "  %4d requests, %6dms avg latency for %s" % \
+          (counts[name], int(1000*sum_elapsed_time[name]/counts[name]), name)
+    if total_secs_elapsed >= RUN_TIME:
+      sys.exit(0)
 
-while True:
-  time.sleep(2)
-  current_max = len(RESULTS)
-  total_secs_elapsed, total_qps = perfstats(current_max)
-  print " %4.1f: %4.1f queries/sec (avg across workload)" % \
-      (total_secs_elapsed, total_qps)
-  sum_elapsed_time = {}
-  counts = {}
-  for i in range(0, current_max-1):
-    name, elapsed_time = RESULTS[i]
-    if name in sum_elapsed_time:
-      sum_elapsed_time[name] += elapsed_time
-      counts[name] += 1
-    else:
-      sum_elapsed_time[name] = elapsed_time
-      counts[name] = 1
-  for name in sorted(sum_elapsed_time):
-    print "  %4d requests, %6dms avg latency for %s" % \
-        (counts[name], int(1000*sum_elapsed_time[name]/counts[name]), name)
-
-#from optparse import OptionParser
-#if __name__ == "__main__":
-#  parser = OptionParser("usage: %prog [options]...")
-#  parser.set_defaults(metros=False)
-#  parser.set_defaults(load_cache=True)
-#  parser.add_option("--metros", action="store_true", dest="metros")
-#  parser.add_option("--load_cache", action="store_true", dest="load_cache")
-#  parser.add_option("--noload_cache", action="store_false", dest="load_cache")
-#  (options, args) = parser.parse_args(sys.argv[1:])
-#  if options.metros:
-#    crawl_metros()
-#  read_metros()
-#  if options.load_cache:
-#    load_cache()
-#  else:
-#    try:
-#      os.unlink(CACHE_FN)
-#    except:
-#      print name
-#  num_cached_pages = len(pages)
-#
-#  outstr = ""
-#  for url in metros:
-#    thread.start_new_thread(crawl_metro_page, (url+"vol/", ""))
-#
-#  print_status()
-#  sys.exit(0)
+if __name__ == "__main__":
+  if len(sys.argv) < 3:
+    print "Usage: "+sys.argv[0]+": <run time> <concurrent fetchers>"
+    sys.exit(1)
+  RUN_TIME = int(sys.argv[1])
+  CONCURRENT_PAGE_FETCHERS = int(sys.argv[2])
+  CONCURRENT_STATIC_FETCHERS = int(CONCURRENT_PAGE_FETCHERS / 3)
+  main()
