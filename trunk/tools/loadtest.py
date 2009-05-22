@@ -281,9 +281,13 @@ def main():
       else:
         sum_elapsed_time[name] = elapsed_time
         counts[name] = 1
+    total_counts = 0
+    for name in counts:
+      total_counts += counts[name]
     for name in sorted(sum_elapsed_time):
-      print "  %4d requests, %6dms avg latency for %s" % \
-          (counts[name], int(1000*sum_elapsed_time[name]/counts[name]), name)
+      print "  %4d requests (%4.1f%%), %6dms avg latency for %s" % \
+          (counts[name], float(counts[name]*100)/float(total_counts+1),
+           int(1000*sum_elapsed_time[name]/counts[name]), name)
     if total_secs_elapsed >= RUN_TIME:
       sys.exit(0)
 
