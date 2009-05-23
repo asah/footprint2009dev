@@ -765,7 +765,7 @@ if __name__ == "__main__":
   #logging.getLogger().setLevel(logging.DEBUG)
   get_options()
   start_details = get_quota_details()
-  #main()
+  main()
   end_details = get_quota_details()
   for key in start_details:
     startval = start_details[key][0]
@@ -780,6 +780,6 @@ if __name__ == "__main__":
       delta_pct = "0.0%"
     if False and delta < 0.0001:
       continue
-    print "%45s: %4s of quota: %s used, which scales to %s of %s %s / day." % \
+    print "%45s: %6s of quota: %s used, which scales to %s of %s %s / day." % \
         (key, delta_pct, fmtnum(delta), fmtnum(day_delta), fmtnum(quota), units)
 
