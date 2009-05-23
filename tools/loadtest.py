@@ -41,7 +41,7 @@ CONCURRENT_STATIC_FETCHERS = 10
 RUN_TIME = 60*10
 
 STATIC_CONTENT_HITRATE = 80
-
+STATIC_REQUEST_NAME = "static content requests"
 
 START_TS = datetime.now()
 def delta_secs(ts1, ts2):
@@ -50,10 +50,11 @@ def delta_secs(ts1, ts2):
       1.0*delta_ts.seconds + \
       delta_ts.microseconds / 1000000.0
 
-def perfstats(queries):
+def perfstats(hits, pageviews):
   secs_elapsed = delta_secs(START_TS, datetime.now())
-  qps = queries / secs_elapsed
-  return (secs_elapsed, qps)
+  hit_qps = hits / secs_elapsed
+  pageview_qps = pageviews / secs_elapsed
+  return (secs_elapsed, hit_qps, pageview_qps)
 
 RESULTS = []
 RESULTS_lock = thread.allocate_lock()
@@ -178,10 +179,9 @@ def static_fetcher_main():
       ts1 = datetime.now()
       content = make_request(False, url)
       elapsed = delta_secs(ts1, datetime.now())
-      if content and content != "":
-        result_name = "static content requests (success)"
-      else:
-        result_name = "static content requests (errors)"
+      result_name = STATIC_REQUEST_NAME
+      if content == "":
+        result_name += " (errors)"
       append_results([result_name, elapsed])
 
 def homepage_request(name, cached=False):
@@ -267,13 +267,17 @@ def main():
   
   while True:
     time.sleep(2)
-    current_max = len(RESULTS)
-    total_secs_elapsed, total_qps = perfstats(current_max)
-    print " %4.1f: %4.1f queries/sec (avg across workload)" % \
-        (total_secs_elapsed, total_qps)
+    pageviews = 0
+    for result in RESULTS:
+      if result[0].find(STATIC_REQUEST_NAME) == -1:
+        pageviews += 1
+    hit_reqs = len(RESULTS)
+    total_secs_elapsed, hit_qps, pageview_qps = perfstats(hit_reqs, pageviews)
+    print " %4.1f: %d hits (%.1f hits/sec), %d pageviews (%.1f pv/sec)" % \
+        (total_secs_elapsed, len(RESULTS), hit_qps, pageviews, pageview_qps)
     sum_elapsed_time = {}
     counts = {}
-    for i in range(0, current_max-1):
+    for i in range(0, hit_reqs-1):
       name, elapsed_time = RESULTS[i]
       if name in sum_elapsed_time:
         sum_elapsed_time[name] += elapsed_time
