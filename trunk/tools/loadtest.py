@@ -737,12 +737,16 @@ def get_quota_details():
     for header in re.finditer("<h3>(.+?)</h3>", line):
       category = header.group(1)
       for match in re.finditer('<tr><td>([a-zA-Z ]+)</td><td>.+?'+
-                               '>\s*([0-9.+-]+) of ([0-9.+-]+) ([a-zA-Z0-9 ]+)',
+                               '>\s*([0-9.+-]+) of ([0-9.+-]+)( [a-zA-Z0-9 ]+ )?',
                                line):
         name = match.group(1)
         value = float(match.group(2))
         quota = float(match.group(3))
-        units = match.group(4).strip()
+        units = match.group(4)
+        if units == None:
+          units = ""
+        else:
+          units = units.strip()
         if name != category:
           name = re.sub(re.compile(category+"\s*"), r'', name)
         details[category+"."+name] = [value, quota, units]
