@@ -778,7 +778,7 @@ if __name__ == "__main__":
       delta_pct = "%.1f%%" % (100.0 * day_delta / quota)
     else:
       delta_pct = "0.0%"
-    if False and delta < 0.0001:
+    if delta < 0.0001:
       continue
     print "%45s: %6s of quota: %s used, which scales to %s of %s %s / day." % \
         (key, delta_pct, fmtnum(delta), fmtnum(day_delta), fmtnum(quota), units)
