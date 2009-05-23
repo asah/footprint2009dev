@@ -41,7 +41,9 @@ CONCURRENT_STATIC_FETCHERS = 10
 RUN_TIME = 60*10
 
 STATIC_CONTENT_HITRATE = 80
-STATIC_REQUEST_NAME = "static content requests"
+
+# to identify pages vs. hits, we prefix page with a given name
+PAGE_NAME_PREFIX = "page_"
 
 START_TS = datetime.now()
 def delta_secs(ts1, ts2):
@@ -52,8 +54,8 @@ def delta_secs(ts1, ts2):
 
 def perfstats(hits, pageviews):
   secs_elapsed = delta_secs(START_TS, datetime.now())
-  hit_qps = hits / secs_elapsed
-  pageview_qps = pageviews / secs_elapsed
+  hit_qps = hits / float(secs_elapsed + 0.01)
+  pageview_qps = pageviews / float(secs_elapsed + 0.01)
   return (secs_elapsed, hit_qps, pageview_qps)
 
 RESULTS = []
@@ -179,7 +181,7 @@ def static_fetcher_main():
       ts1 = datetime.now()
       content = make_request(False, url)
       elapsed = delta_secs(ts1, datetime.now())
-      result_name = STATIC_REQUEST_NAME
+      result_name = "static content requests"
       if content == "":
         result_name += " (errors)"
       append_results([result_name, elapsed])
@@ -189,14 +191,14 @@ def homepage_request(name, cached=False):
   content = make_request(cached, BASE_URL)
   content += make_request(cached, search_url("/ui_snippets?", keyword=""))
   return content
-register_request_type("homepage", homepage_request)
+register_request_type("page_home", homepage_request)
 
 def initial_serp_request(name, cached=False):
   content = make_request(cached, search_url("/search#"))
   content += make_request(cached, search_url("/ui_snippets?"))
   return content
 # don't expect much caching-- use 10% hitrate so we can see warm vs. cold stats
-register_request_type("initial_serp", initial_serp_request, cache_hitrate="10%")
+register_request_type("page_serp_initial", initial_serp_request, cache_hitrate="10%")
 
 def nextpage_serp_request(name, cached=False):
   # statistically, nextpage is page 2
@@ -207,7 +209,7 @@ def nextpage_serp_request(name, cached=False):
   # so don't return content
   return "no content"
 # nextpage is relatively rare, but this includes all pagination requests
-register_request_type("nextpage", nextpage_serp_request, freq=5)
+register_request_type("page_serp_next", nextpage_serp_request, freq=5)
 
 def api_request(name, cached=False):
   # API calls are probably more likely to ask for more results and/or paginate
@@ -216,7 +218,7 @@ def api_request(name, cached=False):
   # API requests don't create static content requests
   return "no content"
 # until we have more apps, API calls will be rare
-register_request_type("api", api_request, freq=2)
+register_request_type("page_api", api_request, freq=2)
 
 def setup_tests():
   request_type_counts = {}
@@ -268,10 +270,11 @@ def main():
   while True:
     time.sleep(2)
     pageviews = 0
-    for result in RESULTS:
-      if result[0].find(STATIC_REQUEST_NAME) == -1:
-        pageviews += 1
     hit_reqs = len(RESULTS)
+    # important to look at a snapshot-- RESULTS is appended by other threads
+    for i in range(0, hit_reqs-1):
+      if RESULTS[i][0].find(PAGE_NAME_PREFIX) == 0:
+        pageviews += 1
     total_secs_elapsed, hit_qps, pageview_qps = perfstats(hit_reqs, pageviews)
     print " %4.1f: %d hits (%.1f hits/sec), %d pageviews (%.1f pv/sec)" % \
         (total_secs_elapsed, len(RESULTS), hit_qps, pageviews, pageview_qps)
@@ -290,7 +293,7 @@ def main():
       total_counts += counts[name]
     for name in sorted(sum_elapsed_time):
       print "  %4d requests (%4.1f%%), %6dms avg latency for %s" % \
-          (counts[name], float(counts[name]*100)/float(total_counts+1),
+          (counts[name], float(counts[name]*100)/float(total_counts+0.01),
            int(1000*sum_elapsed_time[name]/counts[name]), name)
     if total_secs_elapsed >= RUN_TIME:
       sys.exit(0)
