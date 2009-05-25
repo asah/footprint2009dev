@@ -1,0 +1,29 @@
+<script type='text/javascript'>
+  initMap();  // In case it hasn't been inited.
+  asyncLoadManager.addCallback('map', function(){
+      map.clearMarkers();
+  });
+</script>
+<br><br>
+
+{% ifequal current_page "MY_EVENTS" %}
+
+Really?! You can't find one good activity to like?! <p>This is your chance to promote an organization or cause. Simply click "like" in the search results and then share it with friends or keep track of it for yourself, through your activity page.
+
+{% else %}
+
+Your search
+{% if query_param_q %} for &#8220;<b>{{ query_param_q|escape }}</b>&#8221;{% endif %}
+{% if query_param_loc %} near &#8220;<b>{{ query_param_loc|escape }}</b>&#8221;{%endif %}
+did not match any volunteering activities.
+Suggestions:
+<ul>
+  <li>Make sure all words are spelled correctly.</li>
+  <li>Try different keywords.</li>
+  <li>Try more general keywords.</li>
+  <li>Try fewer keywords.</li>
+  <li>Try a different location.</li>
+</ul>
+
+{% endifequal %}
+
