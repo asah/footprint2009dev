@@ -80,6 +80,9 @@ SEARCHFIELDS = {
   # needed for search restricts
   "latitude":"float",
   "longitude":"float",
+  # needed for query by time-of-day
+  "startTime":"integer",
+  "endTime":"integer",
   # needed for basic search results
   "id":"builtin",
   "detailURL":"URL",
@@ -106,6 +109,8 @@ FIELDTYPES = {
   "volunteersFilled":"integer",
   "volunteersNeeded":"integer",
   "minimumAge":"integer",
+  "startTime":"integer",
+  "endTime":"integer",
 
   "latitude":"float",
   "longitude":"float",
@@ -428,14 +433,11 @@ def get_base_other_fields(opp, org):
   possible syndication, we try to make ourselves look like other Base
   feeds.  Since we're talking about a small overlap, these fields are
   populated *as well as* direct mapping of the footprint XML fields."""
+  outstr = output_field("employer", xmlh.get_tag_val(org, "name"))
   if ABRIDGED:
-    outstr = output_field("employer", xmlh.get_tag_val(org, "name"))
     return outstr
-
-  outstr = output_field("quantity",
-                        xmlh.get_tag_val(opp, "volunteersNeeded"))
-  outstr += FIELDSEP + output_field("employer",
-                                    xmlh.get_tag_val(org, "name"))
+  outstr += output_field("quantity",
+                         xmlh.get_tag_val(opp, "volunteersNeeded"))
   outstr += FIELDSEP + output_field("image_link",
                                     xmlh.get_tag_val(org, "logoURL"))
   # don't map expiration_date -- Base has strict limits (e.g. 2 weeks)
@@ -451,16 +453,13 @@ def get_event_reqd_fields(opp):
 
 def get_feed_fields(feedinfo):
   """Fields from the <Feed> portion of FPXML."""
+  outstr = output_tag_value_renamed(feedinfo,
+                                    "providerName", "feed_providerName")
   if ABRIDGED:
-    outstr = output_tag_value_renamed(feedinfo,
-                                      "providerName", "feed_providerName")
     return outstr
-
-  outstr = output_tag_value(feedinfo, "feedID")
+  outstr += output_tag_value(feedinfo, "feedID")
   outstr += FIELDSEP + output_tag_value_renamed(
     feedinfo, "providerID", "feed_providerID")
-  outstr += FIELDSEP + output_tag_value_renamed(
-    feedinfo, "providerName", "feed_providerName")
   outstr += FIELDSEP + output_tag_value_renamed(
     feedinfo, "providerURL", "feed_providerURL")
   outstr += FIELDSEP + output_tag_value_renamed(
@@ -614,6 +613,8 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
   for opptime in opp_times:
     if opptime == None:
       startend = convert_dt_to_gbase("1971-01-01", "00:00:00-00:00", "UTC")
+      starttime = "0000"
+      endtime = "2359"
       openended = "Yes"
     else:
       # event_date_range
@@ -629,8 +630,8 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
         start_time = "00:00:00-00:00"
       startend = convert_dt_to_gbase(start_date, start_time, "UTC")
       if (end_date != "" and end_date + end_time > start_date + start_time):
-        startend += "/"
-        startend += convert_dt_to_gbase(end_date, end_time, "UTC")
+        endstr = convert_dt_to_gbase(start_date, start_time, "UTC")
+        startend += "/" + endstr
     duration = xmlh.get_tag_val(opptime, "duration")
     hrs_per_week = xmlh.get_tag_val(opptime, "commitmentHoursPerWeek")
     time_fields = get_time_fields(openended, duration, hrs_per_week, startend)
@@ -669,33 +670,40 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
       outstr += RECORDSEP
   return totrecs, outstr
 
-def get_time_fields(openended, duration, hrs_per_week,
-                    event_date_range):
+def get_time_fields(openended, duration, hrs_per_week, event_date_range):
   """output time-related fields, e.g. for multiple times per event."""
+  # 2010-02-26T16:00:00/2010-02-26T16:00:00
+  match = re.search(r'T(\d\d):(\d\d):\d\d(\s*/\s*.+?T(\d\d):(\d\d):\d\d)?',
+                    event_date_range)
+  startstr = endstr = ""
+  if match:
+    if match.group(2):
+      startstr = match.group(1) + match.group(2)
+    else:
+      # TODO: exception (but need a way to throw exceptions in general)
+      # e.g. ignore this record, stop this feed, etc.
+      pass
+    if match.group(3):
+      endstr = match.group(4) + match.group(5)
+  time_fields = FIELDSEP + output_field("event_date_range", event_date_range)
+  time_fields += FIELDSEP + output_field("startTime", startstr)
+  time_fields += FIELDSEP + output_field("endTime", endstr)
   if ABRIDGED:
-    time_fields = FIELDSEP + output_field("event_date_range", event_date_range)
     return time_fields
-
-  time_fields = FIELDSEP + output_field("openended", openended)
+  time_fields += FIELDSEP + output_field("openended", openended)
   time_fields += FIELDSEP + output_field("duration", duration)
   time_fields += FIELDSEP + output_field("commitmentHoursPerWeek", hrs_per_week)
-  time_fields += FIELDSEP + output_field("event_date_range", event_date_range)
   return time_fields
 
 def get_loc_fields(location, latitude, longitude, location_string,
                    venue_name):
   """output location-related fields, e.g. for multiple locations per event."""
-  if ABRIDGED:
-    loc_fields = FIELDSEP + output_field("location", location)
-    loc_fields += FIELDSEP + output_field("latitude", latitude)
-    loc_fields += FIELDSEP + output_field("longitude", longitude)
-    loc_fields += FIELDSEP + output_field("location_string", location_string)
-    return loc_fields
-
   loc_fields = FIELDSEP + output_field("location", location)
   loc_fields += FIELDSEP + output_field("latitude", latitude)
   loc_fields += FIELDSEP + output_field("longitude", longitude)
   loc_fields += FIELDSEP + output_field("location_string", location_string)
+  if ABRIDGED:
+    return loc_fields
   loc_fields += FIELDSEP + output_field("venue_name", venue_name)
   return loc_fields
 
