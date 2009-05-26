@@ -88,18 +88,30 @@ def set_entity_attributes(entity, absolute_attributes, relative_attributes):
     return (None, None)
 
 
-def get_by_ids(cls, ids):
+def get_by_ids(cls, ids, memcache_prefix=None, datastore_prefix=None):
   """Gets multiple entities for IDs, trying memcache then datastore.
 
   Args:
     cls: Model class
     ids: list of ids.
+    memcache_prefix: The prefix (of id) used to store the model in memcache.
+        Defaults to cls.MEMCACHE_PREFIX.
+    datastore_prefix: The prefix used to store the model in datastore.
+        Defaults to cls.DATASTORE_PREFIX.
   Returns:
     Dictionary of results, id:model.
   """
-  results = memcache.get_multi(ids, cls.MEMCACHE_PREFIX + ':')
+  results = {}
+  try:
+    results = memcache.get(ids, memcache_prefix + ':')
+  except Exception:
+    pass  # Memcache is busted. Oh well.
 
-  datastore_prefix = cls.DATASTORE_PREFIX
+  if not memcache_prefix:
+    memcache_prefix = cls.MEMCACHE_PREFIX
+  if not datastore_prefix:
+    datastore_prefix = cls.DATASTORE_PREFIX
+
   missing_ids = []
   for id in ids:
     if not id in results:

@@ -119,8 +119,8 @@ def get_model(table, caller):
     model = models.VolunteerOpportunityStats
   elif table == "VolunteerOpportunity":
     model = models.VolunteerOpportunity
-  elif table == "Config":
-    model = models.Config
+  elif table == "BlacklistedVolunteerOpportunity":
+    model = models.BlacklistedVolunteerOpportunity
   elif table == "Posting":
     model = posting.Posting
   elif table == "PageCountShard":

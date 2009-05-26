@@ -14,11 +14,6 @@
 
 """
 Data needed for live vs dev deployment.
-
-In order to run this application, you will need the private_keys.py
-file which contains the Facebook API "Application Secret" string and
-other confidential config settings.
-Contact footprint-eng@googlegroups.com to get this file.
 """
 
 import os
