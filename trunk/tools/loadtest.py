@@ -61,7 +61,7 @@ PAGE_NAME_PREFIX = "page_"
 #  1: Status messages.
 #  2: Info logs.
 #  3: Debug logs.
-VERBOSITY = 0
+VERBOSITY = 1
 
 def AreYouSureOrExit(exit_if_no=True):
   prompt = "Are you sure you want to continue?(y/N) "
@@ -344,11 +344,13 @@ class AbstractRpcServer(object):
         except urllib2.HTTPError, e:
           if tries > 3:
             raise
-          elif e.code == 401:
+          elif e.code == 302 or e.code == 401:
             self._Authenticate()
-##           elif e.code >= 500 and e.code < 600:
-##             # Server Error - try again.
-##             continue
+          elif e.code >= 500 and e.code < 600:
+            # Server Error - try again.
+            print "server error "+str(e.code)+": sleeping and retrying..."
+            time.sleep(1)
+            continue
           else:
             raise
     finally:
