@@ -1,0 +1,61 @@
+{% extends 'layout_two_column.html' %}
+
+{% block js_files %}
+{% endblock %}
+
+{% block subheader %}
+{% endblock subheader %}
+
+{% block content_left %}
+
+{% ifequal current_page "SEARCH" %}
+<div class="map_hint">
+To change the search location, please enter a zip code or city/state.
+</div>
+{% endifequal %}
+
+  {% include 'map_widget.html' %}
+
+  <div id='when_filter_widget'></div>
+{% endblock content_left %}
+
+{% block content_right %}
+  <div id='snippets_pane'></div>
+{% endblock content_right %}
+
+{% block prefooter %}
+
+{% if "appspot.com"|isin:host and not js_debug %}
+  <script type='text/javascript' src='http://www.gmodules.com/ig/proxy?url=http%3A%2F%2Fsuprfetch.appspot.com%2F%3Furl%3D{{host}}%2Fjs%2Fsnippets_list.js%3Fzx%3D{{version}}%26url%3D{{host}}%2Fjs%2Fmap.js%3Fzx%3D{{version}}%26url%3D{{host}}%2Fjs%2Fsearch_results.js%3Fzx%3D{{version}}%26url%3D{{host}}%2Fjs%2Fcalendar_widget.js%3Fzx%3D{{version}}%26jsmin%3Dtrue'></script>
+{% else %}
+  <script type='text/javascript' src='/js/snippets_list.js?zx={{version}}'></script>
+  <script type='text/javascript' src='/js/map.js?zx={{version}}'></script>
+  <script type='text/javascript' src='/js/search_results.js?zx={{version}}'></script>
+  <script type='text/javascript' src='/js/calendar_widget.js?zx={{version}}'></script>
+{% endif %}
+
+  <script type='text/javascript'>
+    var addthis_pub='footprint2009dev';
+    var addthis_options = 'email, google, facebook, myspace';
+    var addthis_header_color = '#ffffff';
+    var addthis_header_background = '#2475B6';
+    var addthis_hover_delay = 10000;
+    var addthis_test0309 = false;  // Remove "You may also like..." ads
+
+    if (false) {
+      jQuery.getScript('http://s7.addthis.com/js/200/addthis_widget.js',
+                       function() { asyncLoadManager.doneLoading('addthis'); });
+      function showShareWidget(node, searchResult) {
+        if (asyncLoadManager.isLoaded('addthis')) {
+          addthis_open(node, '', searchResult.url, searchResult.title);
+        }
+      }
+      function hideShareWidget() {
+        if (asyncLoadManager.isLoaded('addthis')) {
+          addthis_close();
+        }
+      }
+    }
+  </script>
+
+{% endblock prefooter %}

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title_url="http://footprint2009dev.appspot.com/"
+               title="Footprint"
+               height="330"
+               author="Blake Schwendiman"
+               author_email="blake.schwendiman@gmail.com"
+               scrolling="false"
+               scaling="true"
+               author_location="Mesa, AZ"
+               description="Consumer gadget for Footprint project"
+               directory_title="Footprint"
+               author_affiliation="thehowandthewhy.com"
+               screenshot=""
+               thumbnail="">
+    <Require feature="dynamic-height" />
+    <Require feature="setprefs" />
+    <!-- <Require feature="google-domain"/> -->
+    <Require feature="analytics" />
+  </ModulePrefs>
+
+  <UserPref name="location" datatype="string" default_value="" />
+  
+  <Content type="html">
+  <![CDATA[
+    <script src="http://maps.google.com/maps?file=api&amp;v=2" type="text/javascript"></script>
+    <script src="http://maps.google.com/jsapi" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/humanity/jquery-ui.css" type="text/css" />
+    <script type="text/javascript">
+      const DISPLAY_TYPE_MAP__MODULE_ID__ = 0;
+      
+      var mod__MODULE_ID__ = function() {
+        return {
+          map: null,
+          client_location: null,
+          footprint_search_url: 'http://footprint2009dev.appspot.com/api/volopps?key=fpgadget',
+          items: null,
+          display_type: DISPLAY_TYPE_MAP__MODULE_ID__, 
+          
+          log: function(msg) {
+            if (window.console) {
+              console.log(msg);
+            }
+          },
+          
+          get_search_url: function(parms) {
+            var result = this.footprint_search_url;
+            
+            for (var name in parms) {
+              this.log(name + ': ' + parms[name]);
+              result += '&' + name + '=' + _esc(parms[name]);
+            }
+            
+            this.log(result);
+            return result;
+          },
+          
+          lat_lng_to_string: function(lat, lng) {
+            var result = '';
+            
+            if (lat >= 0) {
+              result = '+' + lat.toString();
+            } else {
+              result = lat.toString();
+            }
+            
+            if (lng >= 0) {
+              result += '+' + lng.toString();
+            } else {
+              result += lng.toString();
+            }
+            
+            return result;
+          },
+          
+          clear_item_list: function() {
+            jQuery('#list-tab__MODULE_ID__').html('');
+            if (this.items) {
+              this.items.length = 0;
+            } else {
+              this.items = new Array();
+            }
+          },
+          
+          parse_item: function(item) {
+            var result = new Object();
+            var nodes = item.childNodes;
+
+            for (var i = 0; i < nodes.length; i++) {
+              node = nodes[i];
+
+              if (node.nodeName == 'title') {
+                result.title = node.textContent;
+              } else if (node.nodeName == 'link') {
+                result.link = node.textContent;
+              } else if (node.nodeName == 'description') {
+                result.description = node.textContent;
+              } else if (node.nodeName == 'fp:provider') {
+                result.provider = node.textContent;
+              } else if (node.nodeName == 'fp:latlong') {
+                result.latlng = node.textContent;
+              } else if (node.nodeName == 'fp:location_name') {
+                result.location_name = node.textContent;
+              } else if (node.nodeName == 'fp:id') {
+                result.id = node.textContent;
+              }
+            }
+            
+            return result;
+          },
+          
+          parse_lat_lng: function(latlng_string) {
+            var pieces = latlng_string.split(',');
+            
+            if (pieces.length >= 2) {
+              return {lat: pieces[0], lng: pieces[1]};
+            } else {
+              return {lat: 0.0, lng: 0.0};
+            }
+          },
+          
+          make_marker: function(item) {
+            var latlng = this.parse_lat_lng(item.latlng);
+            var point = new GLatLng(latlng.lat, latlng.lng);
+            var marker = new GMarker(point, {title: item.title});
+            var cont_width = jQuery('#tabs').width();
+
+            var html = '<strong>' + item.title + '</strong><br />' + item.description;
+            
+            GEvent.addListener(marker, 'click', function() {
+              jQuery('#marker-item-' + item.id).dialog({width: (cont_width - 10), maxWidth: (cont_width - 10)});
+            });
+            
+            return marker;
+          },
+          
+          display_items: function() {
+            var marker;
+            var cur_item;
+            var list_items = '';
+            var marker_items = '';
+            
+            if (this.items) {
+              for (var i = 0; i < this.items.length; i++) {
+                cur_item = this.items[i];
+                // add each item to the map
+                marker = this.make_marker(cur_item);
+                this.map.addOverlay(marker);
+                
+                // create the list_items markup
+                list_items += '<li><dl>';
+                list_items += '<dt><a href="' + cur_item.link + '" target="_new">' + cur_item.title + '</a></dt>';
+                list_items += '<dd>' + cur_item.description + '  <a href="' + cur_item.link + '" target="_new">more...</a></dd>';
+                list_items += '</dl></li>';
+
+                // create the marker_items markup
+                marker_items += '<div id="marker-item-' + cur_item.id + '" title="' + cur_item.title + '">';
+                marker_items += '<p>' + cur_item.description + '  <a href="' + cur_item.link + '" target="_new">more...</a></p>';
+                marker_items += '</div>';
+              }
+              // add all item to the list view
+              jQuery('#list-tab__MODULE_ID__').html('<ul class="list_items">' + list_items + '</ul>');
+              jQuery('#map-markers__MODULE_ID__').html(marker_items);
+            }
+          },
+          
+          parse_and_display_items: function(xml_res) {
+            this.clear_item_list();
+            
+            if (xml_res) {
+              var items = xml_res.getElementsByTagName('item');
+              
+              for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                obj = this.parse_item(item);
+                this.log(obj);
+                this.items.push(obj);
+              }
+            }
+            
+            this.display_items();
+            _IG_AdjustIFrameHeight();
+          },
+          
+          init: function() {
+            var lat = 33.434;
+            var lng = -111.848;
+            
+            jQuery('#tabs').tabs();
+            
+            this.client_location = google.loader.ClientLocation;
+            
+            this.map = new GMap2(_gel('map-tab__MODULE_ID__'));
+            this.map.addControl(new GSmallZoomControl());
+            
+            if (this.client_location) {
+              lat = this.client_location.latitude;
+              lng = this.client_location.longitude;
+              
+              this.log('dynamic lat/lng discovered: ' + lat.toString() + ',' + lng.toString() + ' - ' + this.client_location.address.city);
+            }
+            this.map.setCenter(new GLatLng(lat, lng), 10);
+            
+            var full_search_url = this.get_search_url({num: 10, start: 0, vol_loc: this.lat_lng_to_string(lat, lng), output: 'rss'});
+            
+            _IG_FetchXmlContent(full_search_url, function(res) {
+                mod__MODULE_ID__.parse_and_display_items(res);
+              });
+          },
+          
+          dummy: function() {
+          
+          }
+        }
+      }();
+      
+      function init() {
+        mod__MODULE_ID__.init();
+      }
+      
+      _IG_RegisterOnloadHandler(init);
+    </script>
+    <style>
+      .ui-widget {font-size: 9pt;}
+      ul.list_items {padding: 0; margin: 0;}
+      ul.list_items li {list-style-type: none; border-bottom: 1px dotted #999; margin-bottom: 8px; padding-bottom: 4px;}
+      ul.list_items dt {font-size: 10pt; font-weight: bold;}
+      ul.list_items dd {margin: 0;}
+      #list-tab__MODULE_ID__ {overflow-y: scroll;}
+    </style>
+    <div id="tabs">
+      <ul class="list_items">
+        <li><a href="#map-tab__MODULE_ID__">Map</a></li>
+        <li><a href="#list-tab__MODULE_ID__">List</a></li>
+      </ul>
+      <div id="map-tab__MODULE_ID__" style="width: 100%; height: 200px;"></div>
+      <div id="list-tab__MODULE_ID__" style="width: 100%; height: 200px;"></div>
+    </div>
+    <div id="map-markers__MODULE_ID__" style="display: none;"></div>
+  ]]> 
+  </Content>
+
+</Module>
