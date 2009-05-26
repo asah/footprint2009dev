@@ -505,7 +505,8 @@ class ApiTesting(object):
     """ensure that /ui_snippets returns something valid."""
     pieces = urlsplit(self.api_url)
     domain = pieces.netloc
-    data = retrieve_raw_data('http://'+domain+'/ui_snippets?q=test')
+    self.print_details(domain)
+    data = retrieve_raw_data('http://'+domain+'/ui_snippets?q=a&cache=0')
     if not data:
       return self.fail(
         TestResultCode.UNKNOWN_FAIL,
