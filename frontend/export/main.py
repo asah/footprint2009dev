@@ -120,7 +120,7 @@ def get_model(table, caller):
   elif table == "VolunteerOpportunity":
     model = models.VolunteerOpportunity
   elif table == "Config":
-    model = models.Config
+    model = config.Config
   elif table == "Posting":
     model = posting.Posting
   elif table == "PageCountShard":
