@@ -61,6 +61,15 @@ handlers:
 - url: /sheetchecker/.*
   script: sheetchecker/main.py
 
+- url: /robots.txt
+  static_files: robots.txt
+  upload: robots.txt
+
+# Temporary.
+- url: /googlehostedservice.html
+  static_files: googlehostedservice.html
+  upload: googlehostedservice.html
+
 # Keep this last
 - url: /.*
   script: main.py
