@@ -17,12 +17,12 @@ USERNAME = ""
 PASSWORD = ""
 
 LOGPATH = "/home/footprint/public_html/datahub/dashboard/"
-LOG_FN = LOGPATH + "load_gbase.log"
-DETAILED_LOG_FN = LOGPATH + "load_gbase_detail.log"
+
+LOG_FN = "load_gbase.log"
+DETAILED_LOG_FN = "load_gbase_detail.log"
 
 # this file needs to be copied over to frontend/autocomplete/
 POPULAR_WORDS_FN = "popular_words.txt"
-
 FIELD_STATS_FN = "field_stats.txt"
 GEO_STATS_FN = "geo_stats.txt"
 
@@ -113,11 +113,11 @@ def print_word_stats():
   sorted_words.sort(cmp=lambda a, b: cmp(b[1], a[1]))
 
   print_progress("writing "+POPULAR_WORDS_FN+"...")
-  popfh = open(POPULAR_WORDS_FN, "w")
+  popfh = open(LOGPATH+POPULAR_WORDS_FN, "w")
   for word, freq in sorted_words:
     popfh.write(str(freq)+"\t"+word+"\n")
   popfh.close()
-  print_progress("done writing "+POPULAR_WORDS_FN)
+  print_progress("done writing "+LOGPATH+POPULAR_WORDS_FN)
 
 FIELD_VALUES = None
 FIELD_NAMES = None
@@ -156,7 +156,7 @@ def process_field_stats(content):
 def print_field_stats():
   """dump field-value stats."""
   print_progress("writing "+FIELD_STATS_FN+"...")
-  outfh = open(FIELD_STATS_FN, "w")
+  outfh = open(LOGPATH+FIELD_STATS_FN, "w")
   outfh.write("number of records: "+str(NUM_RECORDS_TOTAL)+"\n")
   for i, fieldname in enumerate(FIELD_NAMES):
     outfh.write("field "+fieldname+":uniqvals="+str(len(FIELD_VALUES[i]))+"\n")
@@ -171,7 +171,7 @@ def print_field_stats():
 
 def print_geo_stats():
   print_progress("writing "+GEO_STATS_FN+"...")
-  outfh = open(GEO_STATS_FN, "w")
+  outfh = open(LOGPATH+GEO_STATS_FN, "w")
   for latlng, freq in LATLNG_DENSITY.iteritems():
     outfh.write("%s %d\n" % (latlng, freq))
   outfh.close()
@@ -179,11 +179,11 @@ def print_geo_stats():
 
 def append_log(outstr):
   """append to the detailed and truncated log, for stats collection."""
-  outfh = open(DETAILED_LOG_FN, "a")
+  outfh = open(LOGPATH+DETAILED_LOG_FN, "a")
   outfh.write(outstr)
   outfh.close()
 
-  outfh = open(LOG_FN, "a")
+  outfh = open(LOGPATH+LOG_FN, "a")
   for line in outstr.split('\n'):
     if re.search(r'(STATUS|ERROR)', line):
       outfh.write(line+"\n")
@@ -289,7 +289,6 @@ def load_gbase(name, url, do_processing=True, do_ftp=True):
 def test_loaders():
   """for testing, read from local disk as much as possible."""
   load_gbase("servenet", "servenet.xml", False, False)
-  return
   load_gbase("unitedway", "unitedway.xml", False, False)
   load_gbase("americansolutions", "americansolutions.xml", False, False)
   #load_gbase("meetup", "meetup.xml", False, False)
@@ -347,6 +346,8 @@ def main():
   PASSWORD = sys.argv[2]
 
   if USERNAME == "test":
+    global LOGPATH
+    LOGPATH = "./"
     test_loaders()
   else:
     loaders()
