@@ -373,26 +373,21 @@ def get_abstract(opp):
   abstract = xmlh.get_tag_val(opp, "abstract")
   if abstract == "":
     abstract = xmlh.get_tag_val(opp, "description")
-  # strip \n and \b
-  abstract = re.sub(r'(\\[bn])+', ' ', abstract)
-  # strip XML escaped chars
-  abstract = re.sub(r'&([a-z]+|#[0-9]+);', '', abstract)
   abstract = abstract[:MAX_ABSTRACT_LEN]
-  return abstract
+  return cleanse_snippet(abstract)
 
 def get_direct_mapped_fields(opp, org):
   """map a field directly from FPXML to Google Base."""
+  outstr = output_field("abstract", get_abstract(opp))
   if ABRIDGED:
-    outstr = output_field("abstract", get_abstract(opp))
     return outstr
 
-  outstr = ""
   paid = xmlh.get_tag_val(opp, "paid")
   if (paid == "" or paid.lower()[0] != "y"):
     paid = "n"
   else:
     paid = "y"
-  outstr += output_field("paid", paid)
+  outstr += FIELDSEP + output_field("paid", paid)
   for field in DIRECT_MAP_FIELDS:
     outstr += FIELDSEP + output_tag_value(opp, field)
   for field in ORGANIZATION_FIELDS:
@@ -405,10 +400,6 @@ def get_direct_mapped_fields(opp, org):
     if (fieldval.length > 0):
       val = flatten_to_csv(fieldval[0])
     outstr += output_field(field, val)
-
-  # abstract
-  outstr += FIELDSEP
-  outstr += output_field("abstract", get_abstract(opp))
 
   # orgLocation
   outstr += FIELDSEP
@@ -443,10 +434,26 @@ def get_base_other_fields(opp, org):
   # don't map expiration_date -- Base has strict limits (e.g. 2 weeks)
   return outstr
 
+def cleanse_snippet(instr):
+  # strip \n and \b
+  instr = re.sub(r'(\\[bn])+', ' ', instr)
+  # doubly-escaped HTML
+  instr = re.sub(r'&amp;lt;.+?&amp;gt;', '', instr)
+  instr = re.sub(r'&(amp;)+([a-z]+);', r'&\2;', instr)
+  instr = re.sub(r'&amp;#\d+;', '', instr)
+  # singly-escaped HTML
+  instr = re.sub(r'&lt;/?[a-zA-Z]+?&gt;', '', instr)
+  instr = re.sub(r'&nbsp;', ' ', instr)
+  instr = re.sub(r'&quot;', '"', instr)
+  instr = re.sub(r'&(uml|middot|ndash|bull|mdash|hellip);', '-', instr)
+  # strip leftover XML escaped chars
+  instr = re.sub(r'&([a-z]+|#[0-9]+);', '', instr)
+  return instr
+
 def get_event_reqd_fields(opp):
   """Fields required by Google Base, note that they aren't necessarily
   used by the FP app."""
-  outstr = output_tag_value(opp, "title")
+  outstr = cleanse_snippet(output_tag_value(opp, "title"))
   outstr += FIELDSEP + output_tag_value(opp, "description")
   outstr += FIELDSEP + output_field("link", BASE_PUB_URL)
   return outstr
@@ -999,7 +1006,7 @@ def guess_parse_func(inputfmt, filename):
       (inputfmt == None and re.search(r'americorps', filename))):
     return "americorps", parse_americorps.parse
   if (inputfmt == "servenet" or
-      (inputfmt == None and re.search(r'servenet', filename))):
+      (inputfmt == None and re.search(r'servenet|SERVEnet', filename))):
     return "servenet", parse_servenet.parse
   if (inputfmt == "handson" or inputfmt == "handsonnetwork"):
     return "handsonnetwork", parse_handsonnetwork.parse
@@ -1009,7 +1016,6 @@ def guess_parse_func(inputfmt, filename):
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'(handson|hot.footprint)', filename)):
     # now using FPXML
-    #parsefunc = parse_handsonnetwork.ParseFPXML
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'habitat', filename)):
     def parse_habitat(instr, maxrecs, progress):
