@@ -281,11 +281,16 @@ def test_loaders():
 
 def loaders():
   """put all loaders in one function for easier testing."""
+  if False:
+    # out for the launch
+    load_gbase("servenet",
+               "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
+    load_gbase("americorps",
+               "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
+    load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
   load_gbase("mybarackobama",
              "http://my.barackobama.com/page/event/search_results?"+
              "format=footprint")
-  load_gbase("servenet",
-             "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
   load_gbase("unitedway",
              "http://volunteer.united-e-way.org/"+
              "uwnyc/util/voml/uwnyc-footprint-pull.aspx")
@@ -306,9 +311,6 @@ def loaders():
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
   # note: craiglist crawler is run async to this
   load_gbase("craigslist", "craigslist-cache.txt")
-  load_gbase("americorps",
-             "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
-  load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
   load_gbase("handson",
              "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
 
