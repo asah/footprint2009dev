@@ -16,7 +16,7 @@
 <fp:url_short>{{ result.url_short|escape  }}</fp:url_short>
 <fp:latlong>{{ result.latlong|escape  }}</fp:latlong>
 <fp:location_name>{{ result.location_string|escape  }}</fp:location_name>
-<fp:interest>{{ result.interest|escape  }}</fp:interest>
+{# fp:interest didn't make sense-- API is anonymous so there can't per per-user interest #}
 <fp:interest_count>{{ result.interest_count|escape  }}</fp:interest_count>
 <fp:impressions>{{ result.impressions|escape  }}</fp:impressions>
 <fp:quality_score>{{ result.quality_score|escape  }}</fp:quality_score>

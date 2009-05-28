@@ -73,8 +73,8 @@ DATAHUB_DASHBOARD_TEMPLATE = 'datahub_dashboard.html'
 MODERATE_TEMPLATE = 'moderate.html'
 STATIC_CONTENT_TEMPLATE = 'static_content.html'
 
-DATAHUB_LOG = \
-    "http://google1.osuosl.org/~footprint/datahub/dashboard/load_gbase.log"
+DASHBOARD_BASE_URL = "http://google1.osuosl.org/~footprint/datahub/dashboard/"
+DATAHUB_LOG = DASHBOARD_BASE_URL + "load_gbase.log"
 
 DEFAULT_NUM_RESULTS = 10
 
@@ -284,6 +284,20 @@ class search_view(webapp.RequestHandler):
       return
     pagecount.IncrPageCount("key.%s.searches" % unique_args["key"], 1)
     result_set = search.search(unique_args)
+
+    # insert the interest data-- API searches are anonymous, so set the user
+    # interests to 'None'.  Note: left here to avoid polluting searchresults.py
+    # with view_helper.py and social/personalization stuff.
+    opp_ids = []
+    # perf: only get interest counts for opps actually in the clipped results
+    for primary_res in result_set.clipped_results:
+      opp_ids += [result.item_id for result in primary_res.merged_list]
+    others_interests = view_helper.get_interest_for_opportunities(opp_ids)
+    view_helper.annotate_results(None, others_interests, result_set)
+    # add-up the interests from the children
+    for primary_res in result_set.clipped_results:
+      for result in primary_res.merged_list:
+        primary_res.interest_count += result.interest_count
 
     result_set.request_url = self.request.url
 
@@ -1149,3 +1163,4 @@ class datahub_dashboard_view(webapp.RequestHandler):
     logging.debug("datahub_dashboard_view: %s" % template_values['msg'])
     self.response.out.write(render_template(DATAHUB_DASHBOARD_TEMPLATE,
                                             template_values))
+
