@@ -24,6 +24,7 @@ DETAILED_LOG_FN = LOGPATH + "load_gbase_detail.log"
 POPULAR_WORDS_FN = "popular_words.txt"
 
 FIELD_STATS_FN = "field_stats.txt"
+GEO_STATS_FN = "geo_stats.txt"
 
 STOPWORDS = set([
   'a', 'about', 'above', 'across', 'after', 'afterwards', 'again', 'against',
@@ -121,6 +122,7 @@ def print_word_stats():
 FIELD_VALUES = None
 FIELD_NAMES = None
 NUM_RECORDS_TOTAL = 0
+LATLNG_DENSITY = {}
 def process_field_stats(content):
   """update the field-value histograms."""
   global FIELD_NAMES, FIELD_VALUES, NUM_RECORDS_TOTAL
@@ -132,12 +134,24 @@ def process_field_stats(content):
         FIELD_VALUES = [{} for i in range(len(fields))]
       continue
     NUM_RECORDS_TOTAL += 1
+    lat_val = lng_val = None
     for i, val in enumerate(fields):
+      if lat_val is None and FIELD_NAMES[i].find('latitude') >= 0:
+        lat_val = val
+      if lng_val is None and FIELD_NAMES[i].find('longitude') >= 0:
+        lng_val = val
       val = val[0:300]
       if val in FIELD_VALUES[i]:
         FIELD_VALUES[i][val] += 1
       else:
         FIELD_VALUES[i][val] = 1
+    lat_val = re.sub(r'([.]\d\d)\d+', r'\1', lat_val.strip())
+    lng_val = re.sub(r'([.]\d\d)\d+', r'\1', lng_val.strip())
+    latlng = lat_val + ',' + lng_val
+    if latlng in LATLNG_DENSITY:
+      LATLNG_DENSITY[latlng] += 1
+    else:
+      LATLNG_DENSITY[latlng] = 1
 
 def print_field_stats():
   """dump field-value stats."""
@@ -154,6 +168,14 @@ def print_field_stats():
       outfh.write("  %5d %s\n" % (freq, val))
   outfh.close()
   print_progress("done writing "+FIELD_STATS_FN)
+
+def print_geo_stats():
+  print_progress("writing "+GEO_STATS_FN+"...")
+  outfh = open(GEO_STATS_FN, "w")
+  for latlng, freq in LATLNG_DENSITY.iteritems():
+    outfh.write("%s %d\n" % (latlng, freq))
+  outfh.close()
+  print_progress("done writing "+GEO_STATS_FN)
 
 def append_log(outstr):
   """append to the detailed and truncated log, for stats collection."""
@@ -267,6 +289,7 @@ def load_gbase(name, url, do_processing=True, do_ftp=True):
 def test_loaders():
   """for testing, read from local disk as much as possible."""
   load_gbase("servenet", "servenet.xml", False, False)
+  return
   load_gbase("unitedway", "unitedway.xml", False, False)
   load_gbase("americansolutions", "americansolutions.xml", False, False)
   #load_gbase("meetup", "meetup.xml", False, False)
@@ -323,10 +346,13 @@ def main():
   USERNAME = sys.argv[1]
   PASSWORD = sys.argv[2]
 
-  #test_loaders()
-  loaders()
+  if USERNAME == "test":
+    test_loaders()
+  else:
+    loaders()
   print_word_stats()
   print_field_stats()
+  print_geo_stats()
 
 if __name__ == "__main__":
   main()
