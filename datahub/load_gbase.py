@@ -145,8 +145,14 @@ def process_field_stats(content):
         FIELD_VALUES[i][val] += 1
       else:
         FIELD_VALUES[i][val] = 1
-    lat_val = re.sub(r'([.]\d\d)\d+', r'\1', lat_val.strip())
-    lng_val = re.sub(r'([.]\d\d)\d+', r'\1', lng_val.strip())
+    lat_fltval = float(lat_val)
+    if lat_fltval > 500.0:
+      lat_fltval -= 1000.0
+    lng_fltval = float(lng_val)
+    if lng_fltval > 500.0:
+      lng_fltval -= 1000.0
+    lat_val = re.sub(r'([.]\d\d)\d+', r'\1', str(lat_fltval))
+    lng_val = re.sub(r'([.]\d\d)\d+', r'\1', str(lng_fltval))
     latlng = lat_val + ',' + lng_val
     if latlng in LATLNG_DENSITY:
       LATLNG_DENSITY[latlng] += 1
