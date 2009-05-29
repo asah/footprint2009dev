@@ -1,4 +1,6 @@
 application: footprint2009dev
+#application: footprint-loadtest
+#application: servicefootprint
 
 version: sitedown
 runtime: python
