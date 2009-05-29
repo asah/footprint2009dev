@@ -1443,7 +1443,7 @@ def main():
       sys.exit(1)
 
     args = [sys.argv[0], "-s", "footprint2009reviews.appspot.com"]
-    args.append("--cc=footprint-eng@googlegroups.com")
+    args.append("--cc=footprint-engreviews@googlegroups.com")
     args.append("--description_editor")
     args.append("--send_mail")
     args.append("--min_pylint_score")
