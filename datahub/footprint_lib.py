@@ -427,7 +427,7 @@ def get_base_other_fields(opp, org):
   outstr = output_field("employer", xmlh.get_tag_val(org, "name"))
   if ABRIDGED:
     return outstr
-  outstr += output_field("quantity",
+  outstr += FIELDSEP + output_field("quantity",
                          xmlh.get_tag_val(opp, "volunteersNeeded"))
   outstr += FIELDSEP + output_field("image_link",
                                     xmlh.get_tag_val(org, "logoURL"))
@@ -464,7 +464,7 @@ def get_feed_fields(feedinfo):
                                     "providerName", "feed_providerName")
   if ABRIDGED:
     return outstr
-  outstr += output_tag_value(feedinfo, "feedID")
+  outstr += FIELDSEP + output_tag_value(feedinfo, "feedID")
   outstr += FIELDSEP + output_tag_value_renamed(
     feedinfo, "providerID", "feed_providerID")
   outstr += FIELDSEP + output_tag_value_renamed(
