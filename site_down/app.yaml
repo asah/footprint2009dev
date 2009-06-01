@@ -17,5 +17,9 @@ handlers:
   static_files: html/site_down.html
   upload: html/site_down.html
 
+- url: /robots.txt
+  static_files: robots.txt
+  upload: robots.txt
+
 - url: /.*
   script: site_down.py
