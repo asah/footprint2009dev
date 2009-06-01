@@ -102,6 +102,19 @@ def get_tag_val(entity, tag):
   outstr = re.sub(r'\n', r'\\n', outstr)
   return outstr
 
+def get_tag_attr(entity, tag, attribute):
+  """Finds the first element named (tag) and returns the named
+  attribute."""
+  nodes = entity.getElementsByTagName(tag)
+  if (nodes.length == 0):
+    return ""
+  if (nodes[0] == None):
+    return ""
+  outstr = nodes[0].getAttribute(attribute)
+  outstr = xml.sax.saxutils.escape(outstr).encode('UTF-8')
+  outstr = re.sub(r'\n', r'\\n', outstr)
+  return outstr
+
 def set_default_value(doc, entity, tagname, default_value):
   """add the element if not already present in the DOM tree."""
   nodes = entity.getElementsByTagName(tagname)

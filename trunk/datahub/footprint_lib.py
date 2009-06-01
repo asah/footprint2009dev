@@ -22,6 +22,7 @@ import hashlib
 import urllib
 import re
 from datetime import datetime
+import geocoder
 import parse_footprint
 import parse_gspreadsheet
 import parse_usaservice
@@ -177,6 +178,11 @@ def print_status(msg, filename="", progress=None):
     progress = PROGRESS
   xmlh.print_status(msg, filename, progress=progress)
 
+def print_debug(msg):
+  """print debug message."""
+  if DEBUG:
+    print datetime.now(), msg
+
 # Google Base uses ISO8601... in PST -- I kid you not:
 # http://base.google.com/support/bin/answer.py?
 # answer=78170&hl=en#Events%20and%20Activities
@@ -260,11 +266,10 @@ def get_addr_field(node, field):
   if addr != "":
     addr += " "
   return addr
-  
-def city_loc_fields(node):
+
+def get_city_addr_str(node):
   """synthesize a city-region-postal-country string."""
   # note: avoid commas, so it works with CSV
-  # (this is good enough for the geocoder)
   loc = ""
   loc += get_addr_field(node, "city")
   loc += get_addr_field(node, "region")
@@ -272,75 +277,79 @@ def city_loc_fields(node):
   loc += get_addr_field(node, "country")
   return loc
 
-def compute_loc_field(node):
+def get_street_addr_str(node):
   """concatenate street address fields"""
   loc = get_addr_field(node, "streetAddress1")
   loc += get_addr_field(node, "streetAddress2")
   loc += get_addr_field(node, "streetAddress3")
   return loc
 
-def compute_city_field(node):
+def get_full_addr_str(node):
   """concatenate street address and city/region/postal/country fields"""
-  loc = compute_loc_field(node)
-  loc += city_loc_fields(node)
+  loc = get_street_addr_str(node)
+  loc += get_city_addr_str(node)
   return loc
 
-def lookup_loc_fields(node):
-  """try a multitude of field combinations to get a geocode."""
-  fullloc = loc = compute_city_field(node)
-  latlng = xmlh.get_tag_val(node, "latitude") + ","
-  latlng += xmlh.get_tag_val(node, "longitude")
-  if latlng == ",":
-    latlng = geocode(loc)
-  if latlng == "":
-    # sometimes address1 contains un-geocodable descriptive language,
-    # e.g. venue name, "around the corner from ..." etc.
-    loc = get_addr_field(node, "streetAddress2")
-    loc += get_addr_field(node, "streetAddress3")
-    loc += city_loc_fields(node)
-    latlng = geocode(loc)
-  if latlng == "":
-    # rarely, addr1 & addr are both descriptive
-    loc = get_addr_field(node, "streetAddress3")
-    loc += city_loc_fields(node)
-    latlng = geocode(loc)
-  if latlng == "":
-    # missing or bogus address lines
-    loc = city_loc_fields(node)
-  if latlng == "":
-    # missing or bogus city name
-    loc = get_addr_field(node, "postalCode")
-    loc += get_addr_field(node, "country")
-    latlng = geocode(loc)
-  if latlng == "":
-    # missing or bogus postalcode
-    loc = get_addr_field(node, "city")
-    loc += get_addr_field(node, "region")
-    loc += get_addr_field(node, "country")
-    latlng = geocode(loc)
-  if latlng == "":
-    loc += get_addr_field(node, "region")
-    loc += get_addr_field(node, "country")
-    latlng = geocode(loc)
+def find_geocoded_location(node):
+  """Try a multitude of field combinations to get a geocode.  Returns:
+  raw_location, address, latitude, longitude, accuracy (as strings)."""
+  
+  # Combinations of fields to try geocoding.
+  field_combinations = \
+      ["streetAddress1,streetAddress2,streetAddress3,"
+       + "city,region,postalCode,country",
+       "streetAddress2,streetAddress3,"
+       + "city,region,postalCode,country",
+       "streetAddress3,city,region,postalCode,country",
+       "city,region,postalCode,country",
+       "postalCode,country",
+       "city,region,country",
+       "region,country",
+       "latitude,longitude"]
 
-  # TODO: get more sophisticated about reverse geocoding
-  # entries missing some fields
-  if latlng == "":
-    latlng = "0,0"
-  else:
-    if fullloc == "":
-      fullloc = reverse_geocode(latlng)
-    if loc == "":
-      loc = reverse_geocode(latlng)
+  # Upper bound on the accuracy provided by a given field.  This
+  # prevents false positives like matching the city field to a street
+  # name.
+  field_accuracy = { "streetAddress1": 9,
+                     "streetAddress2": 9,
+                     "streetAddress3": 9,
+                     "city": 5,
+                     "region": 5,
+                     "postalCode": 5,
+                     "country": 1,
+                     "latitude": 9,
+                     "longitude": 9 }
 
-  if DEBUG:
-    print datetime.now(), "geocode: " + loc + "=" + latlng
-  return (fullloc, latlng, loc)
+  for fields in field_combinations:
+    field_list = fields.split(",")
+
+    # Compose the query and find the max accuracy.
+    query = []
+    max_accuracy = 0
+    for field in field_list:
+      field_val = xmlh.get_tag_val(node, field)
+      if field_val != "":
+        query += [field_val]
+        max_accuracy = max(max_accuracy, field_accuracy[field])
+    query = ",".join(query)
+
+    print_debug("trying: " + query + " (" + str(max_accuracy) + ")")
+    result = geocoder.geocode(query)
+    if result:
+      addr, lat, lng, acc = result
+      if int(acc) <= max_accuracy:
+        print_debug("success: " + str(result))
+        return result
+      print_debug("incorrect accuracy: " + str(result))
+
+  result = (get_full_addr_str(node), "0.0", "0.0", "0")
+  print_debug("failed: " + str(result))
+  return result
 
 def output_loc_field(node, mapped_name):
   """macro for output_field( convert node to loc field )"""
   return output_field(mapped_name, 
-                      compute_loc_field(node)+city_loc_fields(node))
+                      get_street_addr_str(node)+get_city_addr_str(node))
 
 def output_tag_value(node, fieldname):
   """macro for output_field( get node value )"""
@@ -475,130 +484,6 @@ def get_feed_fields(feedinfo):
     feedinfo, "createdDateTime", "feed_createdDateTime")
   return outstr
 
-GEOCODE_DEBUG = False
-GEOCODE_CACHE = None
-RGEOCODE_CACHE = None
-GEOCODE_CACHE_FN = "geocode_cache.txt"
-
-def approx_latlng(latlng):
-  res = re.sub(r'([.]\d\d)\d+', r'\1', latlng)
-  #print "approx_latlng("+latlng+")="+res
-  return res
-
-def cleanup_geocode_query(query):
-  return re.sub(r'\s\s+', r' ', re.sub(r'\\[tnrfv]', r' ', query)).lower().strip()
-
-def load_geocode_cache():
-  global GEOCODE_CACHE, RGEOCODE_CACHE
-  GEOCODE_CACHE = {}
-  RGEOCODE_CACHE = {}
-  geocode_fh = open(GEOCODE_CACHE_FN, "r")
-  try:
-    for line in geocode_fh:
-      if "|" in line:
-        key, val = line.split("|")
-        key = cleanup_geocode_query(key)
-        latlng = val.strip()
-        GEOCODE_CACHE[key] = latlng
-        RGEOCODE_CACHE[approx_latlng(latlng)] = key
-        if GEOCODE_DEBUG and len(GEOCODE_CACHE) % 2000 == 0:
-          print "read", len(GEOCODE_CACHE), "geocode cache entries."
-  finally:
-    geocode_fh.close()
-
-
-def geocode_call(query, retries, parsefunc):
-  # geocode with google maps, and cache responses
-  params = urllib.urlencode(
-    {'q':query, 'output':'csv', 'oe':'utf8', 'sensor':'false',
-     'key':'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxQuOQhskTx7t90ovP5xOuY' + \
-       '_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
-  if GEOCODE_DEBUG:
-    print datetime.now(), "(reverse)geocoding '" + query + "'..."
-  maps_fh = urllib.urlopen("http://maps.google.com/maps/geo?%s" % params)
-  res = maps_fh.readline()
-  maps_fh.close()
-  if GEOCODE_DEBUG:
-    print datetime.now(), "response: "+res
-  if "," not in res:
-    # fail and also don't cache
-    return ""
-  respcode, zoom, val = parsefunc(res)
-  zoom = zoom # shutup pylint
-  if respcode == 500 or respcode == 620:
-    if GEOCODE_DEBUG:
-      print datetime.now(), "geocoder quota exceeded-- sleeping..."
-    time.sleep(1)
-    return geocode_call(query, retries - 1, parsefunc)
-
-  # these results get cached
-  geocode_fh = open(GEOCODE_CACHE_FN, "a")
-  if re.match(r'[0-9.+-]+,[0-9.+-]+', val):
-    # gecoding
-    cacheline = query + "|" + val
-    GEOCODE_CACHE[query] = val
-    RGEOCODE_CACHE[approx_latlng(val)] = query
-  else:
-    # reverse geocoding
-    cacheline = val + "|" + query
-    GEOCODE_CACHE[val] = query
-    RGEOCODE_CACHE[approx_latlng(query)] = val
-  if GEOCODE_DEBUG:
-    print datetime.now(), "storing cacheline: "+cacheline
-  else:
-    print_progress("storing cacheline: "+cacheline)
-  geocode_fh.write(cacheline + "\n")
-  geocode_fh.close()
-  return val
-
-def reverse_geocode(latlng, retries=4):
-  global RGEOCODE_CACHE
-  latlng = cleanup_geocode_query(latlng)
-  latlng = re.sub(r'\s', '', latlng)
-  if RGEOCODE_CACHE == None:
-    load_geocode_cache()
-  if approx_latlng(latlng) in RGEOCODE_CACHE:
-    return RGEOCODE_CACHE[approx_latlng(latlng)]
-
-  def parsefunc(response):
-    # 200,8,"1475 Broadway, New York, NY 10036, USA"
-    match = re.search(r'(\d+),(\d+),"(.+)"', response)
-    if match:
-      respcode = int(match.group(1))
-      zoom = int(match.group(2))
-      loc = match.group(3)
-      # TODO: total hack to extract the city granularity
-      loc = re.sub(r'^.+,([^,]+,[^,]+,[^,]+)$', r'\1', loc).strip()
-      return respcode, zoom, loc
-    if GEOCODE_DEBUG:
-      print datetime.now(), "unparseable response: "+response[0:80]
-    return 999, 0, ""
-  return geocode_call(latlng, retries, parsefunc)
-  
-def geocode(addr, retries=4):
-  """convert a string addr to a "lat,long" string"""
-  global GEOCODE_CACHE
-  addr = cleanup_geocode_query(addr)
-  # ignore leading/trailing punctuation
-  addr = re.sub(r'^[^0-9a-z]+', r'', addr)
-  addr = re.sub(r'[^0-9a-z]+$', r'', addr)
-  if GEOCODE_CACHE == None:
-    load_geocode_cache()
-  if addr in GEOCODE_CACHE:
-    return GEOCODE_CACHE[addr]
-
-  def parsefunc(locstr):
-    match = re.search(r'(\d+),(\d+),([0-9.+-]+,[0-9.+-]+)', locstr)
-    if match:
-      respcode = int(match.group(1))
-      zoom = int(match.group(2))
-      latlng = match.group(3)
-      return respcode, zoom, latlng
-    if GEOCODE_DEBUG:
-      print datetime.now(), "unparseable response: "+locstr[0:80]
-    return 999, 0, UNKNOWN_LATLNG
-  return geocode_call(addr, retries, parsefunc)
-
 def output_opportunity(opp, feedinfo, known_orgs, totrecs):
   """main function for outputting a complete opportunity."""
   outstr = ""
@@ -652,22 +537,11 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
         locstr, latlng, geocoded_loc = ("", "", "")
         loc_fields = get_loc_fields("0.0", "0.0", "0.0", "", "")
       else:
-        locstr, latlng, geocoded_loc = lookup_loc_fields(opploc)
-        lat = lng = "0.0"
-        if latlng != "":
-          lat, lng = latlng.split(",")
+        locstr = get_full_addr_str(opploc)
+        addr, lat, lng, acc = find_geocoded_location(opploc)
         loc_fields = get_loc_fields("", str(float(lat)+1000.0),
-                                    str(float(lng)+1000.0), geocoded_loc,
+                                    str(float(lng)+1000.0), addr,
                                     xmlh.get_tag_val(opploc, "name"))
-      #if locstr != geocoded_loc:
-      #  #print datetime.now(), "locstr: ", locstr, " geocoded_loc: ", \
-      #  #  geocoded_loc
-      #  descs = opp.getElementsByTagName("description")
-      #  encoded_locstr = escape(locstr)
-      #  encoded_locstr = unicode(encoded_locstr,errors="ignore")
-      #  encoded_locstr = encoded_locstr.encode('utf-8', "ignore")
-      #  descs[0].firstChild.data += ". detailed location information: "
-      #  descs[0].firstChild.data += encoded_locstr
       opp_id = compute_stable_id(opp, org, locstr, openended, duration,
                            hrs_per_week, startend)
       outstr += output_field("id", opp_id)
@@ -1070,8 +944,7 @@ def clean_input_string(instr):
 
 def parse_options():
   """parse cmdline options"""
-  global DEBUG, PROGRESS, GEOCODE_DEBUG, FIELDSEP, RECORDSEP, ABRIDGED
-  global OUTPUTFMT
+  global DEBUG, PROGRESS, FIELDSEP, RECORDSEP, ABRIDGED, OUTPUTFMT
   parser = OptionParser("usage: %prog [options] sample_data.xml ...")
   parser.set_defaults(geocode_debug=False)
   parser.set_defaults(debug=False)
@@ -1109,17 +982,19 @@ def parse_options():
     RECORDSEP = options.rs
   if (options.debug):
     DEBUG = True
-    GEOCODE_DEBUG = True
+    geocoder.GEOCODE_DEBUG = True
     PROGRESS = True
+    geocoder.SHOW_PROGRESS = True
     FIELDSEP = "\n"
   if (options.abridged):
     ABRIDGED = True
   if (options.geocode_debug):
-    GEOCODE_DEBUG = True
+    geocoder.GEOCODE_DEBUG = True
   if options.test:
     options.progress = True
   if (options.progress):
     PROGRESS = True
+    geocoder.SHOW_PROGRESS = True
   if options.ftpinfo and not options.outputfmt:
     options.outputfmt = "basetsv"
   OUTPUTFMT = options.outputfmt
