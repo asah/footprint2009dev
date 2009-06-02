@@ -235,11 +235,8 @@ class SearchResultSet(object):
         if len(res.merged_list) > 1:
           res.merged_list.sort(cmp=compare_result_dates)
           location_was = res.location
-          # TODO(mt1955)-- need_more appears to be unused?!  pls fix or remove.
-          #need_more = False
           res.less_list = []
           if len(res.merged_list) > 2:
-            #need_more = True
             more_id = "more_" + str(res.idx)
             res.more_id = more_id
             res.more_list = []
@@ -304,9 +301,10 @@ class SearchResultSet(object):
     for res in self.results:
       merge_result(res)
     compute_more_less()
+
     self.num_merged_results = len(self.merged_results)
     if len(self.results) == 0:
       self.estimated_merged_results = self.estimated_results
     else:
-      self.estimated_merged_results = int(self.estimated_results * \
+      self.estimated_merged_results = int(self.estimated_results *
           self.num_merged_results / len(self.results))

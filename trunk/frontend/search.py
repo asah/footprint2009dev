@@ -220,4 +220,15 @@ def fetch_result_set(args):
   result_set = base_search.search(args)
   scoring.score_results_set(result_set, args)
   result_set.dedup()
+
+  if (not result_set.has_more_results 
+      and result_set.num_merged_results < int(args[api.PARAM_NUM])
+      and result_set.estimated_merged_results >= int(args[api.PARAM_NUM])
+      and float(args[api.PARAM_OVERFETCH_RATIO]) < api.CONST_MAX_OVERFETCH_RATIO):
+    # Note: recursion terminated by value of overfetch >= api.CONST_MAX_OVERFETCH_RATIO
+    args[api.PARAM_OVERFETCH_RATIO] = api.CONST_MAX_OVERFETCH_RATIO
+    logging.info("requery with overfetch=%d" % args[api.PARAM_OVERFETCH_RATIO]) 
+    # requery now w/ max overfetch_ratio
+    result_set = fetch_result_set(args)
+
   return result_set
