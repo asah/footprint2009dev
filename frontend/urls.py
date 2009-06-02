@@ -47,6 +47,7 @@ STATIC_CONTENT_FILES = {
   '/help' : 'help.html',
   '/faq' : 'faq.html',
   '/tos' : 'tos.html',
+  '/api_tos' : 'api_tos.html',
   '/dmca' : 'dmca.html',
   '/docs/api.html' : 'api.html',
 }
