@@ -1027,7 +1027,10 @@ class static_content(webapp.RequestHandler):
 
     text = memcache.get(self.STATIC_CONTENT_MEMCACHE_KEY + remote_url)
     if not text:
-      result = urlfetch.fetch(remote_url)
+      # Content is not in memcache.  Fetch from remote location.
+      # We have to append ?zx= to URL to avoid urlfetch's cache.
+      result = urlfetch.fetch("%s?zx=%d" % (remote_url,
+                                            datetime.now().microsecond))
       if result.status_code == 200:
         text = result.content
         memcache.set(self.STATIC_CONTENT_MEMCACHE_KEY + remote_url,
