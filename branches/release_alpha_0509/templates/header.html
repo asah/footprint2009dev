@@ -1,0 +1,85 @@
+<div id='header'>
+  <div id='header_left'>
+    <div id='header_top_spacer'></div>
+    <form class='valign' onsubmit='submitForm("keywords"); return false;'>
+      <table>
+       <tr>
+        <td valign='middle'>
+          <span id='logo_span'>
+            <a style='text-decoration:none;' class='valign noselect no_underline' href='/'><img border='0' id='logo_name' class='valign' src='/images/title_alpha.gif' alt='All For Good'></a>
+          </span>
+        </td>
+        <td valign='middle'>
+          <div>
+            <input type='text' id='keywords' class='valign'
+                   size='40' value='{{ keywords|escape }}' />
+            <img class='search_button valign pointer'
+                 onclick='submitForm("keywords"); return false;'
+                 src='/images/red-search-button.png'>
+
+            <span id='loading' style='display:none;'>Loading...</span>
+          </div>
+          <div id='example_searches'></div>
+        </td>
+       </tr>
+      </table>
+    </form>
+  </div>
+
+<script>
+function setKeywordAndExecute(keywords) {
+  setInputFieldValue(el('keywords'), keywords);
+  submitForm('keywords');
+}
+function createExampleSearchText() {
+  var html = 'E.g., ';
+  var links = [];
+  for (var i = 0; i < popularSearches.length; i++) {
+    links.push('<a onclick="setKeywordAndExecute(\'' + popularSearches[i] +
+        '\');return false;"' +
+        'href="javascript:void(0);">' + popularSearches[i] + '</' + 'a>');
+  }
+  el('example_searches').innerHTML = 'E.g., ' + links.join(', ');
+}
+if (currentPageName != 'HOMEPAGE') {
+  createExampleSearchText();
+}
+</script>
+
+    <script type='text/javascript'>
+      setInputFieldValue(el('keywords'), '');
+    </script>
+
+  <script type="text/javascript">
+    google.setOnLoadCallback(function() {
+      $("#keywords").autocomplete("/autocomplete/query");
+    });
+  </script>
+
+
+  {% if not no_login %}
+  <script src='http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' type='text/javascript'></script>
+  <script type="text/javascript">
+    document.userId = "{{user.user_id|escape }}";
+    document.userType = "{{user.account_type|escape }}";
+    document.userDisplayName = "{{user.display_name|escape }}";
+
+    var FC_SITE_ID = '02962301966004179520';
+    var FB_SITE_ID = '{{ facebook_key }}';
+
+    FB.init(FB_SITE_ID, 'xd_receiver.htm');
+
+    google.load('friendconnect', '0.8');
+    google.setOnLoadCallback(function() {
+      google.friendconnect.container.loadOpenSocialApi({site: FC_SITE_ID, onload: function() {
+        {% if not user %} checkForViewer(); {% endif %}
+      }});
+    });
+  </script>
+
+  <div id='header_right' align='right' width='100%'></div>
+
+  {% endif %}{# no_login #}
+
+  <div style='clear: both; float: none'></div>
+</div>

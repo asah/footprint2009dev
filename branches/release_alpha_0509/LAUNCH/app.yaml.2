@@ -1,0 +1,75 @@
+application: servicefootprint
+#application: footprint2009dev
+
+version: release-alpha-0509-branch-push1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /css
+  static_dir: css
+
+- url: /js
+  static_dir: js
+
+- url: /images
+  static_dir: images
+
+# For realsimplehistory
+- url: /blank.html
+  static_files: blank.html
+  upload: blank.html
+
+# For FriendConnect
+- url: /rpc_relay.html
+  static_files: templates/rpc_relay.html
+  upload: templates/rpc_relay.html
+
+- url: /canvas.html
+  static_files: templates/canvas.html
+  upload: templates/canvas.html
+
+# Unit tests for API
+- url: /testapi/.*
+  script: testapi/main.py
+
+# For FacebookConnect
+- url: /xd_receiver.htm
+  static_files: templates/xd_receiver.htm
+  upload: templates/xd_receiver.htm
+
+- url: /test/.*
+  script: testpages.py
+
+- url: /admin/.*
+  script: main.py
+  login: admin
+
+- url: /export/.*
+  script: export/main.py
+  secure: always
+
+# For Gadget
+- url: /gadget
+  static_dir: html/gadget
+
+# autocompleter for search
+- url: /autocomplete/.*
+  script: autocomplete/main.py
+
+# checker for spreadsheet feeds
+- url: /sheetchecker/.*
+  script: sheetchecker/main.py
+
+- url: /robots.txt
+  static_files: robots.txt
+  upload: robots.txt
+
+# Temporary.
+- url: /googlehostedservice.html
+  static_files: googlehostedservice.html
+  upload: googlehostedservice.html
+
+# Keep this last
+- url: /.*
+  script: main.py
