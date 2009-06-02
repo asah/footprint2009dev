@@ -288,6 +288,7 @@ def load_gbase(name, url, do_processing=True, do_ftp=True):
 
   if do_ftp:
     print_progress("ftp'ing to base")
+    footprint_lib.PROGRESS = True
     footprint_lib.ftp_to_base(name, USERNAME+":"+PASSWORD, tsv_data)
     print_progress("load_gbase: done.")
 
@@ -309,11 +310,9 @@ def test_loaders():
 
 def loaders():
   """put all loaders in one function for easier testing."""
-  if False:
-    # out for the launch
-    load_gbase("americorps",
-               "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
-    load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
+  load_gbase("americorps",
+             "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
+  load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
   load_gbase("servenet",
              "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
   load_gbase("mybarackobama",
@@ -325,6 +324,17 @@ def loaders():
   load_gbase("habitat", "http://www.habitat.org/cd/gv/schedule_to_xml.aspx")
   load_gbase("americansolutions",
              "http://www.americansolutions.com/footprint/footprint.xml")
+  load_gbase("idealist", "http://feeds.idealist.org/xml/"+
+             "footprint-volunteer-opportunities.xml")
+  load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
+  load_gbase("gspreadsheets",
+             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
+  load_gbase("handson",
+             "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
+  # note: craiglist crawler is run asynchronously, hence the local file
+  load_gbase("craigslist", "craigslist-cache.txt")
+
+  # out for launch
   #load_gbase("meetup", "http://api.meetup.com/footprint?"+
   #           "key=2c24625a70343bb68451e337e714b22")
 
@@ -332,15 +342,6 @@ def loaders():
   #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
   #           "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
   #           "en.open.atom.gz")
-  load_gbase("idealist", "http://feeds.idealist.org/xml/"+
-             "footprint-volunteer-opportunities.xml")
-  load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
-  load_gbase("gspreadsheets",
-             "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
-  # note: craiglist crawler is run async to this
-  load_gbase("craigslist", "craigslist-cache.txt")
-  load_gbase("handson",
-             "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
 
 def main():
   """shutup pylint."""
