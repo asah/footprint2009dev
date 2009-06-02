@@ -522,7 +522,7 @@ def output_opportunity(opp, feedinfo, known_orgs, totrecs):
         start_time = "00:00:00-00:00"
       startend = convert_dt_to_gbase(start_date, start_time, "UTC")
       if (end_date != "" and end_date + end_time > start_date + start_time):
-        endstr = convert_dt_to_gbase(start_date, start_time, "UTC")
+        endstr = convert_dt_to_gbase(end_date, end_time, "UTC")
         startend += "/" + endstr
     duration = xmlh.get_tag_val(opptime, "duration")
     hrs_per_week = xmlh.get_tag_val(opptime, "commitmentHoursPerWeek")
