@@ -26,11 +26,11 @@ from google.appengine.api import memcache
 
 def is_latlong(instr):
   """check whether a string is a valid lat-long."""
-  return (re.match(r'[0-9.+-]+\s*,\s*[0-9.+-]+', instr) != None)
+  return (re.match(r'^\s*[0-9.+-]+\s*,\s*[0-9.+-]+\s*$', instr) != None)
   
 def is_latlongzoom(instr):
   """check whether a string is a valid lat-long-zoom."""
-  return (re.match(r'[0-9.+-]+\s*,\s*[0-9.+-]+,[0-9.+-]+', instr) != None)
+  return (re.match(r'^\s*[0-9.+-]+\s*,\s*[0-9.+-]+\s*,\s*[0-9.+-]+\s*$', instr) != None)
 
 def geocode(addr, usecache=True, retries=4):
   """convert a human-readable address into a "lat,long" value (string)."""
