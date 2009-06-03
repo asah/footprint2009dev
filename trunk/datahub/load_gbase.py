@@ -8,6 +8,7 @@ Usage: load_gbase.py username password
 
 import sys
 import re
+import gzip
 import logging
 import subprocess
 from datetime import datetime
@@ -262,12 +263,15 @@ def load_gbase(name, url, do_processing=True, do_ftp=True):
   # run as a subprocess so we can ignore failures and keep going.
   # later, we'll run these concurrently, but for now we're RAM-limited.
   # ignore retcode
-  tsv_filename = "out-"+name+".tsv"
+  # match the filenames to the feed filenames in Google Base, so we can
+  # manually upload for testing.
+  tsv_filename = name+"1.gz"
 
   if do_processing:
     stdout, stderr, retcode = run_shell(["./footprint_lib.py", "--progress",
                                          #"--ftpinfo", USERNAME+":"+PASSWORD,
-                                         "--output", tsv_filename, url],
+                                         "--output", tsv_filename, url,
+                                         "--compress_output" ],
                                         silent_ok=True, print_output=False)
     print stdout,
     if stderr and stderr != "":
@@ -276,9 +280,9 @@ def load_gbase(name, url, do_processing=True, do_ftp=True):
       print name+":RETCODE: "+str(retcode)
 
   print "reading TSV data..."
-  infh = open(tsv_filename, "r")
-  tsv_data = infh.read()
-  infh.close()
+  gzip_fh = gzip.open(tsv_filename, 'r')
+  tsv_data = gzip_fh.read(instr)
+  gzip_fh.close()
 
   print "processing field stats..."
   process_field_stats(tsv_data)
@@ -305,7 +309,7 @@ def test_loaders():
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw", False, False)
   load_gbase("craigslist", "craigslist-cache.txt", False, False)
   load_gbase("americorps", "americorps-xml_ac_recruitopps.xml.gz", False, False)
-  load_gbase("volunteer.gov", "volunteergov.xml", False, False)
+  load_gbase("volunteergov", "volunteergov.xml", False, False)
   load_gbase("handson", "hot.footprint.xml.gz", False, False)
 
 def loaders():
@@ -329,7 +333,7 @@ def loaders():
   load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
   load_gbase("gspreadsheets",
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
-  load_gbase("handson",
+  load_gbase("handsonnetwork",
              "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
   # note: craiglist crawler is run asynchronously, hence the local file
   load_gbase("craigslist", "craigslist-cache.txt")

@@ -161,8 +161,6 @@ FIELDTYPES = {
   "venue_name":"string",
   "location_string":"string",
   "orgLocation":"string",
-
-  "hidden_details":"string",
 }
 
 def print_progress(msg, filename="", progress=None):
@@ -418,14 +416,6 @@ def get_direct_mapped_fields(opp, org):
   else:
     outstr += output_field("orgLocation", "")
 
-  # hidden_details
-  outstr += FIELDSEP
-  fieldval = opp.getElementsByTagName("hiddenDetails")
-  if (fieldval.length > 0):
-    outstr += output_field(fieldval[0], "hidden_details")
-  else:
-    outstr += output_field("hidden_details", "some hidden text. asdfghjkl.")
-
   return outstr
 
 def get_base_other_fields(opp, org):
@@ -443,6 +433,8 @@ def get_base_other_fields(opp, org):
   # don't map expiration_date -- Base has strict limits (e.g. 2 weeks)
   return outstr
 
+
+sent_start_rx = re.compile(r'((^\s*|[.]\s+)[A-Z])([A-Z0-9 ,;-]{13,})')
 def cleanse_snippet(instr):
   # strip \n and \b
   instr = re.sub(r'(\\[bn])+', ' ', instr)
@@ -457,12 +449,21 @@ def cleanse_snippet(instr):
   instr = re.sub(r'&(uml|middot|ndash|bull|mdash|hellip);', '-', instr)
   # strip leftover XML escaped chars
   instr = re.sub(r'&([a-z]+|#[0-9]+);', '', instr)
+
+  # fix obnoxious all caps titles and snippets
+  for str in re.finditer(sent_start_rx, instr):
+    instr = re.sub(sent_start_rx, str.group(1)+str.group(3).lower(), instr, 1)
+  
   return instr
 
+lcword_rx = re.compile(r'(\s)([a-z])')
 def get_event_reqd_fields(opp):
   """Fields required by Google Base, note that they aren't necessarily
   used by the FP app."""
-  outstr = cleanse_snippet(output_tag_value(opp, "title"))
+  title = cleanse_snippet(output_tag_value(opp, "title"))
+  for str in re.finditer(lcword_rx, title):
+    title = re.sub(lcword_rx, str.group(1)+str.group(2).upper(), title, 1)
+  outstr = title
   outstr += FIELDSEP + output_tag_value(opp, "description")
   outstr += FIELDSEP + output_field("link", BASE_PUB_URL)
   return outstr
@@ -800,9 +801,9 @@ def guess_shortname(filename):
     return "gspreadsheet"
   if re.search("(handson|hot.footprint)", filename):
     return "handsonnetwork"
-  if re.search("(volunteer[.]gov)", filename):
+  if re.search("(volunteer[.]?gov)", filename):
     return "volunteergov"
-  if re.search("(whichoneis.com|beextra[.]org)", filename):
+  if re.search("(whichoneis.com|beextra)", filename):
     return "extraordinaries"
   if re.search("idealist", filename):
     return "idealist"
@@ -897,11 +898,11 @@ def guess_parse_func(inputfmt, filename):
       newstr = re.sub(r'&code=', '&amp;code=', instr)
       return parse_footprint.parse_fast(newstr, maxrecs, progress)
     return "badfpxml", parse_habitat
-  if (inputfmt == None and re.search(r'volunteer[.]gov', filename)):
+  if (inputfmt == None and re.search(r'volunteer[.]?gov', filename)):
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'americansolutions', filename)):
     return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'(whichoneis[.]com|beextra[.]org)',
+  if (inputfmt == None and re.search(r'(whichoneis[.]com|beextra)',
                                      filename)):
     return "fpxml", parse_footprint.parse
   if inputfmt == "idealist":
@@ -953,6 +954,7 @@ def parse_options():
   parser.set_defaults(debug_input=False)
   parser.set_defaults(outputfmt="basetsv")
   parser.set_defaults(output="")
+  parser.set_defaults(compress_output=False)
   parser.set_defaults(test=False)
   parser.set_defaults(clean=True)
   parser.set_defaults(maxrecs=-1)
@@ -967,6 +969,10 @@ def parse_options():
   parser.add_option("--progress", action="store_true", dest="progress")
   parser.add_option("--outputfmt", action="store", dest="outputfmt")
   parser.add_option("--output", action="store", dest="output")
+  parser.add_option("--compress_output", action="store_true",
+                    dest="compress_output")
+  parser.add_option("--nocompress_output", action="store_false",
+                    dest="compress_output")
   parser.add_option("-g", "--geodbg", action="store_true", dest="geocode_debug")
   parser.add_option("--ftpinfo", dest="ftpinfo")
   parser.add_option("--fs", "--fieldsep", action="store", dest="fs")
