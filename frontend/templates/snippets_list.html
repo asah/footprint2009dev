@@ -87,10 +87,9 @@
         <a class='snippet_url' href='/url?q={{ result.url|urlencode }}&sig={{ result.url_sig|urlencode }}&id={{ result.merge_key|urlencode }}'>{{ result.url_short|escape }}</a>
         -
         <div class='interest_links'>
-          <span style='display:{{result.interest|yesno:"none,"}};' id='like_{{forloop.counter0}}'><a href='javascript:void(0)' onclick='toggleInterest({{forloop.counter0}});return false;'>Like</a> - </span>
+          <span style='display:{{result.interest|yesno:"none,"}};' id='like_{{forloop.counter0}}'><a href='javascript:void(0)' onclick='toggleInterest({{forloop.counter0}});return false;'>Like</a></span>
 
-          <!-- TODO(doll): Add to calendar functions need dates in the right format -->
-          <span style='position: relative;' class='pointer'
+<!--          <span style='position: relative;' class='pointer'
                onclick='popupModalElement("add_to_calendar{{ forloop.counter0 }}");return false;'>
             <div id='add_to_calendar{{ forloop.counter0 }}'
                  class='add_to_calendar_floating'>
@@ -105,6 +104,7 @@
             </div>
             <a href='javascript:void(0);'>Add to calendar</a>
           </span>
+-->
 {% if moderator %}
           - <a href='/moderateblacklist?action=blacklist&key={{result.merge_key|urlencode}}'>blacklist</a>
 {% endif %}
