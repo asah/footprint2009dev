@@ -5,9 +5,9 @@
 
   {% ifequal user.account_type "friendconnect"%}
     <a href="javascript:;" onclick="google.friendconnect.requestSettings()">Settings</a> |
-    <a href="javascript:;" onclick="google.friendconnect.requestInvite()">Invite</a>
+    <a href="javascript:;" onclick="google.friendconnect.requestInvite()">Invite Friends</a>
   {% else %} {% ifequal user.account_type "facebook" %}
-    <a href="javascript:;" onclick="inviteFacebookFriends();">Invite</a>
+    <a href="javascript:;" onclick="inviteFacebookFriends();">Invite Friends</a>
   {% endifequal %}{% endifequal %}
 
   |
