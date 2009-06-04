@@ -24,27 +24,31 @@ ORGS = {}
 ORGIDS = {}
 MAX_ORGID = 0
 
-def register_org(orgname, orgstr):
+def register_org(item):
   """register the organization info, for lookup later."""
   global MAX_ORGID
+
+  # SponsoringOrganization/Name -- fortunately, no conflicts
+  # but there's no data except the name
+  orgname = xmlh.get_tag_val(item, "Name")
   if orgname in ORGIDS:
     return ORGIDS[orgname]
   MAX_ORGID = MAX_ORGID + 1
   orgstr = '<Organization>'
-  orgstr += '<organizationID>%d</organizationID>' % (len(ORGIDS))
-  orgstr += '<nationalEIN></nationalEIN>'
+  orgstr += '<organizationID>%d</organizationID>' % (MAX_ORGID)
+  orgstr += '<nationalEIN />'
   orgstr += '<name>%s</name>' % (orgname)
-  orgstr += '<missionStatement></missionStatement>'
-  orgstr += '<description></description>'
+  orgstr += '<missionStatement />'
+  orgstr += '<description />'
   orgstr += '<location>'
-  orgstr += xmlh.output_val("city", "")
-  orgstr += xmlh.output_val("region", "")
-  orgstr += xmlh.output_val("postalCode", "")
+  orgstr += xmlh.output_node("city", item, "City")
+  orgstr += xmlh.output_node("region", item, "StateOrProvince")
+  orgstr += xmlh.output_node("postalCode", item, "ZipOrPostalCode")
   orgstr += '</location>'
-  orgstr += '<organizationURL></organizationURL>'
-  orgstr += '<donateURL></donateURL>'
-  orgstr += '<logoURL></logoURL>'
-  orgstr += '<detailURL></detailURL>'
+  orgstr += '<organizationURL />'
+  orgstr += '<donateURL />'
+  orgstr += '<logoURL />'
+  orgstr += '<detailURL />'
   orgstr += '</Organization>'
   ORGS[MAX_ORGID] = orgstr
   ORGIDS[orgname] = MAX_ORGID
@@ -79,10 +83,7 @@ def parse(instr, maxrecs, progress):
 
     item = xmlh.simple_parser(oppstr, known_elnames, progress=False)
 
-    # SponsoringOrganization/Name -- fortunately, no conflicts
-    # but there's no data except the name
-    orgname = xmlh.get_tag_val(item, "Name")
-    orgid = register_org(orgname, orgname)
+    orgid = register_org(item)
 
     # logoURL -- sigh, this is for the opportunity not the org
     volopps += '<VolunteerOpportunity>'
