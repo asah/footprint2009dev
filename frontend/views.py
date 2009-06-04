@@ -235,6 +235,13 @@ class home_page_view(webapp.RequestHandler):
     self.response.out.write(render_template(HOMEPAGE_TEMPLATE,
                                            template_values))
 
+class home_page_redir_view(webapp.RequestHandler):
+  """handler for /home, which somehow got indexed by google."""
+  @expires(0)
+  def get(self):
+    """HTTP get method."""
+    self.redirect("/")
+
 class consumer_ui_search_redir_view(webapp.RequestHandler):
   """handler for embedded HTML forms, which can't form queries
      with query params to the right of the # (hash)."""

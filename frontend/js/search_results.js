@@ -257,11 +257,11 @@ function onLoadSearch() {
     whenFilterWidget =
         new FilterWidget(el('when_filter_widget'),
                          'When',
-                         [ ['Today', 'today'],
+                         [ ['Anytime', 'everything'],
+                           ['Today', 'today'],
                            ['This weekend', 'this_weekend'],
                            ['This week', 'this_week'],
-                           ['This month', 'this_month'],
-                           ['Everything', 'everything'] ],
+                           ['This month', 'this_month'] ],
                          'everything',
                          function(value) { submitForm('when_widget'); });
   }
