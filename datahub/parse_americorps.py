@@ -67,6 +67,9 @@ def parse(instr, maxrecs, progress):
 
   numorgs = numopps = 0
 
+  # fixup for bad start/end dates
+  instr = re.sub(r'<(StartDate|EndDate)>00', r'<\1>20', instr)
+  # fixup for db: namespace which breaks our XML parser
   instr = re.sub(r'<(/?db):', r'<\1_', instr)
   opps = re.findall(r'<VolunteerOpportunity>.+?</VolunteerOpportunity>',
                     instr, re.DOTALL)
