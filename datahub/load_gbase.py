@@ -281,7 +281,7 @@ def load_gbase(name, url, do_processing=True, do_ftp=True):
 
   print "reading TSV data..."
   gzip_fh = gzip.open(tsv_filename, 'r')
-  tsv_data = gzip_fh.read(instr)
+  tsv_data = gzip_fh.read()
   gzip_fh.close()
 
   print "processing field stats..."

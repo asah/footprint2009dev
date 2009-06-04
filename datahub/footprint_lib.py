@@ -1196,6 +1196,10 @@ def main():
     ftp_to_base(filename, options.ftpinfo, outstr)
   elif options.output == "":
     print outstr,
+  elif options.compress_output:
+    gzip_fh = gzip.open(options.output, 'wb', 9)
+    gzip_fh.write(outstr)
+    gzip_fh.close()
   else:
     outfh = open(options.output, "w")
     outfh.write(outstr)
