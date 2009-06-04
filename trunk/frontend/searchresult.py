@@ -68,6 +68,10 @@ class SearchResult(object):
     self.xml_url = escape(url) + "#" + self.item_id
     parsed_url = urlparse.urlparse(url)
     self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
+    if url.find("volunteer.gov/gov") >= 0:
+      # hack for volunteer.gov/gov, which is different from
+      # volunteer.gov/ (which redirects to serve.net)
+      self.url_short += "/gov"
     self.host_website = parsed_url.netloc
     if self.host_website.startswith("www."):
       self.host_website = self.host_website[4:]
