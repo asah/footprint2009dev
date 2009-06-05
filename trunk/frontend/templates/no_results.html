@@ -4,14 +4,15 @@
       map.clearMarkers();
   });
 </script>
-<br><br>
+
 
 {% ifequal current_page "MY_EVENTS" %}
-
-Really?! You can't find one good activity to like?! <p>This is your chance to promote an organization or cause. Simply click "like" in the search results and then share it with friends or keep track of it for yourself, through your activity page.
+<h1 class="snippets_list_header" style="margin:0">You haven't liked any activities yet.</h1>
+<br>
+Liking an activity lets you promote an organization or cause. Simply click "like" in the search results and then share it with friends or keep track of it for yourself, through this activity page.
 
 {% else %}
-
+<br><br>
 Your search
 {% if query_param_q %} for &#8220;<b>{{ query_param_q|escape }}</b>&#8221;{% endif %}
 {% if query_param_loc %} near &#8220;<b>{{ query_param_loc|escape }}</b>&#8221;{%endif %}
