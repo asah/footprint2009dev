@@ -67,7 +67,7 @@ class SearchResult(object):
     # hack to avoid guid duplicates
     self.xml_url = escape(url) + "#" + self.item_id
     parsed_url = urlparse.urlparse(url)
-    self.url_short = '%s://%s' % (parsed_url.scheme, parsed_url.netloc)
+    self.url_short = parsed_url.netloc
     if url.find("volunteer.gov/gov") >= 0:
       # hack for volunteer.gov/gov, which is different from
       # volunteer.gov/ (which redirects to serve.net)
