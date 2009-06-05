@@ -136,6 +136,15 @@ form {
   height: 26px;
 }
 
+input#keywords, input#location {
+  height: 26px;
+  padding: 2px 0;
+  font-size: 12px;
+}
+
+input#keywords { width: 284px; }
+input#location { width: 180px; }
+
 /** Search results page **/
 
 .snippet {
