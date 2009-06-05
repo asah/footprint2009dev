@@ -303,7 +303,9 @@ executeSearchFromHashParams = function() {
 
     var query = createQueryFromUrlParams();
     el('loading').style.display = '';
-
+    if(el('loading-bottom')){
+      el('loading-bottom').style.display = '';
+    }
     // TODO: eliminate the need for lastSearchQuery to be global
 
     lastSearchQuery = query;
@@ -326,6 +328,9 @@ executeSearchFromHashParams = function() {
         map.autoZoomAndCenter(query.getLocation());
       });
       el('loading').style.display = 'none';
+      if(el('loading-bottom')){
+        el('loading-bottom').style.display = 'none';
+      }
     };
 
     var error = function (XMLHttpRequest, textStatus, errorThrown) {
