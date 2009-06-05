@@ -24,8 +24,7 @@ import logging
 
 import views
 import urls
-
-IS_DEVELOPMENT = (os.environ.get('SERVER_SOFTWARE').find("Development")==0)
+import deploy
 
 APPLICATION = webapp.WSGIApplication(
     [(urls.URL_HOME, views.home_page_view),
@@ -47,12 +46,12 @@ APPLICATION = webapp.WSGIApplication(
     ] +
     [ (url, views.static_content) for url in
          urls.STATIC_CONTENT_FILES.iterkeys() ],
-    debug=IS_DEVELOPMENT)
+    debug=deploy.is_local_development())
 
 def main():
   """this comment to appease pylint."""
-  if IS_DEVELOPMENT:
-    logging.info("IS_DEVELOPMENT=True")
+  if deploy.is_local_development():
+    logging.info("deploy.is_local_development()==True")
   else:
     # we have lots of debug and info's
     logging.getLogger().setLevel(logging.WARNING)
