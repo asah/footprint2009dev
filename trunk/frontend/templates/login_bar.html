@@ -1,7 +1,13 @@
    <nobr>
     {% if user %}
 <div id='sign_in'>
-  Hello, {{ user.display_name|escape }} |
+  Hello,
+
+ {% ifequal current_page "MY_EVENTS" %}
+  {{ user.display_name|escape }}
+  {% else %}
+  <a href='/myevents'>{{ user.display_name|escape }}</a>
+  {% endifequal %} | 
 
   {% ifequal user.account_type "friendconnect"%}
     <a href="javascript:;" onclick="google.friendconnect.requestSettings()">Settings</a> |
