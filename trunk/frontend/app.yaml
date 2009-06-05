@@ -6,6 +6,10 @@ version: 1
 runtime: python
 api_version: 1
 
+# super long expiration for images...
+# this means that the &zx= must be used correctly or we'd hosed
+default_expiration: "1000d"
+
 handlers:
 - url: /css
   static_dir: css
