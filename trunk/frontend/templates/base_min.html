@@ -17,13 +17,20 @@
 
 <head>
   <title>{% block title %}All for Good{% endblock %}</title>
-
+  {# chartbeat #}
+  <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
   {% block head %}{% endblock %}
-
 </head>
 
 {% block body %}{% endblock %}
 
 </html>
+
+{# chartbeat #}
+<script type="text/javascript">
+var cbjspath = "static.chartbeat.com/js/chartbeat.js?uid=2008&domain=allforgood.org";
+var cbjsprotocol = (("https:" == document.location.protocol) ? "https://s3.amazonaws.com/" : "http://");
+document.write(unescape("%3Cscript src='"+cbjsprotocol+cbjspath+"' type='text/javascript'%3E%3C/script%3E"))
+</script>
 
 {% endspaceless %}
