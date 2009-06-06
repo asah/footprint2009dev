@@ -334,6 +334,8 @@ def parse(instr, maxrecs, progress):
     row += 1
     CURRENT_ROW = row
   CURRENT_ROW = None
+  if progress:
+    print str(datetime.now())+": ", numopps, "opportunities found."
   volopps += '</VolunteerOpportunities>'
 
   outstr = '<?xml version="1.0" ?>'

@@ -311,9 +311,11 @@ def test_loaders():
   load_gbase("americorps", "americorps-xml_ac_recruitopps.xml.gz", False, False)
   load_gbase("volunteergov", "volunteergov.xml", False, False)
   load_gbase("handson", "hot.footprint.xml.gz", False, False)
+  load_gbase("mlk_day", "mlk_usafc.xml", False, False)
 
 def loaders():
   """put all loaders in one function for easier testing."""
+  load_gbase("mlk_day", "http://my.mlkday.gov/feeds/mlk_usafc.xml")
   load_gbase("americorps",
              "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
   load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
