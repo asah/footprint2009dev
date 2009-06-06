@@ -320,6 +320,9 @@ getDefaultLocation = function() {
 // that.  Having default values here is not the cleanest.
 // TODO: Clean this up -- these defaults should really be properties
 //       of the input fields, or something else cleaner than this.
+// This should be taken care of as of fix for Issue 260
+// I am leaving the var in place in case there is another place it is used
+// that I did not find.
 var inputFieldDefaultValues = {
   'keywords' : 'keywords',
   'location' : 'enter location'
@@ -335,10 +338,13 @@ function setInputFieldValue(input, value) {
   function set(valueToSet) {
     if (!valueToSet || valueToSet == '') {
       input.style.color = '#666';
-      input.value = inputFieldDefaultValues[input.id];
+      input.value = input.name;
 
       input.onfocus = function() {
-        input.value = '';
+        if (input.value == input.name) {
+          input.value = '';
+        }
+
         input.style.color = 'black';
         input.onfocus = null;
       }
@@ -360,7 +366,7 @@ function setInputFieldValue(input, value) {
  * @param {HTMLInputElement} input Input element.
  */
 function getInputFieldValue(input) {
-  if (!input || input.value == inputFieldDefaultValues[input.id]) {
+  if (!input || input.value == input.name) {
     return '';
   } else {
     return input.value;
