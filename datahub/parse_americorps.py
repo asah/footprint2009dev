@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-parser for Hands On Network
+parser for americorps
 """
 
 import xml_helpers as xmlh

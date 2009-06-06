@@ -30,6 +30,7 @@ import parse_handsonnetwork
 import parse_idealist
 import parse_craigslist
 import parse_americorps
+import parse_mlkday
 import parse_userpostings
 import parse_servenet
 import parse_volunteermatch
@@ -813,6 +814,8 @@ def guess_shortname(filename):
     return "craigslist"
   if re.search("americorps", filename):
     return "americorps"
+  if re.search("mlk(_|day)", filename):
+    return "mlk_day"
   if re.search("servenet", filename):
     return "servenet"
   if re.search("volunteermatch", filename):
@@ -880,6 +883,9 @@ def guess_parse_func(inputfmt, filename):
   if (inputfmt == "americorps" or
       (inputfmt == None and re.search(r'americorps', filename))):
     return "americorps", parse_americorps.parse
+  if (inputfmt == "mlkday" or
+      (inputfmt == None and re.search(r'mlk(_|day)', filename))):
+    return "mlk_day", parse_mlkday.parse
   if (inputfmt == "servenet" or
       (inputfmt == None and re.search(r'servenet|SERVEnet', filename))):
     return "servenet", parse_servenet.parse
