@@ -321,9 +321,6 @@ def loaders():
   load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
   load_gbase("servenet",
              "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
-  load_gbase("mybarackobama",
-             "http://my.barackobama.com/page/event/search_results?"+
-             "format=footprint")
   load_gbase("unitedway",
              "http://volunteer.united-e-way.org/"+
              "uwnyc/util/voml/uwnyc-footprint-pull.aspx")
@@ -339,6 +336,11 @@ def loaders():
              "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
   # note: craiglist crawler is run asynchronously, hence the local file
   load_gbase("craigslist", "craigslist-cache.txt")
+
+  # out for launch
+  # load_gbase("mybarackobama",
+  #            "http://my.barackobama.com/page/event/search_results?"+
+  #            "format=footprint")
 
   # out for launch
   #load_gbase("meetup", "http://api.meetup.com/footprint?"+
