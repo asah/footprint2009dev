@@ -363,7 +363,7 @@ input#location { width: 180px; }
 }
 
 .glow_top {
-  background-image: url('../images/glow-top.gif');
+  background-image: url('/zx0000/images/glow-top.gif');
   background-repeat: repeat-x;
   height: 20px;
 }
@@ -374,12 +374,12 @@ input#location { width: 180px; }
 }
 
 .glow_left {
-  background-image: url('../images/glow-left.gif');
+  background-image: url('/zx0000/images/glow-left.gif');
   background-repeat: repeat-y;
 }
 
 .glow_right {
-  background-image: url('../images/glow-right.gif');
+  background-image: url('/zx0000/images/glow-right.gif');
   background-repeat: repeat-y;
 }
 
@@ -389,7 +389,7 @@ input#location { width: 180px; }
 }
 
 .glow_bottom {
-  background-image: url('../images/glow-bottom.gif');
+  background-image: url('/zx0000/images/glow-bottom.gif');
   background-repeat: repeat-x;
   height: 20px;
 }
@@ -513,7 +513,7 @@ A:hover {  /* Keep this near end of file, after other A definitions */
 }
 
 #modal_container .header {
-  background: url(../images/modal/header.gif) repeat-x;
+  background: url(/zx0000/images/modal/header.gif) repeat-x;
   color: #fff;
   font-size: 1.1em;
   font-weight: bold;
@@ -541,7 +541,7 @@ A:hover {  /* Keep this near end of file, after other A definitions */
 }
 
 #modal_container .buttons div {
-  background: url(../images/modal/button.gif) repeat-x;
+  background: url(/zx0000/images/modal/button.gif) repeat-x;
   border: 1px solid #bbb;
   color: #666;
   cursor: pointer;
