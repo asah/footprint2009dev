@@ -1,39 +1,65 @@
-   <nobr>
-    {% if user %}
-<div id='sign_in'>
+{% if not no_login %}
+<script type="text/javascript">
+  document.userId = "{{user.user_id|escape }}";
+  document.userType = "{{user.account_type|escape }}";
+  document.userDisplayName = "{{user.display_name|escape }}";
+  var FC_SITE_ID = '02962301966004179520';
+  var FB_SITE_ID = '{{ facebook_key }}';
+  FB.init(FB_SITE_ID, 'xd_receiver.htm');
+
+  function requestFacebookSignIn() {
+    FB.Connect.requireSession(null, true);
+    FB.Facebook.get_sessionState().waitUntilReady(function() {
+      window.location.reload();
+    });
+  }
+  google.load('friendconnect', '0.8');
+  google.setOnLoadCallback(function() {
+    google.friendconnect.container.loadOpenSocialApi({site: FC_SITE_ID, onload: function() {
+      {% if not user %} checkForViewer(); {% endif %}
+    }});
+  });
+</script>
+{% endif %}{# no_login #}
+
+<nobr>
+{% if user %}
+  <div id='sign_in'>
   Hello,
-
- {% ifequal current_page "MY_EVENTS" %}
-  {{ user.display_name|escape }}
+  {##### username (linked on "my events" page #####}
+  {% ifequal current_page "MY_EVENTS" %}
+    {{ user.display_name|escape }}
   {% else %}
-  <a href='/myevents'>{{ user.display_name|escape }}</a>
-  {% endifequal %} | 
-
-  {% ifequal user.account_type "friendconnect"%}
+    <a href='/myevents'>{{ user.display_name|escape }}</a>
+  {% endifequal %}
+  
+  {##### Login link for Facebook Connect and/or Friend Connect) #####}
+  | {% ifequal user.account_type "friendconnect"%}
     <a href="javascript:;" onclick="google.friendconnect.requestSettings()">Settings</a> |
     <a href="javascript:;" onclick="google.friendconnect.requestInvite()">Invite Friends</a>
   {% else %} {% ifequal user.account_type "facebook" %}
     <a href="javascript:;" onclick="inviteFacebookFriends();">Invite Friends</a>
   {% endifequal %}{% endifequal %}
-
-  |
-  {% ifequal current_page "MY_EVENTS" %}
-  Activity Page <img class='valign' border=0 src='/zx{{version}}/images/like_default.png'>
+  
+  {##### Activity Page link #####}
+  | {% ifequal current_page "MY_EVENTS" %}
+  Activity Page <img class='valign' border=0 src='/zx{{version}}/images/like_default.png'/>
   {% else %}
-  <a href='/myevents'>Activity Page</a> <a href='/myevents'><img class='valign' border=0 src='/zx{{version}}/images/like_default.png'></a>
+  <a href='/myevents'>Activity Page</a> <a href='/myevents'><img class='valign' border=0 src='/zx{{version}}/images/like_default.png'/></a>
   {% endifequal %}
-
+  
+  {##### Help link #####}
   | <a href='/help'><b>Help</b></a>
-  |
 
-  {% ifequal user.account_type "friendconnect"%}
+  {##### Logout link #####}
+  | {% ifequal user.account_type "friendconnect"%}
     <a href="javascript:;" onclick="google.friendconnect.requestSignOut(); clearExternalCookies(); window.location.reload();">Sign Out</a>
   {% else %} {% ifequal user.account_type "facebook" %}
     <a href="javascript:;" onclick="FB.Connect.logout(function() {clearExternalCookies(); window.location.reload();});">Sign Out</a>
   {% endifequal %}{% endifequal %}
-</div>
+  </div>
 
-<script type='text/javascript'>
+  <script type='text/javascript'>
     function inviteFacebookFriends() {
       var url = location.protocol + "//" + location.host;
 
@@ -69,37 +95,28 @@
           [], '', 1, FB.RequireConnect.require, function(){});
       {% endifequal %}{% endifequal %}
     }
-
-</script>
-    {% else %}
-<div id='sign_in'>
-  Sign in with <span id="signInProvider"></span>
-  <a href='javascript:;' onclick="requestFacebookSignIn()">Facebook</a>,
-  <a href='javascript:;' onclick="google.friendconnect.requestSignIn('GOOGLE');return false">Google</a>,
-  <a href='javascript:;' onclick="google.friendconnect.requestSignIn('');return false">More &raquo;</a>
-
-  <script type='text/javascript'>
-    function checkForViewer() {
-      // If the viewer is != null and the userId == null reload page.
-      // This is a temporary placeholder until FC gives us an onSignIn callback
-      var req = opensocial.newDataRequest();
-      req.add(req.newFetchPersonRequest('VIEWER'), 'viewer');
-      req.send(function(data) {
-        if (data.get('viewer').getData()) { window.location.reload();}
-      });
-    }
   </script>
-  | <a href='/help'><b>Help</b></a>
-</div>
+{% else %}
+  <div id='sign_in'>
+    Sign in with <span id="signInProvider"></span>
+    <a href='javascript:;' onclick="requestFacebookSignIn()">Facebook</a>,
+    <a href='javascript:;' onclick="google.friendconnect.requestSignIn('GOOGLE');return false">Google</a>,
+    <a href='javascript:;' onclick="google.friendconnect.requestSignIn('');return false">More &raquo;</a>
+  
+    <script type='text/javascript'>
+      function checkForViewer() {
+        // If the viewer is != null and the userId == null reload page.
+        // This is a temporary placeholder until FC gives us an onSignIn callback
+        var req = opensocial.newDataRequest();
+        req.add(req.newFetchPersonRequest('VIEWER'), 'viewer');
+        req.send(function(data) {
+          if (data.get('viewer').getData()) { window.location.reload();}
+        });
+      }
+    </script>
+    | <a href='/help'><b>Help</b></a>
+  </div>
 
-    {% endif %}
-   </nobr>
+{% endif %}
+</nobr>
 
-<script type='text/javascript'>
-function requestFacebookSignIn() {
-  FB.Connect.requireSession(null, true);
-  FB.Facebook.get_sessionState().waitUntilReady(function() {
-    window.location.reload();
-  });
-}
-</script>
