@@ -114,6 +114,43 @@ def get_unique_args_from_request(request):
     unique_args[arg] = allvals[len(allvals)-1]
   return unique_args
 
+def optimize_page_speed(request):
+  """OK to optimize the page: minimize CSS, minimize JS, Sprites, etc."""
+  # page_optim=1 forces optimization
+  page_optim = request.get('page_optim')
+  if page_optim == "1":
+    return True
+  # page_debug=1 forces no optimization
+  page_debug = request.get('page_debug')
+  if page_debug == "1":
+    return False
+  # optimize in production and on appspot
+  if (request.host_url.find("appspot.com") >= 0 or
+      request.host_url.find("allforgood.org") >= 0):
+    return True
+  return False
+
+def get_default_template_values(request, current_page):
+  # for debugging login issues
+  no_login = (request.get('no_login') == "1")
+
+  version = request.get('dbgversion')
+  # don't allow junk
+  if not version or not re.search(r'^[0-9a-z._-]+$', version):
+    version = os.getenv('CURRENT_VERSION_ID')
+
+  template_values = {
+    'user' : userinfo.get_user(request),
+    'current_page' : current_page,
+    'host' : urllib.quote(request.host_url),
+    'path' : request.path,
+    'version' : version,
+    'no_login' : no_login,
+    'optimize_page' : optimize_page_speed(request),
+    'view_url': request.url,
+    }
+  load_userinfo_into_dict(template_values['user'], template_values)
+  return template_values
 
 def load_userinfo_into_dict(user, userdict):
   """populate the given dict with user info."""
@@ -224,14 +261,7 @@ class home_page_view(webapp.RequestHandler):
   @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
-    user = userinfo.get_user(self.request)
-    template_values = {
-      'user' : user,
-      'current_page' : 'HOMEPAGE',
-      'host' : urllib.quote(self.request.host_url),
-      'version' : os.getenv('CURRENT_VERSION_ID'),
-      'js_debug' : self.request.get('js_debug'),
-    }
+    template_values = get_default_template_values(self.request, 'HOMEPAGE')
     self.response.out.write(render_template(HOMEPAGE_TEMPLATE,
                                            template_values))
 
@@ -261,18 +291,9 @@ class consumer_ui_search_view(webapp.RequestHandler):
   @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
-    template_values = {
-        'result_set': {},
-        'current_page' : 'SEARCH',
-        'is_main_page' : True,
-        'host' : urllib.quote(self.request.host_url),
-        'version' : os.getenv('CURRENT_VERSION_ID'),
-        'js_debug' : self.request.get('js_debug'),
-      }
-    # Retrieve the user-specific information for the search result set.
-    user = userinfo.get_user(self.request)
-    load_userinfo_into_dict(user, template_values)
-
+    template_values = get_default_template_values(self.request, 'SEARCH')
+    template_values['result_set'] = {}
+    template_values['is_main_page'] = True
     self.response.out.write(render_template(SEARCH_RESULTS_TEMPLATE,
                                             template_values))
 
@@ -343,18 +364,15 @@ class search_view(webapp.RequestHandler):
                                  result_set.args["long"])
     logging.debug("geocode("+result_set.args[api.PARAM_VOL_LOC]+") = "+
                   result_set.args["lat"]+","+result_set.args["long"])
-    template_values = {
+    template_values = get_default_template_values(self.request, 'SEARCH')
+    template_values.update({
         'result_set': result_set,
-        'current_page' : 'SEARCH',
-
-        'view_url': self.request.url,
-
         # TODO: remove this stuff...
         'latlong': latlng_string,
         'keywords': result_set.args[api.PARAM_Q],
         'location': result_set.args[api.PARAM_VOL_LOC],
         'max_distance': result_set.args[api.PARAM_VOL_DIST],
-      }
+      })
 
     # pagecount.GetPageCount() is expensive-- only do for debug mode,
     # where this is printed.
@@ -380,41 +398,39 @@ class ui_snippets_view(webapp.RequestHandler):
     """HTTP get method."""
     unique_args = get_unique_args_from_request(self.request)
     result_set = search.search(unique_args)
-
     result_set.request_url = self.request.url
+    template_values = get_default_template_values(self.request, 'SEARCH')
 
     # Retrieve the user-specific information for the search result set.
-    user = userinfo.get_user(self.request)
+    user = template_values['user']
     if user:
+      template_values['moderator'] = user.get_user_info().moderator
       result_set = view_helper.get_annotated_results(user, result_set)
       view_data = view_helper.get_friends_data_for_snippets(user)
     else:
+      template_values['moderator'] = False
       view_data = {
         'friends': [],
         'friends_by_event_id_js': '{}',
       }
 
-    template_values = {
-        'user' : user,
+    loc = unique_args.get(api.PARAM_VOL_LOC, None)
+    if loc and not geocode.is_latlong(loc) and not geocode.is_latlongzoom(loc):
+      template_values['query_param_loc'] = loc
+    else:
+      template_values['query_param_loc'] = None
+
+    template_values.update({
         'result_set': result_set,
-        'current_page' : 'SEARCH',
         'has_results' : (result_set.num_merged_results > 0),  # For django.
         'last_result_index' :
             result_set.clip_start_index + len(result_set.clipped_results),
         'display_nextpage_link' : result_set.has_more_results,
-        'view_url': self.request.url,
-        'host' : urllib.quote(self.request.host_url),
-        'version' : os.getenv('CURRENT_VERSION_ID'),
-        'js_debug' : self.request.get('js_debug'),
         'friends' : view_data['friends'],
         'friends_by_event_id_js': view_data['friends_by_event_id_js'],
         'query_param_q' : unique_args.get(api.PARAM_Q, None),
-      }
-    loc = unique_args.get(api.PARAM_VOL_LOC, None)
-    if loc and not geocode.is_latlong(loc) and not geocode.is_latlongzoom(loc):
-      template_values['query_param_loc'] = loc
-    template_values['moderator'] = (user and user.get_user_info()
-                                    and user.get_user_info().moderator)
+      })
+
     if self.request.get('minimal_snippets_list'):
       # Minimal results list for homepage.
       result_set.clipped_results.sort(cmp=searchresult.compare_result_dates)
@@ -448,7 +464,8 @@ class ui_my_snippets_view(webapp.RequestHandler):
   @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
-    user_info = userinfo.get_user(self.request)
+    template_values = get_default_template_values(self.request, 'MY_EVENTS')
+    user_info = template_values['user']
 
     unique_args = get_unique_args_from_request(self.request)
 
@@ -480,13 +497,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
                                    my_events_gbase_result_set)
 
       friend_data = view_helper.get_friends_data_for_snippets(user_info)
-      template_values = {
-          'current_page' : 'MY_EVENTS',
-          'view_url': self.request.url,
-          'host' : urllib.quote(self.request.host_url),
-          'version' : os.getenv('CURRENT_VERSION_ID'),
-          'js_debug' : self.request.get('js_debug'),
-          'user' : user_info,
+      template_values.update({
           'result_set': my_events_gbase_result_set,
           'has_results' : len(my_events_gbase_result_set.clipped_results) > 0,
           'last_result_index':
@@ -495,13 +506,9 @@ class ui_my_snippets_view(webapp.RequestHandler):
           'display_nextpage_link' : my_events_gbase_result_set.has_more_results,
           'friends' : friend_data['friends'],
           'friends_by_event_id_js': friend_data['friends_by_event_id_js'],
-        }
+        })
     else:
-      template_values = {
-          'current_page' : 'MY_EVENTS',
-          'view_url': self.request.url,
-          'has_results' : False,
-      }
+      template_values.update({ 'has_results' : False, })
 
     template_values['query_param_q'] = unique_args.get(api.PARAM_Q, None)
     loc = unique_args.get(api.PARAM_VOL_LOC, None)
@@ -516,8 +523,8 @@ class my_events_view(webapp.RequestHandler):
   @expires(0)  # User specific.
   def get(self):
     """HTTP get method."""
-    user_info = userinfo.get_user(self.request)
-    if not user_info:
+    template_values = get_default_template_values(self.request, 'MY_EVENTS')
+    if not template_values['user']:
       template_values = {
         'current_page': 'MY_EVENTS',
         # Don't bother rendering this page if not authenticated.
@@ -526,15 +533,6 @@ class my_events_view(webapp.RequestHandler):
       self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
           template_values))
       return
-
-    template_values = {
-        'current_page' : 'MY_EVENTS',
-        'host' : urllib.quote(self.request.host_url),
-        'version' : os.getenv('CURRENT_VERSION_ID'),
-        'js_debug' : self.request.get('js_debug'),
-    }
-    load_userinfo_into_dict(user_info, template_values)
-
     self.response.out.write(render_template(MY_EVENTS_TEMPLATE,
                                             template_values))
 
@@ -561,11 +559,6 @@ class post_view(webapp.RequestHandler):
       'geturl' : geturl,
       }
     load_userinfo_into_dict(user_info, template_values)
-
-    # TODO: remove this workaround once all Facebook/FriendConnect JS
-    #    loading issues are fixed.
-    if self.request.get('no_login'):
-      template_values['no_login'] = True
 
     resp = None
     recaptcha_challenge_field = self.request.get('recaptcha_challenge_field')
@@ -829,14 +822,13 @@ class moderate_view(webapp.RequestHandler):
       if res.description > 100:
         res.description = res.description[0:97]+"..."
 
-    template_values = {
-      'current_page' : 'MODERATE',
-      'version' : os.getenv('CURRENT_VERSION_ID'),
-      'num' : str(num),
-      'ts' : str(nowstr),
-      'result_set' : reslist,
-      'usig': userinfo.get_usig(self.user),
-    }
+    template_values = get_default_template_values(self.request, 'MODERATE')
+    template_values.update({
+        'num' : str(num),
+        'ts' : str(nowstr),
+        'result_set' : reslist,
+        'usig' : userinfo.get_usig(self.user)
+        })
     self.response.out.write(render_template(MODERATE_TEMPLATE, template_values))
 
 class moderate_blacklist_view(webapp.RequestHandler):
@@ -1044,18 +1036,14 @@ class static_content(webapp.RequestHandler):
                      text,
                      self.STATIC_CONTENT_MEMCACHE_TIME)
 
-    if text:
-      user = userinfo.get_user(self.request)
-      template_values = {
-        'user' : user,
-        'path' : self.request.path,
-        'static_content' : text,
-      }
-      self.response.out.write(render_template(STATIC_CONTENT_TEMPLATE,
-                                              template_values))
-    else:
+    if not text:
       self.error(404)
+      return
 
+    template_values = get_default_template_values(self.request, 'STATIC_PAGE')
+    template_values['static_content'] = text
+    self.response.out.write(render_template(STATIC_CONTENT_TEMPLATE,
+                                            template_values))
 
 class datahub_dashboard_view(webapp.RequestHandler):
   """stats by provider, on a hidden URL (underlying data is a hidden URL)."""

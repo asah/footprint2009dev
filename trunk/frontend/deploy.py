@@ -22,16 +22,27 @@ Contact footprint-eng@googlegroups.com to get this file.
 """
 
 import os
+import logging
 import private_keys
 
 PRODUCTION_DOMAIN = 'allforgood.org'
 
-PRODUCTION_MAPS_API_KEY = 'ABQIAAAAHtEBbyenR4BaYGl54_p0fRQu5fCZl1K7T-61hQb7PrEsg72lpRQbhbBcd0325oSLzGUQxP7Nz9Rquw'
-DEFAULT_MAPS_API_KEY = 'ABQIAAAAHtEBbyenR4BaYGl54_p0fRRlOb26qSyU154aZeLwOrF4C7-DphT-k84KU2QtDbk5G77Rqt1x2njBTQ'
+MAPS_API_KEYS = {
+  'www.allforgood.org' : 'ABQIAAAAHtEBbyenR4BaYGl54_p0fRQu5fCZl1K7T-61hQb7PrEsg72lpRQbhbBcd0325oSLzGUQxP7Nz9Rquw',
+  'unknown_what_is_this' : 'ABQIAAAAHtEBbyenR4BaYGl54_p0fRRlOb26qSyU154aZeLwOrF4C7-DphT-k84KU2QtDbk5G77Rqt1x2njBTQ',
+  'footprint-loadtest.appspot.com' : 'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxSWKH9akPVZO-6F_G0PvWoeHNZVdRSifDQCrd-osJFuWDqR3Oh0nKDgbw',
+  'footprint2009dev.appspot.com' : 'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxTpeCj-9ism2i6Mt7fLlVoN6HsfDBSOZjcyagWjKTMT32rzg71rFenopA'
+}
+
+FACEBOOK_API_KEYS = {}
 
 # These are the public Facebook API keys.
 DEFAULT_FACEBOOK_KEY = 'df68a40a4a90d4495ed03f920f16c333'
 PRODUCTION_FACEBOOK_KEY = '628524bbaf79da8a8a478e5ef49fb84f'
+
+FACEBOOK_KEY = None
+FACEBOOK_SECRET_KEY = None
+MAPS_API_KEY = None
 
 def is_production_site():
   """is this a production instance?"""
@@ -42,36 +53,54 @@ def is_local_development():
   """is this running on a development server (and not appspot.com)"""
   return (os.environ.get('SERVER_SOFTWARE').find("Development")==0)
 
+def load_keys():
+  """load facebook, maps, etc. keys."""
+  global FACEBOOK_KEY, MAPS_API_KEY, FACEBOOK_SECRET_KEY
+  if FACEBOOK_KEY or MAPS_API_KEY or FACEBOOK_SECRET_KEY:
+    return
+
+  if is_local_development():
+    # to define your own keys, modify local_keys.py-- ok to checkin.
+    local_keys = __import__('local_keys')
+    try:
+      MAPS_API_KEYS.update(local_keys.MAPS_API_KEYS)
+    except:
+      logging.info("local_keys.MAPS_API_KEYS not defined")
+    try:
+      FACEOOK_API_KEYS.update(local_keys.FACEOOK_API_KEYS)
+    except:
+      logging.info("local_keys.FACEBOOK_API_KEYS not defined")
+
+  # no default for maps api-- has to match
+  http_host = os.environ.get('HTTP_HOST')
+  MAPS_API_KEY = MAPS_API_KEYS.get(http_host, 'unknown')
+  logging.debug("host="+http_host+"  maps api key="+MAPS_API_KEY)
+
+  # facebook API has default key
+  if is_production_site():
+    FACEBOOK_KEY = FACEBOOK_API_KEYS[PRODUCTION_DOMAIN]
+  else:
+    FACEBOOK_KEY = FACEBOOK_API_KEYS.get(http_host, DEFAULT_FACEBOOK_KEY) 
+  logging.debug("host="+http_host+"  facebook key="+FACEBOOK_KEY)
+
+  # facebook secret keys are a special case
+  if is_production_site():
+    FACEBOOK_SECRET_KEY = private_keys.PRODUCTION_FACEBOOK_SECRET
+  else:
+    FACEBOOK_SECRET_KEY = private_keys.DEFAULT_FACEBOOK_SECRET
+
 def load_standard_template_values(template_values):
   """set template_values[...] for various keys"""
-  global DEFAULT_MAPS_API_KEY, DEFAULT_FACEBOOK_KEY
-  if not is_production_site():
-    # you must install a local_keys.py file and fill it with
-    # the keys for your development instance-- it's OK to copy
-    # from the global default keys defined in this file, but
-    # for example the maps API is unlikely to work since it
-    # depends on matching to your server's domain name
-    local_keys = __import__('local_keys')
-    DEFAULT_MAPS_API_KEY = local_keys.DEFAULT_MAPS_API_KEY
-    DEFAULT_FACEBOOK_KEY = local_keys.DEFAULT_FACEBOOK_KEY
-
-  if is_production_site():
-    template_values['maps_api_key'] = PRODUCTION_MAPS_API_KEY
-    template_values['facebook_key'] = PRODUCTION_FACEBOOK_KEY
-  else:
-    template_values['maps_api_key'] = DEFAULT_MAPS_API_KEY
-    template_values['facebook_key'] = DEFAULT_FACEBOOK_KEY
-
-def get_facebook_key():
-  """returns the facebook key"""
-  if is_production_site():
-    return PRODUCTION_FACEBOOK_KEY
-  else:
-    return DEFAULT_FACEBOOK_KEY
+  load_keys()
+  template_values['maps_api_key'] = MAPS_API_KEY
+  template_values['facebook_key'] = FACEBOOK_KEY
 
 def get_facebook_secret():
   """returns the facebook secret key"""
-  if is_production_site():
-    return private_keys.PRODUCTION_FACEBOOK_SECRET
-  else:
-    return private_keys.DEFAULT_FACEBOOK_SECRET
+  load_keys()
+  return FACEBOOK_SECRET_KEY
+
+def get_facebook_key():
+  """returns the facebook public key"""
+  load_keys()
+  return FACEBOOK_KEY

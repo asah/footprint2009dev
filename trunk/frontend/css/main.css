@@ -316,7 +316,7 @@ input#location { width: 180px; }
   margin: 0px;
   padding: 0px;
   position: absolute;
-  top: -3;
+  top: 3px;
   left: 0px;
   z-index: 100;
   width: 100%;

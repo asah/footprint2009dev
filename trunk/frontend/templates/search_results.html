@@ -24,16 +24,17 @@ To change the search location, please enter a zip code or city/state.
 {% endblock content_right %}
 
 {% block prefooter %}
-
-{% if "appspot.com"|isin:host and not js_debug %}
+  {% if optimize_page %}
   <script type='text/javascript' src='http://www.gmodules.com/ig/proxy?url=http%3A%2F%2Fsuprfetch.appspot.com%2F%3Furl%3D{{host}}%2Fzx{{version}}%2Fjs%2Fsnippets_list.js%26url%3D{{host}}%2Fzx{{version}}%2Fjs%2Fmap.js%26url%3D{{host}}%2Fzx{{version}}%2Fjs%2Fsearch_results.js%26url%3D{{host}}%2Fzx{{version}}%2Fjs%2Fcalendar_widget.js%26jsmin%3Dtrue'></script>
 {% else %}
   <script type='text/javascript' src='/zx{{version}}/js/snippets_list.js'></script>
   <script type='text/javascript' src='/zx{{version}}/js/map.js'></script>
   <script type='text/javascript' src='/zx{{version}}/js/search_results.js'></script>
   <script type='text/javascript' src='/zx{{version}}/js/calendar_widget.js'></script>
-{% endif %}
+  {% endif %}
 
+  {% comment %}
+  removed for now-- when re-enabling, put inside the getScript call inside
   <script type='text/javascript'>
     var addthis_pub='footprint2009dev';
     var addthis_options = 'email, google, facebook, myspace';
@@ -55,7 +56,7 @@ To change the search location, please enter a zip code or city/state.
           addthis_close();
         }
       }
-    }
   </script>
+  {% endcomment %}
 
 {% endblock prefooter %}
