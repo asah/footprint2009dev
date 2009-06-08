@@ -1,6 +1,6 @@
 {% extends "base_min.html" %}
 {% block head %}
-  <link href='/css/main.css?zx={{version}}' rel='stylesheet'/>
+  <link href='/zx{{version}}/css/main.css' rel='stylesheet'/>
   {% block css_files %}{% endblock %}
   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 
@@ -28,8 +28,8 @@ p {
 <body>
     <div id='header_top_spacer'></div>
     <div>
-      <a class='no_underline' href='/'><img class='logo' src='/images/logo.png'>
-      <span class='header_title noselect pointer' style='vertical-align: middle;'><img class='logo' src='/images/title-transp.png' alt='All for Good'></span></a>
+      <a class='no_underline' href='/'><img class='logo' src='/zx{{version}}/images/logo.png'>
+      <span class='header_title noselect pointer' style='vertical-align: middle;'><img class='logo' src='/zx{{version}}/images/title-transp.png' alt='All for Good'></span></a>
     </div>
   {# % include 'header.html' % #}
 

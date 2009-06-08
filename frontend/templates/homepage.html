@@ -1,7 +1,7 @@
 {% extends 'layout_full.html' %}
 
 {% block css_files %}
-  <link href='/css/homepage.css?zx={{version}}' rel='stylesheet'/>
+  <link href='/zx{{version}}/css/homepage.css' rel='stylesheet'/>
 {% endblock css_files %}
 
 {% block content %}
@@ -30,7 +30,7 @@
       <input id='location' name='enter location' size='40' class='valign' value=''/>
       <img class='search_button pointer valign'
            onclick='submitForm(""); return false;'
-           height='28' src='/images/red-search-button.png'>
+           height='28' src='/zx{{version}}/images/red-search-button.png'>
     </form>
    </div>
 
@@ -39,7 +39,7 @@
   </div>
 
   <div id='home_left'>
-    <img src='/images/leadin.png'>
+    <img src='/zx{{version}}/images/leadin.png'>
 
     <div id='home_signin'>
       <div id='home_signin_header'>Sign in to:</div>
@@ -58,5 +58,5 @@
   </div>
 </div>
 
-<script type='text/javascript' src='/js/homepage.js?zx={{version}}'></script>
+<script type='text/javascript' src='/zx{{version}}/js/homepage.js'></script>
 {% endblock content %}

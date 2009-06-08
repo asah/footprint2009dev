@@ -7,18 +7,18 @@ runtime: python
 api_version: 1
 
 # super long expiration for images...
-# this means that the &zx= must be used correctly or we'd hosed
 default_expiration: "1000d"
 
 handlers:
-- url: /css
-  static_dir: css
-
-- url: /js
-  static_dir: js
-
-- url: /images
-  static_dir: images
+# NOTE: don't map /js|css|images directly, but instead force the
+# use of version numbers to avoid accidental version problems.
+# Unlike ?zx= this works for proxies that refuse to cache urls
+# containing question marks.
+# yes, this works for subdirectories e.g. third_party
+# the choice of "zx" is standard for google services
+- url: /zx[^/]+/((js|css|images)/.*)
+  static_files: \1
+  upload: (js|css|images)/.*
 
 # For realsimplehistory
 - url: /blank.html
