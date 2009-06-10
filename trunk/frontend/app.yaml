@@ -70,6 +70,11 @@ handlers:
   static_files: robots.txt
   upload: robots.txt
 
+# For favicon
+- url: /favicon.ico
+  static_files: images/favicon.ico
+  upload: images/favicon.ico
+
 # Temporary.
 - url: /googlehostedservice.html
   static_files: googlehostedservice.html
