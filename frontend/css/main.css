@@ -570,3 +570,6 @@ A:hover {  /* Keep this near end of file, after other A definitions */
 #modal_container a.modal_close_x:hover {
   color: #9bb3b3;
 }
+
+.sharelink img { display: none; }
+.sharelink {cursor: pointer; }
