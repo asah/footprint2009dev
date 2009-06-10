@@ -3,14 +3,37 @@
 {% block content %}
 <div id='home'>
   <div id='home_popular'>
-    <b>Popular&nbsp;searches</b>
+    <div id='home_popular_title'>Popular&nbsp;searches</div>
     <div id='popular_list'></div>
+  </div>
+
+  <div id='home_left'>
+    <div id='leadin'>
+    Each of us has a role to play in improving our communities and our country.
+    Small actions add up to a big difference.  <b>All for Good</b> helps you
+    find and share ways to do good.
+    </div>
+
+    <div id='home_signin'>
+      <div id='home_signin_header'>Sign in to:</div>
+
+      <ul>
+        <li>Share volunteer activities with your friends</li>
+        <li>Invite friends to join you on <b>All&nbsp;for&nbsp;Good</b> and see how they're volunteering</li>
+        <li>Track volunteer activities you care about</li>
+      </ul>
+
+      <div>Track and share your activities by signing in with
+        <a href='javascript:void(0);' onclick="requestFacebookSignIn();return false">Facebook</a>,
+        <a href='javascript:void(0);' onclick="google.friendconnect.requestSignIn('GOOGLE');return false">Google</a>, or
+        <a href='javascript:void(0);' onclick="google.friendconnect.requestSignIn('');return false">more &raquo;</a></div>
+    </div>
   </div>
 
   <div id='home_mini'>
    <div id='mini_without_location' style='display:none;'>
     <div id='no_location_message'>
-      Find volunteering events near you
+      Find volunteer activities near you
     </div>
    </div>
 
@@ -34,25 +57,6 @@
    <div id='more' style='display:none;'><a id='more_link'>See more...</a></div>
    {# defined in homepage.js; requires id=snippets and id=more in the DOM #}
    <script>runSnippetsQuery();</script>
-  </div>
-
-  <div id='home_left'>
-    <img src='/zx{{version}}/images/leadin.png' alt='' width='350' height='130'/>
-
-    <div id='home_signin'>
-      <div id='home_signin_header'>Sign in to:</div>
-
-      <ul>
-        <li>Share volunteer activities with your friends</li>
-        <li>Invite friends to join you on <b>All&nbsp;for&nbsp;Good</b> and see how they're volunteering</li>
-        <li>Track volunteer activities you care about</li>
-      </ul>
-
-      <p id='home_signin_links'>Track and share your opportunities by signing in with
-        <a href='javascript:void(0);' onclick="requestFacebookSignIn();return false">Facebook</a>,
-        <a href='javascript:void(0);' onclick="google.friendconnect.requestSignIn('GOOGLE');return false">Google</a>, or
-        <a href='javascript:void(0);' onclick="google.friendconnect.requestSignIn('');return false">more &raquo;</a></p>
-    </div>
   </div>
 </div>
 
