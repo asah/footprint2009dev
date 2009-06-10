@@ -32,31 +32,4 @@ To change the search location, please enter a zip code or city/state.
   <script type='text/javascript' src='/zx{{version}}/js/search_results.js'></script>
   <script type='text/javascript' src='/zx{{version}}/js/calendar_widget.js'></script>
   {% endif %}
-
-  {% comment %}
-  removed for now-- when re-enabling, put inside the getScript call inside
-  <script type='text/javascript'>
-    var addthis_pub='footprint2009dev';
-    var addthis_options = 'email, google, facebook, myspace';
-    var addthis_header_color = '#ffffff';
-    var addthis_header_background = '#2475B6';
-    var addthis_hover_delay = 10000;
-    var addthis_test0309 = false;  // Remove "You may also like..." ads
-
-    if (false) {
-      jQuery.getScript('http://s7.addthis.com/js/200/addthis_widget.js',
-                       function() { asyncLoadManager.doneLoading('addthis'); });
-      function showShareWidget(node, searchResult) {
-        if (asyncLoadManager.isLoaded('addthis')) {
-          addthis_open(node, '', searchResult.url, searchResult.title);
-        }
-      }
-      function hideShareWidget() {
-        if (asyncLoadManager.isLoaded('addthis')) {
-          addthis_close();
-        }
-      }
-  </script>
-  {% endcomment %}
-
 {% endblock prefooter %}
