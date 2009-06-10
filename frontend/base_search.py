@@ -162,6 +162,11 @@ def form_base_query(args):
 
   if api.PARAM_START not in args:
     args[api.PARAM_START] = 1
+
+  # TODO: remove me-- hack to forcibly remove DNC listings for now
+  # (Base hasn't caught up to the takedown, not sure why...)
+  base_query += '+-"my.barackobama.com"'
+
   return base_query
 
 # note: many of the XSS and injection-attack defenses are unnecessary
