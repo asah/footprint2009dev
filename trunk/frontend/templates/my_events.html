@@ -12,6 +12,31 @@ All for Good - Your Activities
   {% endif %}
 {% endblock subheader %}
 
+{% block top_content %}
+<div id="profile_box">
+  {% comment %}
+  ** Profile image code - wasn't working with blank Facebook pics, so currently disabled. **
+  <div id="profile_box_left">
+    <img src="{{ user.thumbnail_url|escape }}" width=50 height=50 alt="{{ user.display_name|escape }}" />
+  </div>
+  {% endcomment %}
+  
+  <div id="profile_box_right">
+    Like count: <span id="like_count"></span>
+  </div>
+  <h1>{{ user.display_name|escape }}</h1>
+  {% comment %}
+  ** Locaiton code - needs to be updated to work properly with social network location **
+  <h2><span id='profile_box_location_text'></span></h2>
+
+  <script type="text/javascript">
+    var defaultLocation = getDefaultLocation().displayLong || '';
+    setTextContent(el('profile_box_location_text'), defaultLocation);
+  </script>
+  {% endcomment %}
+</div>
+{% endblock %}
+
 {% block content_left %}
   <div id='map'></div>
 

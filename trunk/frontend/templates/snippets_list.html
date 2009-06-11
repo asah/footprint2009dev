@@ -25,6 +25,13 @@
 </script>
 
 {% ifequal current_page "MY_EVENTS" %}
+  <script type="text/javascript">
+    /* The like count is only available once this snippets list has been
+	loaded through AJAX, so in order to display it in the blue profile box 
+	above (which cannot be rendered in this template because this tempalte 
+	is only the right column), we have to set it with JS */
+    setTextContent(el('like_count'), {{ like_count|escape }} );
+  </script>
 <h1 class='snippets_list_header'>Your Activities</h1>
 {% endifequal %}
 {% ifequal current_page "SEARCH" %}
