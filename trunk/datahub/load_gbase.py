@@ -302,7 +302,7 @@ def test_loaders():
   load_gbase("servenet", "servenet.xml", False, False)
   load_gbase("unitedway", "unitedway.xml", False, False)
   load_gbase("americansolutions", "americansolutions.xml", False, False)
-  #load_gbase("meetup", "meetup.xml", False, False)
+  load_gbase("meetup", "meetup.xml", False, False)
   load_gbase("extraordinaries", "beextra-extraordinaries.xml", False, False)
   load_gbase("idealist", "idealist.xml", False, False)
   load_gbase("gspreadsheets",
@@ -334,6 +334,9 @@ def loaders():
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
   load_gbase("handsonnetwork",
              "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
+  load_gbase("meetup", "http://api.meetup.com/footprint?"+
+             "key=2c24625a70343bb68451e337e714b22")
+
   # note: craiglist crawler is run asynchronously, hence the local file
   load_gbase("craigslist", "craigslist-cache.txt")
 
@@ -341,10 +344,6 @@ def loaders():
   # load_gbase("mybarackobama",
   #            "http://my.barackobama.com/page/event/search_results?"+
   #            "format=footprint")
-
-  # out for launch
-  #load_gbase("meetup", "http://api.meetup.com/footprint?"+
-  #           "key=2c24625a70343bb68451e337e714b22")
 
   # old custom feed
   #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
