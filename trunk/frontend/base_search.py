@@ -165,7 +165,7 @@ def form_base_query(args):
 
   # TODO: remove me-- hack to forcibly remove DNC listings for now
   # (Base hasn't caught up to the takedown, not sure why...)
-  base_query += '+-"my.barackobama.com"'
+  base_query += '+-barackobama'
 
   return base_query
 
