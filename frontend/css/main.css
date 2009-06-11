@@ -248,6 +248,40 @@ input#location { width: 180px; }
   margin-top: 30px;
 }
 
+/** Profile Box **/
+
+#profile_box {
+  width: 910px;
+  background-color: #DAE9F5;
+  margin-bottom: 20px;
+  padding: 15px;
+  height: 40px;
+}
+
+#profile_box h1 {
+  font-size: 20px;
+  color: #333333;
+}
+
+#profile_box #profile_box_right {
+  float: right;
+  font-size: 14px;
+  padding-right: 25px;
+  margin-right: 15px;
+}
+
+#profile_box #profile_box_left {
+  float: left;
+  padding-right: 22px;
+}
+
+#profile_box h2 {
+  color: #000000;
+  font-size: 12px !important;
+  font-weight: normal;
+  margin: 0;
+}
+
 /** Generic Styles **/
 
 /* TODO(paul): unselectable in IE */

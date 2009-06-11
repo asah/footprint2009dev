@@ -506,6 +506,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
           'display_nextpage_link' : my_events_gbase_result_set.has_more_results,
           'friends' : friend_data['friends'],
           'friends_by_event_id_js': friend_data['friends_by_event_id_js'],
+          'like_count': len(my_interests),
         })
     else:
       template_values.update({ 'has_results' : False, })
