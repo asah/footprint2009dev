@@ -33,6 +33,9 @@ def as_letter(value):
   else:
     return ''
 
+def bold_query(value, query):
+  """Bolds all instances of query in value"""
+  return value.replace(query, "<strong>"+query+"</strong>")
 
 # Prevents pylint from triggering on the 'register' name. Django expects this
 # module to have a 'register' variable.
@@ -40,3 +43,4 @@ def as_letter(value):
 register = webapp.template.create_template_register()
 register.filter('truncate_chars', truncate_chars)
 register.filter('as_letter', as_letter)
+register.filter('bold_query', bold_query)
