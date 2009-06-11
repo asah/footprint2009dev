@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
   <ModulePrefs title="All for Good"
-               description="Get all good events in and around your location, embed it and more."
-               width="400"
-               height="350"
+               description="__MSG_description__"
+               width="250"
+               height="300"
                author="All For Good"
                screenshot="http://developer.gadget.googlepages.com/allforgood.PNG"
                thumbnail="http://developer.gadget.googlepages.com/allforgood.PNG"
                author_email="developer.gadget@google.com">
-    <Require feature="setprefs"/>
+    <Require feature="setprefs" />
     <Require feature="dynamic-height" />
     <Require feature="views" />
     <Locale lang="en"
-            messages="http://developer.gadget.googlepages.com/en_ALL2.0.xml"/>
-    <Locale messages="http://developer.gadget.googlepages.com/en_ALL2.0.xml"/>
+            messages="http://developer.gadget.googlepages.com/en_ALL1.6.xml" />
+    <Locale messages="http://developer.gadget.googlepages.com/en_ALL1.6.xml" />
   </ModulePrefs>
   <UserPref name="storiesToRead"
             display_name="__MSG_stories_to_read__"
             default_value="4"
-            datatype="enum" >
+            datatype="enum">
     <EnumValue value="4" />
     <EnumValue value="5" />
     <EnumValue value="6" />
@@ -27,6 +27,9 @@
     <EnumValue value="9" />
     <EnumValue value="10" />
   </UserPref>
+  <UserPref name="themesFolder"
+            display_name="__MSG_themes_folder__"
+            default_value="" />
   <UserPref name="prefLocation"
             display_name="__MSG_default_location__"
             default_value="__MSG_default_location_value__" />
@@ -41,17 +44,19 @@ h3,
 li,
 p,
 ul {
-  font-family: arial, sans-serif;
   font-weight: normal;
   margin: 0;
   padding: 0;
+}
+body {
+  font-family: arial, sans-serif;
+  font-size: 12px;
 }
 img {
   border: 0;
   cursor: pointer;
 }
 ul { list-style: none; }
-body { font-size: 12px; }
 h2 {
   font-size: 100%;
   font-weight: normal;
@@ -69,19 +74,19 @@ form input { vertical-align: middle; }
 a,
 a:link,
 a:visited {
+  color: #039;
   text-decoration: none;
-  color: #00c;
 }
 a:hover {
+  color: #039;
   text-decoration: underline;
-  color: #00c;
 }
 /* Feed data display region. */
 .clear {
   clear: both;
+  font-size: 0;
   height: 0;
   line-height: 0;
-  font-size: 0;
   overflow: hidden;
 }
 .afg-record {
@@ -113,7 +118,7 @@ a:hover {
 /* Page layout. */
 #afg-header-region {
   background-color: #1155a0;
-  overflow: hidden;/* hasLayout trigger */
+  overflow: hidden; /* hasLayout trigger */
   width: 100%;
 }
 #afg-branding-region {
@@ -121,8 +126,8 @@ a:hover {
 }
 #afg-footer-region {
   background-color: #1155a0;
-  overflow: hidden;/* hasLayout trigger */
-  width: 100%;/* IE6 hasLayout trigger */
+  overflow: hidden; /* hasLayout trigger */
+  width: 100%; /* IE6 hasLayout trigger */
 }
 #afg-footer-content {
   float: right;
@@ -153,20 +158,19 @@ a:hover {
 .afg-gobutton { margin-left: 10px; }
 /* Pagination. */
 .pagination {
-  background-color: #d3d3d3;
-  padding: 5px;
+  padding: 2px 5px;
   text-align: center;
 }
 /* Image Cropper. */
 .image-cropper {
+  display: block;
   overflow: hidden;
   text-align: center;
-  display: block;
 }
-.image-cropper div { margin: 0px -9999px; }
+.image-cropper div { margin: 0 -9999px; }
 #branding-logo {
-  width: 160px;
   height: 21px;
+  width: 160px;
 }
 #branding-logo img { height: 21px; }
 
@@ -175,29 +179,42 @@ a:hover {
   text-align: center;
   width: 100%;
 }
+/*
+While using these style sheet use src = '/c.gif'
+.afg-search-button {
+  background: transparent url('http://gadget.js.googlepages.com/search.png') no-repeat scroll 50% 50%;
+  height: 23px;
+  width: 32px;
+}
+.afg-embed-button {
+  background: transparent url('http://gadget.js.googlepages.com/embed.png') no-repeat scroll 50% 50%;
+  height: 21px;
+  width: 55px;
+}
+.afg-go-button {
+  background: transparent url('http://gadget.js.googlepages.com/go.png') no-repeat scroll 50% 50%;
+  height: 25px;
+  width: 43px;
+}
+*/
 </style>
 <script type="text/javascript">
 /**
  * User prefs.
- * @type {_IG_Prefs}.
+ * @type {_IG_Prefs}
  */
 var prefs = new _IG_Prefs();
 
 /**
- * URL relates to Like functionality.
- * @type {string}.
- */
-var LIKE_URL = 'http://www.allforgood.org/search#num=10&timeperiod=everything';
-
-/**
  * URL relates to get feed functionality.
- * @type {string}.
+ * @type {string}
+ * @const
  */
 var FEED_URL = 'http://www.allforgood.org/api/volopps?output=rss';
 
 /**
- * To store / cache the feeds between pagination.
- * @type {Array}.
+ * To store or cache the feeds between pagination.
+ * @type {Array}
  */
 var feedRecords = [];
 
@@ -229,6 +246,26 @@ var curPage = 1;
 var nextPageInfo = {}; // Stores Info like  'page-1' : false|true
 
 /**
+ * Adjust the height of the mask automatically.
+ * Height 100% for the absolute positioned div is not supported in IE6.
+ * This function will be called on window resize event and
+ * while showing the Popup container with mask.
+ */
+function adjustMaskHeight() {
+  _gel('afg-gadget-mask').style.height = _gel('afg-main').offsetHeight + 'px';
+}
+
+/**
+ * Adjust Iframe Height.
+ * This function will solve Chrome issue.
+ */
+function adjustIFrameHeight() {
+  var rootElement = _gel('afg-main');
+  var gadgetHeight = rootElement.clientHeight || rootElement.offsetHeight;
+  _IG_AdjustIFrameHeight(gadgetHeight);
+}
+
+/**
  * This method formats the date string to expected format.
  * The expected input format is yyyy-MM-dd hh:mm:ss
  * The expected output format is dd/MM/yyyy
@@ -244,8 +281,8 @@ function getDateStr(str) {
 
 /**
  * @param {string} str The date in string format.
- *    If nothing is passed, returns current date.
- * @return {Date} Returns the Date object of the given string.
+ *     If nothing is passed, returns current date.
+ * @return {Date} Returns the date object of the given string.
  */
 function getDateObj(str) {
   str = str || '';
@@ -257,7 +294,7 @@ function getDateObj(str) {
  * Get the Date in the format of : 'yyyyMMddThhmmssZ'.
  * @param {Date} dateObj The date Object which needs to be converted,
  *     into the format of 'yyyyMMddThhmmssZ'.
- * @return {string} Returns formatted Date string for given Date Object.
+ * @return {string} Returns formatted date string for given date object.
  */
 function getDateStringAsUTC(dateObj) {
   var day = dateObj.getDate();
@@ -307,15 +344,12 @@ function getDurationForCalendar(startDate, endDate) {
  * This method will create HTML element string for single feed item.
  * Used for Home & Canvas views.
  * @param {number} feedIndex The json feed with neccessary changes
- *    for single feed item.
- * @return {string} Returns htmlstring for single feed item.
+ *     for single feed item.
+ * @return {string} Returns html string for single feed item.
  */
 function getHtmlForOneRecord(feedIndex) {
   var obj = feedRecords[feedIndex];
   var sitePageNumber = Math.floor(feedIndex / 10);
-  var likeUrl = LIKE_URL + '&start=' + sitePageNumber + 1 +
-      '&vol_loc=' + feedParams.vol_loc +
-      '&q=' + feedParams.q;
   var calendarUrl = 'http://www.google.com/calendar/event?action=TEMPLATE' +
       '&text=' + encodeURIComponent(obj.title) +
       '&details=' + encodeURIComponent(obj.desc) + '...' +
@@ -324,14 +358,10 @@ function getHtmlForOneRecord(feedIndex) {
   var html = [
     '<div class="afg-record ', obj.id, '">',
     '<h3 class="afg-rec-title"> ',
-    '<a href="', obj.titleLink, '" target="_blank" >', obj.title, '</a>',
+    '<a href="', obj.titleLink, '" target="_blank">', obj.title, '</a>',
     '</h3>',
     '<p class="afg-rec-meta"> ',
     obj.location, ' - ', obj.period,
-    '</p>',
-    '<p class="afg-rec-links"> ',
-    '<a href="', likeUrl, '" target="_blank">',
-    prefs.getMsg('like'), '</a>',
     '</p>',
     '</div>'
   ];
@@ -339,21 +369,11 @@ function getHtmlForOneRecord(feedIndex) {
 }
 
 /**
- * Adjust the Height Of the mask automatically.
- * height 100% for the absolute positioned div is not supported in IE6.
- * This function will be called on window resize event and
- *  while showing the Popup container with mask.
- */
-function adjustMaskHeight() {
-  _gel('afg-gadget-mask').style.height = _gel('afg-main').offsetHeight + 'px';
-}
-
-/**
- * To Show / hide any html element by id.
+ * To show or hide any html element by id.
  * Focus the cursor to the given optional Focus Element.
- * @param {string} elementId The id of the element to be shown / hide.
+ * @param {string} elementId The id of the element to be shown or hidden.
  * @param {string} prop The display property to be set.
- * @param {string} optFocusElementId optional Element is to focus the cursor.
+ * @param {string} optFocusElementId Optional element to set the focus.
  */
 function showHideElement(elementId, prop, optFocusElementId) {
   try {
@@ -384,8 +404,8 @@ function stopEvents(event) {
 
 /**
  * This function updates the Branding title based on the location.
- * @param {string} val Search Location value.
- * @param {string} searchText Search Text.
+ * @param {string} val Search location value.
+ * @param {string} searchText Search text.
  */
 function updateTitle(val, searchText) {
   var str = [
@@ -415,9 +435,9 @@ function loading() {
     '<div id="afg-loading-container" style="',
     'margin:50px 0;height:', height - 100, 'px;">',
     '<img src="http://www.google.com/ig/images/spinner.gif" />',
-    '<div style="">', prefs.getMsg('loading'), '</div></div>'
-  ].join('');
-  element.innerHTML = html;
+    '<div>', prefs.getMsg('loading'), '</div></div>'
+  ];
+  element.innerHTML = html.join('');
 }
 
 /**
@@ -430,9 +450,9 @@ function showRecordsAndUpdatePagination() {
   var endIndex = (maxEndIndex < feedRecords.length) ?
                  maxEndIndex : feedRecords.length;
   for (var i = startIndex; i < endIndex; i++) {
-    html[i] = getHtmlForOneRecord(i);
+    html.push(getHtmlForOneRecord(i));
   }
-// Add pagination.
+  // Add pagination.
   if (curPage !== 1 || nextPageInfo['page-' + curPage]) {
     html.push('<div class="pagination">',
               '<div style="width:100%;overflow:hidden;">');
@@ -448,9 +468,9 @@ function showRecordsAndUpdatePagination() {
     }
     html.push('</div></div>');
   }
-// Update content in DOM.
+  // Update content in DOM.
   _gel('afg-content').innerHTML = html.join('');
-  _IG_AdjustIFrameHeight();
+  adjustIFrameHeight();
 }
 
 /**
@@ -462,14 +482,14 @@ function responseErrorHandler() {
     '<div class="afg-record-na">', prefs.getMsg('no_data'),
     '&nbsp;<a href="#" onclick="requestFeed();return false;">',
     prefs.getMsg('try_again'), '</a></div>'
-  ].join('');
-  _gel('afg-content').innerHTML = html;
-  _IG_AdjustIFrameHeight();
+  ];
+  _gel('afg-content').innerHTML = html.join('');
+  adjustIFrameHeight();
 }
 
 /**
- * Update feedRecords from the received Feed XML.
- * @param {Node} xmlContent Xml Content as Callback function response.
+ * Update feed records from the received feed XML.
+ * @param {Node} xmlContent XML content as callback function response.
  * @param {number} timerId Value which stores a reference to the timer.
  */
 function fetchRecords(xmlContent, timerId) {
@@ -504,8 +524,7 @@ function fetchRecords(xmlContent, timerId) {
     for (i = 0; i < length; i++) {
       var item = items[i];
       var jsonFeed = {id: 'rec-' + i};
-      var curNode;
-      for (curNode = item.firstChild; curNode; curNode = curNode.nextSibling) {
+      for (var curNode = item.firstChild; curNode; curNode = curNode.nextSibling) {
         if (curNode.nodeType !== 1) {
           continue;
         }
@@ -545,15 +564,15 @@ function fetchRecords(xmlContent, timerId) {
       navigatePage(-1);
     } else {
       var html = [
-        '<div class="afg-record-na">', prefs.getMsg('no_data'),
-        '&nbsp;<a href="#" onclick="showHideElement(\'afg-search-region-home\'',
+        '<div class="afg-record-na">', prefs.getMsg('your_search'),
+        ' <strong>\'', feedParams.q, '\'</strong> ', prefs.getMsg('not_match'),
+        '<br/><a href="#" onclick="showHideElement(\'afg-search-region-home\'',
         ',\'block\', \'afg-search-text\'); return false;">',
         prefs.getMsg('search_again'), '</a></div>'
-      ].join('');
-      _gel('afg-content').innerHTML = html;
-      _IG_AdjustIFrameHeight();
+      ];
+      _gel('afg-content').innerHTML = html.join('');
+      adjustIFrameHeight();
     }
-    return;
   }
 }
 
@@ -596,7 +615,7 @@ function navigatePage(step) {
  * updates its Branding title based on the prefered location,
  * resets the FeedUrl Parameters, cached feed records and meta information.
  * And calls requestFeed() to initiate the request.
- * @param {string} optSearchTxt optional Search Text.
+ * @param {string} optSearchTxt Optional search text.
  */
 function search(optSearchTxt) {
   var location = prefs.getString('prefLocation');
@@ -629,9 +648,37 @@ function isCancel(event) {
 }
 
 /**
+ * Function to handle custom theme.
+ * 
+ */
+function handleTheme() {
+  var themePath = _trim(prefs.getString('themesFolder'));
+  var searchButton = _gel('afg-search-button');
+  var embedButton = _gel('afg-embed-button');
+  var goButton = _gel('afg-go-button');
+  var head = document.getElementsByTagName('head')[0];
+  var body = document.getElementsByTagName('body')[0];
+  if (themePath) {
+    var linkElement = document.createElement('link');
+    linkElement.id = 'theme-link';
+    linkElement.href = themePath + '/style.css';
+    linkElement.rel = 'stylesheet';
+    head.appendChild(linkElement);
+    searchButton.src = themePath + '/search.gif';
+    embedButton.src = themePath + '/embed.gif';
+    goButton.src = themePath + '/go.gif';
+    body.className += ' site-theme';
+  } else {
+    // Nothing to do right now.
+    body.className += ' default-theme';
+  }
+}
+
+/**
  * Called on load of the gadget.
  */
 function init() {
+  handleTheme();
   var view = gadgets.views.getCurrentView();
   view = view ? view.getName().toLowerCase() : 'home';
   _gel('afg-main').className = 'afg-' + view + '-body';
@@ -642,7 +689,10 @@ function init() {
  * Resize handler to adjust the mask element height.
  * It sets mask element height equals to the body height.
  */
-window.onresize = adjustMaskHeight;
+window.onresize = function() {
+  adjustIFrameHeight();
+  adjustMaskHeight();
+}
 
 /**
  * Entry point.
@@ -653,8 +703,9 @@ _IG_RegisterOnloadHandler(init);
   <div id="afg-header-region">
     <div id="afg-branding-region">
       <div id="afg-branding-btn">
-        <img alt="__MSG_search__" title="__MSG_search__" src="http://gadget.js.googlepages.com/search.png"
-          onclick="showHideElement('afg-search-region-home','block', 'afg-search-text'); return false;">
+        <img id="afg-search-button" alt="__MSG_search__" title="__MSG_search__" class="afg-search-button"
+            src="http://developer.gadget.googlepages.com/search.gif" onerror="this.src='http://developer.gadget.googlepages.com/search.gif'"
+            onclick="showHideElement('afg-search-region-home','block', 'afg-search-text'); return false;">
       </div>
       <h2 id="afg-branding-title"></h2>
       <div class="clear">&nbsp;</div>
@@ -664,17 +715,21 @@ _IG_RegisterOnloadHandler(init);
     <div id="afg-content"></div>
   </div>
   <div id="afg-footer-region">
-    <div style="margin: 5px">
+    <div style="margin:5px">
       <div id="afg-footer-content">
         <form target="_blank" action="http://www.gmodules.com/ig/creator">
           <input type="hidden" name="synd" value="open" />
-          <input type="hidden" name="url" value="http://gadget.js.googlepages.com/footprint_raw.xml" />
-          <input type="image" title="__MSG_embed__" style="cursor:pointer;" src="http://gadget.js.googlepages.com/embed.png" />
+          <input type="hidden" name="url"
+              value="http://developer.gadget.googlepages.com/footprint_raw_final_1.6.xml" />
+          <input type="image" title="__MSG_embed__" class="afg-embed-button" id="afg-embed-button"
+              style="cursor:pointer;" src="http://developer.gadget.googlepages.com/embed.gif" onerror="this.src='http://developer.gadget.googlepages.com/embed.gif'"/>
         </form>
       </div>
-      <a id="branding-logo" class="image-cropper" target="_blank" href="http://www.allforgood.org">
+      <a id="branding-logo" class="image-cropper" target="_blank"
+          href="http://www.allforgood.org">
         <div>
-          <img src="http://gadget.js.googlepages.com/all_for_good_alpha.gif" alt="__MSG_brand_title__" title="__MSG_brand_title__" />
+          <img src="http://developer.gadget.googlepages.com/logo.gif"
+              alt="__MSG_brand_title__" title="__MSG_brand_title__" />
         </div>
       </a>
     </div>
@@ -685,7 +740,8 @@ _IG_RegisterOnloadHandler(init);
     <div id="afg-gadget-dialog" class="afg-dialog">
       <form name="frmSearch" action="#" onsubmit="search();showHideElement('afg-search-region-home','none');return false;">
         <input name="searchText" id="afg-search-text" type="text" onkeyup="isCancel(event);" autocomplete="off" />
-        <input class="afg-gobutton" alt="__MSG_go__" title="__MSG_go__" src="http://gadget.js.googlepages.com/go.png" type="image" />
+        <input id="afg-go-button" class="afg-go-button" alt="__MSG_go__" title="__MSG_go__" type="image"
+            src="http://developer.gadget.googlepages.com/go.gif" onerror="this.src='http://developer.gadget.googlepages.com/go.gif'"/>
       </form>
     </div>
   </div>
@@ -693,3 +749,4 @@ _IG_RegisterOnloadHandler(init);
 ]]>
 </Content>
 </Module>
+
