@@ -720,7 +720,7 @@ _IG_RegisterOnloadHandler(init);
         <form target="_blank" action="http://www.gmodules.com/ig/creator">
           <input type="hidden" name="synd" value="open" />
           <input type="hidden" name="url"
-              value="http://developer.gadget.googlepages.com/footprint_raw_final_1.6.xml" />
+              value="http://footprint2009dev.appspot.com/gadget/gadget.xml"/>
           <input type="image" title="__MSG_embed__" class="afg-embed-button" id="afg-embed-button"
               style="cursor:pointer;" src="http://developer.gadget.googlepages.com/embed.gif" onerror="this.src='http://developer.gadget.googlepages.com/embed.gif'"/>
         </form>
