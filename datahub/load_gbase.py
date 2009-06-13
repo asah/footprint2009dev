@@ -115,7 +115,7 @@ def print_word_stats():
 
   print_progress("writing "+POPULAR_WORDS_FN+"...")
   popfh = open(LOGPATH+POPULAR_WORDS_FN, "w")
-  for word, freq in sorted_words:
+  for word, freq in sorted(sorted_words):
     popfh.write(str(freq)+"\t"+word+"\n")
   popfh.close()
   print_progress("done writing "+LOGPATH+POPULAR_WORDS_FN)
