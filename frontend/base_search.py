@@ -253,7 +253,8 @@ def query(query_url, args, cache):
   result_set.args = args
 
   fetch_start = time.time()
-  fetch_result = urlfetch.fetch(query_url)
+  fetch_result = urlfetch.fetch(query_url, 
+                   deadline = api.CONST_MAX_FETCH_DEADLINE)
   fetch_end = time.time()
   result_set.fetch_time = fetch_end - fetch_start
   if fetch_result.status_code != 200:

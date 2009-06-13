@@ -24,6 +24,8 @@ from datetime import datetime
 from google.appengine.api import urlfetch
 from google.appengine.api import memcache
 
+import api
+
 def is_latlong(instr):
   """check whether a string is a valid lat-long."""
   return (re.match(r'^\s*[0-9.+-]+\s*,\s*[0-9.+-]+\s*$', instr) != None)
@@ -63,7 +65,8 @@ def geocode(addr, usecache=True, retries=4):
        '_YrlyqBQajVan2ia99rD9JgAcFrdQnTD4JQ'})
   fetchurl = "http://maps.google.com/maps/geo?%s" % params
   logging.debug("geocode: cache miss, trying "+fetchurl)
-  fetch_result = urlfetch.fetch(fetchurl)
+  fetch_result = urlfetch.fetch(fetchurl, 
+                    deadline = api.CONST_MAX_FETCH_DEADLINE)
   if fetch_result.status_code != 200:
     # fail and also don't cache
     return ""

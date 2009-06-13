@@ -22,6 +22,7 @@ import os
 
 from xml.dom import minidom
 
+
 class Error(Exception):
   pass
 

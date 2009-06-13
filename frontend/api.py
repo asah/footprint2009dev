@@ -38,6 +38,7 @@ PARAM_TIMEPERIOD = 'timeperiod'
 PARAM_OVERFETCH_RATIO = 'overfetch'
 # TODO: define other constants in api.py, eg...
 CONST_MAX_OVERFETCH_RATIO = 10.0
+CONST_MAX_FETCH_DEADLINE = 10
 
 PARAM_VOL_LOC = 'vol_loc'
 PARAM_VOL_DIST = 'vol_dist'
