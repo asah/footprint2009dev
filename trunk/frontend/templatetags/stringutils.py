@@ -35,7 +35,10 @@ def as_letter(value):
 
 def bold_query(value, query):
   """Bolds all instances of query in value"""
-  return value.replace(query, "<strong>"+query+"</strong>")
+  if query:
+    return value.replace(query, "<strong>%s</strong>" % query)
+  else:
+    return value
 
 # Prevents pylint from triggering on the 'register' name. Django expects this
 # module to have a 'register' variable.

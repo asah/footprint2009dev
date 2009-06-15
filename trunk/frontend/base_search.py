@@ -353,7 +353,7 @@ def get_from_ids(ids):
   """Return a result set containing multiple results for multiple ids.
 
   Args:
-    ids: Iterable of stable IDs of volunteer opportunities.
+    ids: List of stable IDs of volunteer opportunities.
 
   Returns:
     searchresult.SearchResultSet with just the entries in ids.
@@ -372,9 +372,12 @@ def get_from_ids(ids):
     # TODO(mblain): Scope to only 'memcache down' exception.
     logging.exception('get_from_ids: ignoring busted memcache. stack: %s',
                       ''.join(traceback.format_stack()))
+
+  temp_results_dict = {}
+
   for key in hits:
     result = hits[key]
-    result_set.results.append(result)
+    temp_results_dict[result.item_id] = result
 
   # OK, we've collected what we can from memcache. Now look up the rest.
   # Find the Google Base url from the datastore, then look that up in base.
@@ -426,6 +429,19 @@ def get_from_ids(ids):
                     (item_id, temp_results.results[0].item_id, len(results)))
       # Not sure if we should touch the VolunteerOpportunity or not.
       continue
-    result_set.results.append(temp_results.results[0])
+    temp_result = temp_results.results[0]
+    temp_results_dict[temp_result.item_id] = temp_result
+
+  # Our temp result set should now contain both stuff that was looked up from
+  # cache as well as stuff that got fetched directly from Base.  Now order
+  # the events according to the original list of id's.
+  
+  # First reverse the list of id's, so events come out in the right order
+  # after being prepended to the events list.
+  ids.reverse()
+  for id in ids:
+    result = temp_results_dict.get(id, None)
+    if result:
+      result_set.results.insert(0, result)
 
   return result_set
