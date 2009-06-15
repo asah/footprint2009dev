@@ -892,7 +892,7 @@ def guess_parse_func(inputfmt, filename):
       '106', 'americorps', 'americorps', 'http://www.americorps.gov/',
       'AmeriCorps')
 
-  if shortname == "mlkday":
+  if shortname == "mlk_day":
     return "nfg", nfg.parser(
       '115', 'mlk_day', 'mlk_day', 'http://my.mlkday.gov/',
       'Martin Luther King day')
