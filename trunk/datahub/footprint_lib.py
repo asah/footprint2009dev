@@ -804,7 +804,7 @@ def guess_shortname(filename):
     return "handsonnetwork"
   if re.search("(volunteer[.]?gov)", filename):
     return "volunteergov"
-  if re.search("(whichoneis.com|beextra)", filename):
+  if re.search("(whichoneis.com|beextra|extraordinari)", filename):
     return "extraordinaries"
   if re.search("idealist", filename):
     return "idealist"
@@ -908,8 +908,8 @@ def guess_parse_func(inputfmt, filename):
     return "fpxml", parse_footprint.parse
   if (inputfmt == None and re.search(r'americansolutions', filename)):
     return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'(whichoneis[.]com|beextra)',
-                                     filename)):
+  if (inputfmt == None and 
+      re.search(r'(whichoneis[.]com|beextra|extraordinari)', filename)):
     return "fpxml", parse_footprint.parse
   if inputfmt == "idealist":
     return "idealist", parse_idealist.parse
