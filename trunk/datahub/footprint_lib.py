@@ -26,13 +26,10 @@ import geocoder
 import parse_footprint
 import parse_gspreadsheet
 import parse_usaservice
+import parse_networkforgood as nfg
 import parse_handsonnetwork
 import parse_idealist
 import parse_craigslist
-import parse_americorps
-import parse_mlkday
-import parse_userpostings
-import parse_servenet
 import parse_volunteermatch
 import subprocess
 import sys
@@ -820,6 +817,12 @@ def guess_shortname(filename):
     return "servenet"
   if re.search("volunteermatch", filename):
     return "volunteermatch"
+  if re.search("christianvol", filename):
+    return "christianvolunteering"
+  if re.search("volunteer(two|2)", filename):
+    return "volunteertwo"
+  if re.search("mentorpro", filename):
+    return "mentorpro"
   return ""
 
 def ftp_to_base(filename, ftpinfo, instr):
@@ -868,63 +871,80 @@ def ftp_to_base(filename, ftpinfo, instr):
 
 def guess_parse_func(inputfmt, filename):
   """from the filename and the --inputfmt,guess the input type and parse func"""
-  if inputfmt == "fpxml" or re.search(r'fpxml', filename):
+
+  # for development
+  if inputfmt == "fpxml":
     return "fpxml", parse_footprint.parse
-  if (inputfmt == "gspreadsheet" or
-      (inputfmt == None and
-       re.search(r'spreadsheets[.]google[.]com', filename))):
+
+  shortname = guess_shortname(filename)
+
+  # FPXML providers
+  if shortname in ["unitedway", "mybarackobama", "handsonnetwork",
+                   "volunteergov", "americansolutions", "idealist",
+                   "extraordinaries", "meetup"]:
+    # TODO: assign IDs using a closure
+    # http://code.google.com/p/footprint2009dev/issues/detail?id=117
+    return "fpxml", parse_footprint.parse
+
+  # networkforgood providers
+  if shortname == "americorps":
+    return "nfg", nfg.parser(
+      '106', 'americorps', 'americorps', 'http://www.americorps.gov/',
+      'AmeriCorps')
+
+  if shortname == "mlkday":
+    return "nfg", nfg.parser(
+      '115', 'mlk_day', 'mlk_day', 'http://my.mlkday.gov/',
+      'Martin Luther King day')
+
+  if shortname == "christianvolunteering":
+    return "nfg", nfg.parser(
+      '117', 'christianvolunteering', 'christianvolunteering',
+      'http://www.christianvolunteering.org/', 'Christian Volunteering')
+
+  if shortname == "volunteertwo":
+    return "nfg", nfg.parser(
+      '118', 'volunteer2', 'volunteer2',
+      'http://www.volunteer2.com/', 'Volunteer2')
+
+  if shortname == "mentorpro":
+    return "nfg", nfg.parser(
+      '119', 'mentor', 'mentor',
+      'http://www.mentorpro.org/', 'MENTOR')
+
+  if shortname == "servenet":
+    return "nfg", nfg.parser(
+      '114', 'servenet', 'servenet', 'http://www.servenet.org/',
+      'servenet')
+
+  # custom formats
+  if shortname == "gspreadsheet":
     return "gspreadsheet", parse_gspreadsheet.parse
-  if (inputfmt == "usaservice" or inputfmt == "usasvc" or
-      (inputfmt == None and re.search(r'usa-?service', filename))):
+
+  if shortname == "usaservice" or shortname == "usasvc":
     return "usaservice", parse_usaservice.parse
-  if (inputfmt == "craigslist" or inputfmt == "cl" or
-      (inputfmt == None and re.search(r'craigslist', filename))):
+
+  if shortname == "craigslist" or shortname == "cl":
     return "craigslist", parse_craigslist.parse
-  if (inputfmt == "americorps" or
-      (inputfmt == None and re.search(r'americorps', filename))):
-    return "americorps", parse_americorps.parse
-  if (inputfmt == "mlkday" or
-      (inputfmt == None and re.search(r'mlk(_|day)', filename))):
-    return "mlk_day", parse_mlkday.parse
-  if (inputfmt == "servenet" or
-      (inputfmt == None and re.search(r'servenet|SERVEnet', filename))):
-    return "servenet", parse_servenet.parse
-  if (inputfmt == "handson" or inputfmt == "handsonnetwork"):
+
+  if shortname == "handson" or shortname == "handsonnetwork":
     return "handsonnetwork", parse_handsonnetwork.parse
-  if (inputfmt == None and re.search(r'united.*way', filename)):
-    return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'barackobama[.]com', filename)):
-    return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'(handson|hot.footprint)', filename)):
-    # now using FPXML
-    return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'habitat', filename)):
+
+  if shortname == "habitat":
     def parse_habitat(instr, maxrecs, progress):
       # fixup bad escaping
       newstr = re.sub(r'&code=', '&amp;code=', instr)
       return parse_footprint.parse_fast(newstr, maxrecs, progress)
-    return "badfpxml", parse_habitat
-  if (inputfmt == None and re.search(r'volunteer[.]?gov', filename)):
-    return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'americansolutions', filename)):
-    return "fpxml", parse_footprint.parse
-  if (inputfmt == None and 
-      re.search(r'(whichoneis[.]com|beextra|extraordinari)', filename)):
-    return "fpxml", parse_footprint.parse
-  if inputfmt == "idealist":
-    return "idealist", parse_idealist.parse
-  if (inputfmt == None and re.search(r'idealist', filename)):
-    return "fpxml", parse_footprint.parse
-  if (inputfmt == None and re.search(r'meetup', filename)):
-    return "fpxml", parse_footprint.parse
-  if (inputfmt == "fp_userpostings" or
-      (inputfmt == None and re.search(r'(userpostings|/export/Posting)',
-                                      filename))):
-    return "fp_userpostings", parse_userpostings.parse
-  if (inputfmt == "volunteermatch" or inputfmt == "vm" or
-      (inputfmt == None and re.search(r'volunteermatch', filename))):
+    return "habitat", parse_habitat
+
+  if shortname == "volunteermatch" or shortname == "vm":
     return "volunteermatch", parse_volunteermatch.parse
-  print datetime.now(), "unknown input format-- try --inputfmt"
+
+  # legacy-- to be safe, remove after 9/1/2009
+  #if shortname == "idealist":
+  #  return "idealist", parse_idealist.parse
+
+  print datetime.now(), "couldn't guess input format-- try --inputfmt"
   sys.exit(1)
 
 def clean_input_string(instr):
