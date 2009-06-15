@@ -135,7 +135,7 @@ class UserInterest(db.Model):
   DATASTORE_PREFIX = 'id:'
   user = db.ReferenceProperty(UserInfo, collection_name='interests')
   opp_id = db.StringProperty()
-  broadcast_on = db.DateTimeProperty()
+  liked_last_modified = db.DateTimeProperty()
 
   # The interest types (liked, will_attend, etc) must exist with the
   # same property names in UserInterest and VolunteerOpportunityStats,

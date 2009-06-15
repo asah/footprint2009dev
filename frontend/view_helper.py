@@ -33,15 +33,20 @@ def get_user_interests(user, remove_no_interest):
   """
   user_interests = {}
   if user:
-    # Note that if a user has a lot (particularly > 1000) of
-    # UserInterest entries, we'll have to do a more clever
-    # query than the magic reverse reference query.
-    for interest in user.get_user_info().interests:
+    user_info = user.get_user_info()
+    # Note: If we want a limit, tack "fetch(nnn)" on the end of the query.
+    # Also note the descending order, most-recent-first.
+    interests = models.UserInterest.all().filter('user = ', user_info)\
+                .order('-liked_last_modified')
+
+    ordered_event_ids = []
+    for interest in interests:
+      ordered_event_ids.append(interest.opp_id)
       interest_value = getattr(interest, models.USER_INTEREST_LIKED)
       if not remove_no_interest or interest_value != 0:
         user_interests[interest.opp_id] = interest_value
-    logging.debug('Found interests: %s' % user_interests)
-  return user_interests
+
+  return {'interests': user_interests, 'ordered_event_ids': ordered_event_ids}
 
 
 def get_interest_for_opportunities(opp_ids):

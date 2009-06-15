@@ -472,11 +472,13 @@ class ui_my_snippets_view(webapp.RequestHandler):
       # Get the list of all events that I like or am doing.
       # This is a dict of event id keys and interest flag values (right now
       # we only support Liked).
-      my_interests = view_helper.get_user_interests(user_info, True)
+      dict = view_helper.get_user_interests(user_info, True)
+      my_interests = dict['interests']
+      ordered_event_ids = dict['ordered_event_ids']
       
       # Fetch the event details for the events I like, so they can be
       # displayed in the snippets template.
-      my_events_gbase_result_set = base_search.get_from_ids(my_interests.keys())
+      my_events_gbase_result_set = base_search.get_from_ids(ordered_event_ids)
       for result in my_events_gbase_result_set.results:
         result.interest = my_interests[result.item_id]
 
@@ -974,7 +976,7 @@ class action_view(webapp.RequestHandler):
     user_entity = user.get_user_info()
     user_interest = models.UserInterest.get_or_insert(
       models.UserInterest.make_key_name(user_entity, opp_id),
-      user=user_entity, opp_id=opp_id)
+      user=user_entity, opp_id=opp_id, liked_last_modified=datetime.now())
 
     if not user_interest:
       self.error(500)  # Server error.
