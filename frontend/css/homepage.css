@@ -1,18 +1,30 @@
 #leadin {
-  font-size: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+#leadin_header {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#leadin_subheader {
+  font-size: 15px;
 }
 
 #home {
-  padding: 4px 10px;
 }
 
 #home_left {
-  float: left;
-  width: 350px;
+}
+
+#home_video_header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 #home_popular {
+  display: none;
   float: right;
   width: 170px;
 }
@@ -27,21 +39,28 @@
 }
 
 #home_mini {
-  float: left;
-  margin-left: 20px;
-  width: 330px;
+  float: right;
+  width: 325px;
 }
 
-#location_message, #location_text {
+#location_subheader {
+  font-size: 15px;
+}
+
+#location_text_prefixed {
+  font-weight: bold;
+}
+
+#location_message {
   font-size: 20px;
   font-weight: bold;
   margin: 0px;
 }
 
-#no_location_message {
+#mini_without_location {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-bottom: 2px;
 }
 
 #more {
@@ -71,16 +90,23 @@
 #home_left ul {
 }
 
-#home_signin {
-  font-size: 13px;
-  background: #E1ECF5;
-  padding: 10px;
+#home_bullets {
+  margin-top: 20px;
+  padding: 0px;
 }
 
-#home_signin ul {
+#home_bullets ul {
+  font-size: 15px;
   margin-top: 8px;
-  padding-left: 24px;
+  padding-left: 20px;
 }
 
-#home_signin_header {
+#home_bullets_header {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#home_video_placeholder {
+  width: 560px;
+  height: 340px;
 }

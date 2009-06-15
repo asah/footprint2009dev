@@ -29,7 +29,7 @@ function runSnippetsQuery() {
        test that "No Results" message doesn't show "USA". */
     vol_loc_term = '&vol_loc=USA&vol_dist=1500';
   }
-  var url = '/ui_snippets?start=0&num=4&minimal_snippets_list=1' + vol_loc_term;  
+  var url = '/ui_snippets?start=0&num=6&minimal_snippets_list=1' + vol_loc_term;
   jQuery.ajax({
         url: url,
         async: true,
@@ -53,15 +53,24 @@ function renderHomepage() {
     el('mini_without_location').style.display = '';
     el('location_form').style.display = '';
   }
-  
+
   el('more_link').href = 'javascript:submitForm("");void(0);';
-  
-  // Populate the popular searches list.
-  for (var i = 0; i < popularSearches.length; i++) {
-    var href = 'javascript:goPopular(' + i + ');void(0);';
-    var html = '<a href="' + href + '">' +
-        popularSearches[i] + '<' + '\a>';
-    el('popular_list').innerHTML += html + '<br>';
+
+  if (el('popular_list')) {
+    // Populate the popular searches list.
+    for (var i = 0; i < popularSearches.length; i++) {
+      var href = 'javascript:goPopular(' + i + ');void(0);';
+      var html = '<a href="' + href + '">' +
+          popularSearches[i] + '<' + '\a>';
+      el('popular_list').innerHTML += html + '<br>';
+    }
   }
-  setTextContent(el('location_text'), defaultLocation);  
+  setTextContent(el('location_text'), defaultLocation);
+
+  el('home_video_placeholder').innerHTML = '<object width="560" height="340"><param name="movie" value="http://www.youtube.com/v/AeNgjXPZkrM&hl=en&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/AeNgjXPZkrM&hl=en&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="560" height="340"></embed></object>';
+}
+
+function doHomepageChangeLocationClick() {
+  el("location_subheader").style.display="none"
+  el("location_form").style.display="";
 }
