@@ -233,9 +233,9 @@ function updateInterestInfoDisplay(resultIndex) {
     }
     /* add "like(s) this" with proper plurality */
     if (result.totalInterestCount==1) {
-      html += ' likes this';
+      html += ' like this';
     } else if (result.totalInterestCount > 1) {
-      html += ' like this';      
+      html += ' likes this';      
     }
   }
 
