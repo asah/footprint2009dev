@@ -52,4 +52,5 @@ STATIC_CONTENT_FILES = {
   '/apps' : 'apps.html',
   '/dmca' : 'dmca.html',
   '/docs/api.html' : 'api.html',
+  '/partner_terms' : 'partner_terms.html',
 }
