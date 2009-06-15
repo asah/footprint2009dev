@@ -34,6 +34,13 @@ MAPS_API_KEYS = {
   'footprint2009dev.appspot.com' : 'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxTpeCj-9ism2i6Mt7fLlVoN6HsfDBSOZjcyagWjKTMT32rzg71rFenopA'
 }
 
+# Google Analytics keys - only needed for dev, qa, and production
+# we don't want to track in other instances
+GA_KEYS = {
+  'www.allforgood.org' : 'UA-8689219-2',
+  'footprint2009dev.appspot.com' : 'UA-8689219-3'
+}
+
 FACEBOOK_API_KEYS = {}
 
 # These are the public Facebook API keys.
@@ -55,7 +62,7 @@ def is_local_development():
 
 def load_keys():
   """load facebook, maps, etc. keys."""
-  global FACEBOOK_KEY, MAPS_API_KEY, FACEBOOK_SECRET_KEY
+  global FACEBOOK_KEY, MAPS_API_KEY, FACEBOOK_SECRET_KEY, GA_KEY
   if FACEBOOK_KEY or MAPS_API_KEY or FACEBOOK_SECRET_KEY:
     return
 
@@ -76,6 +83,10 @@ def load_keys():
   MAPS_API_KEY = MAPS_API_KEYS.get(http_host, 'unknown')
   logging.debug("host="+http_host+"  maps api key="+MAPS_API_KEY)
 
+  # no default for ga key
+  GA_KEY = GA_KEYS.get(http_host, 'unknown')
+  logging.debug("host="+http_host+"  ga key="+GA_KEY)
+
   # facebook API has default key
   if is_production_site():
     FACEBOOK_KEY = FACEBOOK_API_KEYS[PRODUCTION_DOMAIN]
@@ -94,6 +105,7 @@ def load_standard_template_values(template_values):
   load_keys()
   template_values['maps_api_key'] = MAPS_API_KEY
   template_values['facebook_key'] = FACEBOOK_KEY
+  template_values['ga_key'] = GA_KEY
 
 def get_facebook_secret():
   """returns the facebook secret key"""
