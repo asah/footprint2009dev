@@ -331,6 +331,10 @@ executeSearchFromHashParams = function() {
       if(el('loading-bottom')){
         el('loading-bottom').style.display = 'none';
       }
+      // Load analytics, done here to ensure search is finished first
+      // Only loading for search result pages here - loaded in homepage.js
+      // for the home page and base.html for static pages
+      loadGA();
     };
 
     var error = function (XMLHttpRequest, textStatus, errorThrown) {

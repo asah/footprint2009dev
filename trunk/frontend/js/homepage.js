@@ -40,6 +40,10 @@ function runSnippetsQuery() {
             el('snippets').innerHTML = data;
             el('more').style.display = '';
           }
+          // Load analytics, done here to ensure search is finished first
+          // Only loading for homepage here - loaded in search_resuls.js
+          // for search pages and base.html for static pages
+          loadGA();
         }
       });
 }
