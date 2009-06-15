@@ -303,39 +303,36 @@ def test_loaders():
   load_gbase("unitedway", "unitedway.xml", False, False)
   load_gbase("americansolutions", "americansolutions.xml", False, False)
   load_gbase("meetup", "meetup.xml", False, False)
-  load_gbase("extraordinaries", "beextra-extraordinaries.xml", False, False)
+  load_gbase("extraordinaries", "extraordinaries.xml", False, False)
   load_gbase("idealist", "idealist.xml", False, False)
+  load_gbase("americorps", "americorps.xml", False, False)
+  load_gbase("volunteergov", "volunteergov.xml", False, False)
+  load_gbase("handsonnetwork", "handsonnetwork.xml", False, False)
+  load_gbase("mlk_day", "mlk_day.xml", False, False)
   load_gbase("gspreadsheets",
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw", False, False)
   load_gbase("craigslist", "craigslist-cache.txt", False, False)
-  load_gbase("americorps", "americorps-xml_ac_recruitopps.xml.gz", False, False)
-  load_gbase("volunteergov", "volunteergov.xml", False, False)
-  load_gbase("handson", "hot.footprint.xml.gz", False, False)
-  load_gbase("mlk_day", "mlk_usafc.xml", False, False)
 
 def loaders():
   """put all loaders in one function for easier testing."""
-  load_gbase("mlk_day", "http://my.mlkday.gov/feeds/mlk_usafc.xml")
-  load_gbase("americorps",
-             "http://www.americorps.gov/xmlfeed/xml_ac_recruitopps.xml.gz")
-  load_gbase("volunteer.gov", "http://www.volunteer.gov/footprint.xml")
-  load_gbase("servenet",
-             "http://servenet.org/test/temp/SERVEnetOpportunities001.xml")
-  load_gbase("unitedway",
-             "http://volunteer.united-e-way.org/"+
-             "uwnyc/util/voml/uwnyc-footprint-pull.aspx")
-  load_gbase("habitat", "http://www.habitat.org/cd/gv/schedule_to_xml.aspx")
-  load_gbase("americansolutions",
-             "http://www.americansolutions.com/footprint/footprint.xml")
-  load_gbase("idealist", "http://feeds.idealist.org/xml/"+
-             "footprint-volunteer-opportunities.xml")
-  load_gbase("extraordinaries", "http://app.beextra.org/opps/list/format/xml")
+  load_gbase("mlk_day", "mlk_day.xml")
+  load_gbase("americorps", "americorps.xml")
+  load_gbase("volunteergov", "volunteergov.xml")
+  load_gbase("servenet", "servenet.xml")
+  load_gbase("unitedway", "unitedway.xml")
+  load_gbase("habitat", "habitat.xml")
+  load_gbase("americansolutions", "americansolutions.xml")
+  load_gbase("idealist", "idealist.xml")
+  load_gbase("extraordinaries", "extraordinaries.xml")
+  load_gbase("handsonnetwork", "handsonnetwork.xml")
+  load_gbase("meetup", "meetup.xml")
+  load_gbase("mentorpro", "mentorpro.xml")
+  load_gbase("christianvolunteering", "christianvolunteering.xml")
+  load_gbase("volunteertwo", "volunteertwo.xml")
+
+  # requires special crawling
   load_gbase("gspreadsheets",
              "https://spreadsheets.google.com/ccc?key=rOZvK6aIY7HgjO-hSFKrqMw")
-  load_gbase("handsonnetwork",
-             "http://archive.handsonnetwork.org/feeds/hot.footprint.xml.gz")
-  load_gbase("meetup", "http://api.meetup.com/footprint?"+
-             "key=2c24625a70343bb68451e337e714b22")
 
   # note: craiglist crawler is run asynchronously, hence the local file
   load_gbase("craigslist", "craigslist-cache.txt")
@@ -346,6 +343,7 @@ def loaders():
   #            "format=footprint")
 
   # old custom feed
+  # legacy-- to be safe, remove after 9/1/2009
   #load_gbase("idealist", "http://feeds.idealist.org/xml/feeds/"+
   #           "Idealist-VolunteerOpportunity-VOLUNTEER_OPPORTUNITY_TYPE."+
   #           "en.open.atom.gz")

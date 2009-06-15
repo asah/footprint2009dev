@@ -128,3 +128,4 @@ def parse(instr, maxrecs, progress):
   if progress:
     print datetime.now(), "parse_footprint: done parsing."
   return xmldoc
+
