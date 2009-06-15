@@ -605,5 +605,9 @@ A:hover {  /* Keep this near end of file, after other A definitions */
   color: #9bb3b3;
 }
 
+#location_form {
+  font-size: 15px;
+}
+
 .sharelink img { display: none; }
 .sharelink {cursor: pointer; }
