@@ -183,46 +183,66 @@ function updateInterestInfoDisplay(resultIndex) {
   var result = searchResults[resultIndex];
   var html = '';
 
+  /**
+   * Labels of people who like this 
+   *
+   * Labels include: 'You' if the user likes it,
+   * names of their friends who like it, and 
+   * rollup text of 'N others'
+   */
+  var nameList = []; 
+
+  /* Add 'You', if appropriate, as the first label */
+  if (result.liked) {
+    nameList.push('You');
+  }
+
+  /* Add names of friends who like the event */
   var friends = friendsByEventId[result.itemId] || [];
+  for (var i = 0; i < friends.length; i++) {
+    var friendId = friends[i];
+    var info = friendsInfo[friendId];
+    if (info) {
+      nameList.push(info.name);
+    }
+  }
 
-  if (result.liked || friends.length) {
+  /* Add a count of the number of non-friends who like it */
+  var youAndFriendsCount = (friends ? friends.length : 0) + (result.liked ? 1 : 0);
+  var strangerInterestCount = Math.max(result.totalInterestCount - youAndFriendsCount, 0);
+  if (strangerInterestCount==1) {
+    nameList.push('1 other');
+  } else if (strangerInterestCount > 1) {
+    nameList.push(strangerInterestCount + ' others');
+  }
+
+  /* Put all the names/labels into a sentance */
+  if (nameList.length > 0) {
     html += '<img class="like_icon" src="/zx0000/images/like_default.png">&nbsp;';
-
-    var nameList = result.liked ? 'You' : '';
-
-    // Display friends' info, if any.
-    if (friends.length) {
-      for (var i = 0; i < friends.length; i++) {
-        var friendId = friends[i];
-        var info = friendsInfo[friendId];
-        if (info) {
-          if (i == 0 && nameList != '') {
-            nameList += ', ';
-          }
-          nameList += info.name;
-          if (i < friends.length - 1) {
-            nameList += ', ';
-          }
-        }
-      }
+    /* First element: */
+    html += nameList[0];
+    /* Middle elements, which are separated with commas: */
+    for (var i = 1; i < nameList.length - 1; i++) {
+      html += ', ';
+      html += nameList[i];
     }
-
-    var youAndFriendsCount = (friends ? friends.length : 0) +
-        (result.liked ? 1 : 0);
-
-    var strangerInterestCount = Math.max(result.totalInterestCount -
-                                         youAndFriendsCount, 0);
-    if (strangerInterestCount > 0) {
-      nameList += ' and ' + strangerInterestCount + ' more';
+    /* Last element, with an "and" before it */
+    if (nameList.length > 1) {
+      html += ' and ';
+      html += nameList[nameList.length - 1];
     }
-
-    html += nameList + ' liked this ';
-
-    if (result.liked) {
-      html += '<span class="undo">(' +
-          '<a href="javascript:toggleInterest(' + resultIndex +
-          ');void(0);">undo</a>)</span>';
+    /* add "like(s) this" with proper plurality */
+    if (result.totalInterestCount==1) {
+      html += ' likes this';
+    } else if (result.totalInterestCount > 1) {
+      html += ' like this';      
     }
+  }
+
+  if (result.liked) {
+    html += ' <span class="undo">(' +
+        '<a href="javascript:toggleInterest(' + resultIndex +
+        ');void(0);">undo</a>)</span>';
   }
 
   var div = el('interest_info_' + resultIndex);
