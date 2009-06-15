@@ -20,6 +20,7 @@ because scoring tends to get complex quickly.
 from datetime import datetime
 import logging
 import math
+import api
 
 import view_helper
 
@@ -40,18 +41,51 @@ def score_results_set(result_set, args):
   others_interests = view_helper.get_interest_for_opportunities(idlist)
   total_results = float(len(result_set.results))
   for i, res in enumerate(result_set.results):
-    score_by_base_rank = (total_results - i)/total_results
-    score = score_by_base_rank
-    score_notes = "  GBase relevance score=" + str(score_by_base_rank)
+    score = 1.0
+    score_notes = ""
+
+    # keywordless queries should rank by location and time, not relevance.
+    if api.PARAM_Q in args and args[api.PARAM_Q] != "":
+      # lower ranking items in the backend = lower ranking here (roughly 1/rank)
+      rank_mult = (total_results - i)/total_results
+      score *= rank_mult
+      score_notes += "  backend multiplier=%.3f (rank=%d)\n" % (i, rank_mult)
 
     # TODO: match on start time, etc.
-    delta = res.startdate - datetime.now()
-    if delta.days <= 0:
-      # good luck joining event this soon
-      # also avoids divide-by-zero and dates in the past
+
+    ONEDAY = 24.0 * 3600.0
+    MAXTIME = 500.0 * ONEDAY
+    start_delta = res.startdate - datetime.now()
+    start_delta_secs = start_delta.days*ONEDAY + start_delta.seconds
+    start_delta_secs = min(max(start_delta_secs, 0), MAXTIME)
+    end_delta = res.enddate - datetime.now()
+    end_delta_secs = end_delta.days*ONEDAY + end_delta.seconds
+    end_delta_secs = min(max(end_delta_secs, start_delta_secs), MAXTIME)
+    if end_delta_secs <= 0:
       date_dist_multiplier = .0001
-    else:  
-      date_dist_multiplier = 1.0/(delta.days + (delta.seconds/(24 * 3600)))
+    if start_delta_secs > 0:
+      # further out start date = lower rank (roughly 1/numdays)
+      date_dist_multiplier = 1.0/(start_delta_secs/ONEDAY)
+
+    score *= date_dist_multiplier
+    score_notes += "  date_mult=" + str(date_dist_multiplier)
+    score_notes += "  start=%s (%+g days)" % (
+      res.startdate, start_delta_secs / ONEDAY)
+    score_notes += "  end=%s (%+g days)" % (
+      res.enddate, end_delta_secs / ONEDAY)
+    score_notes += "\n"
+
+    # boost short events
+    delta_secs = end_delta_secs - start_delta_secs
+    if delta_secs > 0:
+      # up to 14 days gets a boost
+      ddays = 10*max(14 - delta_secs/ONEDAY, 1.0)
+      date_delta_multiplier = math.log10(ddays)
+    else:
+      date_delta_multiplier = 1
+    score *= date_delta_multiplier
+    score_notes += "  date_delta_mult=%.3f (%g days)\n" % (
+      date_delta_multiplier, delta_secs / float(ONEDAY))
 
     if (("lat" not in args) or args["lat"] == "" or
         ("long" not in args) or args["long"] == "" or
@@ -91,13 +125,6 @@ def score_results_set(result_set, args):
       score *= interest_weight
       score_notes += "  "+str(interest)+"-stars="+str(interest_weight)
 
-    score *= date_dist_multiplier
-    score_notes += "  startdate multiplier=" + str(date_dist_multiplier)
-    score_notes += "\n"
-    score_notes += "  days delta=" + str(delta.days)
-    score_notes += "  start=" + str(res.startdate)
-    score_notes += "  now=" + str(datetime.now())
-    score_notes += "  delta.seconds=" + str(delta.seconds)
     res.set_score(score, score_notes)
 
   result_set.results.sort(cmp=compare_scores)

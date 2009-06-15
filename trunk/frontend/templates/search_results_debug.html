@@ -8,8 +8,8 @@ If you are a developer, please use the RSS format to build your applications by 
 See the <a href="http://servicefootprint.appspot.com/help/reference.html">All for Good API Reference Guide</a> for additional details.
 
 timings: fetch={{result_set.fetch_time|escape}}   parse={{result_set.parse_time|escape}}
-links: <a href="{{result_set.query_url_encoded|urlencode}}">Google Base query</a>
-query_url=<a href="{{result_set.query_url|urlencode}}">{{result_set.query_url|escape}}</a>
+links: <a href="{{result_set.query_url_encoded}}">Google Base query</a>
+query_url=<a href="{{result_set.query_url}}">{{result_set.query_url|escape}}</a>
 query (q)={{keywords|escape}}
 location center (vol_loc)={{location|escape}} / {{latlong|escape}}   (center point)
 max distance from center (vol_dist)={{max_distance|escape}}  (max distance)
@@ -17,17 +17,13 @@ results: backend-estimated={{result_set.estimated_results|escape}}  merged-estim
 
 <hr/>
 {% for result in result_set.clipped_results %}
-{{result.idx|escape}}. {{result.title|escape}} @ {{result.location|escape}} ({{result.latlong|escape}})
-link: <a href="{{result.url|urlencode}}">{{result.url|escape}}</a>
+<span style='font-size:12px'>{{result.idx|escape}}. {{result.title|escape}}</span>
+loc: {{result.location|escape}} ({{result.latlong|escape}})
+id: {{result.id|escape}}     provider: {{result.provider|escape}}  <a href="{{result.url}}">landing page</a>
 desc: {{result.snippet|escape}}
-id: {{result.id|escape}}     date range: {{result.startdate|escape}}    provider: {{result.provider|escape}} 
 score: {{result.score_str|escape}} (orig result #{{result.orig_idx|escape}}){{result.score_notes|escape}}
 stats: {{result.merged_impressions|escape}} views, {{result.merged_clicks|escape}} clicks  ({{result.merged_ctr|escape}}% CTR)
-start: {{result.starttime|escape}} stop: {{result.endtime|escape}}
-{% if result.merged_list %}
-merged: {% for it in result.merged_debug %}{{it|escape}} {% endfor %}
-{% if result.have_more %}more_id: {{res.more_id|escape}}{% endif %}
-{% endif %}
+{% if result.merged_list %}merged: {% for it in result.merged_debug %}{{it|escape}} {% endfor %}{% if result.have_more %}more_id: {{res.more_id|escape}}{% endif %}{% endif %}
 {% endfor %}
 
 {%include 'paginator.html' %}
