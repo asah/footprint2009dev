@@ -2,14 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Footprint API Reference Guide</title>
+<title>All for Good API Reference Guide</title>
 </head>
 
 <body>
-<h1>Footprint  API Reference Guide</h1>
-<p><a href="index.html">Return to Help index</a></p>
+<h1>All for Good  API Reference Guide</h1>
 <h2>Introduction</h2>
-<p>The Footprint  application programming interface (API) allows client applications to retrieve and view the content of <a href="http://servicefootprint.appspot.com/">http://servicefootprint.appspot.com/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint  API to request a list of volunteer opportunities using a number of parameters documented here.</p>
+<p>The All for Good  application programming interface (API) allows client applications to retrieve and view the content of <a href="http://www.allforgood.org/">http://www.allforgood.org/</a>, which collects and presents volunteer opportunities posted to numerous, disparate sites. Your client application can use the Footrprint  API to request a list of volunteer opportunities using a number of parameters documented here.</p>
 <h2>Contents</h2>
 <p><a href="#Audience">Audience</a></p>
 <p><a href="#Access">Access</a></p>
@@ -20,22 +19,22 @@
 <p><a href="#Elements">Elements</a></p>
 <p><a href="#Notes">Developer notes and requests</a></p>
 <h2 id="Audience">Audience</h2>
-<p>This document is intended for programmers who want to write client applications that can interact with Footprint, an open source aggregator of volunteer opportunities. It provides reference documentation for using the Footprint  API.</p>
+<p>This document is intended for programmers who want to write client applications that can interact with All for Good, an open source aggregator of volunteer opportunities. It provides reference documentation for using the All for Good  API.</p>
 <p>This document doesn't contain information about the programming-language client libraries. For client-library reference information, see related programming-language-specific guides.</p>
 <h2 id="Access">Access</h2>
-<p>The Footprint  API is available at:<br />
-  <a href="http://servicefootprint.appspot.com/api/volopps">http://servicefootprint.appspot.com/api/volopps</a></p>
-<p>As a <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>-based API, Footprint provides all output over HTTP at distinct <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URIs</a>, which makes it easy to test applications with browsers and command-line web clients. Footprint contains listings of volunteer opportunities, which today are defined as events (offline or online), optionally containing locations and start-end times.</p>
+<p>First, request a key to use the All for Good API by completing the <a href="http://spreadsheets.google.com/viewform?formkey=cjY1bEt6aHBzN2NVMTRGZDlxUnNrd2c6MA..">API Key form</a>. Once that request has been fulfilled, you may then use the   API  available at:<br />
+<a href="http://www.allforgood.org/api/volopps">http://www.allforgood.org/api/volopps</a></p>
+<p>As a <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>-based API, All for Good provides all output over HTTP at distinct <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URIs</a>, which makes it easy to test applications with browsers and command-line web clients. All for Good contains listings of volunteer opportunities, which today are defined as events (offline or online), optionally containing locations and start-end times.</p>
 <p>In their simplest form, listings have just a title, description and basic contact, time and location information.  In their fullest form, listings can contain dozens of detailed fields, as described in the <a href="#Elements">Elements</a> section and associated <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html">specification</a>. Because of the short lifespan of these posts, there is little point in storing results.</p>
 <h2 id="Parameters">Query parameters</h2>
-<p>Footprint uses <a href="http://code.google.com/apis/gdata/docs/2.0/reference.html#Queries">Google conventions on query parameters</a>, , e.g. q=... is used for keyword search, num= specifies the number of results and start= sets offset for pagination.</p>
-<p>The syntax for API calls requires following the aforementioned Footprint  API URL (<a href="http://servicefootprint.appspot.com/api/volopps">http://servicefootprint.appspot.com/api/volopps</a>) with a question mark (?) and then a parameter name, equal sign (=), and value. Here's the syntax for constructing API calls:<br />
-  <code>http://servicefootprint.appspot.com/api/volopps?<em>parameter_name</em>=<em>value</em></code></p>
+<p>All for Good uses <a href="http://code.google.com/apis/gdata/docs/2.0/reference.html#Queries">Google conventions on query parameters</a>, , e.g. q=... is used for keyword search, num= specifies the number of results and start= sets offset for pagination.</p>
+<p>The syntax for API calls requires following the aforementioned All for Good  API URL (<a href="http://www.allforgood.org/api/volopps">http://www.allforgood.org/api/volopps</a>) with a question mark (?) and then a parameter name, equal sign (=), and value. Here's the syntax for constructing API calls:<br />
+  <code>http://www.allforgood.org/api/volopps?<em>parameter_name</em>=<em>value</em></code></p>
 <p>For instance, a query for location would use the vol_loc parameter and resemble:<br />
-<code>http://footprint2009dev.appspot.com/api/volopps?vol_loc=<em>City</em>+<em>Name</em>,<em>STATEABBREV</em></code></p>
+<code>http://www.allforgood.org/api/volopps?vol_loc=<em>City</em>+<em>Name</em>,<em>STATEABBREV</em></code></p>
 <p>Multiple parameter and value combinations may be included in a single call by joining them with an ampersand(&amp;), like so:<br />
-<code>http://servicefootprint.appspot.com/api/volopps?<em>parameter_name1</em>=<em>value</em>&amp;<em>parameter_name2</em>=<em>value</em></code></p>
-<p>The Footprint Data API supports the following query parameters:<br />
+<code>http://www.allforgood.org/api/volopps?<em>parameter_name1</em>=<em>value</em>&amp;<em>parameter_name2</em>=<em>value</em></code></p>
+<p>The All for Good Data API supports the following query parameters:<br />
 </p>
 <table>
   <thead>
@@ -55,7 +54,7 @@
     <tr>
       <td><code>output</code></td>
       <td><p>The output format for presenting the results.</p>
-      <p><strong>Important</strong>: This parameter is required for all uses other than debugging. Append the Footprint  API URI with <code>&amp;output=rss</code> to receive the output in a machine-readable format. See the<em> <a href="#Formats">Output formats</a></em> section for additional details.</p></td>
+      <p><strong>Important</strong>: This parameter is required for all uses other than debugging. Append the All for Good  API URI with <code>&amp;output=rss</code> to receive the output in a machine-readable format. See the<em> <a href="#Formats">Output formats</a></em> section for additional details.</p></td>
       <td><p>Default value: html (This should be used only for debugging and otherwise overridden with another format, such as RSS, for production use.)</p>
       <p>Expected values: rss</p></td>
     </tr>
@@ -109,42 +108,42 @@
   </tbody>
 </table>
 <h2 id="Formats">Output formats</h2>
-<p>The Footprint  API provides its output in the following formats:</p>
+<p>The All for Good  API provides its output in the following formats:</p>
 <ul>
   <li><em>RSS</em> - A machine-readable format that is currently recommended for all  uses other than debugging. You can specify this setting by appending the API call with: <code>&amp;output=rss</code></li>
   <li><em>HTML</em> - A  human-readable format that's currently dedicated to debugging. This is the default and will appear whenever you load the API without the output parameter and can be manually set with: <code>&amp;output=html</code></li>
 </ul>
-<p>In addition, many more output formats are planned, including XML (FPXML), xSV (comma, tab, etc. separated values) and more. Ask <a href="mailto:footprint-eng@googlegroups.com">us</a> and we'll quickly provide them. Return to this page or visit the <a href="http://code.google.com/p/footprint2009dev/">Footprint project site</a> for <a href="http://code.google.com/p/footprint2009dev/updates/list">updates</a>.</p>
+<p>In addition, many more output formats are planned, including XML (FPXML), xSV (comma, tab, etc. separated values) and more. Ask <a href="mailto:footprint-eng@googlegroups.com">us</a> and we'll quickly provide them. Return to this page or visit the <a href="http://code.google.com/p/footprint2009dev/">All for Good (Footprint) project site</a> for <a href="http://code.google.com/p/footprint2009dev/updates/list">updates</a>.</p>
 <h2 id="Fields">Output fields</h2>
 <p>Generally, the output fields correspond to the input fields found in FPXML (see the <a href="#Elements">Elements</a> section), with a few extra fields:</p>
 <ul>
   <li><em>quality_score</em> - Internally, we score each record using heuristics to predict what will be popular with users, then use this for ranking.  This field contains that value, between 0.0 and 1.0</li>
-  <li><em>pageviews</em> - Whenever possible, trusted clients report to Footprint the number of pageviews from each listing.  This value is the total lifetime pageviews for this listing.</li>
+  <li><em>pageviews</em> - Whenever possible, trusted clients report to All for Good the number of pageviews from each listing.  This value is the total lifetime pageviews for this listing.</li>
 </ul>
 <h2 id="Examples">Examples</h2>
-<p>Here are some example queries made against the Footprint  API to help you see how the API works. We've appended <code>&amp;output=rss</code> to each query to get machine-readable output.</p>
+<p>Here are some example queries made against the All for Good  API to help you see how the API works. We've appended <code>&amp;output=rss</code> to each query to get machine-readable output.</p>
 <p>Listings near San Francisco:<br />
-  <a href="http://servicefootprint.appspot.com/api/volopps?vol_loc=San+Francisco,CA&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?vol_loc=San+Francisco,CA&amp;output=rss</a><br />
+  <a href="http://www.allforgood.org/api/volopps?vol_loc=San+Francisco,CA&amp;output=rss">http://www.allforgood.org/api/volopps?vol_loc=San+Francisco,CA&amp;output=rss</a><br />
   </p>
 <p>Listings within 10 miles of 94703:<br />
-<a href="http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_loc=94703&amp;vol_dist=10&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_loc=94703&amp;vol_dist=10&amp;output=rss</a></p>
+<a href="http://www.allforgood.org/api/volopps?q=park&amp;vol_loc=94703&amp;vol_dist=10&amp;output=rss">http://www.allforgood.org/api/volopps?q=park&amp;vol_loc=94703&amp;vol_dist=10&amp;output=rss</a></p>
 <p>Listings near a particular latitude and longitude:<br />
-  <a href="http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_loc=37.8524741,-122.2738958&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_loc=37.8524741,-122.2738958&amp;output=rss</a></p>
+  <a href="http://www.allforgood.org/api/volopps?q=park&amp;vol_loc=37.8524741,-122.2738958&amp;output=rss">http://www.allforgood.org/api/volopps?q=park&amp;vol_loc=37.8524741,-122.2738958&amp;output=rss</a></p>
 <p>Up to 50 listings containing the term &quot;park&quot;:<br />
-  <a href="http://servicefootprint.appspot.com/api/volopps?q=park&amp;num=50&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?q=park&amp;num=50&amp;output=rss</a></p>
+  <a href="http://www.allforgood.org/api/volopps?q=park&amp;num=50&amp;output=rss">http://www.allforgood.org/api/volopps?q=park&amp;num=50&amp;output=rss</a></p>
 <p>Park listings starting May 10th or later:<br />
-<a href="http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_startdate=2009-05-10&amp;output=rss">http://servicefootprint.appspot.com/api/volopps?q=park&amp;vol_startdate=2009-05-10&amp;output=rss</a></p>
-<p>And here is an example of a Footprint query called from a program, this one written in Java:</p>
+<a href="http://www.allforgood.org/api/volopps?q=park&amp;vol_startdate=2009-05-10&amp;output=rss">http://www.allforgood.org/api/volopps?q=park&amp;vol_startdate=2009-05-10&amp;output=rss</a></p>
+<p>And here is an example of an All for Good query called from a program, this one written in Java:</p>
 <pre>
 URLConnection connection;
 URL url = new URL
-     &quot;http://footprint2009dev.appspot.com/api/volopps?output=rss&amp;vol_loc=&quot; +
+     &quot;http://www.allforgood.org/api/volopps?output=rss&amp;vol_loc=&quot; +
      location);
 connection = url.openConnection();
 connection.connect();
 InputStream stream = connection.getInputStream();</pre>
 <h2 id="Elements">Elements</h2>
-<p>Footprint stores one record per location, i.e. if an event has multiple locations, there's one record per location.  Likewise, for repeated events, we store one record per time range. These elements are described in the Footprint XML specification for data received from providers here:<br />
+<p>All for Good stores one record per location, i.e. if an event has multiple locations, there's one record per location.  Likewise, for repeated events, we store one record per time range. These elements are described in the All for Good XML specification for data received from providers here:<br />
   <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd">http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.xsd</a><br />
 <a href="http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html">http://code.google.com/p/footprint2009dev/source/browse/trunk/spec/spec0.1.html</a><br />
 </p>
@@ -162,6 +161,5 @@ InputStream stream = connection.getInputStream();</pre>
   <li><em>caching results</em> - Yes, you may cache results for at least 1 hour.  Please contact us if you want to cache for longer.</li>
   <li><em>HTTP compressed output</em> - We can probably add this if you need-- please ask and explain why.</li>
 </ul>
-<p><a href="index.html">Return to Help index</a></p>
 </body>
 </html>
