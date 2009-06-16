@@ -1,5 +1,12 @@
 indexes:
 
+# Used to sort Liked interests by most-recent first
+- kind: UserInterest
+  properties:
+  - name: user
+  - name: liked_last_modified
+    direction: desc
+
 # Used for testapi datastore query
 - kind: TestResults
   properties:
