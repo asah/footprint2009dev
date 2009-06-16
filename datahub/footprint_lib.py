@@ -823,7 +823,7 @@ def guess_shortname(filename):
     return "volunteertwo"
   if re.search("mentorpro", filename):
     return "mentorpro"
-  if re.search("mpsg_feed", filename):
+  if re.search("(mpsg_feed|myproj_servegov)", filename):
     return "myproj_servegov"
   return ""
 
