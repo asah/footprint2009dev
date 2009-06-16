@@ -289,13 +289,25 @@ function onLoadSearch() {
 
 /** Asynchronously execute a search based on the current parameters.
  */
-executeSearchFromHashParams = function() {
+executeSearchFromHashParams = function(currentLocation) {
   /** The XMLHttpRequest of the current search, kept so it can be cancelled.
    * @type {XMLHttpRequest}
    */
   var currentXhr;
 
-  return function() {
+  return function(currentLocation) {
+    // Try to avoid the annoyance of a useless extra click on Back button.
+    // TODO(timman): Find a cleaner way to determine first-rewrite.
+    if (typeof currentLocation == 'string') {
+      // Duck-type our programmatically expanded (rewritten) query string.
+      if (currentLocation.indexOf('timeperiod') == -1 &&
+          currentLocation.indexOf('num=') == -1) {
+        // We have identified this location as being a fragmentary initial
+        // location such as "q=Education&vol_loc=90815", so we skip past it.
+        window.history.go(-1);
+      }
+    }
+
     // abort any currently running query
     if (currentXhr) {
       currentXhr.abort();
