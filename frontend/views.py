@@ -80,7 +80,7 @@ DEFAULT_NUM_RESULTS = 10
 # Register custom Django templates
 template.register_template_library('templatetags.comparisonfilters')
 template.register_template_library('templatetags.stringutils')
-template.register_template_library('templatetags.dateutils')
+template.register_template_library('templatetags.dateutils_tags')
 
 
 # TODO: not safe vs. spammers to checkin... but in our design,
