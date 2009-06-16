@@ -36,8 +36,11 @@ def get_user_interests(user, remove_no_interest):
     user_info = user.get_user_info()
     # Note: If we want a limit, tack "fetch(nnn)" on the end of the query.
     # Also note the descending order, most-recent-first.
-    interests = models.UserInterest.all().filter('user = ', user_info)\
-                .order('-liked_last_modified')
+
+    # TODO: Make liked_last_modified work (complains about missing index)
+    #interests = models.UserInterest.all().filter('user = ', user_info)\
+    #            .order('-liked_last_modified')
+    interests = models.UserInterest.all().filter('user = ', user_info)
 
     ordered_event_ids = []
     for interest in interests:
