@@ -25,14 +25,16 @@ import os
 import logging
 import private_keys
 
-PRODUCTION_DOMAIN = 'allforgood.org'
+PRODUCTION_DOMAINS = ['allforgood.org', 'footprint2009qa.appspot.com']
 
+# pylint: disable-msg=C0301
 MAPS_API_KEYS = {
-  'www.allforgood.org' : 'ABQIAAAAHtEBbyenR4BaYGl54_p0fRQu5fCZl1K7T-61hQb7PrEsg72lpRQbhbBcd0325oSLzGUQxP7Nz9Rquw',
-  'unknown_what_is_this' : 'ABQIAAAAHtEBbyenR4BaYGl54_p0fRRlOb26qSyU154aZeLwOrF4C7-DphT-k84KU2QtDbk5G77Rqt1x2njBTQ',
+  'allforgood.org' : 'ABQIAAAAHtEBbyenR4BaYGl54_p0fRQu5fCZl1K7T-61hQb7PrEsg72lpRQbhbBcd0325oSLzGUQxP7Nz9Rquw',
+  'footprint2009qa.appspot.com' : 'ABQIAAAA1sNtdnui_8Lmt75VBAosOhRSEEb9tdSIuCkRNLnpLNbLMSh74BRy7tIEe3Z6GgLCRLUFTTQ45vQ3mg',
   'footprint-loadtest.appspot.com' : 'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxSWKH9akPVZO-6F_G0PvWoeHNZVdRSifDQCrd-osJFuWDqR3Oh0nKDgbw',
   'footprint2009dev.appspot.com' : 'ABQIAAAAxq97AW0x5_CNgn6-nLxSrxTpeCj-9ism2i6Mt7fLlVoN6HsfDBSOZjcyagWjKTMT32rzg71rFenopA'
 }
+# pylint: enable-msg=C0301
 
 # Google Analytics keys - only needed for dev, qa, and production
 # we don't want to track in other instances
@@ -41,20 +43,31 @@ GA_KEYS = {
   'footprint2009dev.appspot.com' : 'UA-8689219-3'
 }
 
-FACEBOOK_API_KEYS = {}
-
 # These are the public Facebook API keys.
-DEFAULT_FACEBOOK_KEY = 'df68a40a4a90d4495ed03f920f16c333'
-PRODUCTION_FACEBOOK_KEY = '628524bbaf79da8a8a478e5ef49fb84f'
+DEFAULT_FACEBOOK_API_KEY = 'df68a40a4a90d4495ed03f920f16c333'
+FACEBOOK_API_KEYS = {
+  'allforgood.org': '628524bbaf79da8a8a478e5ef49fb84f',
+  'footprint2009qa.appspot.com': '213e79302371015635ab5707d691143f'
+}
 
-FACEBOOK_KEY = None
-FACEBOOK_SECRET_KEY = None
+FACEBOOK_API_KEY = None
+FACEBOOK_SECRET = None
 MAPS_API_KEY = None
+GA_KEY = None
+
+def host_sans_www():
+  """Return the host name without any leading 'www.'"""
+  http_host = os.environ.get('HTTP_HOST')
+  
+  # Remove www. at the beginning if it's there
+  if (http_host[:4]=='www.'):
+    http_host = http_host[4:]
+
+  return http_host
 
 def is_production_site():
   """is this a production instance?"""
-  http_host = os.environ.get('HTTP_HOST')
-  return (http_host[-len(PRODUCTION_DOMAIN):] == PRODUCTION_DOMAIN)
+  return host_sans_www() in PRODUCTION_DOMAINS
 
 def is_local_development():
   """is this running on a development server (and not appspot.com)"""
@@ -62,8 +75,8 @@ def is_local_development():
 
 def load_keys():
   """load facebook, maps, etc. keys."""
-  global FACEBOOK_KEY, MAPS_API_KEY, FACEBOOK_SECRET_KEY, GA_KEY
-  if FACEBOOK_KEY or MAPS_API_KEY or FACEBOOK_SECRET_KEY:
+  global FACEBOOK_API_KEY, FACEBOOK_SECRET, GA_KEY, MAPS_API_KEY
+  if FACEBOOK_API_KEY or MAPS_API_KEY or FACEBOOK_SECRET or GA_KEY:
     return
 
   if is_local_development():
@@ -74,45 +87,40 @@ def load_keys():
     except:
       logging.info("local_keys.MAPS_API_KEYS not defined")
     try:
-      FACEOOK_API_KEYS.update(local_keys.FACEOOK_API_KEYS)
+      FACEBOOK_API_KEYS.update(local_keys.FACEOOK_API_KEYS)
     except:
       logging.info("local_keys.FACEBOOK_API_KEYS not defined")
 
   # no default for maps api-- has to match
-  http_host = os.environ.get('HTTP_HOST')
+  http_host = host_sans_www()
   MAPS_API_KEY = MAPS_API_KEYS.get(http_host, 'unknown')
-  logging.debug("host="+http_host+"  maps api key="+MAPS_API_KEY)
+  logging.debug("host=" + http_host + "  maps api key=" + MAPS_API_KEY)
 
   # no default for ga key
   GA_KEY = GA_KEYS.get(http_host, 'unknown')
-  logging.debug("host="+http_host+"  ga key="+GA_KEY)
+  logging.debug("host=" + http_host + "  ga key=" + GA_KEY)
 
   # facebook API has default key
-  if is_production_site():
-    FACEBOOK_KEY = FACEBOOK_API_KEYS[PRODUCTION_DOMAIN]
-  else:
-    FACEBOOK_KEY = FACEBOOK_API_KEYS.get(http_host, DEFAULT_FACEBOOK_KEY) 
-  logging.debug("host="+http_host+"  facebook key="+FACEBOOK_KEY)
+  FACEBOOK_API_KEY = FACEBOOK_API_KEYS.get(http_host, DEFAULT_FACEBOOK_API_KEY)
+  logging.debug("host=" + http_host + "  facebook key=" + FACEBOOK_API_KEY)
 
   # facebook secret keys are a special case
-  if is_production_site():
-    FACEBOOK_SECRET_KEY = private_keys.PRODUCTION_FACEBOOK_SECRET
-  else:
-    FACEBOOK_SECRET_KEY = private_keys.DEFAULT_FACEBOOK_SECRET
+  FACEBOOK_SECRET = private_keys.FACEBOOK_SECRETS.get(http_host, 
+    private_keys.DEFAULT_FACEBOOK_SECRET)
 
 def load_standard_template_values(template_values):
   """set template_values[...] for various keys"""
   load_keys()
   template_values['maps_api_key'] = MAPS_API_KEY
-  template_values['facebook_key'] = FACEBOOK_KEY
+  template_values['facebook_key'] = FACEBOOK_API_KEY
   template_values['ga_key'] = GA_KEY
 
 def get_facebook_secret():
-  """returns the facebook secret key"""
+  """Returns the facebook secret key"""
   load_keys()
-  return FACEBOOK_SECRET_KEY
+  return FACEBOOK_SECRET
 
 def get_facebook_key():
-  """returns the facebook public key"""
+  """Returns the facebook public key"""
   load_keys()
-  return FACEBOOK_KEY
+  return FACEBOOK_API_KEY
