@@ -61,6 +61,7 @@ def score_results_set(result_set, args):
     end_delta = res.enddate - datetime.now()
     end_delta_secs = end_delta.days*ONEDAY + end_delta.seconds
     end_delta_secs = min(max(end_delta_secs, start_delta_secs), MAXTIME)
+    date_dist_multiplier = 1
     if end_delta_secs <= 0:
       date_dist_multiplier = .0001
     if start_delta_secs > 0:
