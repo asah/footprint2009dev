@@ -787,7 +787,7 @@ def guess_shortname(filename):
     return "usaservice"
   if re.search(r'meetup', filename):
     return "meetup"
-  if re.search(r'barackobama[.]com', filename):
+  if re.search(r'barackobama', filename):
     return "mybarackobama"
   if re.search(r'united.*way', filename):
     return "unitedway"
