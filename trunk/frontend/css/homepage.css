@@ -43,12 +43,8 @@
   width: 325px;
 }
 
-#location_subheader {
-  font-size: 15px;
-}
-
-#location_text_prefixed {
-  font-weight: bold;
+#location_subheader, #location_text_prefixed, #location_text {
+  font-size: 13px;
 }
 
 #location_message {
