@@ -823,6 +823,8 @@ def guess_shortname(filename):
     return "volunteertwo"
   if re.search("mentorpro", filename):
     return "mentorpro"
+  if re.search("mpsg_feed", filename):
+    return "myproj_servegov"
   return ""
 
 def ftp_to_base(filename, ftpinfo, instr):
@@ -881,7 +883,7 @@ def guess_parse_func(inputfmt, filename):
   # FPXML providers
   if shortname in ["unitedway", "mybarackobama", "handsonnetwork",
                    "volunteergov", "americansolutions", "idealist",
-                   "extraordinaries", "meetup"]:
+                   "extraordinaries", "meetup", "volunteermatch"]:
     # TODO: assign IDs using a closure
     # http://code.google.com/p/footprint2009dev/issues/detail?id=117
     return "fpxml", parse_footprint.parse
@@ -917,6 +919,11 @@ def guess_parse_func(inputfmt, filename):
       '114', 'servenet', 'servenet', 'http://www.servenet.org/',
       'servenet')
 
+  if shortname == "myproj_servegov":
+    return "nfg", nfg.parser(
+      '120', 'myproj_servegov', 'myproj_servegov',
+      'http://myproject.serve.gov/', 'MyprojectServeGov')
+
   # custom formats
   if shortname == "gspreadsheet":
     return "gspreadsheet", parse_gspreadsheet.parse
@@ -937,10 +944,9 @@ def guess_parse_func(inputfmt, filename):
       return parse_footprint.parse_fast(newstr, maxrecs, progress)
     return "habitat", parse_habitat
 
-  if shortname == "volunteermatch" or shortname == "vm":
-    return "volunteermatch", parse_volunteermatch.parse
-
   # legacy-- to be safe, remove after 9/1/2009
+  #if shortname == "volunteermatch" or shortname == "vm":
+  #  return "volunteermatch", parse_volunteermatch.parse
   #if shortname == "idealist":
   #  return "idealist", parse_idealist.parse
 
