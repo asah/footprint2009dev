@@ -139,7 +139,7 @@ form {
 input#keywords, input#location {
   height: 16px;
   padding: 2px 0;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 input#keywords { width: 284px; }
