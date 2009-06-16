@@ -40,7 +40,8 @@ MAPS_API_KEYS = {
 # we don't want to track in other instances
 GA_KEYS = {
   'www.allforgood.org' : 'UA-8689219-2',
-  'footprint2009dev.appspot.com' : 'UA-8689219-3'
+  'footprint2009dev.appspot.com' : 'UA-8689219-3',
+  'footprint2009qa.appspot.com' : 'UA-8689219-4'
 }
 
 # These are the public Facebook API keys.
