@@ -146,7 +146,7 @@ addthis.button('#share_{{forloop.counter0}}', { username: "footprint2009dev", se
 <script>
 if (false) {
   el('debug_snippets').style.display = '';
-  el('debug_snippets').innerHTML = "DEBUG INFO:<br> FP query=<a href='{{ view_url }}'>{{ view_url|escape }}</a><br> Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded|escape }}</a><br> num results: backend-estimated={{result_set.estimated_results|escape}}  merged-estimated={{result_set.estimated_merged_results|escape}}  backend={{result_set.num_results|escape}}   merged={{result_set.num_merged_results|escape}}";
+  el('debug_snippets').innerHTML = "DEBUG INFO:<br> FP query=<a href='{{ view_url }}'>{{ view_url|escape }}<\/a><br> Base query= <a href='{{ result_set.query_url_encoded }}'>{{ result_set.query_url_unencoded|escape }}<\/a><br> num results: backend-estimated={{result_set.estimated_results|escape}}  merged-estimated={{result_set.estimated_merged_results|escape}}  backend={{result_set.num_results|escape}}   merged={{result_set.num_merged_results|escape}}";
 }
 </script>
 
