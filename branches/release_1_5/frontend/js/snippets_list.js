@@ -231,11 +231,13 @@ function updateInterestInfoDisplay(resultIndex) {
       html += ' and ';
       html += nameList[nameList.length - 1];
     }
-    /* add "like(s) this" with proper plurality */
-    if (result.totalInterestCount==1) {
+    /* add "like this" with proper plurality */
+    if (result.totalInterestCount==1) && (!result.liked) {
+      /* "Mary likes this", "1 other likes this" */
       html += ' like this';
-    } else if (result.totalInterestCount > 1) {
-      html += ' likes this';      
+    } else {
+      /* "Bob and Jane like this", "You like this", "2 others like this" */
+      html += ' like this';
     }
   }
 
