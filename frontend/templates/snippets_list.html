@@ -44,9 +44,12 @@
 
 {% for result in result_set.clipped_results %}
   <div class='snippet'>
-    <div class='snippet_number'>{{ forloop.counter0|as_letter }}</div>
-    <table>
+    <table class='snippet_table'>
     <tr>
+    <td valign='top' class='snippet_number'>
+      {{ forloop.counter0|as_letter }}
+    </td>
+
     <td valign='top'>
     <div>
       {# TODO(paul): ESCAPE THE LOCATION FIELD AGAINST QUOTES #}
@@ -125,10 +128,11 @@ addthis.button('#share_{{forloop.counter0}}', { username: "footprint2009dev", se
 
       </div>
 
-      {% if not forloop.last %}
-      <div class='snippet_bottom_border'></div>
-      {% endif %}
     </div>
+
+    {% if not forloop.last %}
+    <div class='snippet_bottom_border'></div>
+    {% endif %}
 
     </td>
     </tr>

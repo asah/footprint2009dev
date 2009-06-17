@@ -134,6 +134,7 @@ form {
 
 .search_button {
   height: 26px;
+  width: 30px;
 }
 
 input#keywords, input#location {
@@ -146,6 +147,10 @@ input#keywords { width: 284px; }
 input#location { width: 180px; }
 
 /** Search results page **/
+
+.snippet_table {
+  width: 100%;
+}
 
 .snippet {
   margin-bottom: 10px;
@@ -466,14 +471,11 @@ h1 {
 }
 
 .snippet_number {
-  padding-top: 3px;  /* Fix misalignment with table */
   font-size: 16px;
   color: #666;
   font-weight: bold;
-  float: left;
   margin-right: 8px;
   width: 1em;
-  text-align: right;
 }
 
 .undo_link {
