@@ -232,7 +232,7 @@ function updateInterestInfoDisplay(resultIndex) {
       html += nameList[nameList.length - 1];
     }
     /* add "like this" with proper plurality */
-    if (result.totalInterestCount==1) && (!result.liked) {
+    if ((result.totalInterestCount==1) && (!result.liked)) {
       /* "Mary likes this", "1 other likes this" */
       html += ' like this';
     } else {
