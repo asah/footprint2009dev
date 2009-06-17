@@ -480,7 +480,7 @@ class ui_my_snippets_view(webapp.RequestHandler):
       # displayed in the snippets template.
       my_events_gbase_result_set = base_search.get_from_ids(ordered_event_ids)
       for result in my_events_gbase_result_set.results:
-        result.interest = my_interests[result.item_id]
+        result.interest = my_interests.get(result.item_id, 0)
 
       search.normalize_query_values(unique_args)
       start = unique_args[api.PARAM_START]
