@@ -378,8 +378,8 @@ def get_abstract(opp):
   abstract = xmlh.get_tag_val(opp, "abstract")
   if abstract == "":
     abstract = xmlh.get_tag_val(opp, "description")
-  abstract = abstract[:MAX_ABSTRACT_LEN]
-  return cleanse_snippet(abstract)
+  abstract = cleanse_snippet(abstract)
+  return abstract[:MAX_ABSTRACT_LEN]
 
 def get_direct_mapped_fields(opp, org):
   """map a field directly from FPXML to Google Base."""
@@ -434,6 +434,10 @@ def get_base_other_fields(opp, org):
 
 sent_start_rx = re.compile(r'((^\s*|[.]\s+)[A-Z])([A-Z0-9 ,;-]{13,})')
 def cleanse_snippet(instr):
+  # convert known XML/XHTML chars
+  instr = re.sub(r'&nbsp;', ' ', instr)
+  instr = re.sub(r'&quot;', '"', instr)
+  instr = re.sub(r'&(uml|middot|ndash|bull|mdash|hellip);', '-', instr)
   # strip \n and \b
   instr = re.sub(r'(\\[bn])+', ' ', instr)
   # doubly-escaped HTML
@@ -441,12 +445,14 @@ def cleanse_snippet(instr):
   instr = re.sub(r'&(amp;)+([a-z]+);', r'&\2;', instr)
   instr = re.sub(r'&amp;#\d+;', '', instr)
   # singly-escaped HTML
-  instr = re.sub(r'&lt;/?[a-zA-Z]+?&gt;', '', instr)
-  instr = re.sub(r'&nbsp;', ' ', instr)
-  instr = re.sub(r'&quot;', '"', instr)
-  instr = re.sub(r'&(uml|middot|ndash|bull|mdash|hellip);', '-', instr)
+  # </p>, <br/>
+  instr = re.sub(r'&lt;/?[a-zA-Z]+?/?&gt;', '', instr)
+  # <a href=...>, <font ...>
+  instr = re.sub(r'&lt;?(font|a|p|img)[^&]*/?&gt;', '', instr, re.IGNORECASE)
   # strip leftover XML escaped chars
   instr = re.sub(r'&([a-z]+|#[0-9]+);', '', instr)
+  # strip repeated spaces, so maxlen works
+  instr = re.sub(r'\s+', ' ', instr)
 
   # fix obnoxious all caps titles and snippets
   for str in re.finditer(sent_start_rx, instr):
@@ -815,7 +821,10 @@ def guess_shortname(filename):
     return "mlk_day"
   if re.search("servenet", filename):
     return "servenet"
-  if re.search("volunteermatch", filename):
+  if re.search(r'(seniorcorps|985148b9e3c5b9523ed96c33de482e3d)', filename):
+    # note: has to come before volunteermatch
+    return "seniorcorps"
+  if re.search(r'(volunteermatch|cfef12bf527d2ec1acccba6c4c159687)', filename):
     return "volunteermatch"
   if re.search("christianvol", filename):
     return "christianvolunteering"
@@ -823,7 +832,7 @@ def guess_shortname(filename):
     return "volunteertwo"
   if re.search("mentorpro", filename):
     return "mentorpro"
-  if re.search("(mpsg_feed|myproj_servegov)", filename):
+  if re.search(r'(mpsg_feed|myproj_servegov)', filename):
     return "myproj_servegov"
   return ""
 
@@ -924,6 +933,11 @@ def guess_parse_func(inputfmt, filename):
       '120', 'myproj_servegov', 'myproj_servegov',
       'http://myproject.serve.gov/', 'MyprojectServeGov')
 
+  if shortname == "seniorcorps":
+    return "nfg", nfg.parser(
+      '121', 'seniorcorps', 'seniorcorps',
+      'http://www.seniorcorps.gov/', 'SeniorCorps')
+
   # custom formats
   if shortname == "gspreadsheet":
     return "gspreadsheet", parse_gspreadsheet.parse
@@ -971,8 +985,6 @@ def clean_input_string(instr):
   cleaning_progress("filtered iso8859-1 dashes")
   instr = xmlh.clean_string(instr)
   cleaning_progress("filtered nonprintables")
-  instr = re.sub(r'&[a-z]+;', '', instr)
-  cleaning_progress("filtered weird X/HTML escapes")
   return instr
 
 def parse_options():
