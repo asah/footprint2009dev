@@ -648,6 +648,23 @@ function isCancel(event) {
 }
 
 /**
+ * Validate whether the suggested theme path is allowed.
+ *
+ * @param string path to validate
+ * @return valid path or empty string
+ */
+function validThemePath(pathToCheck) {
+  if (pathToCheck.match(/^http:\/\/footprint2009dev.googlecode.com\/svn\/[a-zA-Z0-9/_-]+?\/frontend\/html\/gadget$/)) {
+    return pathToCheck;
+  }
+  if (pathToCheck.match(/^http:\/\/([^\/]*[.])?mtvn?[.]com\/.+$/)) {
+    return pathToCheck;
+  }
+  
+  return '';
+}
+
+/**
  * Function to handle custom theme.
  * 
  */
@@ -658,6 +675,8 @@ function handleTheme() {
   var goButton = _gel('afg-go-button');
   var head = document.getElementsByTagName('head')[0];
   var body = document.getElementsByTagName('body')[0];
+  
+  themePath = validThemePath(themePath);
   if (themePath) {
     var linkElement = document.createElement('link');
     linkElement.id = 'theme-link';
