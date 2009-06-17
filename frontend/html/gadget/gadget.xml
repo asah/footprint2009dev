@@ -434,7 +434,7 @@ function loading() {
   var html = [
     '<div id="afg-loading-container" style="',
     'margin:50px 0;height:', height - 100, 'px;">',
-    '<img src="http://www.google.com/ig/images/spinner.gif" />',
+    '<img src="/ig/proxy?url=http://www.google.com/ig/images/spinner.gif" />',
     '<div>', prefs.getMsg('loading'), '</div></div>'
   ];
   element.innerHTML = html.join('');
@@ -680,15 +680,24 @@ function handleTheme() {
   if (themePath) {
     var linkElement = document.createElement('link');
     linkElement.id = 'theme-link';
-    linkElement.href = themePath + '/style.css';
+    linkElement.href = '/ig/proxy?url=' + themePath + '/style.css';
     linkElement.rel = 'stylesheet';
     head.appendChild(linkElement);
-    searchButton.src = themePath + '/search.gif';
-    embedButton.src = themePath + '/embed.gif';
-    goButton.src = themePath + '/go.gif';
+    searchButton.src = '/ig/proxy?url=' + themePath + '/search.gif';
+    embedButton.src = '/ig/proxy?url=' + themePath + '/embed.gif';
+    goButton.src = '/ig/proxy?url=' + themePath + '/go.gif';
     body.className += ' site-theme';
   } else {
-    // Nothing to do right now.
+    themePath = 'http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme';
+    
+    var linkElement = document.createElement('link');
+    linkElement.id = 'theme-link';
+    linkElement.href = '/ig/proxy?url=' + themePath + '/style.css';
+    linkElement.rel = 'stylesheet';
+    head.appendChild(linkElement);
+    searchButton.src = '/ig/proxy?url=' + themePath + '/search.gif';
+    embedButton.src = '/ig/proxy?url=' + themePath + '/embed.gif';
+    goButton.src = '/ig/proxy?url=' + themePath + '/go.gif';
     body.className += ' default-theme';
   }
 }
@@ -723,7 +732,7 @@ _IG_RegisterOnloadHandler(init);
     <div id="afg-branding-region">
       <div id="afg-branding-btn">
         <img id="afg-search-button" alt="__MSG_search__" title="__MSG_search__" class="afg-search-button"
-            src="http://developer.gadget.googlepages.com/search.gif" onerror="this.src='http://developer.gadget.googlepages.com/search.gif'"
+            src="/ig/proxy?url=http://developer.gadget.googlepages.com/search.gif" onerror="this.src='http://developer.gadget.googlepages.com/search.gif'"
             onclick="showHideElement('afg-search-region-home','block', 'afg-search-text'); return false;">
       </div>
       <h2 id="afg-branding-title"></h2>
@@ -741,13 +750,13 @@ _IG_RegisterOnloadHandler(init);
           <input type="hidden" name="url"
               value="http://footprint2009dev.appspot.com/gadget/gadget.xml"/>
           <input type="image" title="__MSG_embed__" class="afg-embed-button" id="afg-embed-button"
-              style="cursor:pointer;" src="http://developer.gadget.googlepages.com/embed.gif" onerror="this.src='http://developer.gadget.googlepages.com/embed.gif'"/>
+              style="cursor:pointer;" src="/ig/proxy?url=http://developer.gadget.googlepages.com/embed.gif" onerror="this.src='http://developer.gadget.googlepages.com/embed.gif'"/>
         </form>
       </div>
       <a id="branding-logo" class="image-cropper" target="_blank"
           href="http://www.allforgood.org">
         <div>
-          <img src="http://developer.gadget.googlepages.com/logo.gif"
+          <img src="/ig/proxy?url=http://developer.gadget.googlepages.com/logo.gif"
               alt="__MSG_brand_title__" title="__MSG_brand_title__" />
         </div>
       </a>
@@ -760,7 +769,7 @@ _IG_RegisterOnloadHandler(init);
       <form name="frmSearch" action="#" onsubmit="search();showHideElement('afg-search-region-home','none');return false;">
         <input name="searchText" id="afg-search-text" type="text" onkeyup="isCancel(event);" autocomplete="off" />
         <input id="afg-go-button" class="afg-go-button" alt="__MSG_go__" title="__MSG_go__" type="image"
-            src="http://developer.gadget.googlepages.com/go.gif" onerror="this.src='http://developer.gadget.googlepages.com/go.gif'"/>
+            src="/ig/proxy?url=http://developer.gadget.googlepages.com/go.gif" onerror="this.src='http://developer.gadget.googlepages.com/go.gif'"/>
       </form>
     </div>
   </div>
