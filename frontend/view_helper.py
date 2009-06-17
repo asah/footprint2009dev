@@ -136,8 +136,8 @@ def get_friends_data_for_snippets(user_info):
   friend_opp_count = {}
   friends_by_event_id = {}
   for friend in friends:
-    friend_event_ids = get_user_interests(friend, True)
-    for event_id in friend_event_ids:
+    dict = get_user_interests(friend, True)
+    for event_id in dict['interests']:
       count = friend_opp_count.get(event_id, 0)
       friend_opp_count[event_id] = count + 1
       uids = friends_by_event_id.get(event_id, [])
