@@ -329,6 +329,7 @@ def loaders():
   load_gbase("mentorpro", "mentorpro.xml")
   load_gbase("christianvolunteering", "christianvolunteering.xml")
   load_gbase("volunteertwo", "volunteertwo.xml")
+  load_gbase("seniorcorps", "seniorcorps.xml")
 
   # requires special crawling
   load_gbase("gspreadsheets",
