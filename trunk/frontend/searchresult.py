@@ -51,6 +51,14 @@ def js_escape(string):
 class SearchResult(object):
   """class to hold the results of a search to the backend."""
   def __init__(self, url, title, snippet, location, item_id, base_url):
+    # TODO: HACK: workaround for issue 404-- broken servegov links
+    # hack added here so the urlsig's come out correctly and the fix
+    # applies everywhere including xml_url, API calls, etc.
+    url = re.sub(
+      # regexp written to be very specific to myproject.serve.gov
+      # and not break once the feed changes
+      r'(myproject[.]serve[.]gov.+?)subProjectId', r'\1&subProjectId', url)
+    
     # TODO: Consider using kwargs or something to make this more generic.
     self.url = url
     self.url_sig = None
