@@ -144,6 +144,14 @@ class SearchResultSet(object):
     self.pubdate = get_rfc2822_datetime()
     self.last_build_date = self.pubdate
 
+  def append_results(self, results):
+    """append a results arry to this results set and rerun dedup()"""
+    self.num_results = len(self.results) + len(results.results)
+    self.results.extend(results.results)
+    self.merged_results = []
+    self.clipped_results = []
+    self.dedup()
+
   def clip_set(self, start, num, result_set):
     """Extract just the slice of merged results from start to start+num.
     No need for bounds-checking -- python list slicing does that
