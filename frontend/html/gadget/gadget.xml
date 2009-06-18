@@ -5,15 +5,15 @@
                width="250"
                height="361"
                author="All For Good"
-               screenshot="http://developer.gadget.googlepages.com/allforgood.PNG"
-               thumbnail="http://developer.gadget.googlepages.com/allforgood.PNG"
+               screenshot="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/afg.png"
+               thumbnail="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/afg-thm.png"
                author_email="developer.gadget@google.com">
     <Require feature="setprefs" />
     <Require feature="dynamic-height" />
     <Require feature="views" />
     <Locale lang="en"
-            messages="http://developer.gadget.googlepages.com/en_ALL1.6.xml" />
-    <Locale messages="http://developer.gadget.googlepages.com/en_ALL1.6.xml" />
+            messages="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/afg_en_ALL.xml" />
+    <Locale messages="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/afg_en_ALL.xml" />
   </ModulePrefs>
   <UserPref name="storiesToRead"
             display_name="__MSG_stories_to_read__"
@@ -32,7 +32,11 @@
             default_value="" />
   <UserPref name="prefLocation"
             display_name="__MSG_default_location__"
-            default_value="__MSG_default_location_value__" />
+            default_value="" />
+  <UserPref name="preferredKeywords"
+            display_name="__MSG_preferred_keywords__"
+            default_value="" />
+  <UserPref name="searchText" datatype="hidden" default_value="" />
 <Content type="html" view="home">
 <![CDATA[
 <style type="text/css">
@@ -70,7 +74,6 @@ p,
 a,
 span { line-height: 130%; }
 form { text-align: center; }
-form input { vertical-align: middle; }
 a,
 a:link,
 a:visited {
@@ -103,11 +106,11 @@ a:hover {
 /* Modal popup. */
 .afg-mask {
   background-color: #666;
-  filter: alpha(opacity=50);
+  filter: alpha(opacity=80);
   height: 100%;
-  opacity: 0.5;
+  opacity: 0.8;
   width: 100%;
-  -moz-opacity: 0.5;
+  -moz-opacity: 0.8;
 }
 .afg-mask,
 .afg-dialog {
@@ -146,14 +149,15 @@ a:hover {
   margin-right: 50px;
 }
 #afg-gadget-dialog {
-  margin: 60px 5% 0 5%;
+  margin: 33px 5% 0 5%;
   width: 90%;
+  text-align: center;
 }
 /* Modal popup content. */
-#afg-search-text {
+.afg-text {
   height: 2em;
   padding: 0.25em 0;
-  width: 75%;
+  width: 100%;
 }
 .afg-gobutton { margin-left: 10px; }
 /* Pagination. */
@@ -171,6 +175,7 @@ a:hover {
 #branding-logo {
   height: 21px;
   width: 160px;
+  float: left;
 }
 #branding-logo img { height: 21px; }
 
@@ -179,26 +184,28 @@ a:hover {
   text-align: center;
   width: 100%;
 }
-/*
-While using these style sheet use src = '/c.gif'
-.afg-search-button {
-  background: transparent url('http://gadget.js.googlepages.com/search.png') no-repeat scroll 50% 50%;
-  height: 23px;
-  width: 32px;
+
+.afg-popup-link,
+.afg-popup-link:link,
+.afg-popup-link:visited,
+.afg-popup-link:hover {
+  color: #fff;
 }
-.afg-embed-button {
-  background: transparent url('http://gadget.js.googlepages.com/embed.png') no-repeat scroll 50% 50%;
-  height: 21px;
-  width: 55px;
+#header-links li{
+  float: left;
+  padding-right: 10px;
 }
-.afg-go-button {
-  background: transparent url('http://gadget.js.googlepages.com/go.png') no-repeat scroll 50% 50%;
-  height: 25px;
-  width: 43px;
+
+#header-links a,
+#header-links a:link,
+#header-links a:visited,
+#header-links a:hover {
+  color: #fff;
+  text-decoration: underline;
 }
-*/
+
 </style>
-<script type="text/javascript">
+<script>
 /**
  * User prefs.
  * @type {_IG_Prefs}
@@ -369,27 +376,6 @@ function getHtmlForOneRecord(feedIndex) {
 }
 
 /**
- * To show or hide any html element by id.
- * Focus the cursor to the given optional Focus Element.
- * @param {string} elementId The id of the element to be shown or hidden.
- * @param {string} prop The display property to be set.
- * @param {string} optFocusElementId Optional element to set the focus.
- */
-function showHideElement(elementId, prop, optFocusElementId) {
-  try {
-    _gel(elementId).style.display = prop;
-    if (prop == 'block') {
-      adjustMaskHeight();
-    }
-    if (optFocusElementId) {
-      var focusElement = _gel(optFocusElementId);
-      focusElement.focus();
-      focusElement.select();
-    }
-  } catch (err) {}
-}
-
-/**
  * This function stops the propagation of the event and
  * prevents the default behaviour of the event.
  * @param {Event} event Window event.
@@ -408,12 +394,22 @@ function stopEvents(event) {
  * @param {string} searchText Search text.
  */
 function updateTitle(val, searchText) {
-  var str = [
-    prefs.getMsg('recent_listings_near'), ' <strong>', val, '<\/strong> '
-  ];
+  prefs.set('searchText' , searchText || '');
+  var str = [prefs.getMsg('recent_listings'), ' '];
+  if (val) {
+    str.push(prefs.getMsg('near'), ' <strong>', val, '<\/strong> ');
+    _gel('afg-change-location').style.display = 'block';
+    _gel('afg-set-location').style.display = 'none';
+  } else {
+    _gel('afg-change-location').style.display = 'none';
+    _gel('afg-set-location').style.display = 'block';
+  }
   if (searchText) {
     str.push(prefs.getMsg('matching'), ' <strong>\'',
-        searchText, '\'<\/strong>');
+      searchText, '\'<\/strong>');
+    _gel('afg-clear-search').style.display = 'block';
+  } else {
+    _gel('afg-clear-search').style.display = 'none';
   }
   _gel('afg-branding-title').innerHTML = str.join('');
 }
@@ -434,7 +430,7 @@ function loading() {
   var html = [
     '<div id="afg-loading-container" style="',
     'margin:50px 0;height:', height - 100, 'px;">',
-    '<img src="/ig/proxy?url=http://www.google.com/ig/images/spinner.gif" />',
+    '<img src="http://www.google.com/ig/images/spinner.gif" />',
     '<div>', prefs.getMsg('loading'), '</div></div>'
   ];
   element.innerHTML = html.join('');
@@ -565,9 +561,8 @@ function fetchRecords(xmlContent, timerId) {
     } else {
       var html = [
         '<div class="afg-record-na">', prefs.getMsg('your_search'),
-        ' <strong>\'', feedParams.q, '\'</strong> ', prefs.getMsg('not_match'),
-        '<br/><a href="#" onclick="showHideElement(\'afg-search-region-home\'',
-        ',\'block\', \'afg-search-text\'); return false;">',
+        ' <strong>\'', prefs.getString('searchText'), '\'</strong> ', prefs.getMsg('not_match'),
+        '<br/><a href="#" onclick="showDialog(\'search\'); return false;">',
         prefs.getMsg('search_again'), '</a></div>'
       ];
       _gel('afg-content').innerHTML = html.join('');
@@ -619,15 +614,16 @@ function navigatePage(step) {
  */
 function search(optSearchTxt) {
   var location = prefs.getString('prefLocation');
+  var prefKeywords = prefs.getString('preferredKeywords').replace(/\s+/gi, '+');
   var searchText = (optSearchTxt && prefs.getMsg(optSearchTxt)) ||
       _gel('afg-search-text').value || '';
-  updateTitle(location, searchText);
+  updateTitle(_trim(location), searchText);
   location = location.replace(/\s+/gi, '+');
   searchText = searchText.replace(/\s+/gi, '+');
 
   feedParams.start = 1;
   feedParams.vol_loc = location;
-  feedParams.q = searchText;
+  feedParams.q = prefKeywords + '+' + searchText;
   // Reset FeedRecord and pagination related variables.
   feedRecords = [];
   curPage = 1;
@@ -643,63 +639,93 @@ function isCancel(event) {
   event = event || window.event;
   var key = event.keyCode || event.which || event.charCode;
   if (key == 27) {
-    showHideElement('afg-search-region-home', 'none');
+    hideDialog();
   }
-}
-
-/**
- * Validate whether the suggested theme path is allowed.
- *
- * @param string path to validate
- * @return valid path or empty string
- */
-function validThemePath(pathToCheck) {
-  if (pathToCheck.match(/^http:\/\/footprint2009dev.googlecode.com\/svn\/[a-zA-Z0-9/_-]+?\/frontend\/html\/gadget$/)) {
-    return pathToCheck;
-  }
-  if (pathToCheck.match(/^http:\/\/([^\/]*[.])?mtvn?[.]com\/.+$/)) {
-    return pathToCheck;
-  }
-  
-  return '';
 }
 
 /**
  * Function to handle custom theme.
- * 
  */
 function handleTheme() {
   var themePath = _trim(prefs.getString('themesFolder'));
   var searchButton = _gel('afg-search-button');
   var embedButton = _gel('afg-embed-button');
   var goButton = _gel('afg-go-button');
+  var cancelButton = _gel('afg-cancel-button');
   var head = document.getElementsByTagName('head')[0];
   var body = document.getElementsByTagName('body')[0];
-  
-  themePath = validThemePath(themePath);
   if (themePath) {
     var linkElement = document.createElement('link');
     linkElement.id = 'theme-link';
-    linkElement.href = '/ig/proxy?url=' + themePath + '/style.css';
+    linkElement.href = themePath + '/style.css';
     linkElement.rel = 'stylesheet';
     head.appendChild(linkElement);
-    searchButton.src = '/ig/proxy?url=' + themePath + '/search.gif';
-    embedButton.src = '/ig/proxy?url=' + themePath + '/embed.gif';
-    goButton.src = '/ig/proxy?url=' + themePath + '/go.gif';
+    searchButton.src = themePath + '/search.gif';
+    embedButton.src = themePath + '/embed.gif';
+    goButton.src = themePath + '/go.gif';
+    cancelButton.src = themePath + '/cancel.gif';
     body.className += ' site-theme';
   } else {
-    themePath = 'http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme';
-    
-    var linkElement = document.createElement('link');
-    linkElement.id = 'theme-link';
-    linkElement.href = '/ig/proxy?url=' + themePath + '/style.css';
-    linkElement.rel = 'stylesheet';
-    head.appendChild(linkElement);
-    searchButton.src = '/ig/proxy?url=' + themePath + '/search.gif';
-    embedButton.src = '/ig/proxy?url=' + themePath + '/embed.gif';
-    goButton.src = '/ig/proxy?url=' + themePath + '/go.gif';
+    // Nothing to do right now.
     body.className += ' default-theme';
   }
+}
+
+/**
+ * Function to handle top searches and hide the popup.
+ * @param {string} searchTerm The search term.
+ */
+function topSearch(searchTerm) {
+  search(searchTerm);
+  hideDialog();
+}
+
+/**
+ * This function is used to show a popup dialog.
+ * @param {string} showString It is used to decide which form to be shown.
+ */
+function showDialog(showString) {
+  _gel('afg-search-region-home').style.display = 'block';
+  var searchForm = _gel('afg-search-form');
+  var locationForm = _gel('afg-location-form');
+  var focusElement;
+  if (showString == 'location') {
+    searchForm.style.display = 'none';
+    locationForm.style.display = 'block';
+    focusElement = locationForm.elements[0];
+  } else {
+    locationForm.style.display = 'none';
+    searchForm.style.display = 'block';
+    focusElement = searchForm.elements[0];
+  }
+  focusElement.focus();
+  focusElement.value = '';
+  adjustMaskHeight();
+}
+
+/**
+ *
+ */
+function clearSearch() {
+  _gel('afg-search-text').value = '';
+  search();
+}
+
+/**
+ * This function is used to hide the popup dialog.
+ */
+function hideDialog() {
+  _gel('afg-search-region-home').style.display = 'none';
+}
+
+/**
+ * Set the location and restart the search.
+ */
+function setLocation(optLocation) {
+  var location = optLocation || _gel('afg-location-text').value || '';
+  prefs.set('prefLocation', location);
+  search();
+  hideDialog();
 }
 
 /**
@@ -731,11 +757,18 @@ _IG_RegisterOnloadHandler(init);
   <div id="afg-header-region">
     <div id="afg-branding-region">
       <div id="afg-branding-btn">
-        <img id="afg-search-button" alt="__MSG_search__" title="__MSG_search__" class="afg-search-button"
-            src="/ig/proxy?url=http://developer.gadget.googlepages.com/search.gif" onerror="this.src='http://developer.gadget.googlepages.com/search.gif'"
-            onclick="showHideElement('afg-search-region-home','block', 'afg-search-text'); return false;">
+        <img id="afg-search-button" class="afg-search-button"
+            alt="__MSG_search__" title="__MSG_search__"
+            src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/search.gif"
+            onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/search.gif'"
+            onclick="showDialog('search')">
       </div>
       <h2 id="afg-branding-title"></h2>
+      <ul id="header-links">
+      <li id="afg-set-location"><a href="javascript:showDialog('location')">Set Location</a></li>
+      <li id="afg-change-location"><a href="javascript:showDialog('location')">Change Location</a></li>
+      <li id="afg-clear-search"><a href="javascript:clearSearch()">Clear Search</a></li>
+      </ul>
       <div class="clear">&nbsp;</div>
     </div>
   </div>
@@ -748,28 +781,71 @@ _IG_RegisterOnloadHandler(init);
         <form target="_blank" action="http://www.gmodules.com/ig/creator">
           <input type="hidden" name="synd" value="open" />
           <input type="hidden" name="url"
-              value="http://footprint2009dev.appspot.com/gadget/gadget.xml"/>
+              value="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/gadget.xml"/>
           <input type="image" title="__MSG_embed__" class="afg-embed-button" id="afg-embed-button"
-              style="cursor:pointer;" src="/ig/proxy?url=http://developer.gadget.googlepages.com/embed.gif" onerror="this.src='http://developer.gadget.googlepages.com/embed.gif'"/>
+              style="cursor:pointer;" src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/embed.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/embed.gif'"/>
         </form>
       </div>
       <a id="branding-logo" class="image-cropper" target="_blank"
           href="http://www.allforgood.org">
         <div>
-          <img src="/ig/proxy?url=http://developer.gadget.googlepages.com/logo.gif"
+          <img src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/logo.gif"
               alt="__MSG_brand_title__" title="__MSG_brand_title__" />
         </div>
       </a>
+      <div class="clear">&nbsp;</div>
     </div>
   </div>
   <!-- Search Region for Home View -->
   <div id="afg-search-region-home" style="display: none;">
     <div id="afg-gadget-mask" class="afg-mask" onclick="return stopEvents(event)"></div>
     <div id="afg-gadget-dialog" class="afg-dialog">
-      <form name="frmSearch" action="#" onsubmit="search();showHideElement('afg-search-region-home','none');return false;">
-        <input name="searchText" id="afg-search-text" type="text" onkeyup="isCancel(event);" autocomplete="off" />
-        <input id="afg-go-button" class="afg-go-button" alt="__MSG_go__" title="__MSG_go__" type="image"
-            src="/ig/proxy?url=http://developer.gadget.googlepages.com/go.gif" onerror="this.src='http://developer.gadget.googlepages.com/go.gif'"/>
+      <form name="frmSearch" id="afg-search-form" action="#" onsubmit="search();hideDialog();return false;">
+        <div style="width:90%; margin:auto;">
+          <input name="searchText" id="afg-search-text" tabIndex="1" type="text" onkeyup="isCancel(event);" autocomplete="off" class="afg-text"/>
+          <div style="text-align:left; color: #fff; margin:1px 0 2px">
+            __MSG_example__
+            <a href="javascript:topSearch('education')" class="afg-popup-link">
+                __MSG_education__</a>,
+            <a href="javascript:topSearch('health')" class="afg-popup-link">
+                __MSG_health__</a>,
+            <a href="javascript:topSearch('nature')" class="afg-popup-link">
+                __MSG_nature__</a>
+          </div>
+        </div>
+        <div>
+          <input id="afg-go-button" class="afg-go-button" tabIndex="2"
+              alt="__MSG_go__" title="__MSG_go__" type="image"
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif'"/>
+          <img id="afg-cancel-button" class="afg-cancel-button"
+              alt="__MSG_cancel__" title="__MSG_cancel__" tabIndex="3"
+              onclick="hideDialog();" onkeypress="hideDialog();"
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif"
+              onerror"this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif'" />
+        </div>
+      </form>
+      <form name="frmSearch" id="afg-location-form" action="#" onsubmit="setLocation();return false;">
+        <div style="width:90%; margin:auto;">
+          <input name="locationText" id="afg-location-text" tabIndex="1" type="text" onkeyup="isCancel(event);" autocomplete="off" class="afg-text"/>
+          <div style="text-align:left; color: #fff; margin:1px 0 2px">
+            __MSG_example__
+            <a href="javascript:setLocation('__MSG_default_location_value__')" class="afg-popup-link">
+                __MSG_default_location_value__</a>
+          </div>
+        </div>
+        <div>
+          <input id="afg-go-button1" class="afg-go-button" tabIndex="2"
+              alt="__MSG_go__" title="__MSG_go__" type="image"
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif'"/>
+          <img id="afg-cancel-button1" class="afg-cancel-button"
+              alt="__MSG_cancel__" title="__MSG_cancel__" tabIndex="3"
+              onclick="hideDialog();" onkeypress="hideDialog();"
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif"
+              onerror"this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif'" />
+        </div>
       </form>
     </div>
   </div>
