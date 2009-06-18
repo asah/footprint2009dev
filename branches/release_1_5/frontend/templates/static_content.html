@@ -7,11 +7,19 @@
 <li>
 {% ifequal path '/about' %} About {% else %} <a href='/about'>About</a> {% endifequal %}
 
+<li><a href='http://blog.allforgood.org'>Blog</a>
+	
 <li>
 {% ifequal path '/help' %} Help {% else %} <a href='/help'>Help</a> {% endifequal %}
 
 <li>
-{% ifequal path '/faq' %} Frequently Asked Questions {% else %} <a href='/faq'>Frequently Asked Questions</a> {% endifequal %}
+{% ifequal path '/faq' %} FAQs {% else %} <a href='/faq'>FAQs</a> {% endifequal %}
+
+<li>
+{% ifequal path '/apps' %} Apps {% else %} <a href='/apps'>Apps</a> {% endifequal %}
+
+<li>
+{% ifequal path '/docs/api.html' %} API {% else %} <a href='/docs/api.html'>API</a> {% endifequal %}
 
 <li>
 {% ifequal path '/privacypolicy' %} Privacy Policy {% else %} <a href='/privacypolicy'>Privacy Policy</a> {% endifequal %}
