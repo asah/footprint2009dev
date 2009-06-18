@@ -26,7 +26,7 @@ import geocoder
 import parse_footprint
 import parse_gspreadsheet
 import parse_usaservice
-import parse_networkforgood as nfg
+import parse_networkforgood
 import parse_handsonnetwork
 import parse_idealist
 import parse_craigslist
@@ -890,49 +890,85 @@ def guess_parse_func(inputfmt, filename):
   shortname = guess_shortname(filename)
 
   # FPXML providers
-  if shortname in ["unitedway", "mybarackobama", "handsonnetwork",
-                   "volunteergov", "americansolutions", "idealist",
-                   "extraordinaries", "meetup", "volunteermatch"]:
-    # TODO: assign IDs using a closure
-    # http://code.google.com/p/footprint2009dev/issues/detail?id=117
-    return "fpxml", parse_footprint.parse
+  fp = parse_footprint
+  if shortname == "unitedway":
+    return "fpxml", fp.parser(
+      '122', 'unitedway', 'unitedway', 'http://www.unitedway.org/',
+      'United Way')
+  if shortname == "mybarackobama":
+    return "fpxml", fp.parser(
+      '116', 'mybarackobama', 'mybarackobama', 'http://my.barackobama.com/',
+      'Organizing for America / DNC')
+  if shortname == "handsonnetwork":
+    return "fpxml", fp.parser(
+      '102', 'handsonnetwork', 'handsonnetwork', 'http://handsonnetwork.org/',
+      'HandsOn Network')
+  if shortname == "volunteergov":
+    return "fpxml", fp.parser(
+      '107', 'volunteergov', 'volunteergov', 'http://www.volunteer.gov/',
+      'volunteer.gov')
+  if shortname == "americansolutions":
+    return "fpxml", fp.parser(
+      '115', 'americansolutions', 'americansolutions',
+      'http://www.americansolutions.com/',
+      'American Solutions for Winning the Future')
+  if shortname == "idealist":
+    return "fpxml", fp.parser(
+      '103', 'idealist', 'idealist', 'http://www.idealist.org/',
+      'Idealist')
+  if shortname == "extraordinaries":
+    return "fpxml", fp.parser(
+      '110', 'extraordinaries', 'extraordinaries', 'http://www.beextra.org/',
+      'The Extraordinaries')
+  if shortname == "meetup":
+    return "fpxml", fp.parser(
+      '112', 'meetup', 'meetup', 'http://www.meetup.com/',
+      'Meetup')
+  if shortname == "volunteermatch":
+    return "fpxml", fp.parser(
+      '104', 'volunteermatch', 'volunteermatch',
+      'http://www.volunteermatch.org/', 'Volunteer Match')
+
+  if shortname == "habitat":
+    parser = fp.parser(
+      '111', 'habitat', 'habitat',
+      'http://www.habitat.org/', 'Habitat for Humanity')
+    def parse_habitat(instr, maxrecs, progress):
+      # fixup bad escaping
+      newstr = re.sub(r'&code=', '&amp;code=', instr)
+      return parser(newstr, maxrecs, progress)
+    return "habitat", parse_habitat
 
   # networkforgood providers
+  nfg = parse_networkforgood
   if shortname == "americorps":
     return "nfg", nfg.parser(
       '106', 'americorps', 'americorps', 'http://www.americorps.gov/',
       'AmeriCorps')
-
   if shortname == "mlk_day":
     return "nfg", nfg.parser(
       '115', 'mlk_day', 'mlk_day', 'http://my.mlkday.gov/',
       'Martin Luther King day')
-
   if shortname == "christianvolunteering":
     return "nfg", nfg.parser(
       '117', 'christianvolunteering', 'christianvolunteering',
       'http://www.christianvolunteering.org/', 'Christian Volunteering')
-
   if shortname == "volunteertwo":
     return "nfg", nfg.parser(
       '118', 'volunteer2', 'volunteer2',
       'http://www.volunteer2.com/', 'Volunteer2')
-
   if shortname == "mentorpro":
     return "nfg", nfg.parser(
       '119', 'mentor', 'mentor',
       'http://www.mentorpro.org/', 'MENTOR')
-
   if shortname == "servenet":
     return "nfg", nfg.parser(
       '114', 'servenet', 'servenet', 'http://www.servenet.org/',
       'servenet')
-
   if shortname == "myproj_servegov":
     return "nfg", nfg.parser(
       '120', 'myproj_servegov', 'myproj_servegov',
       'http://myproject.serve.gov/', 'MyprojectServeGov')
-
   if shortname == "seniorcorps":
     return "nfg", nfg.parser(
       '121', 'seniorcorps', 'seniorcorps',
@@ -947,16 +983,6 @@ def guess_parse_func(inputfmt, filename):
 
   if shortname == "craigslist" or shortname == "cl":
     return "craigslist", parse_craigslist.parse
-
-  if shortname == "handson" or shortname == "handsonnetwork":
-    return "handsonnetwork", parse_handsonnetwork.parse
-
-  if shortname == "habitat":
-    def parse_habitat(instr, maxrecs, progress):
-      # fixup bad escaping
-      newstr = re.sub(r'&code=', '&amp;code=', instr)
-      return parse_footprint.parse_fast(newstr, maxrecs, progress)
-    return "habitat", parse_habitat
 
   # legacy-- to be safe, remove after 9/1/2009
   #if shortname == "volunteermatch" or shortname == "vm":
@@ -1131,13 +1157,9 @@ def process_file(filename, options, providerName="", providerID="",
   print_progress("outputfmt: "+options.outputfmt)
   print_status("input data: "+str(len(instr))+" bytes", shortname)
 
-  if inputfmt == "fpxml":
-    footprint_xmlstr = instr
-  else:
-    print_progress("parsing "+inputfmt+"...")
-    assert parsefunc != parse_footprint.parse
-    footprint_xmlstr, numorgs, numopps = \
-        parsefunc(instr, int(options.maxrecs), PROGRESS)
+  print_progress("parsing...")
+  footprint_xmlstr, numorgs, numopps = \
+      parsefunc(instr, int(options.maxrecs), PROGRESS)
 
   if (providerID != "" and
       footprint_xmlstr.find('<providerID></providerID>')):
