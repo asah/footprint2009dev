@@ -782,6 +782,7 @@ _IG_RegisterOnloadHandler(init);
           <input type="hidden" name="synd" value="open" />
           <input type="hidden" name="url"
               value="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/gadget.xml"/>
+          <input type="hidden" name="nocache" value="1" />
           <input type="image" title="__MSG_embed__" class="afg-embed-button" id="afg-embed-button"
               style="cursor:pointer;" src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/embed.gif"
               onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/embed.gif'"/>
