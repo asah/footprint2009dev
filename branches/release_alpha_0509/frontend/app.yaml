@@ -1,7 +1,7 @@
 application: servicefootprint
 #application: footprint2009dev
 
-version: release-alpha-0509-branch-push10
+version: release-alpha-0509-branch-push11
 runtime: python
 api_version: 1
 
