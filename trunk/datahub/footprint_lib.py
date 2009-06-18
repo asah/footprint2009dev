@@ -27,7 +27,6 @@ import parse_footprint
 import parse_gspreadsheet
 import parse_usaservice
 import parse_networkforgood
-import parse_handsonnetwork
 import parse_idealist
 import parse_craigslist
 import parse_volunteermatch
