@@ -613,3 +613,22 @@ A:hover {  /* Keep this near end of file, after other A definitions */
 
 .sharelink img { display: none; }
 .sharelink {cursor: pointer; }
+
+a.addlink {
+	text-decoration: none;
+	color: #003399;
+	height: 25px;
+	display: block;
+	font-size: 14	px;
+}
+
+.addlink img {
+	float: left;
+	padding-right: 5px;
+	padding-left: 20px;
+}
+
+.addlink span {
+	padding-top: 5px;
+	display: block;
+}

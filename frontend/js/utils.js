@@ -299,9 +299,9 @@ getDefaultLocation = function() {
           }
         }
       } catch (err) {
-        clientLocation = { 'coords': undefined,
-                           'displayShort': undefined,
-                           'displayLong': undefined };
+        clientLocation = { 'coords': '',
+                           'displayShort': '',
+                           'displayLong': '' };
       }
     }
     var userVolLocCookie = getSessionCookie('user_vol_loc');
@@ -313,20 +313,11 @@ getDefaultLocation = function() {
       return clientLocation;
     }
   };
-}(); // executed inline to close over the 'clientLocationString' variable.
+}();  // executed inline to close over the 'clientLocationString' variable.
 
-// These defaultValues used to be stored directly as attributes
-// of the DOM elements (in the HTML templates), but IE doesn't like
-// that.  Having default values here is not the cleanest.
-// TODO: Clean this up -- these defaults should really be properties
-//       of the input fields, or something else cleaner than this.
-// This should be taken care of as of fix for Issue 260
-// I am leaving the var in place in case there is another place it is used
-// that I did not find.
-var inputFieldDefaultValues = {
-  'keywords' : 'keywords',
-  'location' : 'enter location'
-};
+function trimString(string) {
+	return string.replace(/^\s+|\s+$/g, '');
+}
 
 /**
  * Populate a text input field with a value, and revert to input.defaultValue
@@ -336,12 +327,14 @@ var inputFieldDefaultValues = {
  */
 function setInputFieldValue(input, value) {
   function set(valueToSet) {
-    if (!valueToSet || valueToSet == '') {
+    valueToSet = trimString(valueToSet || '');
+
+    if (valueToSet == '') {
       input.style.color = '#666';
-      input.value = input.name;
+      input.value = input.name || '';
 
       input.onfocus = function() {
-        if (input.value == input.name) {
+        if (input.value && input.name && input.value == input.name) {
           input.value = '';
         }
 
@@ -366,7 +359,7 @@ function setInputFieldValue(input, value) {
  * @param {HTMLInputElement} input Input element.
  */
 function getInputFieldValue(input) {
-  if (!input || input.value == input.name) {
+  if (!input || !input.value || input.value == input.name) {
     return '';
   } else {
     return input.value;
@@ -375,6 +368,8 @@ function getInputFieldValue(input) {
 
 var SESSION_COOKIE_PREFIX = 'allforgood_';
 function setSessionCookie(name, value) {
+  value = trimString(value || '');  // Force string so we don't write
+                                    // 'undefined' or 'null'
   document.cookie = SESSION_COOKIE_PREFIX +
     escape(name) + '=' + escape(value);
 }
@@ -390,7 +385,11 @@ function getSessionCookie(name) {
       cookieName = cookieName.substring(1, cookieName.length);
     }
     if (cookieName == prefixedName) {
-      return unescape(pair[1]);
+      if (pair[1]) {
+        return unescape(pair[1]);
+      } else {
+        return '';
+      }
     }
   }
   return undefined;
@@ -416,21 +415,23 @@ function clearExternalCookies() {
 
 // Define console.log in case it's not already.
 try {
-  var console = {};
-  console.text_ = '';
-  console.visible_ = false;
-  console.div_ = null;
-  console.log = function(text) {
-    if (getHashOrQueryParam('debugjs') != null) {
-      if (!console.visible_) {
-        console.visible_ = true;
-        console.div_ = document.createElement('div');
-        console.div_.style.border = '1px solid silver';
-        console.div_.style.padding = '4px';
-        document.body.appendChild(console.div_);
+  if (!('console' in window)) {
+    var console = {};
+    console.text_ = '';
+    console.visible_ = false;
+    console.div_ = null;
+    console.log = function(text) {
+      if (getHashOrQueryParam('debugjs') != null) {
+        if (!console.visible_) {
+          console.visible_ = true;
+          console.div_ = document.createElement('div');
+          console.div_.style.border = '1px solid silver';
+          console.div_.style.padding = '4px';
+          document.body.appendChild(console.div_);
+        }
+        console.text_ += text + '<br>';
+        console.div_.innerHTML = console.text_;
       }
-      console.text_ += text + '<br>';
-      console.div_.innerHTML = console.text_;
     }
   }
 } catch(err) {}
