@@ -1,8 +1,8 @@
-#application: servicefootprint
-application: footprint2009dev
+application: servicefootprint
+#application: footprint2009dev
 #application: footprint-loadtest
 
-version: 1
+version: release-1-5-r843
 runtime: python
 api_version: 1
 
