@@ -729,10 +729,49 @@ function setLocation(optLocation) {
 }
 
 /**
+ * Used for setting the logo according to the size of container.
+ */ 
+function setLogoImage() {
+  var myWidth = 0;
+  var imgPath = 'http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/logo';
+
+  if (typeof(window.innerWidth) == 'number') {
+    // Non-IE
+    myWidth = window.innerWidth;
+  } else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+    // IE 6+ 
+    myWidth = document.documentElement.clientWidth;
+  } else if (document.body && ( document.body.clientWidth || document.body.clientHeight )) {
+    myWidth = document.body.clientWidth;
+  }
+  
+  if (myWidth <=150) {
+    imgPath += '_180';
+    _gel('branding-logo').style.width = '83px';
+    _gel('branding-logo').style.height = '';
+    _gel('logo-img').style.height = '11';
+  } else if(myWidth <= 180){
+    imgPath += '_180';
+    _gel('branding-logo').style.width = '95px';
+    _gel('branding-logo').style.height = '';
+    _gel('logo-img').style.height = '14';
+  } else if (myWidth <= 200){
+    imgPath += '_200';
+    _gel('branding-logo').style.width = '110px';
+    _gel('branding-logo').style.height = '';
+    _gel('logo-img').style.height = '18px';
+  }
+
+ //Setting the source for logo image.
+ _gel('logo-img').src = imgPath + '.gif';
+}
+ 
+/**
  * Called on load of the gadget.
  */
 function init() {
   handleTheme();
+  setLogoImage();
   var view = gadgets.views.getCurrentView();
   view = view ? view.getName().toLowerCase() : 'home';
   _gel('afg-main').className = 'afg-' + view + '-body';
@@ -791,8 +830,7 @@ _IG_RegisterOnloadHandler(init);
       <a id="branding-logo" class="image-cropper" target="_blank"
           href="http://www.allforgood.org">
         <div>
-          <img src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/logo.gif"
-              alt="__MSG_brand_title__" title="__MSG_brand_title__" />
+          <img id="logo-img" alt="__MSG_brand_title__" title="__MSG_brand_title__" />
         </div>
       </a>
       <div class="clear">&nbsp;</div>
