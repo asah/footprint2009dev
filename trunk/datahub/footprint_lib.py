@@ -884,12 +884,16 @@ def guess_parse_func(inputfmt, filename):
 
   # for development
   if inputfmt == "fpxml":
-    return "fpxml", parse_footprint.parse
+    return "fpxml", parse_footprint.parse_fast
 
   shortname = guess_shortname(filename)
 
   # FPXML providers
   fp = parse_footprint
+  if shortname == "americanredcross":
+    return "fpxml", fp.parser(
+      '123', 'americanredcross', 'americanredcross', 'http://www.givelife.org/',
+      'American Red Cross')
   if shortname == "unitedway":
     return "fpxml", fp.parser(
       '122', 'unitedway', 'unitedway', 'http://www.unitedway.org/',
