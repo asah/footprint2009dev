@@ -44,7 +44,7 @@ function runSnippetsQuery() {
           // Only loading for homepage here - loaded in search_resuls.js
           // for search pages and base.html for static pages
 
-          // loadGA();  // TODO: re-enable this (see bug #410)
+          loadGA();
         }
       });
 }
