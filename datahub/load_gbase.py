@@ -299,6 +299,7 @@ def load_gbase(name, url, do_processing=True, do_ftp=True):
 
 def test_loaders():
   """for testing, read from local disk as much as possible."""
+  load_gbase("americanredcross", "americanredcross.xml", False, False)
   load_gbase("servenet", "servenet.xml", False, False)
   load_gbase("unitedway", "unitedway.xml", False, False)
   load_gbase("americansolutions", "americansolutions.xml", False, False)
@@ -315,6 +316,7 @@ def test_loaders():
 
 def loaders():
   """put all loaders in one function for easier testing."""
+  load_gbase("americanredcross", "americanredcross.xml")
   load_gbase("mlk_day", "mlk_day.xml")
   load_gbase("americorps", "americorps.xml")
   load_gbase("volunteergov", "volunteergov.xml")
