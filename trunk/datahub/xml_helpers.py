@@ -85,8 +85,7 @@ def get_tag_val(entity, tag):
   """walk the DOM of entity looking for the first child named (tag)."""
   #print "----------------------------------------"
   nodes = entity.getElementsByTagName(tag)
-  #print "nodes: "
-  #print nodes
+  #print "nodes:", nodes
   if (nodes.length == 0):
     return ""
   #print nodes[0]
@@ -96,8 +95,9 @@ def get_tag_val(entity, tag):
     return ""
   if (nodes[0].firstChild.data == None):
     return ""
-  #print nodes[0].firstChild.data
-  outstr = nodes[0].firstChild.data
+  outstr = "".join([node.data for node in nodes[0].childNodes if node.nodeType in [node.TEXT_NODE, node.CDATA_SECTION_NODE]])
+  outstr = outstr.strip()
+  #outstr = nodes[0].firstChild.data
   outstr = xml.sax.saxutils.escape(outstr).encode('UTF-8')
   outstr = re.sub(r'\n', r'\\n', outstr)
   return outstr
