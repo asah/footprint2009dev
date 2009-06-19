@@ -53,4 +53,6 @@ STATIC_CONTENT_FILES = {
   '/dmca' : 'dmca.html',
   '/docs/api.html' : 'api.html',
   '/partner_terms' : 'partner_terms.html',
+  '/apps/gmail' : 'apps-gmail.html',
+  '/apps/typepad' : 'apps-typepad.html',
 }
