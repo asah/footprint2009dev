@@ -55,4 +55,5 @@ STATIC_CONTENT_FILES = {
   '/partner_terms' : 'partner_terms.html',
   '/apps/gmail' : 'apps-gmail.html',
   '/apps/typepad' : 'apps-typepad.html',
+  '/apps/blogger' : 'apps-blogger.html',
 }
