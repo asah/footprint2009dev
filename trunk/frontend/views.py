@@ -71,6 +71,7 @@ ADMIN_TEMPLATE = 'admin.html'
 DATAHUB_DASHBOARD_TEMPLATE = 'datahub_dashboard.html'
 MODERATE_TEMPLATE = 'moderate.html'
 STATIC_CONTENT_TEMPLATE = 'static_content.html'
+NOT_FOUND_TEMPLATE = 'not_found.html'
 
 DASHBOARD_BASE_URL = "http://google1.osuosl.org/~footprint/datahub/dashboard/"
 DATAHUB_LOG = DASHBOARD_BASE_URL + "load_gbase.log"
@@ -271,6 +272,13 @@ class home_page_redir_view(webapp.RequestHandler):
     """HTTP get method."""
     self.redirect("/")
 
+class not_found_handler(webapp.RequestHandler):
+  def get(self):
+    self.error(404)
+    template_values = get_default_template_values(self.request, 'STATIC_PAGE')
+    self.response.out.write(render_template(NOT_FOUND_TEMPLATE,
+                                            template_values))
+		
 class consumer_ui_search_redir_view(webapp.RequestHandler):
   """handler for embedded HTML forms, which can't form queries
      with query params to the right of the # (hash)."""
