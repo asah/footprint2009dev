@@ -796,6 +796,8 @@ def guess_shortname(filename):
     return "mybarackobama"
   if re.search(r'united.*way', filename):
     return "unitedway"
+  if re.search(r'americanredcross', filename):
+    return "americanredcross"
   if re.search("habitat", filename):
     return "habitat"
   if re.search("americansolutions", filename):
