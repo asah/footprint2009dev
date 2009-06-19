@@ -34,11 +34,6 @@ import sheetchecker.parse_gspreadsheet as parse_gspreadsheet
 
 CHECK_SHEET_TEMPLATE = "checksheet.html"
 
-# Register custom Django templates
-template.register_template_library('templatetags.comparisonfilters')
-template.register_template_library('templatetags.stringutils')
-template.register_template_library('templatetags.dateutils')
-
 def render_template(template_filename, template_values):
   """wrapper for template.render() which handles path."""
   path = os.path.join(os.path.dirname(__file__),
