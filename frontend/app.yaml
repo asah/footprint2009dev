@@ -57,6 +57,7 @@ handlers:
 
 # For Gadget
 - url: /gadget
+  expiration: "1h"
   static_dir: html/gadget
 
 # autocompleter for search
