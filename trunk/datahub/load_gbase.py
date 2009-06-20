@@ -9,6 +9,7 @@ Usage: load_gbase.py username password
 import sys
 import re
 import gzip
+import bz2
 import logging
 import subprocess
 from datetime import datetime
@@ -20,6 +21,7 @@ PASSWORD = ""
 LOGPATH = "/home/footprint/public_html/datahub/dashboard/"
 
 LOG_FN = "load_gbase.log"
+LOG_FN_BZ2 = "load_gbase.log.bz2"
 DETAILED_LOG_FN = "load_gbase_detail.log"
 
 # this file needs to be copied over to frontend/autocomplete/
@@ -194,6 +196,14 @@ def append_log(outstr):
   for line in outstr.split('\n'):
     if re.search(r'(STATUS|ERROR)', line):
       outfh.write(line+"\n")
+  outfh.close()
+
+  # create a bzip2 file from the log
+  infh = open(LOGPATH+LOG_FN, "r")
+  data = infh.read()
+  infh.close()
+  outfh = bz2.BZ2File(LOGPATH+LOG_FN_BZ2, "w")
+  outfh.write(data)
   outfh.close()
 
 def error_exit(msg):

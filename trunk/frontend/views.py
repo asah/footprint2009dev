@@ -74,7 +74,7 @@ STATIC_CONTENT_TEMPLATE = 'static_content.html'
 NOT_FOUND_TEMPLATE = 'not_found.html'
 
 DASHBOARD_BASE_URL = "http://google1.osuosl.org/~footprint/datahub/dashboard/"
-DATAHUB_LOG = DASHBOARD_BASE_URL + "load_gbase.log"
+DATAHUB_LOG = DASHBOARD_BASE_URL + "load_gbase.log.bz2"
 
 DEFAULT_NUM_RESULTS = 10
 
@@ -1072,6 +1072,10 @@ class datahub_dashboard_view(webapp.RequestHandler):
     if fetch_result.status_code != 200:
       template_values['msg'] = \
           "error fetching dashboard data: code %d" % fetch_result.status_code
+
+    if re.search(r'[.]bz2$', url):
+      import bz2
+      fetch_result.content = bz2.decompress(fetch_result.content)
     lines = fetch_result.content.split("\n")
     # typical line
     # 2009-04-26 18:07:16.295996:STATUS:extraordinaries done parsing: output
@@ -1080,12 +1084,13 @@ class datahub_dashboard_view(webapp.RequestHandler):
                           "done parsing: output (\d+) organizations and "+
                           "(\d+) opportunities .(\d+) bytes.: (\d+) minutes")
     def parse_date(datestr, timestr):
-      """TODO: move to day granularity once we have a few weeks of data.
+      """uses day granularity now that we have a few weeks of data.
       At N=10 providers, 5 values, 12 bytes each, 600B per record.
       daily is reasonable for a year, hourly is not."""
-      match = re.search(r'(\d+):', timestr)
-      hour = int(match.group(1))
-      return datestr + str(4*int(hour / 4)) + ":00"
+      #match = re.search(r'(\d+):', timestr)
+      #hour = int(match.group(1))
+      #return datestr + str(4*int(hour / 4)) + ":00"
+      return datestr
 
     js_data = ""
     known_dates = {}
@@ -1113,6 +1118,15 @@ class datahub_dashboard_view(webapp.RequestHandler):
       known_dates[hour] = i
       date_strings.append(hour)
     #js_data += "// date_strings["+str(i)+"]="+date_strings[i]+"\n"
+    def commas(num):
+      num = str(num)
+      while True:
+        newnum, count = re.subn(r'(\d)(\d\d\d)(,|[.]|$)', r'\1,\2', num)
+        if count == 0:
+          break
+        num = newnum
+      return num
+    max_date = {}
     for line in lines:
       match = re.search(statusrx, line)
       if match:
@@ -1120,17 +1134,19 @@ class datahub_dashboard_view(webapp.RequestHandler):
         date_idx = known_dates[hour]
         provider = match.group(3)
         provider_idx = known_providers[provider]
-        #js_data += "// date_idx="+str(date_idx)
-        #js_data += " provider_idx="+str(provider_idx)+"\n"
+        max_date[provider_idx] = re.sub(r':\d\d$', '',
+                                        match.group(1) + " " + match.group(2))
         rec = provider_data[provider_idx][date_idx]
-        rec['organizations'] = match.group(4)
-        rec['listings'] = match.group(5)
-        rec['bytes'] = match.group(6)
-        rec['loadtimes'] = match.group(7)
+        rec['organizations'] = commas(match.group(4))
+        rec['listings'] = commas(match.group(5))
+        rec['kbytes'] = commas(int(float(match.group(6))/1024.0))
+        rec['loadtimes'] = commas(match.group(7))
     js_data += "function sv(row,col,val) {data.setValue(row,col,val);}\n"
     js_data += "function ac(typ,key) {data.addColumn(typ,key);}\n"
     js_data += "function acn(key) {data.addColumn('number',key);}\n"
 
+    # provider names are implemented as chart labels, so they line up
+    # with the charts-- otherwise it just doesn't work right.
     js_data += "data = new google.visualization.DataTable();\n"
     js_data += "data.addRows(1);"
     for provider_idx, provider in enumerate(sorted_providers):
@@ -1139,10 +1155,23 @@ class datahub_dashboard_view(webapp.RequestHandler):
     js_data += "\n"
     js_data += "var chart = new google.visualization.ImageSparkLine("
     js_data += "  document.getElementById('provider_names'));\n"
+    js_data += "chart.draw(data,{width:160,height:50,showAxisLines:false,"
+    js_data += "  showValueLabels:false,labelPosition:'right'});\n"
+
+    # provider last loaded times are implemented as chart labels, so
+    # they line up with the charts-- otherwise it just doesn't work.
+    js_data += "data = new google.visualization.DataTable();\n"
+    js_data += "data.addRows(1);"
+    for provider_idx, provider in enumerate(sorted_providers):
+      js_data += "acn('"+max_date[provider_idx]+"');"
+      js_data += "sv(0,"+str(provider_idx)+",0);"
+    js_data += "\n"
+    js_data += "var chart = new google.visualization.ImageSparkLine("
+    js_data += "  document.getElementById('lastloaded'));\n"
     js_data += "chart.draw(data,{width:150,height:50,showAxisLines:false,"
     js_data += "  showValueLabels:false,labelPosition:'right'});\n"
 
-    for key in ['organizations', 'listings', 'bytes', 'loadtimes']:
+    for key in ['organizations', 'listings', 'kbytes', 'loadtimes']:
       js_data += "data = new google.visualization.DataTable();\n"
       js_data += "data.addRows("+str(len(sorted_dates))+");\n"
       colnum = 0
