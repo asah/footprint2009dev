@@ -57,4 +57,5 @@ STATIC_CONTENT_FILES = {
   '/apps/typepad' : 'apps-typepad.html',
   '/apps/blogger' : 'apps-blogger.html',
   '/apps/googlesites' : 'apps-googlesites.html',
+  '/apps/wordpress' : 'apps-wordpress.html',
 }
