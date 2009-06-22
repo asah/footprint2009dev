@@ -56,4 +56,5 @@ STATIC_CONTENT_FILES = {
   '/apps/gmail' : 'apps-gmail.html',
   '/apps/typepad' : 'apps-typepad.html',
   '/apps/blogger' : 'apps-blogger.html',
+  '/apps/googlesites' : 'apps-googlesites.html',
 }
