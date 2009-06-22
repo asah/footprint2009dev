@@ -234,7 +234,7 @@ function updateInterestInfoDisplay(resultIndex) {
     /* add "like this" with proper plurality */
     if ((result.totalInterestCount==1) && (!result.liked)) {
       /* "Mary likes this", "1 other likes this" */
-      html += ' like this';
+      html += ' likes this';
     } else {
       /* "Bob and Jane like this", "You like this", "2 others like this" */
       html += ' like this';
