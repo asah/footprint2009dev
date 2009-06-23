@@ -212,12 +212,29 @@ def require_usig(handler_method):
 def require_admin(handler_method):
   """Decorator ensuring the current App Engine user is an administrator."""
   def decorate(self):
-    if not users.is_current_user_admin():
-      self.error(401)
-      html = '<html><body><a href="%s">Sign in</a></body></html>'
-      self.response.out.write(html % (users.create_login_url(self.request.url)))
-      return
-    return handler_method(self)
+    """Validate request is from an admin user, send to logon page if not."""
+    user = users.get_current_user()
+
+    if user:
+      if users.is_current_user_admin():
+        # User is an admin, go ahead and run the handler
+        return handler_method(self)
+
+      else:
+        # User is not an admin, return unauthorized
+        self.error(401)
+        html = '<html><body>'
+        html += 'Sorry, you are not an administrator. Please '
+        html += '<a href="%s">' % users.create_logout_url(self.request.url)
+        html += 'log out</a> and sign in as an administrator.'
+        html += '</body></html>'
+        self.response.out.write(html)
+        return
+
+    # No user, redirect to the login page
+    self.redirect(users.create_login_url(self.request.url))
+    return
+
   return decorate
 
 
