@@ -59,5 +59,5 @@ STATIC_CONTENT_FILES = {
   '/apps/googlesites' : 'apps-googlesites.html',
   '/apps/wordpress' : 'apps-wordpress.html',
   '/code' : 'code.html',
-  '/posting' : 'posting.html',
+  '/posting' : 'spreadsheet.html',
 }
