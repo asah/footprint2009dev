@@ -230,7 +230,7 @@ def search(args):
 
   logging.debug("calling Base: "+query_url)
   results = query(query_url, args, False)
-  logging.debug("Base call done.")
+  logging.debug("Base call done: %d results" % len(results.results))
 
   # Base doesn't implement day-of-week filtering
   if (api.PARAM_VOL_STARTDAYOFWEEK in args and
