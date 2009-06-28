@@ -188,6 +188,14 @@ def normalize_query_values(args):
     args[api.PARAM_Q] = ""
   dbgargs(api.PARAM_Q)
 
+  if api.PARAM_VOL_LOC not in args:
+    # bugfix for http://code.google.com/p/footprint2009dev/issues/detail?id=461
+    # q=Massachusetts should imply vol_loc=Massachusetts, USA
+    # note that this implementation also makes q=nature match
+    # a town near santa ana, CA
+    # http://www.allforgood.org/search#q=nature&vol_loc=nature%2C%20USA
+    args[api.PARAM_VOL_LOC] = args[api.PARAM_Q] + " USA"
+
   args["lat"] = args["long"] = ""
   if api.PARAM_VOL_LOC in args:
     zoom = 5
@@ -195,6 +203,11 @@ def normalize_query_values(args):
       args["lat"], args["long"] = args[api.PARAM_VOL_LOC].split(",")
     elif geocode.is_latlongzoom(args[api.PARAM_VOL_LOC]):
       args["lat"], args["long"], zoom = args[api.PARAM_VOL_LOC].split(",")
+    elif args[api.PARAM_VOL_LOC] == "virtual":
+      args["lat"] = args["long"] = "0.0"
+      zoom = 6
+    elif args[api.PARAM_VOL_LOC] == "anywhere":
+      args["lat"] = args["long"] = ""
     else:
       res = geocode.geocode(args[api.PARAM_VOL_LOC])
       if res != "":
