@@ -3,7 +3,7 @@
 application: footprint2009dev
 #application: footprint-loadtest
 
-version: ehysen2
+version: 1
 runtime: python
 api_version: 1
 
