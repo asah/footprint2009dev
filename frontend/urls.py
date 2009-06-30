@@ -60,4 +60,5 @@ STATIC_CONTENT_FILES = {
   '/apps/wordpress' : 'apps-wordpress.html',
   '/code' : 'code.html',
   '/posting' : 'spreadsheet.html',
+  '/guide' : 'tour.html',
 }
