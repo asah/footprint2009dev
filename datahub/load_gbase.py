@@ -321,7 +321,9 @@ def loaders():
   load_gbase("americansolutions", "americansolutions.xml")
   load_gbase("americorps", "americorps.xml")
   load_gbase("christianvolunteering", "christianvolunteering.xml")
+  load_gbase("citizencorps", "citizencorps.xml")
   load_gbase("extraordinaries", "extraordinaries.xml")
+  load_gbase("givingdupage", "givingdupage.xml")
   load_gbase("habitat", "habitat.xml")
   load_gbase("handsonnetwork", "handsonnetwork.xml")
   load_gbase("idealist", "idealist.xml")
@@ -336,6 +338,7 @@ def loaders():
   load_gbase("volunteergov", "volunteergov.xml")
   load_gbase("volunteermatch", "volunteermatch.xml")
   load_gbase("volunteertwo", "volunteertwo.xml")
+  load_gbase("ymca", "ymca.xml")
 
   # requires special crawling
   load_gbase("gspreadsheets",
