@@ -370,10 +370,15 @@ def compute_stable_id(opp, org, locstr, openended, duration,
   # TODO: if two providers have same listing, the time info
   # is unlikely to be exactly the same, incl. missing fields
   timestr = openended + duration + hrs_per_week + startend
-  return hashlib.md5(eid + loc + timestr).hexdigest()
+  title = get_title(opp)
+  abstract = get_abstract(opp)
+  detailURL = xmlh.get_tag_val(opp, 'detailURL')
+  hashstr = "\t".join([eid, loc, timestr, title, abstract, detailURL])
+  return hashlib.md5(hashstr).hexdigest()
 
 def get_abstract(opp):
-  """process abstract-- shorten, strip newlines and formatting."""
+  """process abstract-- shorten, strip newlines and formatting.
+  TODO: cache/memoize this."""
   abstract = xmlh.get_tag_val(opp, "abstract")
   if abstract == "":
     abstract = xmlh.get_tag_val(opp, "description")
@@ -459,14 +464,18 @@ def cleanse_snippet(instr):
   
   return instr
 
+def get_title(opp):
+  """compute a clean title.  TODO: do this once and cache/memoize it"""
+  title = cleanse_snippet(output_tag_value(opp, "title"))
+  for str in re.finditer(lcword_rx, title):
+    title = re.sub(lcword_rx, str.group(1)+str.group(2).upper(), title, 1)
+  return title
+
 lcword_rx = re.compile(r'(\s)([a-z])')
 def get_event_reqd_fields(opp):
   """Fields required by Google Base, note that they aren't necessarily
   used by the FP app."""
-  title = cleanse_snippet(output_tag_value(opp, "title"))
-  for str in re.finditer(lcword_rx, title):
-    title = re.sub(lcword_rx, str.group(1)+str.group(2).upper(), title, 1)
-  outstr = title
+  outstr = get_title(opp)
   outstr += FIELDSEP + output_tag_value(opp, "description")
   outstr += FIELDSEP + output_field("link", BASE_PUB_URL)
   return outstr
@@ -798,6 +807,10 @@ def guess_shortname(filename):
     return "unitedway"
   if re.search(r'americanredcross', filename):
     return "americanredcross"
+  if re.search(r'citizencorps', filename):
+    return "citizencorps"
+  if re.search(r'ymca', filename):
+    return "ymca"
   if re.search("habitat", filename):
     return "habitat"
   if re.search("americansolutions", filename):
@@ -818,6 +831,8 @@ def guess_shortname(filename):
     return "craigslist"
   if re.search("americorps", filename):
     return "americorps"
+  if re.search("givingdupage", filename):
+    return "givingdupage"
   if re.search("mlk(_|day)", filename):
     return "mlk_day"
   if re.search("servenet", filename):
@@ -892,35 +907,22 @@ def guess_parse_func(inputfmt, filename):
 
   # FPXML providers
   fp = parse_footprint
-  if shortname == "americanredcross":
-    return "fpxml", fp.parser(
-      '123', 'americanredcross', 'americanredcross', 'http://www.givelife.org/',
-      'American Red Cross')
-  if shortname == "unitedway":
-    return "fpxml", fp.parser(
-      '122', 'unitedway', 'unitedway', 'http://www.unitedway.org/',
-      'United Way')
-  if shortname == "mybarackobama":
-    return "fpxml", fp.parser(
-      '116', 'mybarackobama', 'mybarackobama', 'http://my.barackobama.com/',
-      'Organizing for America / DNC')
   if shortname == "handsonnetwork":
     return "fpxml", fp.parser(
       '102', 'handsonnetwork', 'handsonnetwork', 'http://handsonnetwork.org/',
       'HandsOn Network')
-  if shortname == "volunteergov":
-    return "fpxml", fp.parser(
-      '107', 'volunteergov', 'volunteergov', 'http://www.volunteer.gov/',
-      'volunteer.gov')
-  if shortname == "americansolutions":
-    return "fpxml", fp.parser(
-      '115', 'americansolutions', 'americansolutions',
-      'http://www.americansolutions.com/',
-      'American Solutions for Winning the Future')
   if shortname == "idealist":
     return "fpxml", fp.parser(
       '103', 'idealist', 'idealist', 'http://www.idealist.org/',
       'Idealist')
+  if shortname == "volunteermatch":
+    return "fpxml", fp.parser(
+      '104', 'volunteermatch', 'volunteermatch',
+      'http://www.volunteermatch.org/', 'Volunteer Match')
+  if shortname == "volunteergov":
+    return "fpxml", fp.parser(
+      '107', 'volunteergov', 'volunteergov', 'http://www.volunteer.gov/',
+      'volunteer.gov')
   if shortname == "extraordinaries":
     return "fpxml", fp.parser(
       '110', 'extraordinaries', 'extraordinaries', 'http://www.beextra.org/',
@@ -929,10 +931,31 @@ def guess_parse_func(inputfmt, filename):
     return "fpxml", fp.parser(
       '112', 'meetup', 'meetup', 'http://www.meetup.com/',
       'Meetup')
-  if shortname == "volunteermatch":
+  if shortname == "americansolutions":
     return "fpxml", fp.parser(
-      '104', 'volunteermatch', 'volunteermatch',
-      'http://www.volunteermatch.org/', 'Volunteer Match')
+      '115', 'americansolutions', 'americansolutions',
+      'http://www.americansolutions.com/',
+      'American Solutions for Winning the Future')
+  if shortname == "mybarackobama":
+    return "fpxml", fp.parser(
+      '116', 'mybarackobama', 'mybarackobama', 'http://my.barackobama.com/',
+      'Organizing for America / DNC')
+  if shortname == "unitedway":
+    return "fpxml", fp.parser(
+      '122', 'unitedway', 'unitedway', 'http://www.unitedway.org/',
+      'United Way')
+  if shortname == "americanredcross":
+    return "fpxml", fp.parser(
+      '123', 'americanredcross', 'americanredcross', 'http://www.givelife.org/',
+      'American Red Cross')
+  if shortname == "citizencorps":
+    return "fpxml", fp.parser(
+      '124', 'citizencorps', 'citizencorps', 'http://citizencorps.gov/',
+      'Citizen Corps / FEMA')
+  if shortname == "ymca":
+    return "fpxml", fp.parser(
+      '126', 'ymca', 'ymca', 'http://www.ymca.net/',
+      'YMCA')
 
   if shortname == "habitat":
     parser = fp.parser(
@@ -950,6 +973,10 @@ def guess_parse_func(inputfmt, filename):
     return "nfg", nfg.parser(
       '106', 'americorps', 'americorps', 'http://www.americorps.gov/',
       'AmeriCorps')
+  if shortname == "servenet":
+    return "nfg", nfg.parser(
+      '114', 'servenet', 'servenet', 'http://www.servenet.org/',
+      'servenet')
   if shortname == "mlk_day":
     return "nfg", nfg.parser(
       '115', 'mlk_day', 'mlk_day', 'http://my.mlkday.gov/',
@@ -966,10 +993,6 @@ def guess_parse_func(inputfmt, filename):
     return "nfg", nfg.parser(
       '119', 'mentor', 'mentor',
       'http://www.mentorpro.org/', 'MENTOR')
-  if shortname == "servenet":
-    return "nfg", nfg.parser(
-      '114', 'servenet', 'servenet', 'http://www.servenet.org/',
-      'servenet')
   if shortname == "myproj_servegov":
     return "nfg", nfg.parser(
       '120', 'myproj_servegov', 'myproj_servegov',
@@ -978,6 +1001,10 @@ def guess_parse_func(inputfmt, filename):
     return "nfg", nfg.parser(
       '121', 'seniorcorps', 'seniorcorps',
       'http://www.seniorcorps.gov/', 'SeniorCorps')
+  if shortname == "givingdupage":
+    return "nfg", nfg.parser(
+      '125', 'givingdupage', 'givingdupage', 'http://www.dupageco.org/',
+      'Giving Dupage')
 
   # custom formats
   if shortname == "gspreadsheet":
