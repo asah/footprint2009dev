@@ -760,8 +760,8 @@ _IG_RegisterOnloadHandler(init);
       <div id="afg-branding-btn">
         <img id="afg-search-button" class="afg-search-button"
             alt="__MSG_search__" title="__MSG_search__"
-            src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_search_btn__.gif"
-            onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_search_btn__.gif'"
+            src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_search_btn__.gif"
+            onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_search_btn__.gif'"
             onclick="showDialog('search')">
       </div>
       <h2 id="afg-branding-title"></h2>
@@ -785,8 +785,8 @@ _IG_RegisterOnloadHandler(init);
               value="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/gadget.xml"/>
           <input type="hidden" name="nocache" value="1" />
           <input type="image" title="__MSG_embed__" class="afg-embed-button" id="afg-embed-button"
-              style="cursor:pointer;" src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_embed_btn__.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_embed_btn__.gif'"/>
+              style="cursor:pointer;" src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_embed_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_embed_btn__.gif'"/>
         </form>
       </div>
       <a id="branding-logo" class="image-cropper" target="_blank"
@@ -820,13 +820,13 @@ _IG_RegisterOnloadHandler(init);
         <div>
           <input id="afg-go-button" class="afg-go-button" tabIndex="2"
               alt="__MSG_go__" title="__MSG_go__" type="image"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_go_btn__.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_go_btn__.gif'"/>
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_go_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_go_btn__.gif'"/>
           <img id="afg-cancel-button" class="afg-cancel-button"
               alt="__MSG_cancel__" title="__MSG_cancel__" tabIndex="3"
               onclick="hideDialog();" onkeypress="hideDialog();"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_cancel_btn__.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_cancel_btn__.gif'" />
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif'" />
         </div>
       </form>
       <form name="frmSearch" id="afg-location-form" action="#" onsubmit="setLocation();return false;">
@@ -841,13 +841,13 @@ _IG_RegisterOnloadHandler(init);
         <div>
           <input id="afg-ok-button" class="afg-ok-button" tabIndex="2"
               alt="__MSG_ok__" title="__MSG_ok__" type="image"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_ok_btn__.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_ok_btn__.gif'"/>
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_ok_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_ok_btn__.gif'"/>
           <img id="afg-cancel-button1" class="afg-cancel-button"
               alt="__MSG_cancel__" title="__MSG_cancel__" tabIndex="3"
               onclick="hideDialog();" onkeypress="hideDialog();"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_cancel_btn__.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/___MSG_cancel_btn__.gif'" />
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif'" />
         </div>
       </form>
     </div>
