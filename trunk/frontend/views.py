@@ -1154,10 +1154,10 @@ class datahub_dashboard_view(webapp.RequestHandler):
         max_date[provider_idx] = re.sub(r':\d\d$', '',
                                         match.group(1) + " " + match.group(2))
         rec = provider_data[provider_idx][date_idx]
-        rec['organizations'] = commas(match.group(4))
-        rec['listings'] = commas(match.group(5))
-        rec['kbytes'] = commas(int(float(match.group(6))/1024.0))
-        rec['loadtimes'] = commas(match.group(7))
+        rec['organizations'] = int(match.group(4))
+        rec['listings'] = int(match.group(5))
+        rec['kbytes'] = int(float(match.group(6))/1024.0)
+        rec['loadtimes'] = int(match.group(7))
     js_data += "function sv(row,col,val) {data.setValue(row,col,val);}\n"
     js_data += "function ac(typ,key) {data.addColumn(typ,key);}\n"
     js_data += "function acn(key) {data.addColumn('number',key);}\n"
@@ -1167,8 +1167,11 @@ class datahub_dashboard_view(webapp.RequestHandler):
     js_data += "data = new google.visualization.DataTable();\n"
     js_data += "data.addRows(1);"
     for provider_idx, provider in enumerate(sorted_providers):
-      js_data += "acn('"+provider+"');"
+      js_data += "\nacn('"+provider+"');"
       js_data += "sv(0,"+str(provider_idx)+",0);"
+    js_data += "data.addRows(1);"
+    js_data += "\nacn('totals');"
+    js_data += "sv(0,"+str(len(sorted_providers))+",0);"
     js_data += "\n"
     js_data += "var chart = new google.visualization.ImageSparkLine("
     js_data += "  document.getElementById('provider_names'));\n"
@@ -1179,16 +1182,24 @@ class datahub_dashboard_view(webapp.RequestHandler):
     # they line up with the charts-- otherwise it just doesn't work.
     js_data += "data = new google.visualization.DataTable();\n"
     js_data += "data.addRows(1);"
+    maxdate = ""
     for provider_idx, provider in enumerate(sorted_providers):
-      js_data += "acn('"+max_date[provider_idx]+"');"
+      js_data += "\nacn('"+max_date[provider_idx]+"');"
       js_data += "sv(0,"+str(provider_idx)+",0);"
+      if maxdate < max_date[provider_idx]:
+        maxdate = max_date[provider_idx]
+    js_data += "data.addRows(1);"
+    js_data += "\nacn('"+maxdate+"');"
+    js_data += "sv(0,"+str(len(sorted_providers))+",0);"
     js_data += "\n"
     js_data += "var chart = new google.visualization.ImageSparkLine("
     js_data += "  document.getElementById('lastloaded'));\n"
     js_data += "chart.draw(data,{width:150,height:50,showAxisLines:false,"
     js_data += "  showValueLabels:false,labelPosition:'right'});\n"
 
+    totals = {}
     for key in ['organizations', 'listings', 'kbytes', 'loadtimes']:
+      totals[key] = 0
       js_data += "data = new google.visualization.DataTable();\n"
       js_data += "data.addRows("+str(len(sorted_dates))+");\n"
       colnum = 0
@@ -1196,18 +1207,22 @@ class datahub_dashboard_view(webapp.RequestHandler):
         colstr = ""
         try:
           # print the current number next to the graph
-          colstr = "\nacn('"+str(provider_data[provider_idx][-1][key])+"');"
+          colstr = "\nacn('"+commas(str(provider_data[provider_idx][-1][key]))+"');"
+          totals[key] += provider_data[provider_idx][-1][key]
         except:
           colstr = "\nacn('0');"
         for date_idx, hour in enumerate(sorted_dates):
           try:
             rec = provider_data[provider_idx][date_idx]
-            val = "sv("+str(date_idx)+","+str(colnum)+","+rec[key]+");"
+            val = "sv("+str(date_idx)+","+str(colnum)+","+str(rec[key])+");"
           except:
             val = ""
           colstr += val
         colnum += 1
         js_data += colstr
+      js_data += "data.addRows(1);"
+      js_data += "\nacn('"+commas(str(totals[key]))+"');"
+      js_data += "sv(0,"+str(len(sorted_providers))+",0);"
       js_data += "\n"
       js_data += "var chart = new google.visualization.ImageSparkLine("
       js_data += "  document.getElementById('"+key+"_chart'));\n"
