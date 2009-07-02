@@ -24,7 +24,7 @@ import re
 from datetime import datetime
 import geocoder
 import parse_footprint
-import parse_gspreadsheet
+import parse_gspreadsheet as pgs
 import parse_usaservice
 import parse_networkforgood
 import parse_idealist
@@ -1008,7 +1008,7 @@ def guess_parse_func(inputfmt, filename):
 
   # custom formats
   if shortname == "gspreadsheet":
-    return "gspreadsheet", parse_gspreadsheet.parse
+    return "gspreadsheet", pgs.parse
 
   if shortname == "usaservice" or shortname == "usasvc":
     return "usaservice", parse_usaservice.parse
@@ -1247,11 +1247,10 @@ def main():
     url = "http://spreadsheets.google.com/feeds/cells/" + match.group(1)
     url += "/1/public/basic"
     # to avoid hitting 80 columns
-    pgs = parse_gspreadsheet
     data = {}
     updated = {}
     if PROGRESS:
-      print "processing spreadsheet", url
+      print "processing master spreadsheet", url
     maxrow, maxcol = pgs.read_gspreadsheet(url, data, updated, PROGRESS)
     header_row, header_startcol = pgs.find_header_row(data, 'provider name')
 
@@ -1269,9 +1268,19 @@ def main():
     outstr = ""
     for row in range(data_startrow, int(maxrow)+1):
       providerName = pgs.cellval(data, row, header_startcol)
+      if providerName is None or providerName == "":
+        if PROGRESS:
+          print "missing provider name from row "+str(row)
+        continue
       providerID = pgs.cellval(data, row, header_startcol+1)
+      if providerID is None or providerID == "":
+        if PROGRESS:
+          print "missing provider ID from row "+str(row)
+        continue
       providerURL = pgs.cellval(data, row, header_startcol+2)
-      if providerName == "" or providerID == "" or providerURL == "":
+      if providerURL is None or providerURL == "":
+        if PROGRESS:
+          print "missing provider URL from row "+str(row)
         continue
       match = re.search(r'key=([^& ]+)', providerURL)
       providerURL = "http://spreadsheets.google.com/feeds/cells/"
@@ -1281,6 +1290,10 @@ def main():
         print "processing spreadsheet", providerURL, "name="+providerName
       providerBytes, providerNumorgs, providerNumopps, tmpstr = process_file(
         providerURL, options, providerName, providerID, providerURL)
+      if PROGRESS:
+        print "done processing spreadsheet: name="+providerName, \
+            "records="+str(providerNumopps), \
+            "url="+providerURL
       bytes += providerBytes
       numorgs += providerNumorgs
       numopps += providerNumopps
