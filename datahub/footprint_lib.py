@@ -1271,17 +1271,17 @@ def main():
       if providerName is None or providerName == "":
         if PROGRESS:
           print "missing provider name from row "+str(row)
-        continue
+        break
       providerID = pgs.cellval(data, row, header_startcol+1)
       if providerID is None or providerID == "":
         if PROGRESS:
           print "missing provider ID from row "+str(row)
-        continue
+        break
       providerURL = pgs.cellval(data, row, header_startcol+2)
       if providerURL is None or providerURL == "":
         if PROGRESS:
           print "missing provider URL from row "+str(row)
-        continue
+        break
       match = re.search(r'key=([^& ]+)', providerURL)
       providerURL = "http://spreadsheets.google.com/feeds/cells/"
       providerURL += match.group(1)
