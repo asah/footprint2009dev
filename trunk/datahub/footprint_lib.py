@@ -193,6 +193,7 @@ def convert_dt_to_gbase(datestr, timestr, timezone):
     timestr = dateutil.parser.parse(datestr + " " + timestr)
   except:
     print "error parsing datetime: "+datestr+" "+timestr
+    return ""
   timestr = timestr.replace(tzinfo=tzinfo)
   pst = dateutil.tz.tzstr("PST8PDT")
   timestr = timestr.astimezone(pst)
