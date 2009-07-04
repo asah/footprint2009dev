@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-  <ModulePrefs title="All for Good"
+  <ModulePrefs title="__MSG_title__"
                description="__MSG_description__"
                width="250"
                height="361"
-               author="All For Good"
+               author="Gadgetfactory"
                screenshot="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/afg.png"
                thumbnail="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/afg-thm.png"
-               author_email="developer.gadget@google.com">
+               author_email="developer.gadget@gmail.com">
     <Require feature="setprefs" />
     <Require feature="dynamic-height" />
     <Require feature="views" />
@@ -16,7 +16,7 @@
     <Locale messages="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/afg_en_ALL.xml" />
   </ModulePrefs>
   <UserPref name="storiesToRead"
-            display_name="__MSG_stories_to_read__"
+            display_name="__MSG_listings_per_page__"
             default_value="4"
             datatype="enum">
     <EnumValue value="4" />
@@ -55,12 +55,13 @@ ul {
 body {
   font-family: arial, sans-serif;
   font-size: 12px;
+  overflow: hidden;
 }
 img {
   border: 0;
   cursor: pointer;
 }
-ul { list-style: none; }
+ul {list-style: none;}
 h2 {
   font-size: 100%;
   font-weight: normal;
@@ -72,8 +73,8 @@ h3 {
 }
 p,
 a,
-span { line-height: 130%; }
-form { text-align: center; }
+span {line-height: 130%;}
+form {text-align: center;}
 a,
 a:link,
 a:visited {
@@ -84,7 +85,8 @@ a:hover {
   color: #039;
   text-decoration: underline;
 }
-/* Feed data display region. */
+
+/* Feed data related styles. */
 .clear {
   clear: both;
   font-size: 0;
@@ -101,9 +103,10 @@ a:hover {
   margin: 20px 0;
   text-align: center;
 }
-.afg-rec-meta { color: #666; }
-.afg-rec-title { font-weight: bold; }
-/* Modal popup. */
+.afg-rec-meta {color: #666;}
+.afg-rec-title {font-weight: bold;}
+
+/* Modal popup related styles. */
 .afg-mask {
   background-color: #666;
   filter: alpha(opacity=80);
@@ -118,23 +121,20 @@ a:hover {
   position: absolute;
   top: 0;
 }
-/* Page layout. */
+
+/* Page layout realted styles. */
 #afg-header-region {
   background-color: #1155a0;
-  overflow: hidden; /* hasLayout trigger */
+  overflow: hidden;
   width: 100%;
 }
-#afg-branding-region {
-  padding: 5px;
-}
+#afg-branding-region {padding: 5px;}
 #afg-footer-region {
   background-color: #1155a0;
-  overflow: hidden; /* hasLayout trigger */
-  width: 100%; /* IE6 hasLayout trigger */
+  overflow: hidden;
+  width: 100%;
 }
-#afg-footer-content {
-  float: right;
-}
+#afg-footer-content {float: right;}
 #afg-content-region {
   background-color: #fff;
   overflow: hidden;
@@ -153,44 +153,44 @@ a:hover {
   width: 90%;
   text-align: center;
 }
-/* Modal popup content. */
-.afg-text {
-  height: 2em;
-  padding: 0.25em 0;
-  width: 100%;
-}
-.afg-gobutton { margin-left: 10px; }
-/* Pagination. */
-.pagination {
-  padding: 2px 5px;
-  text-align: center;
-}
-/* Image Cropper. */
-.image-cropper {
-  display: block;
-  overflow: hidden;
-  text-align: center;
-}
-.image-cropper div { margin: 0 -9999px; }
-#branding-logo {
-  height: 21px;
-  width: 160px;
-  float: left;
-}
-#branding-logo img { height: 21px; }
 
-/* Loading. */
-#afg-loading-container {
-  text-align: center;
-  width: 100%;
-}
-
+/* Modal popup content related styles. */
+.afg-text {width: 100%;}
+.afg-gobutton {margin-left: 10px;}
 .afg-popup-link,
 .afg-popup-link:link,
 .afg-popup-link:visited,
 .afg-popup-link:hover {
   color: #fff;
 }
+
+/* Style for pagination. */
+.pagination {
+  padding: 2px 5px;
+  text-align: center;
+}
+
+/* Image Cropper related styles. */
+.image-cropper {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+}
+.image-cropper div {margin: 0 -9999px;}
+#branding-logo {
+  height: 18px;
+  width: 126px;
+  float: left;
+}
+#branding-logo img {height: 18px;}
+
+/* Style for loading. */
+#afg-loading-container {
+  text-align: center;
+  width: 100%;
+}
+
+/* Header links related styles. */
 #header-links li{
   float: left;
   padding-right: 10px;
@@ -203,7 +203,6 @@ a:hover {
   color: #fff;
   text-decoration: underline;
 }
-
 </style>
 <script>
 /**
@@ -214,8 +213,8 @@ var prefs = new _IG_Prefs();
 
 /**
  * URL relates to get feed functionality.
- * @type {string}
  * @const
+ * @type {string}
  */
 var FEED_URL = 'http://www.allforgood.org/api/volopps?output=rss';
 
@@ -228,11 +227,13 @@ var feedRecords = [];
 /**
  * Number of pages to be cached on each request to server.
  * @const
+ * @type {number}
  */
 var PAGES_PER_QUERY = 3;
 
 /**
  * Parameters to be sent with feed URL to get feeds.
+ * @type {Object}
  */
 var feedParams = {
   vol_loc: '',
@@ -244,13 +245,16 @@ var feedParams = {
 
 /**
  * To store the information on current page number.
+ * @type {number}
  */
 var curPage = 1;
 
 /**
- * To store the next page information for the cached pages during pagination.
+ * To store the next page information for the cached pages during pagination
+ * as key value pair.
+ * @type {Object}
  */
-var nextPageInfo = {}; // Stores Info like  'page-1' : false|true
+var nextPageInfo = {};
 
 /**
  * Adjust the height of the mask automatically.
@@ -263,8 +267,7 @@ function adjustMaskHeight() {
 }
 
 /**
- * Adjust Iframe Height.
- * This function will solve Chrome issue.
+ * Adjust iframe height.
  */
 function adjustIFrameHeight() {
   var rootElement = _gel('afg-main');
@@ -273,95 +276,42 @@ function adjustIFrameHeight() {
 }
 
 /**
- * This method formats the date string to expected format.
- * The expected input format is yyyy-MM-dd hh:mm:ss
- * The expected output format is dd/MM/yyyy
- * @param {string} str The date string from the feed.
- * @return {string} Holds date string in the expected format.
- */
-function getDateStr(str) {
-  str = str || '';
-  str = str.replace(/-/g, '/');
-  var date = new Date(str);
-  return [date.getDate(), date.getMonth() + 1, date.getFullYear()].join('/');
-}
-
-/**
+ * Convert to date object from date string.
  * @param {string} str The date in string format.
  *     If nothing is passed, returns current date.
  * @return {Date} Returns the date object of the given string.
  */
 function getDateObj(str) {
-  str = str || '';
-  str = str.replace(/-/g, '/');
-  return new Date(str);
+  return new Date((str || '').replace(/-/g, '/'));
 }
 
 /**
- * Get the Date in the format of : 'yyyyMMddThhmmssZ'.
- * @param {Date} dateObj The date Object which needs to be converted,
- *     into the format of 'yyyyMMddThhmmssZ'.
- * @return {string} Returns formatted date string for given date object.
+ * This method formats the date string to expected format.
+ * @param {string} str The date string from the feed.
+ *     The expected input format is yyyy-MM-dd hh:mm:ss.
+ * @return {string} Holds date string in 'MM/dd/yyyy' format.
  */
-function getDateStringAsUTC(dateObj) {
-  var day = dateObj.getDate();
-  var month = dateObj.getMonth() + 1;
-  var hour = dateObj.getHours();
-  var minute = dateObj.getMinutes();
-  var second = dateObj.getSeconds();
+function getDateStr(str) {
+  var date = getDateObj(str);
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
   if (day < 10) {
     day = '0' + day;
   }
   if (month < 10) {
     month = '0' + month;
   }
-  if (hour < 10) {
-    hour = '0' + hour;
-  }
-  if (minute < 10) {
-    minute = '0' + minute;
-  }
-  if (second < 10) {
-    second = '0' + second;
-  }
-  return '' + dateObj.getFullYear() + month + day + 'T' +
-      hour + minute + second + 'Z';
-}
-
-/**
- * Get Calendar formatted Duration for the given Start and End date.
- * The format will be '&dates=startdate/enddate',
- * where dates will be in the form of 'yyyyMMddThhmmssZ',
- * when both start date and end date are valid, otherwise returns ''.
- * @param {string} startDate The start date.
- * @param {string} endDate The end date.
- * @return {string} Returns calendar formatted duration as above.
- */
-function getDurationForCalendar(startDate, endDate) {
-  var startDateObj = getDateObj(startDate);
-  var endDateObj = getDateObj(endDate);
-  if (startDateObj.getTime() >= endDateObj.getTime()) {
-    return '';
-  }
-  return '&dates=' + getDateStringAsUTC(startDateObj) + '/' +
-      getDateStringAsUTC(endDateObj);
+  return [month, day, date.getFullYear()].join('/');
 }
 
 /**
  * This method will create HTML element string for single feed item.
- * Used for Home & Canvas views.
- * @param {number} feedIndex The json feed with neccessary changes
+ * @param {number} feedIndex Json feed with neccessary changes
  *     for single feed item.
  * @return {string} Returns html string for single feed item.
  */
 function getHtmlForOneRecord(feedIndex) {
   var obj = feedRecords[feedIndex];
-  var sitePageNumber = Math.floor(feedIndex / 10);
-  var calendarUrl = 'http://www.google.com/calendar/event?action=TEMPLATE' +
-      '&text=' + encodeURIComponent(obj.title) +
-      '&details=' + encodeURIComponent(obj.desc) + '...' +
-      '&location=' + encodeURIComponent(obj.location) +
-      getDurationForCalendar(obj.stdate, obj.enddate);
   var html = [
     '<div class="afg-record ', obj.id, '">',
     '<h3 class="afg-rec-title"> ',
@@ -406,7 +356,7 @@ function updateTitle(val, searchText) {
   }
   if (searchText) {
     str.push(prefs.getMsg('matching'), ' <strong>\'',
-      searchText, '\'<\/strong>');
+        searchText, '\'<\/strong>');
     _gel('afg-clear-search').style.display = 'block';
   } else {
     _gel('afg-clear-search').style.display = 'none';
@@ -415,10 +365,10 @@ function updateTitle(val, searchText) {
 }
 
 /**
- * Replaces the content region of the container by loading.gif.
+ * Replaces the content region of the container by loading image.
  * The width of the passed element will not be changed.
- * The existing height will be retained, if it is more than 50px,
- * otherwise 50px will be set as its height.
+ * The existing height will be retained, if it is more than 100px,
+ * otherwise 100px will be set as its height.
  */
 function loading() {
   var element = _gel('afg-content');
@@ -434,6 +384,36 @@ function loading() {
     '<div>', prefs.getMsg('loading'), '</div></div>'
   ];
   element.innerHTML = html.join('');
+}
+
+/**
+ * This function is used to show a popup dialog.
+ * @param {string} showString Used to decide which form to be shown.
+ */
+function showDialog(showString) {
+  _gel('afg-search-region-home').style.display = 'block';
+  var searchForm = _gel('afg-search-form');
+  var locationForm = _gel('afg-location-form');
+  var focusElement;
+  if (showString == 'location') {
+    searchForm.style.display = 'none';
+    locationForm.style.display = 'block';
+    focusElement = locationForm.elements[0];
+  } else {
+    locationForm.style.display = 'none';
+    searchForm.style.display = 'block';
+    focusElement = searchForm.elements[0];
+  }
+  focusElement.focus();
+  focusElement.value = '';
+  adjustMaskHeight();
+}
+
+/**
+ * This function is used to hide the popup dialog.
+ */
+function hideDialog() {
+  _gel('afg-search-region-home').style.display = 'none';
 }
 
 /**
@@ -464,13 +444,13 @@ function showRecordsAndUpdatePagination() {
     }
     html.push('</div></div>');
   }
-  // Update content in DOM.
+  // Update content html.
   _gel('afg-content').innerHTML = html.join('');
   adjustIFrameHeight();
 }
 
 /**
- * Response Error Handler Function.
+ * Response error handler function.
  * This function will be called if the request is timed out.
  */
 function responseErrorHandler() {
@@ -486,12 +466,13 @@ function responseErrorHandler() {
 /**
  * Update feed records from the received feed XML.
  * @param {Node} xmlContent XML content as callback function response.
- * @param {number} timerId Value which stores a reference to the timer.
+ * @param {number} timerId Value stores a reference to the timer.
  */
 function fetchRecords(xmlContent, timerId) {
   // Cancels the timeout set previously.
   clearTimeout(timerId);
   var recordsRequested = prefs.getInt('storiesToRead') * PAGES_PER_QUERY + 1;
+  var pageRef, recordRef, item, jsonFeed, curNode;
 
   try {
     if (typeof xmlContent != 'object') {
@@ -510,40 +491,39 @@ function fetchRecords(xmlContent, timerId) {
     }
 
     for (var i = 0; i < PAGES_PER_QUERY; i++) {
-      var pageRef = 'page-' + (curPage + i);
-      var recordRef = (i + 1) * prefs.getInt('storiesToRead');
+      pageRef = 'page-' + (curPage + i);
+      recordRef = (i + 1) * prefs.getInt('storiesToRead');
       if (items[recordRef]) {
         nextPageInfo[pageRef] = true;
       }
     }
 
-    for (i = 0; i < length; i++) {
-      var item = items[i];
-      var jsonFeed = {id: 'rec-' + i};
-      for (var curNode = item.firstChild; curNode; curNode = curNode.nextSibling) {
-        if (curNode.nodeType !== 1) {
-          continue;
-        }
-        var nodeVal = curNode.firstChild ? curNode.firstChild.nodeValue : '';
-        switch (curNode.nodeName) {
-          case 'title':
-            jsonFeed.title = nodeVal;
-            break;
-          case 'link':
-            jsonFeed.titleLink = nodeVal;
-            break;
-          case 'fp:location_name':
-            jsonFeed.location = nodeVal;
-            break;
-          case 'description':
-            jsonFeed.desc = nodeVal;
-            break;
-          case 'fp:startDate':
-            jsonFeed.stdate = nodeVal;
-            break;
-          case 'fp:endDate':
-            jsonFeed.enddate = nodeVal;
-            break;
+    for (var j = 0; j < length; j++) {
+      item = items[j];
+      jsonFeed = {id: 'rec-' + j};
+      for (curNode = item.firstChild; curNode; curNode = curNode.nextSibling) {
+        if (curNode.nodeType == 1) {
+          var nodeVal = curNode.firstChild ? curNode.firstChild.nodeValue : '';
+          switch (curNode.nodeName) {
+            case 'title':
+              jsonFeed.title = nodeVal;
+              break;
+            case 'link':
+              jsonFeed.titleLink = nodeVal;
+              break;
+            case 'fp:location_name':
+              jsonFeed.location = nodeVal;
+              break;
+            case 'description':
+              jsonFeed.desc = nodeVal;
+              break;
+            case 'fp:startDate':
+              jsonFeed.stdate = nodeVal;
+              break;
+            case 'fp:endDate':
+              jsonFeed.enddate = nodeVal;
+              break;
+          }
         }
       }
       jsonFeed.period = getDateStr(jsonFeed.stdate) +
@@ -552,19 +532,30 @@ function fetchRecords(xmlContent, timerId) {
     }
     showRecordsAndUpdatePagination();
   } catch (err) {
-    // For both 'Invalid feed type' and 'No feed available' Errors,
+    // For both 'Invalid feed type' and 'No feed available' errors,
     // redirect to previous page if available,
     // shows 'Try again' message otherwise.
     if (curPage > 1) {
       nextPageInfo['page-' + (curPage - 1)] = false;
       navigatePage(-1);
     } else {
-      var html = [
-        '<div class="afg-record-na">', prefs.getMsg('your_search'),
-        ' <strong>\'', prefs.getString('searchText'), '\'</strong> ', prefs.getMsg('not_match'),
-        '<br/><a href="#" onclick="showDialog(\'search\'); return false;">',
-        prefs.getMsg('search_again'), '</a></div>'
-      ];
+      var searchText = prefs.getString('searchText');
+      var location = prefs.getString('prefLocation');
+      var html = ['<div class="afg-record-na">', prefs.getMsg('your_search')];
+      if (searchText) {
+        html.push(' <strong>\'', searchText, '\'</strong> ');
+      } else if (location) {
+        html.push(' ', prefs.getMsg('near'),
+            ' <strong>\'', location, '\'</strong> ');
+      }
+      html.push(prefs.getMsg('not_match'), '<br/>');
+      if (searchText) {
+        html.push('<a href="#" onclick="showDialog(\'search\'); ',
+            'return false;">', prefs.getMsg('search_again'), '</a></div>');
+      } else if (location) {
+        html.push('<a href="#" onclick="showDialog(\'location\'); ',
+            'return false;">', prefs.getMsg('change_location'), '</a></div>');
+      }
       _gel('afg-content').innerHTML = html.join('');
       adjustIFrameHeight();
     }
@@ -578,11 +569,11 @@ function fetchRecords(xmlContent, timerId) {
 function requestFeed() {
   var feedUrl = [FEED_URL];
   for (var key in feedParams) {
-    feedUrl.push(key + '=' + feedParams[key]);
+    feedUrl.push(key + '=' + _esc(feedParams[key]));
   }
   var feedUrlString = feedUrl.join('&');
   loading();
-  // It will call checkResponse function after 5 seconds.
+  // Call responseErrorHandler function after 5 seconds.
   var timerId = setTimeout(responseErrorHandler, 5000);
   _IG_FetchXmlContent(feedUrlString, _IG_Callback(fetchRecords, timerId));
 }
@@ -607,28 +598,30 @@ function navigatePage(step) {
 
 /**
  * This function reads the user input,
- * updates its Branding title based on the prefered location,
- * resets the FeedUrl Parameters, cached feed records and meta information.
- * And calls requestFeed() to initiate the request.
- * @param {string} optSearchTxt Optional search text.
+ * updates title based on the prefered location,
+ * resets the feed url parameters, cached feed records and meta information.
+ * Also calls requestFeed() to initiate the request.
+ * @param {string} opt_searchTxt Search text (optional).
+ * @param {boolean} opt_hidePopup Information whether to hide the
+ *     dialog window or not (optional).
  */
-function search(optSearchTxt) {
+function search(opt_searchTxt, opt_hidePopup) {
   var location = prefs.getString('prefLocation');
-  var prefKeywords = prefs.getString('preferredKeywords').replace(/\s+/gi, '+');
-  var searchText = (optSearchTxt && prefs.getMsg(optSearchTxt)) ||
-      _gel('afg-search-text').value || '';
+  var prefKeywords = prefs.getString('preferredKeywords');
+  var searchText = opt_searchTxt || _gel('afg-search-text').value || '';
   updateTitle(_trim(location), searchText);
-  location = location.replace(/\s+/gi, '+');
-  searchText = searchText.replace(/\s+/gi, '+');
 
   feedParams.start = 1;
   feedParams.vol_loc = location;
-  feedParams.q = prefKeywords + '+' + searchText;
+  feedParams.q = prefKeywords + ' ' + searchText;
   // Reset FeedRecord and pagination related variables.
   feedRecords = [];
   curPage = 1;
   nextPageInfo = {};
   requestFeed();
+  if (opt_hidePopup) {
+    hideDialog();
+  }
 }
 
 /**
@@ -648,63 +641,30 @@ function isCancel(event) {
  */
 function handleTheme() {
   var themePath = _trim(prefs.getString('themesFolder'));
-  var searchButton = _gel('afg-search-button');
-  var embedButton = _gel('afg-embed-button');
-  var goButton = _gel('afg-go-button');
-  var cancelButton = _gel('afg-cancel-button');
-  var head = document.getElementsByTagName('head')[0];
-  var body = document.getElementsByTagName('body')[0];
   if (themePath) {
     var linkElement = document.createElement('link');
-    linkElement.id = 'theme-link';
     linkElement.href = themePath + '/style.css';
     linkElement.rel = 'stylesheet';
-    head.appendChild(linkElement);
-    searchButton.src = themePath + '/search.gif';
-    embedButton.src = themePath + '/embed.gif';
-    goButton.src = themePath + '/go.gif';
-    cancelButton.src = themePath + '/cancel.gif';
-    body.className += ' site-theme';
-  } else {
-    // Nothing to do right now.
-    body.className += ' default-theme';
+    document.getElementsByTagName('head')[0].appendChild(linkElement);
+    document.getElementsByTagName('body')[0].className += ' site-theme';
+
+    _gel('afg-search-button').src = themePath + '/' +
+        prefs.getMsg('search_btn') + '.gif';
+    _gel('afg-embed-button').src = themePath + '/' +
+        prefs.getMsg('embed_btn') + '.gif';
+    _gel('afg-go-button').src = themePath + '/' +
+        prefs.getMsg('go_btn') + '.gif';
+    _gel('afg-ok-button').src = themePath + '/' +
+        prefs.getMsg('ok_btn') + '.gif';
+    _gel('afg-cancel-button').src = themePath + '/' +
+        prefs.getMsg('cancel_btn') + '.gif';
+    _gel('afg-cancel-button1').src = themePath + '/' +
+        prefs.getMsg('cancel_btn') + '.gif';
   }
 }
 
 /**
- * Function to handle top searches and hide the popup.
- * @param {string} searchTerm The search term.
- */
-function topSearch(searchTerm) {
-  search(searchTerm);
-  hideDialog();
-}
-
-/**
- * This function is used to show a popup dialog.
- * @param {string} showString It is used to decide which form to be shown.
- */
-function showDialog(showString) {
-  _gel('afg-search-region-home').style.display = 'block';
-  var searchForm = _gel('afg-search-form');
-  var locationForm = _gel('afg-location-form');
-  var focusElement;
-  if (showString == 'location') {
-    searchForm.style.display = 'none';
-    locationForm.style.display = 'block';
-    focusElement = locationForm.elements[0];
-  } else {
-    locationForm.style.display = 'none';
-    searchForm.style.display = 'block';
-    focusElement = searchForm.elements[0];
-  }
-  focusElement.focus();
-  focusElement.value = '';
-  adjustMaskHeight();
-}
-
-/**
- *
+ * Used to clear the search text box.
  */
 function clearSearch() {
   _gel('afg-search-text').value = '';
@@ -712,14 +672,8 @@ function clearSearch() {
 }
 
 /**
- * This function is used to hide the popup dialog.
- */
-function hideDialog() {
-  _gel('afg-search-region-home').style.display = 'none';
-}
-
-/**
  * Set the location and restart the search.
+ * @param {string} optLocation Optional location text.
  */
 function setLocation(optLocation) {
   var location = optLocation || _gel('afg-location-text').value || '';
@@ -730,51 +684,57 @@ function setLocation(optLocation) {
 
 /**
  * Used for setting the logo according to the size of container.
- */ 
+ */
 function setLogoImage() {
-  var myWidth = 0;
-  var imgPath = 'http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/logo';
-
+  var gadgetWidth = 0;
+  var themePath = _trim(prefs.getString('themesFolder'));
+  var imgPath = themePath ?
+      themePath + '/logo' :
+      'http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/logo';
   if (typeof(window.innerWidth) == 'number') {
     // Non-IE
-    myWidth = window.innerWidth;
-  } else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
-    // IE 6+ 
-    myWidth = document.documentElement.clientWidth;
-  } else if (document.body && ( document.body.clientWidth || document.body.clientHeight )) {
-    myWidth = document.body.clientWidth;
-  }
-  
-  if (myWidth <=150) {
-    imgPath += '_180';
-    _gel('branding-logo').style.width = '83px';
-    _gel('branding-logo').style.height = '';
-    _gel('logo-img').style.height = '11';
-  } else if(myWidth <= 180){
-    imgPath += '_180';
-    _gel('branding-logo').style.width = '95px';
-    _gel('branding-logo').style.height = '';
-    _gel('logo-img').style.height = '14';
-  } else if (myWidth <= 200){
-    imgPath += '_200';
-    _gel('branding-logo').style.width = '110px';
-    _gel('branding-logo').style.height = '';
-    _gel('logo-img').style.height = '18px';
+    gadgetWidth = window.innerWidth;
+  } else if (document.documentElement && document.documentElement.clientWidth) {
+    // IE 6+
+    gadgetWidth = document.documentElement.clientWidth;
+  } else if (document.body && document.body.clientWidth) {
+    gadgetWidth = document.body.clientWidth;
   }
 
- //Setting the source for logo image.
- _gel('logo-img').src = imgPath + '.gif';
+  // Loading branding logo according to availble size.
+  var brandLogoStyle = _gel('branding-logo').style;
+  var logoImage = _gel('logo-img');
+  var logoImageStyle = logoImage.style;
+  if (gadgetWidth <= 150) {
+    imgPath += '_180';
+    brandLogoStyle.width = '83px';
+    brandLogoStyle.height = '';
+    logoImageStyle.height = '11px';
+  } else if (gadgetWidth <= 180){
+    imgPath += '_180';
+    brandLogoStyle.width = '95px';
+    brandLogoStyle.height = '';
+    logoImageStyle.height = '14px';
+  } else if (gadgetWidth <= 200){
+    imgPath += '_200';
+    brandLogoStyle.width = '110px';
+    brandLogoStyle.height = '';
+    logoImageStyle.height = '18px';
+  } else {
+    brandLogoStyle.width = '126px';
+    brandLogoStyle.height = '18px';
+    logoImageStyle.height = '18px';
+  }
+  //Setting the source for logo image.
+  logoImage.src = imgPath + '.gif';
 }
- 
+
 /**
  * Called on load of the gadget.
  */
 function init() {
   handleTheme();
   setLogoImage();
-  var view = gadgets.views.getCurrentView();
-  view = view ? view.getName().toLowerCase() : 'home';
-  _gel('afg-main').className = 'afg-' + view + '-body';
   search();
 }
 
@@ -783,14 +743,16 @@ function init() {
  * It sets mask element height equals to the body height.
  */
 window.onresize = function() {
+  setLogoImage();
   adjustIFrameHeight();
   adjustMaskHeight();
-}
+};
 
 /**
  * Entry point.
  */
 _IG_RegisterOnloadHandler(init);
+
 </script>
 <div id="afg-main">
   <div id="afg-header-region">
@@ -798,15 +760,15 @@ _IG_RegisterOnloadHandler(init);
       <div id="afg-branding-btn">
         <img id="afg-search-button" class="afg-search-button"
             alt="__MSG_search__" title="__MSG_search__"
-            src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/search.gif"
-            onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/search.gif'"
+            src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_search_btn__.gif"
+            onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_search_btn__.gif'"
             onclick="showDialog('search')">
       </div>
       <h2 id="afg-branding-title"></h2>
       <ul id="header-links">
-      <li id="afg-set-location"><a href="javascript:showDialog('location')">Set Location</a></li>
-      <li id="afg-change-location"><a href="javascript:showDialog('location')">Change Location</a></li>
-      <li id="afg-clear-search"><a href="javascript:clearSearch()">Clear Search</a></li>
+      <li id="afg-set-location"><a href="javascript:showDialog('location')">__MSG_set_location__</a></li>
+      <li id="afg-change-location"><a href="javascript:showDialog('location')">__MSG_change_location__</a></li>
+      <li id="afg-clear-search"><a href="javascript:clearSearch()">__MSG_clear_search__</a></li>
       </ul>
       <div class="clear">&nbsp;</div>
     </div>
@@ -823,14 +785,16 @@ _IG_RegisterOnloadHandler(init);
               value="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/gadget.xml"/>
           <input type="hidden" name="nocache" value="1" />
           <input type="image" title="__MSG_embed__" class="afg-embed-button" id="afg-embed-button"
-              style="cursor:pointer;" src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/embed.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/embed.gif'"/>
+              style="cursor:pointer;" src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_embed_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_embed_btn__.gif'"/>
         </form>
       </div>
       <a id="branding-logo" class="image-cropper" target="_blank"
           href="http://www.allforgood.org">
         <div>
-          <img id="logo-img" alt="__MSG_brand_title__" title="__MSG_brand_title__" />
+          <img id="logo-img" alt="__MSG_brand_title__" title="__MSG_brand_title__"
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/logo.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/logo.gif'"/>
         </div>
       </a>
       <div class="clear">&nbsp;</div>
@@ -845,24 +809,24 @@ _IG_RegisterOnloadHandler(init);
           <input name="searchText" id="afg-search-text" tabIndex="1" type="text" onkeyup="isCancel(event);" autocomplete="off" class="afg-text"/>
           <div style="text-align:left; color: #fff; margin:1px 0 2px">
             __MSG_example__
-            <a href="javascript:topSearch('education')" class="afg-popup-link">
+            <a href="javascript:search('__MSG_education__', 1)" class="afg-popup-link">
                 __MSG_education__</a>,
-            <a href="javascript:topSearch('health')" class="afg-popup-link">
+            <a href="javascript:search('__MSG_health__', 1)" class="afg-popup-link">
                 __MSG_health__</a>,
-            <a href="javascript:topSearch('nature')" class="afg-popup-link">
+            <a href="javascript:search('__MSG_nature__', 1)" class="afg-popup-link">
                 __MSG_nature__</a>
           </div>
         </div>
         <div>
           <input id="afg-go-button" class="afg-go-button" tabIndex="2"
               alt="__MSG_go__" title="__MSG_go__" type="image"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif'"/>
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_go_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_go_btn__.gif'"/>
           <img id="afg-cancel-button" class="afg-cancel-button"
               alt="__MSG_cancel__" title="__MSG_cancel__" tabIndex="3"
               onclick="hideDialog();" onkeypress="hideDialog();"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif"
-              onerror"this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif'" />
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif'" />
         </div>
       </form>
       <form name="frmSearch" id="afg-location-form" action="#" onsubmit="setLocation();return false;">
@@ -875,15 +839,15 @@ _IG_RegisterOnloadHandler(init);
           </div>
         </div>
         <div>
-          <input id="afg-go-button1" class="afg-go-button" tabIndex="2"
-              alt="__MSG_go__" title="__MSG_go__" type="image"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif"
-              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/go.gif'"/>
+          <input id="afg-ok-button" class="afg-ok-button" tabIndex="2"
+              alt="__MSG_ok__" title="__MSG_ok__" type="image"
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_ok_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_ok_btn__.gif'"/>
           <img id="afg-cancel-button1" class="afg-cancel-button"
               alt="__MSG_cancel__" title="__MSG_cancel__" tabIndex="3"
               onclick="hideDialog();" onkeypress="hideDialog();"
-              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif"
-              onerror"this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/cancel.gif'" />
+              src="http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif"
+              onerror="this.src='http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/gadget/theme/__MSG_cancel_btn__.gif'" />
         </div>
       </form>
     </div>
