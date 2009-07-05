@@ -28,6 +28,7 @@ import deploy
 
 APPLICATION = webapp.WSGIApplication(
     [(urls.URL_HOME, views.home_page_view),
+     (urls.URL_PSA, views.home_page_view),
      # TODO: replace with a generic way to redirect all unknown pages to /
      (urls.URL_OLD_HOME, views.home_page_redir_view),
      (urls.URL_CONSUMER_UI_SEARCH, views.consumer_ui_search_view),

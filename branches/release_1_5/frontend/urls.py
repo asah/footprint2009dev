@@ -32,6 +32,7 @@ URL_UI_MY_SNIPPETS = '/ui_my_snippets'
 URL_REDIRECT = '/url'
 URL_DATAHUB_DASHBOARD = '/dashboard/datahub'
 URL_ACTION = '/action'  # User actions like starring
+URL_PSA = '/psa' # Redirect to home page for tracking adsense psas
 
 STATIC_CONTENT_LOCATION = 'http://footprint2009dev.googlecode.com/svn/trunk/frontend/html/'
 
