@@ -216,18 +216,31 @@ def normalize_query_values(args):
     args["long"] = args["long"].strip()
     if api.PARAM_VOL_DIST not in args:
       zoom = int(zoom)
-      if zoom == 1: # country
+      if zoom == 1:
+        # country zoomlevel is kinda bogus--
+        # 500 mile search radius (avoids 0.0,0.0 in the atlantic ocean)
         args[api.PARAM_VOL_DIST] = 500
       elif zoom == 2: # region
-        args[api.PARAM_VOL_DIST] = 300
-      elif zoom == 3: # county
-        args[api.PARAM_VOL_DIST] = 100
-      elif zoom == 4 or zoom == 0: # city/town
+        # state/region is very wide-- start with 50 mile radius,
+        # and we'll fallback to larger.
         args[api.PARAM_VOL_DIST] = 50
-      elif zoom == 5: # postal code
-        args[api.PARAM_VOL_DIST] = 25
-      elif zoom > 5: # street or level
+      elif zoom == 3: # county
+        # county radius should be pretty rare-- start with 10 mile radius,
+        # and we'll fallback to larger.
         args[api.PARAM_VOL_DIST] = 10
+      elif zoom == 4 or zoom == 0:
+        # city is the common case-- start with 5 mile search radius,
+        # and we'll fallback to larger.  This avoids accidentally
+        # prioritizing listings from neighboring cities.
+        args[api.PARAM_VOL_DIST] = 5
+      elif zoom == 5:
+        # postal codes are also a common case-- start with a narrower
+        # radius than the city, and we'll fallback to larger.
+        args[api.PARAM_VOL_DIST] = 3
+      elif zoom > 5:
+        # street address or GPS coordinates-- start with a very narrow
+        # search suitable for walking.
+        args[api.PARAM_VOL_DIST] = 1
   else:
     args[api.PARAM_VOL_LOC] = args[api.PARAM_VOL_DIST] = ""
   dbgargs(api.PARAM_VOL_LOC)
@@ -243,12 +256,28 @@ def fetch_result_set(args):
   """Validate the search parameters, and perform the search."""
   result_set = fetch_and_dedup(args)
 
+  def can_use_backfill(args, result_set):
+    if (not result_set.has_more_results 
+        and result_set.num_merged_results < 
+        int(args[api.PARAM_NUM]) + int(args[api.PARAM_START])):
+      return True
+    return False
+
+  if (can_use_backfill(args, result_set) and
+      (args["lat"] != "0.0" or args["long"] != "0.0")):
+    newargs = copy.copy(args)
+    newargs[api.PARAM_VOL_DIST] = newargs[api.PARAM_VOL_DIST] * 5
+    logging.debug("backfilling with further listings...")
+    locationless_result_set = fetch_and_dedup(newargs)
+    logging.debug("len(result_set.results)=%d" % len(result_set.results))
+    logging.debug("len(locationless)=%d" % len(locationless_result_set.results))
+    result_set.append_results(locationless_result_set)
+    logging.debug("new len=%d" % len(result_set.results))
+
   # backfill with locationless listings
   locationless_result_set = []
-  if (not result_set.has_more_results 
-      and result_set.num_merged_results < 
-            int(args[api.PARAM_NUM]) + int(args[api.PARAM_START])
-      and (args["lat"] != "0.0" or args["long"] != "0.0")):
+  if (can_use_backfill(args, result_set) and
+      (args["lat"] != "0.0" or args["long"] != "0.0")):
     newargs = copy.copy(args)
     newargs["lat"] = newargs["long"] = "0.0"
     newargs[api.PARAM_VOL_DIST] = 50
