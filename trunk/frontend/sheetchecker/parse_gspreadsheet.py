@@ -36,6 +36,8 @@ expects the caller to pass in the providerID and providerName)
 #</entry>
 
 import re
+import calendar
+import time
 import logging
 
 MAX_BLANKROWS = 2
@@ -358,10 +360,27 @@ def parse(instr):
         if end_time != "" and end_time != "ongoing":
           parser_error("ongoing event should have blank End Time.")
       else:
-        get_dtval(record, "StartDate")
-        get_tmval(record, "StartTime")
-        get_dtval(record, "EndDate")
-        get_tmval(record, "EndTime")
+        date_start = get_dtval(record, "StartDate")
+        time_start = get_tmval(record, "StartTime")
+        date_ending = get_dtval(record, "EndDate")
+        if len(date_ending) < 1:
+          date_ending = date_start
+        time_ending = get_tmval(record, "EndTime")
+
+        def to_epoch(timestamp):
+          try:
+            t = time.strptime(timestamp, "%m/%d/%Y %H:%M:%S")
+            epoch = int(calendar.timegm(t))
+          except:
+            epoch = 0
+          return epoch
+       
+        if (to_epoch(date_start + ' ' + time_start) > 
+            to_epoch(date_ending + ' ' + time_ending)):
+          parser_error("Start Date/Time later than End Date/Time.")
+
+      get_minlen(record, 'URL', 12)
+
       email = recordval(record, "ContactEmail")
       if email != "" and email.find("@") == -1:
         parser_error("malformed email address: "+email)
